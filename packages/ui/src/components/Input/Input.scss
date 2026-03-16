@@ -28,6 +28,6 @@
   &__input {
     @include form-reset;
 
-    @apply w-full flex-1 self-stretch bg-transparent text-sm outline-none placeholder:text-sm placeholder:text-text-placeholder disabled:cursor-not-allowed;
+    @apply w-full flex-1 self-stretch bg-transparent text-base outline-none placeholder:text-sm placeholder:text-text-placeholder disabled:cursor-not-allowed;
   }
 }
