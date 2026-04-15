@@ -2,12 +2,12 @@
   @apply fixed inset-0 z-[1000] w-screen overflow-y-auto;
 
   &__backdrop {
-    @apply flex min-h-full items-center justify-center bg-surface-overlay/50 px-3 text-center;
+    @apply bg-surface-overlay/50 flex min-h-full items-center justify-center px-3 text-center;
     @apply transition-opacity duration-300 ease-out;
   }
 
   &__dialog {
-    @apply relative w-full max-w-[400px] overflow-hidden rounded-md bg-surface-primary p-6 text-left shadow-xl;
+    @apply bg-surface-primary relative w-full max-w-[400px] overflow-hidden rounded-md p-6 text-left shadow-xl;
     @apply transition-all duration-300 ease-out;
   }
 

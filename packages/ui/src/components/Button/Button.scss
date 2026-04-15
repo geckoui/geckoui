@@ -54,7 +54,7 @@
   }
 
   &[data-variant="icon"] {
-    @apply aspect-square size-8 rounded-md border-transparent bg-transparent p-0 enabled:hover:bg-surface-hover;
+    @apply enabled:hover:bg-surface-hover aspect-square size-8 rounded-md border-transparent bg-transparent p-0;
 
     &[data-color="primary"] {
       @apply text-text-tertiary disabled:text-text-disabled;

@@ -4,66 +4,66 @@
   &__backdrop {
     @apply fixed inset-0 cursor-pointer transition duration-300 ease-in-out;
 
-    &--hidden,
-    &--clickthrough {
+    &[data-state="hidden"],
+    &[data-clickthrough] {
       @apply pointer-events-none;
     }
 
-    &--visible {
+    &[data-state="visible"] {
       @apply bg-surface-overlay/75 opacity-100;
     }
 
-    &--hidden {
+    &[data-state="hidden"] {
       @apply opacity-0;
     }
   }
 
   &__drawer {
-    @apply pointer-events-auto fixed h-full w-full transform overflow-y-auto bg-surface-primary shadow-xl transition duration-300 ease-in-out;
+    @apply bg-surface-primary pointer-events-auto fixed h-full w-full transform overflow-y-auto shadow-xl transition duration-300 ease-in-out;
 
-    &--right {
+    &[data-placement="right"] {
       @apply inset-y-0 right-0 max-w-md;
     }
 
-    &--left {
+    &[data-placement="left"] {
       @apply inset-y-0 left-0 max-w-md;
     }
 
-    &--top {
+    &[data-placement="top"] {
       @apply inset-x-0 top-0 max-h-[50%];
     }
 
-    &--bottom {
+    &[data-placement="bottom"] {
       @apply inset-x-0 bottom-0 max-h-[50%];
     }
 
-    &--closed {
+    &[data-state="closed"] {
       @apply delay-100;
     }
 
-    &--top-open,
-    &--bottom-open {
+    &[data-state="open"][data-placement="top"],
+    &[data-state="open"][data-placement="bottom"] {
       @apply translate-y-0;
     }
 
-    &--right-open,
-    &--left-open {
+    &[data-state="open"][data-placement="right"],
+    &[data-state="open"][data-placement="left"] {
       @apply translate-x-0;
     }
 
-    &--right-closed {
+    &[data-state="closed"][data-placement="right"] {
       @apply translate-x-full;
     }
 
-    &--left-closed {
+    &[data-state="closed"][data-placement="left"] {
       @apply -translate-x-full;
     }
 
-    &--top-closed {
+    &[data-state="closed"][data-placement="top"] {
       @apply -translate-y-full;
     }
 
-    &--bottom-closed {
+    &[data-state="closed"][data-placement="bottom"] {
       @apply translate-y-full;
     }
   }

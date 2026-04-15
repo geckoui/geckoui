@@ -4,7 +4,7 @@
   @include button-reset;
   @include focus-outline;
 
-  @apply bg-surface-active relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-primary-600;
+  @apply bg-surface-active data-[checked]:bg-primary-600 relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50;
 
   &--size-sm {
     @apply h-4 w-7;
@@ -15,7 +15,7 @@
   }
 
   &:hover {
-    @apply enabled:ring-2 ring-primary-400;
+    @apply ring-primary-400 enabled:ring-2;
   }
 
   &__thumb {

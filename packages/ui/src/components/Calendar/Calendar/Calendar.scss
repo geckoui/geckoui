@@ -3,10 +3,10 @@
 .GeckoUICalendar {
   @include base-reset;
 
-  @apply mt-px min-w-[320px] max-w-[320px] rounded-md border border-border-primary px-3 py-4 text-sm;
+  @apply border-border-primary mt-px max-w-[320px] min-w-[320px] rounded-md border px-3 py-4 text-sm;
 
   &--calendars-2 {
-    @apply min-w-fit max-w-fit;
+    @apply max-w-fit min-w-fit;
   }
 
   &__dual {
@@ -14,7 +14,7 @@
 
     &--first,
     &--second {
-      @apply min-w-[296px] max-w-[296px];
+      @apply max-w-[296px] min-w-[296px];
     }
 
     &--second {

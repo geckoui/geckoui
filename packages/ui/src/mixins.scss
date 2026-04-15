@@ -7,7 +7,7 @@
 
 @mixin icon {
   @include base-reset;
-  @apply inline-block h-4 w-4 bg-text-primary;
+  @apply bg-text-primary inline-block h-4 w-4;
 
   mask-position: center;
   mask-size: contain;

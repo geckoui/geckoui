@@ -10,14 +10,14 @@
       @apply flex flex-1 cursor-default items-center justify-center rounded-md px-3 py-1.5 font-bold;
 
       &--clickable {
-        @apply cursor-pointer hover:bg-surface-hover-strong;
+        @apply hover:bg-surface-hover-strong cursor-pointer;
       }
     }
 
     &__arrow-button {
       @include button-reset;
 
-      @apply rounded-md px-3 py-1.5 hover:bg-surface-hover-strong;
+      @apply hover:bg-surface-hover-strong rounded-md px-3 py-1.5;
     }
 
     &__arrow-left-icon,

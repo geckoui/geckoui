@@ -6,7 +6,7 @@
   &__input {
     @include form-reset;
 
-    @apply block h-full w-full rounded-lg border border-border-secondary text-center outline-none enabled:focus-within:border-primary-300 disabled:cursor-not-allowed;
+    @apply border-border-secondary enabled:focus-within:border-primary-300 block h-full w-full rounded-lg border text-center outline-none disabled:cursor-not-allowed;
   }
 
   &--disabled &__input {

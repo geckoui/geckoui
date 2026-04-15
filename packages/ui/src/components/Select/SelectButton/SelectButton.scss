@@ -3,7 +3,7 @@
 .GeckoUISelectButton {
   @include button-reset;
 
-  @apply relative flex min-h-10 w-full items-center gap-2 rounded-md border border-border-secondary py-1 pl-3 pr-3 text-text-primary;
+  @apply border-border-secondary text-text-primary relative flex min-h-10 w-full items-center gap-2 rounded-md border py-1 pr-3 pl-3;
 
   &--enabled {
     @apply cursor-pointer;
@@ -18,7 +18,7 @@
   }
 
   &--disabled {
-    @apply cursor-not-allowed bg-surface-disabled;
+    @apply bg-surface-disabled cursor-not-allowed;
   }
 
   &--readonly {
@@ -42,7 +42,7 @@
   }
 
   &__multiselected-chip {
-    @apply inline-flex items-center gap-1 self-center rounded border border-border-secondary/70 bg-surface-tertiary px-2 py-1 text-left text-xs text-text-primary;
+    @apply border-border-secondary/70 bg-surface-tertiary text-text-primary inline-flex items-center gap-1 self-center rounded border px-2 py-1 text-left text-xs;
 
     &--disabled {
       @apply text-text-disabled opacity-70;
@@ -54,7 +54,7 @@
       @apply flex h-4 w-4 items-center justify-center rounded-sm;
 
       &__icon {
-        @apply inline-block h-2 w-2 bg-text-secondary;
+        @apply bg-text-secondary inline-block h-2 w-2;
 
         mask-image: url('data:image/svg+xml,<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.02426 0.175736C0.78995 -0.0585786 0.41005 -0.0585786 0.175736 0.175736C-0.0585786 0.41005 -0.0585786 0.78995 0.175736 1.02426L3.15147 4L0.175736 6.97574C-0.0585786 7.21005 -0.0585786 7.58995 0.175736 7.82426C0.41005 8.05858 0.78995 8.05858 1.02426 7.82426L4 4.84853L6.97574 7.82426C7.21005 8.05858 7.58995 8.05858 7.82426 7.82426C8.05858 7.58995 8.05858 7.21005 7.82426 6.97574L4.84853 4L7.82426 1.02426C8.05858 0.78995 8.05858 0.41005 7.82426 0.175736C7.58995 -0.0585786 7.21005 -0.0585786 6.97574 0.175736L4 3.15147L1.02426 0.175736Z" fill="currentColor"/></svg>');
         -webkit-mask-image: url('data:image/svg+xml,<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.02426 0.175736C0.78995 -0.0585786 0.41005 -0.0585786 0.175736 0.175736C-0.0585786 0.41005 -0.0585786 0.78995 0.175736 1.02426L3.15147 4L0.175736 6.97574C-0.0585786 7.21005 -0.0585786 7.58995 0.175736 7.82426C0.41005 8.05858 0.78995 8.05858 1.02426 7.82426L4 4.84853L6.97574 7.82426C7.21005 8.05858 7.58995 8.05858 7.82426 7.82426C8.05858 7.58995 8.05858 7.21005 7.82426 6.97574L4.84853 4L7.82426 1.02426C8.05858 0.78995 8.05858 0.41005 7.82426 0.175736C7.58995 -0.0585786 7.21005 -0.0585786 6.97574 0.175736L4 3.15147L1.02426 0.175736Z" fill="currentColor"/></svg>');
@@ -75,10 +75,10 @@
   }
 
   &__value {
-    @apply flex items-center text-text-primary;
+    @apply text-text-primary flex items-center;
 
     &--placeholder {
-      @apply relative ml-0 text-text-placeholder;
+      @apply text-text-placeholder relative ml-0;
     }
 
     &--hidden {

@@ -3,7 +3,7 @@
 .GeckoUISelectMenu {
   @include base-reset;
 
-  @apply absolute left-0 z-[10] flex max-h-[240px] w-full min-w-0 flex-col gap-[1px] rounded-md bg-surface-primary shadow-lg ring-1 ring-border-primary;
+  @apply bg-surface-primary ring-border-primary absolute left-0 z-[10] flex max-h-[240px] w-full min-w-0 flex-col gap-[1px] rounded-md shadow-lg ring-1;
 
   &__items {
     @include base-reset;

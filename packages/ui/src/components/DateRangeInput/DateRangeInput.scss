@@ -4,7 +4,7 @@
 
 .GeckoUIDateRangeInput {
   &__range-separator {
-    @apply pb-[1px] mx-1 select-none whitespace-nowrap text-text-secondary;
+    @apply text-text-secondary mx-1 pb-[1px] whitespace-nowrap select-none;
   }
 }
 

@@ -3,14 +3,14 @@
 .GeckoUIInput {
   @include base-reset;
 
-  @apply relative flex min-h-10 w-full items-center gap-2 rounded-md border border-border-secondary px-3;
+  @apply border-border-secondary relative flex min-h-10 w-full items-center gap-2 rounded-md border px-3;
 
   &:has(input:-webkit-autofill) {
     background: var(--color-surface-autofill) !important;
   }
 
   &--disabled {
-    @apply cursor-not-allowed bg-surface-disabled text-text-disabled;
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
   }
 
   &--enabled {
@@ -28,6 +28,6 @@
   &__input {
     @include form-reset;
 
-    @apply w-full flex-1 self-stretch bg-transparent text-sm outline-none placeholder:text-sm placeholder:text-text-placeholder disabled:cursor-not-allowed;
+    @apply placeholder:text-text-placeholder w-full flex-1 self-stretch bg-transparent text-sm outline-none placeholder:text-sm disabled:cursor-not-allowed;
   }
 }

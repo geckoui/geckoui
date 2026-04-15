@@ -324,17 +324,22 @@ export default function RootLayout({ children }) {
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses `data-*` attributes for state and variant styling:
 
-- `GeckoUIDrawer` - Main container
-- `GeckoUIDrawer__backdrop` - Background overlay
-- `GeckoUIDrawer__backdrop--visible` - Visible backdrop state
-- `GeckoUIDrawer__backdrop--hidden` - Hidden backdrop state
-- `GeckoUIDrawer__backdrop--clickthrough` - Clickable backdrop
-- `GeckoUIDrawer__drawer` - Drawer panel
-- `GeckoUIDrawer__drawer--{placement}` - Placement modifier
-- `GeckoUIDrawer__drawer--open` - Open state
-- `GeckoUIDrawer__drawer--closed` - Closed state
+**Backdrop** (`GeckoUIDrawer__backdrop`):
+- `data-state="visible" | "hidden"` — Backdrop visibility
+- `data-clickthrough` — Present when click-through is enabled
+
+**Drawer panel** (`GeckoUIDrawer__drawer`):
+- `data-placement="right" | "left" | "top" | "bottom"` — Slide direction
+- `data-state="open" | "closed"` — Open/closed state
+
+```css
+/* Example: custom right-side drawer when open */
+.GeckoUIDrawer__drawer[data-placement="right"][data-state="open"] {
+  /* your styles */
+}
+```
 
 ## Accessibility
 

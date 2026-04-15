@@ -19,7 +19,7 @@
     @include button-reset;
     @include focus-outline;
 
-    @apply flex items-center justify-center border-border-secondary bg-surface-primary;
+    @apply border-border-secondary bg-surface-primary flex items-center justify-center;
     @apply enabled:hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50;
 
     &--decrement {
@@ -45,7 +45,7 @@
     @apply border-y;
 
     &:disabled {
-      @apply cursor-not-allowed bg-surface-disabled;
+      @apply bg-surface-disabled cursor-not-allowed;
     }
   }
 

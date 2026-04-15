@@ -23,7 +23,7 @@
   &__box {
     @include base-reset;
 
-    @apply h-4 w-4 cursor-pointer rounded border border-border-primary;
+    @apply border-border-primary h-4 w-4 cursor-pointer rounded border;
 
     &:hover,
     &:has(:hover) {
@@ -32,7 +32,7 @@
   }
 
   &:has(:disabled) &__box {
-    @apply cursor-not-allowed border-border-disabled bg-surface-disabled;
+    @apply border-border-disabled bg-surface-disabled cursor-not-allowed;
   }
 
   &:has(:checked) &__box {
@@ -44,7 +44,7 @@
   }
 
   &__icon {
-    @apply pointer-events-none absolute inset-0 z-[1] m-auto hidden stroke-[5px] text-text-on-primary;
+    @apply text-text-on-primary pointer-events-none absolute inset-0 z-[1] m-auto hidden stroke-[5px];
   }
 
   &:has(:checked) &__icon {

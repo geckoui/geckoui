@@ -3,10 +3,10 @@
 .GeckoUIDateInput {
   @include base-reset;
 
-  @apply relative flex min-h-10 items-center gap-3 rounded-md border border-border-secondary px-3;
+  @apply border-border-secondary relative flex min-h-10 items-center gap-3 rounded-md border px-3;
 
   &--disabled {
-    @apply cursor-not-allowed bg-surface-disabled text-text-disabled;
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
 
     .GeckoUIDateInput__segment {
       @apply cursor-not-allowed;
@@ -54,7 +54,7 @@
   }
 
   &__placeholder {
-    @apply line-clamp-1 flex-1 text-sm text-text-placeholder;
+    @apply text-text-placeholder line-clamp-1 flex-1 text-sm;
   }
 
   &--enabled:focus-within &__placeholder {
@@ -62,7 +62,7 @@
   }
 
   &__hidden-input {
-    @apply pointer-events-none absolute left-0 top-0 -z-10 h-full w-full border-none bg-transparent opacity-0 outline-none;
+    @apply pointer-events-none absolute top-0 left-0 -z-10 h-full w-full border-none bg-transparent opacity-0 outline-none;
   }
 
   &__display-container {
@@ -86,7 +86,7 @@
   }
 
   &__separator {
-    @apply select-none text-text-muted;
+    @apply text-text-muted select-none;
   }
 
   &--disabled &__separator {
@@ -128,6 +128,6 @@
   }
 
   &__calendar {
-    @apply z-10 bg-surface-primary;
+    @apply bg-surface-primary z-10;
   }
 }

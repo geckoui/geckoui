@@ -4,5 +4,5 @@
   @include form-reset;
   @include focus-outline;
 
-  @apply w-full rounded-md border border-border-secondary px-3 py-1.5 text-sm placeholder:text-sm placeholder:font-normal placeholder:leading-5 placeholder:text-text-placeholder focus:outline-none focus:ring-0 focus:ring-offset-0 enabled:hover:border-primary-300 enabled:focus:border-primary-300 disabled:cursor-not-allowed disabled:bg-surface-disabled disabled:text-text-disabled;
+  @apply border-border-secondary placeholder:text-text-placeholder enabled:hover:border-primary-300 enabled:focus:border-primary-300 disabled:bg-surface-disabled disabled:text-text-disabled w-full rounded-md border px-3 py-1.5 text-sm placeholder:text-sm placeholder:leading-5 placeholder:font-normal focus:ring-0 focus:ring-offset-0 focus:outline-none disabled:cursor-not-allowed;
 }

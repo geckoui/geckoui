@@ -2,7 +2,7 @@
 
 .GeckoUIDropdown {
   &__button {
-    @apply flex flex-row items-center justify-center gap-2 rounded-md border border-border-secondary px-3 py-1.5 text-xs text-text-secondary enabled:hover:bg-surface-hover disabled:cursor-not-allowed disabled:bg-surface-hover disabled:text-text-disabled;
+    @apply border-border-secondary text-text-secondary enabled:hover:bg-surface-hover disabled:bg-surface-hover disabled:text-text-disabled flex flex-row items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs disabled:cursor-not-allowed;
 
     &--icon {
       @apply p-0;
@@ -12,7 +12,7 @@
   &__icon {
     @include icon;
 
-    @apply h-2.5 w-2.5 bg-text-secondary;
+    @apply bg-text-secondary h-2.5 w-2.5;
 
     mask-image: url('data:image/svg+xml,<svg width="10" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.230169 0.363673C0.528748 0.076578 1.00353 0.0858874 1.29063 0.384466L5 4.32222L8.70938 0.384466C8.99647 0.0858875 9.47125 0.076578 9.76983 0.363673C10.0684 0.650768 10.0777 1.12555 9.79063 1.42413L5.54063 5.92413C5.39922 6.07119 5.20401 6.1543 5 6.1543C4.79599 6.1543 4.60078 6.07119 4.45938 5.92413L0.209376 1.42413C-0.0777189 1.12555 -0.0684095 0.650768 0.230169 0.363673Z" fill="currentColor"/></svg>');
     -webkit-mask-image: url('data:image/svg+xml,<svg width="10" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.230169 0.363673C0.528748 0.076578 1.00353 0.0858874 1.29063 0.384466L5 4.32222L8.70938 0.384466C8.99647 0.0858875 9.47125 0.076578 9.76983 0.363673C10.0684 0.650768 10.0777 1.12555 9.79063 1.42413L5.54063 5.92413C5.39922 6.07119 5.20401 6.1543 5 6.1543C4.79599 6.1543 4.60078 6.07119 4.45938 5.92413L0.209376 1.42413C-0.0777189 1.12555 -0.0684095 0.650768 0.230169 0.363673Z" fill="currentColor"/></svg>');
@@ -34,6 +34,6 @@
   &__menu-item {
     @include button-reset;
 
-    @apply w-full px-3 py-1.5 text-left text-sm text-text-secondary hover:bg-surface-hover-strong disabled:cursor-not-allowed disabled:text-text-disabled;
+    @apply text-text-secondary hover:bg-surface-hover-strong disabled:text-text-disabled w-full px-3 py-1.5 text-left text-sm disabled:cursor-not-allowed;
   }
 }

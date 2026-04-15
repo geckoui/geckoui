@@ -8,7 +8,7 @@
   &__arrow {
     @include button-reset;
 
-    @apply relative flex h-10 items-center justify-center p-4 text-sm font-medium text-text-muted;
+    @apply text-text-muted relative flex h-10 items-center justify-center p-4 text-sm font-medium;
 
     &:disabled {
       @apply cursor-not-allowed;
@@ -17,7 +17,7 @@
     &__icon {
       @include icon;
 
-      @apply h-5 w-5 bg-text-muted;
+      @apply bg-text-muted h-5 w-5;
 
       &--previous {
         mask-image: url('data:image/svg+xml,<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.2906 6.18134C13.5777 6.47992 13.5684 6.9547 13.2698 7.2418L9.33208 10.9512L13.2698 14.6605C13.5684 14.9476 13.5777 15.4224 13.2906 15.721C13.0035 16.0196 12.5287 16.0289 12.2302 15.7418L7.73017 11.4918C7.58311 11.3504 7.5 11.1552 7.5 10.9512C7.5 10.7472 7.58311 10.552 7.73017 10.4105L12.2302 6.16055C12.5287 5.87345 13.0035 5.88276 13.2906 6.18134Z" fill="%236B7280"/></svg>');
@@ -36,7 +36,7 @@
   }
 
   &__page-count {
-    @apply flex flex-row items-center justify-center gap-x-1 p-4 text-sm font-medium text-text-muted sm:hidden;
+    @apply text-text-muted flex flex-row items-center justify-center gap-x-1 p-4 text-sm font-medium sm:hidden;
   }
 
   &__page-buttons {
@@ -46,7 +46,7 @@
   &__page-button {
     @include button-reset;
 
-    @apply relative flex h-10 items-center justify-center p-4 text-sm font-medium text-text-muted;
+    @apply text-text-muted relative flex h-10 items-center justify-center p-4 text-sm font-medium;
 
     &:hover {
       @apply text-text-primary;
@@ -61,7 +61,7 @@
     }
 
     &--ellipsis {
-      @apply cursor-default text-text-disabled;
+      @apply text-text-disabled cursor-default;
     }
   }
 }

@@ -16,15 +16,15 @@
   }
 
   &__upload-area {
-    @apply relative flex min-h-[160px] flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border-secondary bg-surface-secondary p-6 transition-colors duration-200;
+    @apply border-border-secondary bg-surface-secondary relative flex min-h-[160px] flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-6 transition-colors duration-200;
   }
 
   &__upload-icon {
-    @apply h-10 w-10 text-text-muted;
+    @apply text-text-muted h-10 w-10;
   }
 
   &__upload-text {
-    @apply text-center text-sm text-text-muted;
+    @apply text-text-muted text-center text-sm;
   }
 
   &__upload-buttons {
@@ -34,23 +34,23 @@
   &__browse-button {
     @include button-reset;
 
-    @apply rounded-md border border-border-secondary bg-surface-primary px-4 py-2 text-sm font-medium text-text-primary shadow-sm transition-colors duration-200;
+    @apply border-border-secondary bg-surface-primary text-text-primary rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors duration-200;
 
     &:hover {
       @apply bg-surface-tertiary;
     }
 
     &:focus-visible {
-      @apply outline-none ring-2 ring-primary-400 ring-offset-2;
+      @apply ring-primary-400 ring-2 ring-offset-2 outline-none;
     }
   }
 
   &__file-list {
-    @apply flex max-h-[200px] flex-col overflow-y-auto rounded-lg border border-border-secondary;
+    @apply border-border-secondary flex max-h-[200px] flex-col overflow-y-auto rounded-lg border;
   }
 
   &__file-row {
-    @apply flex items-center gap-3 border-b border-border-secondary px-4 py-3 last:border-b-0;
+    @apply border-border-secondary flex items-center gap-3 border-b px-4 py-3 last:border-b-0;
 
     &:hover {
       @apply bg-surface-secondary;
@@ -58,24 +58,24 @@
   }
 
   &__file-name {
-    @apply flex-1 truncate text-sm text-text-primary;
+    @apply text-text-primary flex-1 truncate text-sm;
   }
 
   &__file-size {
-    @apply shrink-0 text-xs text-text-muted;
+    @apply text-text-muted shrink-0 text-xs;
   }
 
   &__file-remove {
     @include button-reset;
 
-    @apply shrink-0 rounded p-1 text-text-muted transition-colors duration-200;
+    @apply text-text-muted shrink-0 rounded p-1 transition-colors duration-200;
 
     &:hover {
       @apply bg-red-100 text-red-600;
     }
 
     &:focus-visible {
-      @apply outline-none ring-2 ring-red-400;
+      @apply ring-2 ring-red-400 outline-none;
     }
   }
 
@@ -84,6 +84,6 @@
   }
 
   &__loading-overlay {
-    @apply pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg bg-surface-primary/50;
+    @apply bg-surface-primary/50 pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg;
   }
 }

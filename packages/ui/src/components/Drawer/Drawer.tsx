@@ -4,36 +4,8 @@ import { type Root, createRoot } from "react-dom/client";
 
 import { useClickOutside, useEscListener } from "../../hooks";
 import { classNames } from "../../utils/classNames";
-import type { DrawerPlacementMap, DrawerProps } from "./Drawer.types";
+import type { DrawerProps } from "./Drawer.types";
 import { DRAWER_CONTAINER_ID } from "./DrawerContainer";
-
-/**
- * Helper function to get drawer classes based on placement and open state
- * This handles the compound variant logic for different placement and state combinations
- */
-function getDrawerClasses(
-  placement: keyof DrawerPlacementMap,
-  open: boolean,
-  className?: string
-): string {
-  const baseClass = "GeckoUIDrawer__drawer";
-  const placementClass = `${baseClass}--${placement}`;
-  const stateClass = open ? `${baseClass}--open` : `${baseClass}--closed`;
-
-  // Compound variants for placement + open combinations
-  let compoundClass = "";
-  if (open) {
-    if (placement === "right" || placement === "left") {
-      compoundClass = `${baseClass}--right-open ${baseClass}--left-open`;
-    } else if (placement === "top" || placement === "bottom") {
-      compoundClass = `${baseClass}--top-open ${baseClass}--bottom-open`;
-    }
-  } else {
-    compoundClass = `${baseClass}--${placement}-closed`;
-  }
-
-  return classNames(baseClass, placementClass, stateClass, compoundClass, className);
-}
 
 /**
  * Drawer is a slide-out panel component that displays auxiliary content from any edge of the viewport.
@@ -176,18 +148,19 @@ function Drawer({
   return (
     <div className="GeckoUIDrawer" ref={drawerRootRef} role="dialog">
       <div
-        className={classNames(
-          "GeckoUIDrawer__backdrop",
-          open ? "GeckoUIDrawer__backdrop--visible" : "GeckoUIDrawer__backdrop--hidden",
-          hideBackdrop && "GeckoUIDrawer__backdrop--hidden",
-          allowClickOutside && "GeckoUIDrawer__backdrop--clickthrough",
-          backdropClassName
-        )}
+        data-state={open && !hideBackdrop ? "visible" : "hidden"}
+        data-clickthrough={allowClickOutside || undefined}
+        className={classNames("GeckoUIDrawer__backdrop", backdropClassName)}
         onClick={handleDismiss}
         onKeyDown={handleDismiss}
         role="presentation"
       />
-      <div className={getDrawerClasses(placement, open, className)}>{children}</div>
+      <div
+        data-placement={placement}
+        data-state={open ? "open" : "closed"}
+        className={classNames("GeckoUIDrawer__drawer", className)}>
+        {children}
+      </div>
     </div>
   );
 }

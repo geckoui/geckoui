@@ -7,7 +7,7 @@
     &__button {
       @include button-reset;
 
-      @apply w-full rounded-md p-5 hover:bg-surface-hover-strong;
+      @apply hover:bg-surface-hover-strong w-full rounded-md p-5;
 
       &--selected {
         @apply bg-surface-hover-strong;

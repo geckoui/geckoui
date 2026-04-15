@@ -11,7 +11,7 @@
     &__button {
       @include button-reset;
 
-      @apply relative flex aspect-square size-full cursor-pointer items-center justify-center place-self-center rounded-md hover:bg-surface-hover-strong disabled:cursor-not-allowed;
+      @apply hover:bg-surface-hover-strong relative flex aspect-square size-full cursor-pointer items-center justify-center place-self-center rounded-md disabled:cursor-not-allowed;
 
       &--today {
         @apply text-primary-600;
@@ -30,11 +30,11 @@
       }
 
       &--hover-preview {
-        @apply rounded-none bg-primary-100;
+        @apply bg-primary-100 rounded-none;
       }
 
       &--in-range {
-        @apply relative rounded-none bg-primary-700 hover:bg-primary-600;
+        @apply bg-primary-700 hover:bg-primary-600 relative rounded-none;
       }
 
       &--range-start,

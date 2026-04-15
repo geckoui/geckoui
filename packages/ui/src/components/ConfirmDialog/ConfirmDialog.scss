@@ -4,11 +4,11 @@
   }
 
   &__title {
-    @apply text-base font-semibold leading-none text-text-primary;
+    @apply text-text-primary text-base leading-none font-semibold;
   }
 
   &__content {
-    @apply mb-1 py-4 text-sm font-normal text-text-muted;
+    @apply text-text-muted mb-1 py-4 text-sm font-normal;
   }
 
   &__actions {

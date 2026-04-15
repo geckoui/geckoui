@@ -1,6 +1,6 @@
 .GeckoUIRHFCurrencyInput {
   &__currency-symbol,
   &__currency-code {
-    @apply text-sm font-normal text-text-muted;
+    @apply text-text-muted text-sm font-normal;
   }
 }

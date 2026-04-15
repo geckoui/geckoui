@@ -9,7 +9,7 @@
   @apply transition-colors duration-[120ms] ease-in-out;
 
   &:disabled {
-    @apply cursor-not-allowed border-border-disabled;
+    @apply border-border-disabled cursor-not-allowed;
   }
 
   &:enabled:hover {
