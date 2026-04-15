@@ -5,11 +5,11 @@ description: Customize Gecko UI colors and design tokens using CSS variables
 
 # Theming
 
-Gecko UI uses CSS custom properties (variables) for theming. All color values use RGB format without the `rgb()` wrapper, allowing for easy opacity adjustments.
+Gecko UI uses CSS custom properties (variables) for theming with [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch) color values. You can override theme colors using any valid CSS color format — `oklch()`, `hex`, `rgb()`, `hsl()`, or any other format you prefer.
 
 ## CSS Variables
 
-The library uses a comprehensive set of CSS variables organized into categories:
+Theme colors are defined as `--color-*` CSS custom properties. These are standard [Tailwind CSS v4 theme variables](https://tailwindcss.com/docs/theme) and work seamlessly with Tailwind's opacity modifier syntax (e.g., `bg-primary-600/50`).
 
 ### Primary Colors
 
@@ -17,17 +17,17 @@ Primary color scale from 50 (lightest) to 950 (darkest):
 
 ```css
 :root {
-  --gecko-ui-primary-50: 255 248 235;
-  --gecko-ui-primary-100: 255 235 204;
-  --gecko-ui-primary-200: 255 214 153;
-  --gecko-ui-primary-300: 255 184 96;
-  --gecko-ui-primary-400: 255 149 51;
-  --gecko-ui-primary-500: 255 115 21;   /* Base primary */
-  --gecko-ui-primary-600: 236 93 14;
-  --gecko-ui-primary-700: 200 70 8;
-  --gecko-ui-primary-800: 150 48 5;
-  --gecko-ui-primary-900: 110 35 3;
-  --gecko-ui-primary-950: 72 24 1;
+  --color-primary-50: oklch(0.9705 0.0142 254.6);
+  --color-primary-100: oklch(0.9319 0.0316 255.59);
+  --color-primary-200: oklch(0.8823 0.0571 254.13);
+  --color-primary-300: oklch(0.8091 0.0956 251.81);
+  --color-primary-400: oklch(0.7137 0.1434 254.62);
+  --color-primary-500: oklch(0.6231 0.188 259.81);
+  --color-primary-600: oklch(0.5461 0.2152 262.88);
+  --color-primary-700: oklch(0.4882 0.2172 264.38);
+  --color-primary-800: oklch(0.4244 0.1809 265.64);
+  --color-primary-900: oklch(0.3791 0.1378 265.52);
+  --color-primary-950: oklch(0.2823 0.0874 267.94);
 }
 ```
 
@@ -37,15 +37,16 @@ Background colors for various UI surfaces:
 
 ```css
 :root {
-  --gecko-ui-surface-primary: 255 255 255;        /* Main background */
-  --gecko-ui-surface-secondary: 250 250 250;      /* Secondary background */
-  --gecko-ui-surface-tertiary: 245 245 245;       /* Tertiary background */
-  --gecko-ui-surface-hover: 245 245 245;          /* Hover state */
-  --gecko-ui-surface-hover-strong: 235 235 235;   /* Strong hover state */
-  --gecko-ui-surface-active: 212 212 212;         /* Active/pressed state */
-  --gecko-ui-surface-disabled: 235 235 235;       /* Disabled state */
-  --gecko-ui-surface-overlay: 0 0 0;              /* Backdrop overlay */
-  --gecko-ui-surface-autofill: 245 245 245;       /* Browser autofill */
+  --color-surface-primary: oklch(1 0 none);           /* Main background */
+  --color-surface-secondary: oklch(0.9851 0 none);    /* Secondary background */
+  --color-surface-tertiary: oklch(0.9702 0 none);     /* Tertiary background */
+  --color-surface-hover: oklch(0.9702 0 none);        /* Hover state */
+  --color-surface-hover-strong: oklch(0.9401 0 none); /* Strong hover state */
+  --color-surface-active: oklch(0.8699 0 none);       /* Active/pressed state */
+  --color-surface-disabled: oklch(0.9401 0 none);     /* Disabled state */
+  --color-surface-overlay: oklch(0 0 none);            /* Backdrop overlay */
+  --color-surface-autofill: oklch(0.9702 0 none);     /* Browser autofill */
+  --color-surface-emphasis: oklch(0.4461 0.0263 256.8);
 }
 ```
 
@@ -55,13 +56,14 @@ Text colors for different hierarchy levels:
 
 ```css
 :root {
-  --gecko-ui-text-primary: 23 23 23;         /* Primary text */
-  --gecko-ui-text-secondary: 64 64 64;       /* Secondary text */
-  --gecko-ui-text-tertiary: 115 115 115;     /* Tertiary text */
-  --gecko-ui-text-disabled: 163 163 163;     /* Disabled text */
-  --gecko-ui-text-placeholder: 163 163 163;  /* Placeholder text */
-  --gecko-ui-text-inverse: 250 250 250;      /* Inverse text (on dark) */
-  --gecko-ui-text-muted: 115 115 115;        /* Muted text */
+  --color-text-primary: oklch(0.2046 0 none);      /* Primary text */
+  --color-text-secondary: oklch(0.3715 0 none);    /* Secondary text */
+  --color-text-tertiary: oklch(0.5555 0 none);     /* Tertiary text */
+  --color-text-disabled: oklch(0.7155 0 none);     /* Disabled text */
+  --color-text-placeholder: oklch(0.7155 0 none);  /* Placeholder text */
+  --color-text-inverse: oklch(0.9851 0 none);      /* Inverse text (on dark) */
+  --color-text-muted: oklch(0.5555 0 none);        /* Muted text */
+  --color-text-on-primary: oklch(1 0 none);        /* Text on primary color */
 }
 ```
 
@@ -71,23 +73,23 @@ Border colors for various states:
 
 ```css
 :root {
-  --gecko-ui-border-primary: 235 235 235;    /* Default border */
-  --gecko-ui-border-secondary: 212 212 212;  /* Secondary border */
-  --gecko-ui-border-focus: 163 163 163;      /* Focus state */
-  --gecko-ui-border-hover: 212 212 212;      /* Hover state */
-  --gecko-ui-border-disabled: 235 235 235;   /* Disabled state */
+  --color-border-primary: oklch(0.9401 0 none);   /* Default border */
+  --color-border-secondary: oklch(0.8699 0 none); /* Secondary border */
+  --color-border-focus: oklch(0.7155 0 none);     /* Focus state */
+  --color-border-hover: oklch(0.8699 0 none);     /* Hover state */
+  --color-border-disabled: oklch(0.9401 0 none);  /* Disabled state */
 }
 ```
 
 ### Scrollbar Colors
 
-Custom scrollbar styling:
+Custom scrollbar styling (these use the `--gecko-ui-` prefix as they are not Tailwind utilities):
 
 ```css
 :root {
-  --gecko-ui-scrollbar-track: 0 0 0 / 0;          /* Scrollbar track (transparent) */
-  --gecko-ui-scrollbar-thumb: 209 213 219;        /* Scrollbar thumb */
-  --gecko-ui-scrollbar-thumb-hover: 156 163 175;  /* Scrollbar thumb on hover */
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.8717 0.0093 258.34);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.7137 0.0192 261.32);
 }
 ```
 
@@ -97,40 +99,34 @@ Gecko UI includes built-in dark mode support. Apply the `.dark` class to enable 
 
 ```css
 .dark {
-  /* Primary colors remain the same */
-  --gecko-ui-primary-500: 255 115 21;
+  --color-surface-primary: oklch(0.2046 0 none);
+  --color-surface-secondary: oklch(0.2435 0 none);
+  --color-surface-tertiary: oklch(0.2972 0 none);
+  --color-surface-hover: oklch(0.2972 0 none);
+  --color-surface-hover-strong: oklch(0.3715 0 none);
+  --color-surface-active: oklch(0.5555 0 none);
+  --color-surface-disabled: oklch(0.2972 0 none);
+  --color-surface-overlay: oklch(0 0 none);
+  --color-surface-autofill: oklch(0.2435 0 none);
+  --color-surface-emphasis: oklch(0.7748 0.0054 247.89);
 
-  /* Surface colors inverted */
-  --gecko-ui-surface-primary: 23 23 23;
-  --gecko-ui-surface-secondary: 32 32 32;
-  --gecko-ui-surface-tertiary: 45 45 45;
-  --gecko-ui-surface-hover: 45 45 45;
-  --gecko-ui-surface-hover-strong: 64 64 64;
-  --gecko-ui-surface-active: 115 115 115;
-  --gecko-ui-surface-disabled: 45 45 45;
-  --gecko-ui-surface-overlay: 0 0 0;
-  --gecko-ui-surface-autofill: 32 32 32;
+  --color-text-primary: oklch(0.9851 0 none);
+  --color-text-secondary: oklch(0.8699 0 none);
+  --color-text-tertiary: oklch(0.7155 0 none);
+  --color-text-disabled: oklch(0.5555 0 none);
+  --color-text-placeholder: oklch(0.5555 0 none);
+  --color-text-inverse: oklch(0.2046 0 none);
+  --color-text-muted: oklch(0.7155 0 none);
 
-  /* Text colors inverted */
-  --gecko-ui-text-primary: 250 250 250;
-  --gecko-ui-text-secondary: 212 212 212;
-  --gecko-ui-text-tertiary: 163 163 163;
-  --gecko-ui-text-disabled: 115 115 115;
-  --gecko-ui-text-placeholder: 115 115 115;
-  --gecko-ui-text-inverse: 23 23 23;
-  --gecko-ui-text-muted: 163 163 163;
+  --color-border-primary: oklch(0.4676 0 none);
+  --color-border-secondary: oklch(0.4676 0 none);
+  --color-border-focus: oklch(0.5555 0 none);
+  --color-border-hover: oklch(0.7155 0 none);
+  --color-border-disabled: oklch(0.2972 0 none);
 
-  /* Borders with opacity for dark mode */
-  --gecko-ui-border-primary: 255 255 255 / 0.1;
-  --gecko-ui-border-secondary: 255 255 255 / 0.15;
-  --gecko-ui-border-focus: 115 115 115;
-  --gecko-ui-border-hover: 163 163 163;
-  --gecko-ui-border-disabled: 255 255 255 / 0.1;
-
-  /* Scrollbar colors for dark mode */
-  --gecko-ui-scrollbar-track: 0 0 0 / 0;
-  --gecko-ui-scrollbar-thumb: 75 85 99;
-  --gecko-ui-scrollbar-thumb-hover: 107 114 128;
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.551 0.0234 264.36);
 }
 ```
 
@@ -165,8 +161,7 @@ import { useEffect, useState } from 'react';
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  useEffect(() => {
-    // Apply theme to html element
+  useEffect(() {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
@@ -178,22 +173,31 @@ export function ThemeProvider({ children }) {
 
 ### Changing Primary Color
 
-Override the primary color scale to match your brand:
+Override the primary color scale to match your brand. You can use **any CSS color format**:
 
 ```css
 :root {
-  /* Blue primary color */
-  --gecko-ui-primary-50: 239 246 255;
-  --gecko-ui-primary-100: 219 234 254;
-  --gecko-ui-primary-200: 191 219 254;
-  --gecko-ui-primary-300: 147 197 253;
-  --gecko-ui-primary-400: 96 165 250;
-  --gecko-ui-primary-500: 59 130 246;   /* Base primary */
-  --gecko-ui-primary-600: 37 99 235;
-  --gecko-ui-primary-700: 29 78 216;
-  --gecko-ui-primary-800: 30 64 175;
-  --gecko-ui-primary-900: 30 58 138;
-  --gecko-ui-primary-950: 23 37 84;
+  /* Using oklch */
+  --color-primary-50: oklch(0.98 0.02 330);
+  --color-primary-100: oklch(0.95 0.04 330);
+  --color-primary-200: oklch(0.90 0.08 330);
+  --color-primary-300: oklch(0.82 0.14 330);
+  --color-primary-400: oklch(0.72 0.19 330);
+  --color-primary-500: oklch(0.65 0.24 330);
+  --color-primary-600: oklch(0.55 0.22 330);
+  --color-primary-700: oklch(0.48 0.19 330);
+  --color-primary-800: oklch(0.40 0.16 330);
+  --color-primary-900: oklch(0.35 0.12 330);
+  --color-primary-950: oklch(0.25 0.08 330);
+}
+```
+
+```css
+:root {
+  /* Using hex — works too! */
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
 }
 ```
 
@@ -204,31 +208,32 @@ Override individual tokens:
 ```css
 :root {
   /* Make borders more prominent */
-  --gecko-ui-border-primary: 200 200 200;
+  --color-border-primary: oklch(0.8 0 none);
 
   /* Adjust text hierarchy */
-  --gecko-ui-text-secondary: 80 80 80;
+  --color-text-secondary: oklch(0.4 0 none);
 
   /* Custom hover states */
-  --gecko-ui-surface-hover: 240 240 240;
+  --color-surface-hover: oklch(0.95 0 none);
 }
 ```
 
-## Using RGB Values
+## Using Color Variables in Custom CSS
 
-All colors use RGB format (space-separated values) to enable easy opacity adjustments:
+Since variables contain full color values, use them directly with `var()`:
 
 ```css
-/* Use with rgb() */
-color: rgb(var(--gecko-ui-text-primary));
+/* Direct usage */
+color: var(--color-text-primary);
+background: var(--color-surface-primary);
 
-/* Use with opacity */
-color: rgb(var(--gecko-ui-text-primary) / 0.5);
-background: rgb(var(--gecko-ui-surface-primary) / 0.8);
+/* With opacity using color-mix() */
+color: color-mix(in oklch, var(--color-text-primary) 50%, transparent);
+background: color-mix(in oklch, var(--color-surface-primary) 80%, transparent);
 
-/* Use in Tailwind arbitrary values */
-className="text-[rgb(var(--gecko-ui-text-primary))]"
-className="bg-[rgb(var(--gecko-ui-surface-hover)/0.5)]"
+/* In Tailwind arbitrary values */
+className="text-[var(--color-text-primary)]"
+className="bg-[var(--color-surface-hover)]"
 ```
 
 ## Component-Specific Styling
@@ -238,7 +243,7 @@ Components use their own class names for targeted styling:
 ```css
 /* Style all inputs */
 .GeckoUIInput {
-  --gecko-ui-border-primary: 180 180 180;
+  --color-border-primary: oklch(0.75 0 none);
 }
 
 /* Style all buttons */
@@ -310,7 +315,7 @@ You can also use icons from external libraries by converting them to data URLs:
 
 ## Best Practices
 
-1. **Use RGB Format**: All custom colors should use RGB values (e.g., `255 255 255`) for opacity support
+1. **Use Any Color Format**: Override with `oklch()`, `hex`, `rgb()`, `hsl()` — whatever you prefer
 2. **Maintain Consistency**: Keep color scales consistent with 50-950 range
 3. **Test Contrast**: Ensure text colors meet WCAG contrast requirements
 4. **Dark Mode Parity**: When customizing light mode, also update dark mode tokens
@@ -322,27 +327,17 @@ You can also use icons from external libraries by converting them to data URLs:
 /* custom-theme.css */
 :root {
   /* Brand primary color (Purple) */
-  --gecko-ui-primary-50: 250 245 255;
-  --gecko-ui-primary-100: 243 232 255;
-  --gecko-ui-primary-200: 233 213 255;
-  --gecko-ui-primary-300: 216 180 254;
-  --gecko-ui-primary-400: 192 132 252;
-  --gecko-ui-primary-500: 168 85 247;   /* Base */
-  --gecko-ui-primary-600: 147 51 234;
-  --gecko-ui-primary-700: 126 34 206;
-  --gecko-ui-primary-800: 107 33 168;
-  --gecko-ui-primary-900: 88 28 135;
-  --gecko-ui-primary-950: 59 7 100;
-
-  /* Custom border radius */
-  --gecko-ui-border-radius: 0.75rem;
-}
-
-/* Apply to components */
-.GeckoUIInput,
-.GeckoUITextarea,
-.GeckoUIButton {
-  border-radius: var(--gecko-ui-border-radius);
+  --color-primary-50: oklch(0.98 0.02 300);
+  --color-primary-100: oklch(0.95 0.05 300);
+  --color-primary-200: oklch(0.90 0.09 300);
+  --color-primary-300: oklch(0.84 0.14 300);
+  --color-primary-400: oklch(0.74 0.19 300);
+  --color-primary-500: oklch(0.65 0.24 300);
+  --color-primary-600: oklch(0.56 0.23 300);
+  --color-primary-700: oklch(0.49 0.20 300);
+  --color-primary-800: oklch(0.42 0.17 300);
+  --color-primary-900: oklch(0.36 0.13 300);
+  --color-primary-950: oklch(0.26 0.08 300);
 }
 ```
 

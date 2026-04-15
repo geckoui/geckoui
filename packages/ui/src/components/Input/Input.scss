@@ -6,7 +6,7 @@
   @apply relative flex min-h-10 w-full items-center gap-2 rounded-md border border-border-secondary px-3;
 
   &:has(input:-webkit-autofill) {
-    background: rgb(var(--gecko-ui-surface-autofill)) !important;
+    background: var(--color-surface-autofill) !important;
   }
 
   &--disabled {
@@ -28,6 +28,6 @@
   &__input {
     @include form-reset;
 
-    @apply w-full flex-1 self-stretch bg-transparent text-base outline-none placeholder:text-sm placeholder:text-text-placeholder disabled:cursor-not-allowed;
+    @apply w-full flex-1 self-stretch bg-transparent text-sm outline-none placeholder:text-sm placeholder:text-text-placeholder disabled:cursor-not-allowed;
   }
 }

@@ -40,12 +40,17 @@
 }
 
 @mixin focus-outline {
-  @apply outline-2 outline-offset-2 outline-primary-300;
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-300);
+    outline-offset: 2px;
+  }
 }
 
 @mixin scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgb(var(--gecko-ui-scrollbar-thumb)) transparent;
+  scrollbar-color: var(--gecko-ui-scrollbar-thumb) transparent;
   scrollbar-gutter: auto;
 
   -webkit-scrollbar {
@@ -57,10 +62,10 @@
   }
 
   -webkit-scrollbar-thumb {
-    background: rgb(var(--gecko-ui-scrollbar-thumb));
+    background: var(--gecko-ui-scrollbar-thumb);
   }
 
   -webkit-scrollbar-thumb:hover {
-    background: rgb(var(--gecko-ui-scrollbar-thumb-hover));
+    background: var(--gecko-ui-scrollbar-thumb-hover);
   }
 }

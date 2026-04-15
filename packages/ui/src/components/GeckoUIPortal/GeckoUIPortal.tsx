@@ -14,9 +14,9 @@ const GeckoUIPortal: FC<GeckoUIPortalProps> = ({ toastOptions = {} }) => {
         position="bottom-right"
         style={
           {
-            "--normal-bg": "rgb(var(--gecko-ui-surface-primary))",
-            "--normal-text": "rgb(var(--gecko-ui-text-primary))",
-            "--normal-border": "rgb(var(--gecko-ui-border-primary))",
+            "--normal-bg": "var(--color-surface-primary)",
+            "--normal-text": "var(--color-text-primary)",
+            "--normal-border": "var(--color-border-primary)",
             ...style
           } as React.CSSProperties
         }

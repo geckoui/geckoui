@@ -10,7 +10,7 @@
     }
 
     &--visible {
-      @apply bg-surface-overlay/25 bg-opacity-75 opacity-100;
+      @apply bg-surface-overlay/75 opacity-100;
     }
 
     &--hidden {

@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
   Button,
@@ -41,6 +40,7 @@ import {
   toast
 } from "@geckoui/geckoui";
 import "@geckoui/geckoui/styles.css";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Fragment, useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";

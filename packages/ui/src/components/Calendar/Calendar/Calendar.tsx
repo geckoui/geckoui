@@ -257,8 +257,8 @@ const Calendar = (props: CalendarProps) => {
         `GeckoUICalendar--mode-${view}`,
         `GeckoUICalendar--selection-${mode}`,
         mode === "range" &&
-        view === CalendarType.Day &&
-        `GeckoUICalendar--calendars-${numberOfMonths}`,
+          view === CalendarType.Day &&
+          `GeckoUICalendar--calendars-${numberOfMonths}`,
         className
       )}
       style={style}>

@@ -11,8 +11,7 @@ const cssImports = glob
       !f.endsWith("styles.scss") &&
       !f.endsWith("imports.scss") &&
       !f.endsWith("mixins.scss") &&
-      !f.endsWith("tailwind-variables.scss") &&
-      fs.lstatSync(f).isFile() // Ensure it's a file
+      fs.lstatSync(f).isFile()
   )
   .map((f) => {
     const relativePath = path.relative(srcDir, f).replace(/\\/g, "/"); // Replace backslashes on Windows

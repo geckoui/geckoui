@@ -1,7 +1,7 @@
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import type { Node, Root } from "fumadocs-core/page-tree";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
 
 const llmSection: Node[] = [
   { type: "separator", name: "LLM" },

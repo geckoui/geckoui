@@ -74,53 +74,38 @@ function App() {
 
 ## Theming
 
-GeckoUI uses a powerful CSS variable-based theming system that automatically adapts all components when you change the theme class.
+GeckoUI uses [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch) color values with CSS custom properties (`--color-*`) powered by Tailwind CSS v4. You can override colors using **any CSS color format** — oklch, hex, rgb, hsl, etc.
 
-### Applying Themes
+### Dark Mode
 
-Simply add a theme class to your root element:
+Add the `.dark` class to your root element:
 
 ```tsx
-// Light theme (default)
-<div className="light">
-  <App />
-</div>
-
-// Dark theme
 <div className="dark">
   <App />
 </div>
-
-// Custom theme
-<div className="neon">
-  <App />
-</div>
 ```
 
-### Built-in Themes
+### Customizing Colors
 
-- **Light** (default) - Clean, bright interface
-- **Dark** - Easy on the eyes
-
-### Creating Custom Themes
-
-Create a CSS file with your theme:
+Override CSS variables to match your brand:
 
 ```css
-/* my-theme.css */
-.my-theme {
-  /* Override any other CSS variables as needed */
+:root {
+  --color-primary-500: oklch(0.65 0.24 330);
+  --color-primary-600: oklch(0.55 0.22 330);
+
+  /* hex works too */
+  --color-primary-700: #6d28d9;
 }
 ```
 
-Import it and use it:
+Import after the base styles:
 
 ```tsx
-import "./my-theme.css";
+import "@geckoui/geckoui/styles.css";
 
-<div className="my-theme">
-  <App />
-</div>;
+import "./my-theme.css";
 ```
 
 ## Advanced Usage

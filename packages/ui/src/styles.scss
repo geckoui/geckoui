@@ -1,4 +1,3 @@
-@import "./tailwind-variables.scss";
 @import "./mixins.scss";
 @import "./icons.scss";
 @import "./imports.scss";
@@ -8,76 +7,38 @@
 }
 
 :root {
-  --gecko-ui-primary-50: 239 246 255;
-  --gecko-ui-primary-100: 219 234 254;
-  --gecko-ui-primary-200: 191 219 254;
-  --gecko-ui-primary-300: 147 197 253;
-  --gecko-ui-primary-400: 96 165 250;
-  --gecko-ui-primary-500: 59 130 246;
-  --gecko-ui-primary-600: 37 99 235;
-  --gecko-ui-primary-700: 29 78 216;
-  --gecko-ui-primary-800: 30 64 175;
-  --gecko-ui-primary-900: 30 58 138;
-  --gecko-ui-primary-950: 23 37 84;
-
-  --gecko-ui-surface-primary: 255 255 255;
-  --gecko-ui-surface-secondary: 250 250 250;
-  --gecko-ui-surface-tertiary: 245 245 245;
-  --gecko-ui-surface-hover: 245 245 245;
-  --gecko-ui-surface-hover-strong: 235 235 235;
-  --gecko-ui-surface-active: 212 212 212;
-  --gecko-ui-surface-disabled: 235 235 235;
-  --gecko-ui-surface-overlay: 0 0 0;
-  --gecko-ui-surface-autofill: 245 245 245;
-  --gecko-ui-surface-emphasis: 75 85 99;
-
-  --gecko-ui-text-primary: 23 23 23;
-  --gecko-ui-text-secondary: 64 64 64;
-  --gecko-ui-text-tertiary: 115 115 115;
-  --gecko-ui-text-disabled: 163 163 163;
-  --gecko-ui-text-placeholder: 163 163 163;
-  --gecko-ui-text-inverse: 250 250 250;
-  --gecko-ui-text-muted: 115 115 115;
-  --gecko-ui-text-on-primary: 255 255 255;
-
-  --gecko-ui-border-primary: 235 235 235;
-  --gecko-ui-border-secondary: 212 212 212;
-  --gecko-ui-border-focus: 163 163 163;
-  --gecko-ui-border-hover: 212 212 212;
-  --gecko-ui-border-disabled: 235 235 235;
-
-  --gecko-ui-scrollbar-track: 0 0 0;
-  --gecko-ui-scrollbar-thumb: 209 213 219;
-  --gecko-ui-scrollbar-thumb-hover: 156 163 175;
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.8717 0.0093 258.34);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.7137 0.0192 261.32);
 }
 
 .dark {
-  --gecko-ui-surface-primary: 23 23 23;
-  --gecko-ui-surface-secondary: 32 32 32;
-  --gecko-ui-surface-tertiary: 45 45 45;
-  --gecko-ui-surface-hover: 45 45 45;
-  --gecko-ui-surface-hover-strong: 64 64 64;
-  --gecko-ui-surface-active: 115 115 115;
-  --gecko-ui-surface-disabled: 45 45 45;
-  --gecko-ui-surface-overlay: 0 0 0;
-  --gecko-ui-surface-autofill: 32 32 32;
-  --gecko-ui-surface-emphasis: 179 182 185;
+  --color-surface-primary: oklch(0.2046 0 none);
+  --color-surface-secondary: oklch(0.2435 0 none);
+  --color-surface-tertiary: oklch(0.2972 0 none);
+  --color-surface-hover: oklch(0.2972 0 none);
+  --color-surface-hover-strong: oklch(0.3715 0 none);
+  --color-surface-active: oklch(0.5555 0 none);
+  --color-surface-disabled: oklch(0.2972 0 none);
+  --color-surface-overlay: oklch(0 0 none);
+  --color-surface-autofill: oklch(0.2435 0 none);
+  --color-surface-emphasis: oklch(0.7748 0.0054 247.89);
 
-  --gecko-ui-text-primary: 250 250 250;
-  --gecko-ui-text-secondary: 212 212 212;
-  --gecko-ui-text-tertiary: 163 163 163;
-  --gecko-ui-text-disabled: 115 115 115;
-  --gecko-ui-text-placeholder: 115 115 115;
-  --gecko-ui-text-inverse: 23 23 23;
-  --gecko-ui-text-muted: 163 163 163;
+  --color-text-primary: oklch(0.9851 0 none);
+  --color-text-secondary: oklch(0.8699 0 none);
+  --color-text-tertiary: oklch(0.7155 0 none);
+  --color-text-disabled: oklch(0.5555 0 none);
+  --color-text-placeholder: oklch(0.5555 0 none);
+  --color-text-inverse: oklch(0.2046 0 none);
+  --color-text-muted: oklch(0.7155 0 none);
 
-  --gecko-ui-border-primary: 90 90 90;
-  --gecko-ui-border-secondary: 90 90 90;
-  --gecko-ui-border-focus: 115 115 115;
-  --gecko-ui-border-hover: 163 163 163;
-  --gecko-ui-border-disabled: 45 45 45;
+  --color-border-primary: oklch(0.4676 0 none);
+  --color-border-secondary: oklch(0.4676 0 none);
+  --color-border-focus: oklch(0.5555 0 none);
+  --color-border-hover: oklch(0.7155 0 none);
+  --color-border-disabled: oklch(0.2972 0 none);
 
-  --gecko-ui-scrollbar-track: 0 0 0;
-  --gecko-ui-scrollbar-thumb: 75 85 99;
-  --gecko-ui-scrollbar-thumb-hover: 107 114 128;
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.551 0.0234 264.36);
 }

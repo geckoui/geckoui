@@ -25,7 +25,7 @@
     @apply border-primary-600/50;
 
     &:after {
-      box-shadow: inset 1em 1em rgba(var(--gecko-ui-primary-600) / 0.5);
+      box-shadow: inset 1em 1em color-mix(in oklch, var(--color-primary-600) 50%, transparent);
     }
   }
 
@@ -33,11 +33,11 @@
     content: "";
     @apply absolute h-[0.5em] w-[0.5em] rounded-full;
     @apply scale-0 transition-transform duration-[120ms] ease-in-out;
-    box-shadow: inset 1em 1em rgb(var(--gecko-ui-primary-600));
+    box-shadow: inset 1em 1em var(--color-primary-600);
   }
 
   &:checked:after {
     @apply scale-100;
-    box-shadow: inset 1em 1em rgb(var(--gecko-ui-primary-600));
+    box-shadow: inset 1em 1em var(--color-primary-600);
   }
 }

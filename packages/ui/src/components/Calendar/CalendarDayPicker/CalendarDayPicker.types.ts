@@ -3,8 +3,8 @@ import type { CalendarHeaderProps } from "../CalendarHeader";
 
 interface CalendarDayPickerBaseProps
   extends CalendarHeaderProps,
-  CalendarActiveProps,
-  Pick<CalendarProps, "disableDate" | "renderDayCell"> { }
+    CalendarActiveProps,
+    Pick<CalendarProps, "disableDate" | "renderDayCell"> {}
 
 export interface CalendarDayPickerSingleProps extends CalendarDayPickerBaseProps {
   /**
