@@ -52,7 +52,11 @@ body {
   }
 
   .GeckoUISwitch__thumb[data-size="lg"] {
-    @apply w-6 translate-x-0.5 group-data-[checked]:translate-x-7;
+    @apply w-6 translate-x-0.5;
+  }
+
+  .GeckoUISwitch:has(input:checked) .GeckoUISwitch__thumb[data-size="lg"] {
+    @apply translate-x-7;
   }
 
   /* Module Augmentation Examples - Custom Alert Variant */

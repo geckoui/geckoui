@@ -1,10 +1,24 @@
 @import "../../mixins.scss";
 
 .GeckoUISwitch {
-  @include button-reset;
-  @include focus-outline;
+  @apply bg-surface-active relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-200 ease-in-out;
 
-  @apply bg-surface-active data-[checked]:bg-primary-600 relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50;
+  &:has(input:checked) {
+    @apply bg-primary-600;
+  }
+
+  &:has(input:disabled) {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--color-primary-300);
+    outline-offset: 2px;
+  }
+
+  &:has(input:hover) {
+    @apply ring-primary-400 ring-2;
+  }
 
   &[data-size="sm"] {
     @apply h-4 w-7;
@@ -15,18 +29,34 @@
   }
 
   &:hover {
-    @apply ring-primary-400 enabled:ring-2;
+    @apply ring-primary-400 ring-2;
+  }
+
+  &:has(input:disabled):hover {
+    @apply ring-0;
+  }
+
+  &__input {
+    @apply sr-only;
   }
 
   &__thumb {
     @apply bg-surface-primary pointer-events-none inline-block aspect-square transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out;
 
     &[data-size="sm"] {
-      @apply w-3.5 translate-x-0 group-data-[checked]:translate-x-3;
+      @apply w-3.5 translate-x-0;
     }
 
     &[data-size="md"] {
-      @apply w-5 translate-x-0.5 group-data-[checked]:translate-x-5;
+      @apply w-5 translate-x-0.5;
     }
+  }
+
+  &:has(input:checked) &__thumb[data-size="sm"] {
+    @apply translate-x-3;
+  }
+
+  &:has(input:checked) &__thumb[data-size="md"] {
+    @apply translate-x-5;
   }
 }
