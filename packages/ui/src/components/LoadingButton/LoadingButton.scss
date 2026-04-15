@@ -1,5 +1,5 @@
 .GeckoUILoadingButton {
-  &--loading {
+  &[data-loading] {
     @apply gap-2;
   }
 }

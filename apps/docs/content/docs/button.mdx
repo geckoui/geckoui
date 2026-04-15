@@ -258,49 +258,39 @@ declare module "@geckoui/geckoui" {
 
 ### Step 2: Add CSS Styles
 
-Add the corresponding styles to your global CSS/SCSS file. The class naming follows the pattern `GeckoUIButton--{variant}-{color}`:
+Add the corresponding styles to your global CSS file. Target using `data-variant` and `data-color` attribute selectors:
 
-```scss
-.GeckoUIButton {
-  &--filled {
-    &-secondary {
-      @apply bg-gray-600 text-white border-gray-600 enabled:hover:bg-gray-700 enabled:hover:border-gray-700 disabled:bg-gray-600/50 disabled:border-border-disabled;
-    }
+```css
+.GeckoUIButton[data-variant="filled"][data-color="secondary"] {
+  @apply bg-gray-600 text-white border-gray-600 enabled:hover:bg-gray-700 enabled:hover:border-gray-700 disabled:bg-gray-600/50 disabled:border-border-disabled;
+}
 
-    &-danger {
-      @apply bg-red-600 text-white border-red-600 enabled:hover:bg-red-700 enabled:hover:border-red-700 disabled:bg-red-600/50 disabled:border-border-disabled;
-    }
-  }
+.GeckoUIButton[data-variant="filled"][data-color="danger"] {
+  @apply bg-red-600 text-white border-red-600 enabled:hover:bg-red-700 enabled:hover:border-red-700 disabled:bg-red-600/50 disabled:border-border-disabled;
+}
 
-  &--outlined {
-    &-secondary {
-      @apply border-gray-400 text-gray-600 enabled:hover:bg-gray-50 disabled:bg-surface-hover disabled:text-text-disabled;
-    }
+.GeckoUIButton[data-variant="outlined"][data-color="secondary"] {
+  @apply border-gray-400 text-gray-600 enabled:hover:bg-gray-50 disabled:bg-surface-hover disabled:text-text-disabled;
+}
 
-    &-danger {
-      @apply border-red-400 text-red-600 enabled:hover:bg-red-50 disabled:bg-surface-hover disabled:text-text-disabled;
-    }
-  }
+.GeckoUIButton[data-variant="outlined"][data-color="danger"] {
+  @apply border-red-400 text-red-600 enabled:hover:bg-red-50 disabled:bg-surface-hover disabled:text-text-disabled;
+}
 
-  &--ghost {
-    &-secondary {
-      @apply text-gray-600 enabled:hover:bg-gray-50 disabled:text-text-disabled;
-    }
+.GeckoUIButton[data-variant="ghost"][data-color="secondary"] {
+  @apply text-gray-600 enabled:hover:bg-gray-50 disabled:text-text-disabled;
+}
 
-    &-danger {
-      @apply text-red-600 enabled:hover:bg-red-50 disabled:text-text-disabled;
-    }
-  }
+.GeckoUIButton[data-variant="ghost"][data-color="danger"] {
+  @apply text-red-600 enabled:hover:bg-red-50 disabled:text-text-disabled;
+}
 
-  &--icon {
-    &-secondary {
-      @apply text-gray-500 disabled:text-text-disabled;
-    }
+.GeckoUIButton[data-variant="icon"][data-color="secondary"] {
+  @apply text-gray-500 disabled:text-text-disabled;
+}
 
-    &-danger {
-      @apply text-red-500 disabled:text-text-disabled;
-    }
-  }
+.GeckoUIButton[data-variant="icon"][data-color="danger"] {
+  @apply text-red-500 disabled:text-text-disabled;
 }
 ```
 
@@ -324,12 +314,18 @@ You can also extend `ButtonVariantMap` for custom variants or `ButtonSizeMap` fo
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses `data-*` attributes for state and variant styling:
 
-- `GeckoUIButton` - Main button class
-- `GeckoUIButton--{variant}` - Variant modifier (filled, outlined, ghost, icon)
-- `GeckoUIButton--{variant}-{color}` - Combined variant and color
-- `GeckoUIButton--size-{size}` - Size modifier (xs, sm, md, lg, xl)
+- `data-variant` - Variant (filled, outlined, ghost, icon)
+- `data-color` - Color (primary, or custom via module augmentation)
+- `data-size` - Size (xs, sm, md, lg, xl)
+
+Target them in CSS with attribute selectors:
+
+```css
+.GeckoUIButton[data-variant="filled"][data-color="primary"] { }
+.GeckoUIButton[data-size="lg"] { }
+```
 
 ## Default Behavior
 

@@ -80,14 +80,8 @@ const LoadingButton: FC<LoadingButtonProps> = ({
 
   return (
     <Button
-      className={classNames(
-        "GeckoUILoadingButton",
-        `GeckoUILoadingButton--${variant}`,
-        `GeckoUILoadingButton--${variant}-${color}`,
-        `GeckoUILoadingButton--size-${size}`,
-        loading && `GeckoUILoadingButton--loading GeckoUILoadingButton--${variant}-loading`,
-        className
-      )}
+      data-loading={loading || undefined}
+      className={classNames("GeckoUILoadingButton", className)}
       disabled={loading || disabled}
       size={size}
       color={color}

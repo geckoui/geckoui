@@ -110,13 +110,13 @@ import "./my-theme.css";
 
 ## Advanced Usage
 
-### Custom Styling with BEM
+### Custom Styling with Data Attributes
 
-All components use BEM (Block Element Modifier) naming for easy customization:
+Components use `data-*` attributes for variant/state styling:
 
 ```css
-/* Target specific component parts */
-.GeckoUIButton--contained-primary {
+/* Target specific variants */
+.GeckoUIButton[data-variant="filled"][data-color="primary"] {
   /* Your custom styles */
 }
 

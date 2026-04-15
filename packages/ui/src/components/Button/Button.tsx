@@ -42,13 +42,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, className, variant = "filled", size = "md", color = "primary", ...rest }, ref) => {
     return (
       <button
-        className={classNames(
-          "GeckoUIButton",
-          `GeckoUIButton--${variant}`,
-          `GeckoUIButton--${variant}-${color}`,
-          `GeckoUIButton--size-${size}`,
-          className
-        )}
+        data-variant={variant}
+        data-color={color}
+        data-size={size}
+        className={classNames("GeckoUIButton", className)}
         ref={ref}
         type="button"
         {...rest}>

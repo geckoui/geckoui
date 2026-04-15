@@ -14,35 +14,35 @@ body {
   @import "@geckoui/geckoui/styles.css";
 
   /* Module Augmentation Examples - Custom Button Colors */
-  .GeckoUIButton--filled-secondary {
+  .GeckoUIButton[data-variant="filled"][data-color="secondary"] {
     @apply bg-gray-600 text-white border-gray-600 enabled:hover:bg-gray-700 enabled:hover:border-gray-700 disabled:bg-gray-600/50 disabled:border-gray-400;
   }
 
-  .GeckoUIButton--filled-danger {
+  .GeckoUIButton[data-variant="filled"][data-color="danger"] {
     @apply bg-red-600 text-white border-red-600 enabled:hover:bg-red-700 enabled:hover:border-red-700 disabled:bg-red-600/50 disabled:border-red-400;
   }
 
-  .GeckoUIButton--outlined-secondary {
+  .GeckoUIButton[data-variant="outlined"][data-color="secondary"] {
     @apply border-gray-400 text-gray-600 enabled:hover:bg-gray-50 disabled:bg-gray-50 disabled:text-gray-400;
   }
 
-  .GeckoUIButton--outlined-danger {
+  .GeckoUIButton[data-variant="outlined"][data-color="danger"] {
     @apply border-red-400 text-red-600 enabled:hover:bg-red-50 disabled:bg-red-50 disabled:text-red-400;
   }
 
-  .GeckoUIButton--ghost-secondary {
+  .GeckoUIButton[data-variant="ghost"][data-color="secondary"] {
     @apply text-gray-600 enabled:hover:bg-gray-50 disabled:text-gray-400;
   }
 
-  .GeckoUIButton--ghost-danger {
+  .GeckoUIButton[data-variant="ghost"][data-color="danger"] {
     @apply text-red-600 enabled:hover:bg-red-50 disabled:text-red-400;
   }
 
-  .GeckoUIButton--icon-secondary {
+  .GeckoUIButton[data-variant="icon"][data-color="secondary"] {
     @apply text-gray-500 disabled:text-gray-400;
   }
 
-  .GeckoUIButton--icon-danger {
+  .GeckoUIButton[data-variant="icon"][data-color="danger"] {
     @apply text-red-500 disabled:text-red-400;
   }
 

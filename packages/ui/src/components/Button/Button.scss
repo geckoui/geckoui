@@ -7,56 +7,56 @@
   @apply box-border flex flex-row items-center justify-center gap-1.5 rounded-md text-xs disabled:cursor-not-allowed;
   @apply transition-transform duration-200 ease-out;
 
-  &:active:not(:disabled):not(&--icon) {
+  &:active:not(:disabled):not([data-variant="icon"]) {
     @apply scale-95;
   }
 
-  &--size-xs {
+  &[data-size="xs"] {
     @apply h-[26px] px-2 text-xs;
   }
 
-  &--size-sm {
+  &[data-size="sm"] {
     @apply h-8 px-3 text-xs;
   }
 
-  &--size-md {
+  &[data-size="md"] {
     @apply h-[38px] px-3 text-sm;
   }
 
-  &--size-lg {
+  &[data-size="lg"] {
     @apply h-[44px] px-3.5 text-sm;
   }
 
-  &--size-xl {
+  &[data-size="xl"] {
     @apply h-[50px] px-4 text-sm font-semibold;
   }
 
-  &--filled {
-    &-primary {
+  &[data-variant="filled"] {
+    &[data-color="primary"] {
       @apply text-text-on-primary border-primary-600 bg-primary-600 enabled:hover:border-primary-700 enabled:hover:bg-primary-700 disabled:border-border-disabled disabled:bg-primary-600/50;
     }
   }
 
-  &--outlined {
+  &[data-variant="outlined"] {
     @apply border;
 
-    &-primary {
+    &[data-color="primary"] {
       @apply border-border-secondary text-text-primary enabled:hover:bg-surface-hover disabled:bg-surface-hover disabled:text-text-disabled;
     }
   }
 
-  &--ghost {
+  &[data-variant="ghost"] {
     @apply border-transparent bg-transparent enabled:font-semibold;
 
-    &-primary {
+    &[data-color="primary"] {
       @apply text-primary-600 enabled:hover:bg-surface-hover disabled:text-text-disabled;
     }
   }
 
-  &--icon {
+  &[data-variant="icon"] {
     @apply aspect-square size-8 rounded-md border-transparent bg-transparent p-0 enabled:hover:bg-surface-hover;
 
-    &-primary {
+    &[data-color="primary"] {
       @apply text-text-tertiary disabled:text-text-disabled;
     }
   }
