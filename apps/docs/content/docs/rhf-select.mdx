@@ -365,8 +365,14 @@ const methods = useForm({
 ## Error States
 
 RHFSelect automatically displays error states with:
-- Red border via `GeckoUIRHFSelectButton--error` CSS class when `fieldState.error` exists
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
 - No automatic error message display (use RHFInputGroup or RHFError component)
+
+```css
+.GeckoUIRHFSelectButton[data-error] {
+  border-color: red;
+}
+```
 
 Use [RHFInputGroup](/docs/rhf-input-group) component for label + select + error layout:
 

@@ -9,11 +9,11 @@
 
       @apply hover:bg-surface-hover-strong rounded-md p-5;
 
-      &--selected {
+      &[data-selected] {
         @apply bg-surface-hover-strong;
       }
 
-      &--prev-next {
+      &[data-prev-next] {
         @apply opacity-40 hover:opacity-100;
       }
     }

@@ -230,17 +230,15 @@ Displays current page / total pages (e.g., "5 / 10") for quick reference.
 
 ## Styling
 
-The component uses BEM-style class names:
-
 - `GeckoUIPagination` - Main container
 - `GeckoUIPagination__arrow` - Previous/Next buttons
-- `GeckoUIPagination__arrow--previous` - Previous arrow icon
-- `GeckoUIPagination__arrow--next` - Next arrow icon
+- `GeckoUIPagination__arrow__icon[data-direction="previous"]` - Previous arrow icon
+- `GeckoUIPagination__arrow__icon[data-direction="next"]` - Next arrow icon
 - `GeckoUIPagination__page-count` - Page counter display
 - `GeckoUIPagination__page-buttons` - Page number buttons container
 - `GeckoUIPagination__page-button` - Individual page button
-- `GeckoUIPagination__page-button--active` - Active page
-- `GeckoUIPagination__page-button--ellipsis` - Ellipsis button
+- `GeckoUIPagination__page-button[data-active]` - Active page
+- `GeckoUIPagination__page-button[data-ellipsis]` - Ellipsis button
 
 ## Accessibility
 

@@ -215,7 +215,13 @@ For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
 ## Error States
 
 RHFTextarea automatically displays error states with:
-- Red border via `GeckoUIRHFTextarea--error` CSS class when `fieldState.error` exists
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+
+```css
+.GeckoUIRHFTextarea[data-error] {
+  border-color: red;
+}
+```
 
 Use [RHFInputGroup](/docs/rhf-input-group) component for label + textarea + error layout:
 

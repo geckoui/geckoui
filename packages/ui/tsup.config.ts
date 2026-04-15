@@ -1,6 +1,5 @@
 import tailwindcss from "@tailwindcss/postcss";
 import { sassPlugin } from "esbuild-sass-plugin";
-import { readFileSync } from "fs";
 import { globSync } from "glob";
 import { resolve } from "path";
 import postcss from "postcss";
@@ -22,10 +21,6 @@ const external = [
   "prop-types",
   "tailwind-merge"
 ];
-
-const themeCSS = readFileSync(resolve("src/theme.css"), "utf8");
-const themeVars = themeCSS.match(/@theme\s*\{([\s\S]*?)\}/)?.[1] || "";
-const themeRoot = `:root {\n${themeVars}\n}`;
 
 const watchFiles = ["./src/**/*.scss"].flatMap((pattern) => {
   return globSync(pattern, { ignore: "node_modules/**" });
@@ -50,7 +45,7 @@ export default defineConfig((options) => {
       sassPlugin({
         sourceMap: false,
         async transform(source) {
-          const fullSource = `@reference "tailwindcss";\n${themeCSS}\n${themeRoot}\n${source}`;
+          const fullSource = `@reference "tailwindcss";\n${source}`;
           const { css } = await postcss([tailwindcss()]).process(fullSource, {
             from: resolve("src/styles.scss")
           });

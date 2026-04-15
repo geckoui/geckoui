@@ -5,23 +5,23 @@
 
   @apply border-border-secondary text-text-primary relative flex min-h-10 w-full items-center gap-2 rounded-md border py-1 pr-3 pl-3;
 
-  &--enabled {
+  &[data-state="enabled"] {
     @apply cursor-pointer;
   }
 
-  &--enabled:focus-within {
+  &[data-state="enabled"]:focus-within {
     @apply border-primary-400;
   }
 
-  &--enabled:hover {
+  &[data-state="enabled"]:hover {
     @apply border-primary-400;
   }
 
-  &--disabled {
+  &[data-state="disabled"] {
     @apply bg-surface-disabled cursor-not-allowed;
   }
 
-  &--readonly {
+  &[data-readonly] {
     @apply gap-1;
   }
 
@@ -44,7 +44,7 @@
   &__multiselected-chip {
     @apply border-border-secondary/70 bg-surface-tertiary text-text-primary inline-flex items-center gap-1 self-center rounded border px-2 py-1 text-left text-xs;
 
-    &--disabled {
+    &[data-disabled] {
       @apply text-text-disabled opacity-70;
     }
 
@@ -60,7 +60,7 @@
         -webkit-mask-image: url('data:image/svg+xml,<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.02426 0.175736C0.78995 -0.0585786 0.41005 -0.0585786 0.175736 0.175736C-0.0585786 0.41005 -0.0585786 0.78995 0.175736 1.02426L3.15147 4L0.175736 6.97574C-0.0585786 7.21005 -0.0585786 7.58995 0.175736 7.82426C0.41005 8.05858 0.78995 8.05858 1.02426 7.82426L4 4.84853L6.97574 7.82426C7.21005 8.05858 7.58995 8.05858 7.82426 7.82426C8.05858 7.58995 8.05858 7.21005 7.82426 6.97574L4.84853 4L7.82426 1.02426C8.05858 0.78995 8.05858 0.41005 7.82426 0.175736C7.58995 -0.0585786 7.21005 -0.0585786 6.97574 0.175736L4 3.15147L1.02426 0.175736Z" fill="currentColor"/></svg>');
       }
 
-      &--disabled {
+      &[data-disabled] {
         @apply cursor-not-allowed;
       }
     }
@@ -69,7 +69,7 @@
       @apply bg-surface-active;
     }
 
-    &__clear-button--disabled:hover {
+    &__clear-button[data-disabled]:hover {
       @apply bg-transparent;
     }
   }
@@ -77,11 +77,11 @@
   &__value {
     @apply text-text-primary flex items-center;
 
-    &--placeholder {
+    &[data-placeholder] {
       @apply text-text-placeholder relative ml-0;
     }
 
-    &--hidden {
+    &[data-hidden] {
       @apply hidden;
     }
   }
@@ -90,7 +90,7 @@
     @apply flex items-center gap-1;
   }
 
-  &--disabled &__value {
+  &[data-state="disabled"] &__value {
     @apply text-text-disabled;
   }
 
@@ -107,11 +107,11 @@
     grid-template-columns: 0px min-content;
     box-sizing: border-box;
 
-    &--multi-selected {
+    &[data-multi-selected] {
       padding: 0 2px;
     }
 
-    &--focusonly {
+    &[data-focusonly] {
       @apply absolute inset-0 -z-[10];
     }
 
@@ -160,11 +160,11 @@
       outline: 0px;
       padding: 0px;
 
-      &--initial {
+      &[data-initial] {
         @apply absolute left-3;
       }
 
-      &--readonly {
+      &[data-readonly] {
         width: 0;
         z-index: -1;
         cursor: pointer;

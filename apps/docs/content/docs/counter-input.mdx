@@ -158,15 +158,15 @@ declare module "@geckoui/geckoui" {
 Add the corresponding styles to your global CSS/SCSS file:
 
 ```scss
-.GeckoUICounterInput--size-xl .GeckoUICounterInput__button {
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__button {
   @apply h-14 w-14;
 }
 
-.GeckoUICounterInput--size-xl .GeckoUICounterInput__input {
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__input {
   @apply h-14 w-24 text-lg;
 }
 
-.GeckoUICounterInput--size-xl .GeckoUICounterInput__icon {
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__icon {
   @apply h-6 w-6;
 }
 ```
@@ -186,17 +186,19 @@ Add the corresponding styles to your global CSS/SCSS file:
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses BEM base class names with `data-*` attributes for modifiers:
 
 - `GeckoUICounterInput` - Main container
-- `GeckoUICounterInput--size-{sm|md|lg}` - Size modifiers
-- `GeckoUICounterInput--disabled` - Disabled state
-- `GeckoUICounterInput--readonly` - Read-only state
+- `GeckoUICounterInput[data-size="sm|md|lg"]` - Size modifiers
+- `GeckoUICounterInput[data-state="disabled"]` - Disabled state
+- `GeckoUICounterInput[data-state="readonly"]` - Read-only state
 - `GeckoUICounterInput__button` - Increment/decrement buttons
-- `GeckoUICounterInput__button--increment` - Plus button
-- `GeckoUICounterInput__button--decrement` - Minus button
+- `GeckoUICounterInput__button[data-action="increment"]` - Plus button
+- `GeckoUICounterInput__button[data-action="decrement"]` - Minus button
 - `GeckoUICounterInput__input` - The numeric input field
 - `GeckoUICounterInput__icon` - Button icons
+- `GeckoUICounterInput__icon[data-icon="minus"]` - Minus icon
+- `GeckoUICounterInput__icon[data-icon="plus"]` - Plus icon
 
 ## Related Components
 

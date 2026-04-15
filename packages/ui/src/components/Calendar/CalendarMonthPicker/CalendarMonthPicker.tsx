@@ -1,4 +1,3 @@
-import { classNames } from "../../../utils/classNames";
 import { generateMonthNames } from "../Calendar.utils";
 import { CalendarHeader } from "../CalendarHeader";
 import type { MonthPickerProps } from "./CalendarMonthPicker.types";
@@ -21,10 +20,8 @@ function CalendarMonthPicker({
 
           return (
             <button
-              className={classNames(
-                "GeckoUICalendar__month-picker__button",
-                selected && "GeckoUICalendar__month-picker__button--selected"
-              )}
+              className="GeckoUICalendar__month-picker__button"
+              data-selected={selected || undefined}
               key={monthName}
               onClick={() => onSelectMonth?.(index)}
               type="button">

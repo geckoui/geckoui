@@ -32,11 +32,8 @@ const SelectMenu = ({ children, className, ...rest }: SelectMenuProps) => {
     <div
       ref={(r) => refs.setFloating(r)}
       style={floatingStyles}
-      className={classNames(
-        "GeckoUISelectMenu",
-        hasDropdownSearch && "GeckoUISelectMenu--with-dropdown-search",
-        className
-      )}
+      className={classNames("GeckoUISelectMenu", className)}
+      data-with-search={hasDropdownSearch || undefined}
       {...rest}>
       {hasDropdownSearch && (
         <SelectDropdownSearch className="GeckoUISelectMenu__search-container" autoFocus />

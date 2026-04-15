@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { classNames } from "../../../utils/classNames";
 import { CalendarHeader } from "../CalendarHeader";
 import type { CalendarYearPickerProps } from "./CalendarYearPicker.types";
 
@@ -38,11 +37,9 @@ function CalendarYearPicker({ activeYear, onSelectYear, ...headerProps }: Calend
 
           return (
             <button
-              className={classNames(
-                "GeckoUICalendar__year-picker__button",
-                selected && "GeckoUICalendar__year-picker__button--selected",
-                isPrevNext && "GeckoUICalendar__year-picker__button--prev-next"
-              )}
+              className="GeckoUICalendar__year-picker__button"
+              data-selected={selected || undefined}
+              data-prev-next={isPrevNext || undefined}
               key={year}
               onClick={() => onSelectYear?.(year)}
               type="button">

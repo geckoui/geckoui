@@ -5,11 +5,11 @@
 
   @apply flex items-center;
 
-  &--disabled {
+  &[data-state="disabled"] {
     @apply cursor-not-allowed opacity-50;
   }
 
-  &--readonly {
+  &[data-state="readonly"] {
     .GeckoUICounterInput__button {
       @apply cursor-not-allowed disabled:opacity-100;
     }
@@ -22,11 +22,11 @@
     @apply border-border-secondary bg-surface-primary flex items-center justify-center;
     @apply enabled:hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50;
 
-    &--decrement {
+    &[data-action="decrement"] {
       @apply rounded-l-md border;
     }
 
-    &--increment {
+    &[data-action="increment"] {
       @apply rounded-r-md border;
     }
   }
@@ -52,16 +52,16 @@
   &__icon {
     @include icon;
 
-    &--minus {
+    &[data-icon="minus"] {
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
     }
 
-    &--plus {
+    &[data-icon="plus"] {
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
     }
   }
 
-  &--size-sm {
+  &[data-size="sm"] {
     .GeckoUICounterInput__button {
       @apply h-8 w-8;
     }
@@ -75,7 +75,7 @@
     }
   }
 
-  &--size-md {
+  &[data-size="md"] {
     .GeckoUICounterInput__button {
       @apply h-10 w-10;
     }
@@ -89,7 +89,7 @@
     }
   }
 
-  &--size-lg {
+  &[data-size="lg"] {
     .GeckoUICounterInput__button {
       @apply h-12 w-12;
     }

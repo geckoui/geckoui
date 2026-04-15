@@ -1,9 +1,9 @@
 .GeckoUIRHFOTPInput {
-  &--error .GeckoUIOTPInput__input {
+  &[data-error] .GeckoUIOTPInput__input {
     @apply border-red-500;
   }
 
-  &--error:hover .GeckoUIOTPInput__input:enabled {
+  &[data-error]:hover .GeckoUIOTPInput__input:enabled {
     @apply border-red-600;
   }
 }

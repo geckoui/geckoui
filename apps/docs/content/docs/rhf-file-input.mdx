@@ -317,8 +317,14 @@ z.array(z.instanceof(File))
 ## Error States
 
 RHFFileInput automatically displays error states with:
-- Red border via `GeckoUIRHFFileInput--error` CSS class when validation fails
+- Red border via `data-error` attribute on the root element when validation fails
 - Use with [RHFInputGroup](/docs/rhf-input-group) for label + error message display
+
+```css
+.GeckoUIRHFFileInput[data-error] {
+  border-color: red;
+}
+```
 
 ```tsx
 <RHFInputGroup label="Upload File" required>

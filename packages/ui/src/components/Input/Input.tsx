@@ -55,12 +55,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <label
         aria-disabled={disabled}
-        className={classNames(
-          "GeckoUIInput group",
-          disabled ? "GeckoUIInput--disabled" : "GeckoUIInput--enabled",
-          readOnly && "GeckoUIInput--readonly",
-          className
-        )}
+        data-state={disabled ? "disabled" : "enabled"}
+        data-readonly={readOnly || undefined}
+        className={classNames("GeckoUIInput group", className)}
         htmlFor={id ?? _id}>
         <DynamicComponentRenderer component={prefix} inputRef={ref} />
 

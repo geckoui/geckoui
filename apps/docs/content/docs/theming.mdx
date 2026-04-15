@@ -261,7 +261,7 @@ Components use their own class names for targeted styling:
 
 Gecko UI uses CSS `mask-image` with inline SVGs for icons. This approach allows icons to inherit color from parent elements and be styled with CSS.
 
-To find an icon's class name, use your browser's DevTools to inspect the element. All icon classes follow the BEM naming convention (e.g., `.GeckoUI-icon__check`, `.GeckoUIAlert__icon--error`).
+To find an icon's class name, use your browser's DevTools to inspect the element. All icon classes follow a consistent naming pattern (e.g., `.GeckoUI-icon__check`, `.GeckoUIAlert__icon[data-variant="error"]`).
 
 ### Overriding an Icon
 
@@ -279,7 +279,7 @@ To replace an icon, override the `mask-image` property with your custom SVG:
 Alert icons are variant-specific. Override them by targeting the variant modifier:
 
 ```css
-.GeckoUIAlert__icon--error {
+.GeckoUIAlert__icon[data-variant="error"] {
   @apply bg-red-600;
   mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-4V7h2v6h-2z"/></svg>');
   -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-4V7h2v6h-2z"/></svg>');

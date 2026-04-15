@@ -326,45 +326,47 @@ function Example() {
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses base class names with `data-*` attributes for states:
 
 **Main Container:**
 - `GeckoUICalendar` - Main container
-- `GeckoUICalendar--calendars-2` - Dual calendar mode modifier
+- `GeckoUICalendar[data-calendars="2"]` - Dual calendar mode
+- `GeckoUICalendar[data-mode]` - Current view mode (`day`, `month`, `year`)
+- `GeckoUICalendar[data-selection]` - Selection mode (`single`, `range`)
 - `GeckoUICalendar__dual` - Dual calendar wrapper
-- `GeckoUICalendar__dual--first` / `GeckoUICalendar__dual--second` - First/second calendar
+- `GeckoUICalendar__dual[data-position="first"]` / `GeckoUICalendar__dual[data-position="second"]` - First/second calendar
 
 **Header:**
 - `GeckoUICalendar__header` - Header container
 - `GeckoUICalendar__header__title` - Month/year title
-- `GeckoUICalendar__header__title--clickable` - Clickable title state
+- `GeckoUICalendar__header__title[data-clickable]` - Clickable title state
 - `GeckoUICalendar__header__arrow-button` - Navigation arrow buttons
 - `GeckoUICalendar__header__arrow-left-icon` / `GeckoUICalendar__header__arrow-right-icon` - Arrow icons
 
 **Year Picker:**
 - `GeckoUICalendar__year-picker` - Year picker grid
 - `GeckoUICalendar__year-picker__button` - Year button
-- `GeckoUICalendar__year-picker__button--selected` - Selected year
-- `GeckoUICalendar__year-picker__button--prev-next` - Previous/next year buttons
+- `GeckoUICalendar__year-picker__button[data-selected]` - Selected year
+- `GeckoUICalendar__year-picker__button[data-prev-next]` - Previous/next year buttons
 
 **Month Picker:**
 - `GeckoUICalendar__month-picker` - Month picker grid
 - `GeckoUICalendar__month-picker__button` - Month button
-- `GeckoUICalendar__month-picker__button--selected` - Selected month
+- `GeckoUICalendar__month-picker__button[data-selected]` - Selected month
 
 **Day Picker:**
 - `GeckoUICalendar__day-picker-weekdays` - Weekday header row
 - `GeckoUICalendar__day-picker` - Day picker grid
 - `GeckoUICalendar__day-picker__button` - Day button
-- `GeckoUICalendar__day-picker__button--today` - Today's date
-- `GeckoUICalendar__day-picker__button--selected` - Selected date
-- `GeckoUICalendar__day-picker__button--disabled` - Disabled date
-- `GeckoUICalendar__day-picker__button--active-month-false` - Dates outside current month
-- `GeckoUICalendar__day-picker__button--in-range` - Date within selected range
-- `GeckoUICalendar__day-picker__button--range-start` - Range start date
-- `GeckoUICalendar__day-picker__button--range-end` - Range end date
-- `GeckoUICalendar__day-picker__button--hover-preview` - Hover preview for range selection
-- `GeckoUICalendar__day-picker__button--hover-preview-start` / `GeckoUICalendar__day-picker__button--hover-preview-end` - Hover preview boundaries
+- `GeckoUICalendar__day-picker__button[data-today]` - Today's date
+- `GeckoUICalendar__day-picker__button[data-selected]` - Selected date
+- `GeckoUICalendar__day-picker__button[data-disabled]` - Disabled date
+- `GeckoUICalendar__day-picker__button[data-active-month]` - Dates in current month (absent for outside dates)
+- `GeckoUICalendar__day-picker__button[data-in-range]` - Date within selected range
+- `GeckoUICalendar__day-picker__button[data-range-start]` - Range start date
+- `GeckoUICalendar__day-picker__button[data-range-end]` - Range end date
+- `GeckoUICalendar__day-picker__button[data-hover-preview]` - Hover preview for range selection
+- `GeckoUICalendar__day-picker__button[data-hover-preview-start]` / `GeckoUICalendar__day-picker__button[data-hover-preview-end]` - Hover preview boundaries
 
 ## Accessibility
 

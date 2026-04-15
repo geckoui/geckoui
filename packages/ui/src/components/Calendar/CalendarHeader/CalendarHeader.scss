@@ -9,7 +9,7 @@
 
       @apply flex flex-1 cursor-default items-center justify-center rounded-md px-3 py-1.5 font-bold;
 
-      &--clickable {
+      &[data-clickable] {
         @apply hover:bg-surface-hover-strong cursor-pointer;
       }
     }

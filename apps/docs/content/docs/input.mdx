@@ -180,12 +180,12 @@ import { MailIcon } from 'lucide-react';
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses a base class with data attributes for states:
 
 - `GeckoUIInput` - Main container
-- `GeckoUIInput--enabled` - Applied when not disabled
-- `GeckoUIInput--disabled` - Applied when disabled
-- `GeckoUIInput--readonly` - Applied when read-only
+- `GeckoUIInput[data-state="enabled"]` - Applied when not disabled
+- `GeckoUIInput[data-state="disabled"]` - Applied when disabled
+- `GeckoUIInput[data-readonly]` - Applied when read-only
 - `GeckoUIInput__input` - The actual input element
 
 Override styles using `className` for the container or `inputClassName` for the input element.

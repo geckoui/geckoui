@@ -53,11 +53,8 @@ const RHFOTPInput: FC<RHFOTPInputProps> = ({
       render={({ field, fieldState }) => {
         return (
           <OTPInput
-            className={classNames(
-              "GeckoUIRHFOTPInput",
-              !disabled && fieldState.error && "GeckoUIRHFOTPInput--error",
-              className
-            )}
+            className={classNames("GeckoUIRHFOTPInput", className)}
+            data-error={!disabled && fieldState.error ? "" : undefined}
             disabled={disabled}
             {...rest}
             {...field}

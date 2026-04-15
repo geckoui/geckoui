@@ -13,7 +13,7 @@
     @apply flex flex-col gap-[1px] overflow-y-auto overscroll-contain p-2;
   }
 
-  &--with-dropdown-search {
+  &[data-with-search] {
     @apply max-h-[260px];
   }
 

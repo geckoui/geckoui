@@ -144,15 +144,16 @@ Display one or two months in the calendar:
 
 ## Styling
 
-The component uses BEM-style class names:
+**State attributes (on `GeckoUIDateInput`):**
+- `data-state="disabled"` - Disabled state
+- `data-state="readonly"` - Read-only state
+- `data-error` - Error state
+- `data-focus` - Focused state
+- `data-calendar-open` - Calendar is open
 
+**Structural class names:**
 - `GeckoUIDateRangeInputWrapper` - Wrapper container
 - `GeckoUIDateInput` - Main input container
-- `GeckoUIDateInput--disabled` - Disabled state
-- `GeckoUIDateInput--readOnly` - Read-only state
-- `GeckoUIDateInput--error` - Error state
-- `GeckoUIDateInput--focus` - Focused state
-- `GeckoUIDateInput--calendar-open` - Calendar is open
 - `GeckoUIDateInput__segment` - Date segment input
 - `GeckoUIDateInput__separator` - Separator between segments (/)
 - `GeckoUIDateRangeInput__range-separator` - Separator between dates (-)
@@ -161,6 +162,14 @@ The component uses BEM-style class names:
 - `GeckoUIDateInput__clear-button` - Clear button
 - `GeckoUIDateInput__prefix` - Prefix container
 - `GeckoUIDateInput__suffix` - Suffix container
+
+```css
+.GeckoUIDateInput[data-state="disabled"] { opacity: 0.5; }
+.GeckoUIDateInput[data-state="readonly"] { pointer-events: none; }
+.GeckoUIDateInput[data-error] { border-color: red; }
+.GeckoUIDateInput[data-focus] { border-color: blue; }
+.GeckoUIDateInput[data-calendar-open] { border-color: blue; }
+```
 
 ## Accessibility
 

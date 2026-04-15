@@ -254,8 +254,14 @@ function RegistrationForm() {
 ## Error States
 
 RHFInput automatically displays error states with:
-- Red border via `GeckoUIRHFInput--error` CSS class when `fieldState.error` exists
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
 - No automatic error icon (you must add via suffix prop if desired)
+
+```css
+.GeckoUIRHFInput[data-error] {
+  border-color: red;
+}
+```
 
 **Recommended**: Use [RHFInputGroup](/docs/rhf-input-group) for label + input + error layouts. It automatically detects the RHF input and displays validation errors:
 

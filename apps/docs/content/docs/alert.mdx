@@ -283,17 +283,15 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ```scss
 .GeckoUIAlert {
-  &--critical {
+  &[data-variant="critical"] {
     @apply text-purple-600;
   }
 
-  &__icon {
-    &--critical {
-      @apply bg-purple-600;
+  &__icon[data-variant="critical"] {
+    @apply bg-purple-600;
 
-      mask-image: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8 3C8.41421 3 8.75 3.33579 8.75 3.75V8.25C8.75 8.66421 8.41421 9 8 9C7.58579 9 7.25 8.66421 7.25 8.25V3.75C7.25 3.33579 7.58579 3 8 3ZM8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44771 11 7 11.4477 7 12C7 12.5523 7.44771 13 8 13Z" fill="currentColor"/></svg>');
-      -webkit-mask-image: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8 3C8.41421 3 8.75 3.33579 8.75 3.75V8.25C8.75 8.66421 8.41421 9 8 9C7.58579 9 7.25 8.66421 7.25 8.25V3.75C7.25 3.33579 7.58579 3 8 3ZM8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44771 11 7 11.4477 7 12C7 12.5523 7.44771 13 8 13Z" fill="currentColor"/></svg>');
-    }
+    mask-image: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8 3C8.41421 3 8.75 3.33579 8.75 3.75V8.25C8.75 8.66421 8.41421 9 8 9C7.58579 9 7.25 8.66421 7.25 8.25V3.75C7.25 3.33579 7.58579 3 8 3ZM8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44771 11 7 11.4477 7 12C7 12.5523 7.44771 13 8 13Z" fill="currentColor"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8 3C8.41421 3 8.75 3.33579 8.75 3.75V8.25C8.75 8.66421 8.41421 9 8 9C7.58579 9 7.25 8.66421 7.25 8.25V3.75C7.25 3.33579 7.58579 3 8 3ZM8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44771 11 7 11.4477 7 12C7 12.5523 7.44771 13 8 13Z" fill="currentColor"/></svg>');
   }
 }
 ```
@@ -314,18 +312,20 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses `data-*` attributes for state and variant styling:
 
-- `GeckoUIAlert` - Main container
-- `GeckoUIAlert--{variant}` - Variant modifier (error, success, warning, info, default)
-- `GeckoUIAlert--condensed` - Applied when condensed
-- `GeckoUIAlert__body` - Content wrapper
-- `GeckoUIAlert__icon` - Icon element
-- `GeckoUIAlert__icon--{variant}` - Variant-specific icon styling
-- `GeckoUIAlert__title` - Title text
-- `GeckoUIAlert__description` - Description text
-- `GeckoUIAlert__remove-button` - Dismiss button
-- `GeckoUIAlert__remove-button__icon` - Dismiss button icon
+- `data-variant` — Variant (error, warning, info, success, default)
+- `data-condensed` — Present when condensed mode is enabled
+
+BEM class names for structural elements:
+
+- `GeckoUIAlert` — Main container
+- `GeckoUIAlert__body` — Content wrapper
+- `GeckoUIAlert__icon` — Icon element
+- `GeckoUIAlert__title` — Title text
+- `GeckoUIAlert__description` — Description text
+- `GeckoUIAlert__remove-button` — Dismiss button
+- `GeckoUIAlert__remove-button__icon` — Dismiss button icon
 
 ## Related Components
 

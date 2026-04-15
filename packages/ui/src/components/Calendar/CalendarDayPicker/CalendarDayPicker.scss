@@ -13,58 +13,54 @@
 
       @apply hover:bg-surface-hover-strong relative flex aspect-square size-full cursor-pointer items-center justify-center place-self-center rounded-md disabled:cursor-not-allowed;
 
-      &--today {
+      &[data-today] {
         @apply text-primary-600;
       }
 
-      &--selected {
-        @apply text-surface-tertiary;
-      }
-
-      &--selected {
+      &[data-selected] {
         @apply bg-primary-700 text-text-on-primary hover:bg-primary-600;
       }
 
-      &--active-month-false {
+      &:not([data-active-month]) {
         @apply opacity-40;
       }
 
-      &--hover-preview {
+      &[data-hover-preview] {
         @apply bg-primary-100 rounded-none;
       }
 
-      &--in-range {
+      &[data-in-range] {
         @apply bg-primary-700 hover:bg-primary-600 relative rounded-none;
       }
 
-      &--range-start,
-      &--range-end {
+      &[data-range-start],
+      &[data-range-end] {
         @apply bg-primary-700 hover:bg-primary-600;
       }
 
-      &--range-start {
+      &[data-range-start] {
         @apply rounded-l-md;
       }
 
-      &--range-end {
+      &[data-range-end] {
         @apply rounded-r-md;
       }
 
-      &--hover-preview-start {
+      &[data-hover-preview-start] {
         @apply rounded-l-md rounded-r-none;
       }
 
-      &--hover-preview-end {
+      &[data-hover-preview-end] {
         @apply rounded-l-none rounded-r-md;
       }
 
-      &--range-start,
-      &--range-end,
-      &--in-range {
+      &[data-range-start],
+      &[data-range-end],
+      &[data-in-range] {
         @apply text-text-on-primary;
       }
 
-      &--disabled {
+      &[data-disabled] {
         @apply cursor-not-allowed opacity-30;
       }
     }
@@ -74,7 +70,7 @@
 .dark .GeckoUICalendar {
   &__day-picker {
     &__button {
-      &--hover-preview {
+      &[data-hover-preview] {
         @apply bg-primary-500;
       }
     }

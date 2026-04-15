@@ -1,7 +1,6 @@
 import { useFilePicker } from "../../../hooks";
 import { Upload, X } from "../../../icons";
 import type { FilePickerFile } from "../../../types";
-import { classNames } from "../../../utils/classNames";
 import { Spinner } from "../../Spinner";
 import { RHFController } from "../RHFController";
 import type { RHFFilePickerProps, RHFFilePickerRendererProps } from "./RHFFilePicker.types";
@@ -165,12 +164,10 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
 
   return (
     <div
-      className={classNames(
-        "GeckoUIRHFFilePicker",
-        loading && "GeckoUIRHFFilePicker--loading",
-        dragging && "GeckoUIRHFFilePicker--dragging",
-        error && "GeckoUIRHFFilePicker--error"
-      )}>
+      className="GeckoUIRHFFilePicker"
+      data-loading={loading || undefined}
+      data-dragging={dragging || undefined}
+      data-error={error ? "" : undefined}>
       <div
         className="GeckoUIRHFFilePicker__upload-area"
         ref={dropzoneRef as unknown as React.RefObject<HTMLDivElement>}>

@@ -316,14 +316,19 @@ The button content follows this priority:
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses `data-*` attributes for styling:
 
 - `GeckoUILoadingButton` - Main container class
-- `GeckoUILoadingButton--{variant}` - Variant modifier
-- `GeckoUILoadingButton--{variant}-{color}` - Combined variant and color
-- `GeckoUILoadingButton--size-{size}` - Size modifier
-- `GeckoUILoadingButton--loading` - Applied during loading state
-- `GeckoUILoadingButton--{variant}-loading` - Variant-specific loading state
+- `data-loading` - Applied during loading state
+
+Variant, color, and size styling are handled by the underlying [Button](/docs/button) component via its own `data-*` attributes.
+
+```css
+.GeckoUILoadingButton[data-loading] {
+  pointer-events: none;
+  opacity: 0.8;
+}
+```
 
 ## Dependencies
 

@@ -1,11 +1,11 @@
 .GeckoUISelectOption {
   @apply flex cursor-pointer scroll-m-2 flex-row items-center justify-between gap-3 rounded py-2 pr-[16px] pl-[12px] text-left;
 
-  &--focused {
+  &[data-focused] {
     @apply bg-surface-hover-strong;
   }
 
-  &--disabled {
+  &[data-disabled] {
     @apply cursor-not-allowed opacity-50;
   }
 

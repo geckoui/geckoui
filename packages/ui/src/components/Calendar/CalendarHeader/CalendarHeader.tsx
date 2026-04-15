@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import { classNames } from "../../../utils/classNames";
 import type { CalendarHeaderProps } from "./CalendarHeader.types";
 
 function CalendarHeader({
@@ -10,7 +9,7 @@ function CalendarHeader({
   onClickHeader
 }: CalendarHeaderProps): ReactNode {
   return (
-    <div className={classNames("GeckoUICalendar__header")}>
+    <div className="GeckoUICalendar__header">
       <button
         className="GeckoUICalendar__header__arrow-button GeckoUICalendar__header__arrow-button--left"
         onClick={onClickLeftArrow}
@@ -19,10 +18,8 @@ function CalendarHeader({
       </button>
 
       <button
-        className={classNames(
-          "GeckoUICalendar__header__title",
-          onClickHeader && "GeckoUICalendar__header__title--clickable"
-        )}
+        className="GeckoUICalendar__header__title"
+        data-clickable={onClickHeader ? "" : undefined}
         onClick={onClickHeader}
         type="button">
         {header}

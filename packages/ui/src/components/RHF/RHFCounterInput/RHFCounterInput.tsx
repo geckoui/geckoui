@@ -34,11 +34,8 @@ const RHFCounterInput: FC<RHFCounterInputProps> = ({
 
         return (
           <CounterInput
-            className={classNames(
-              "GeckoUIRHFCounterInput",
-              hasError && "GeckoUIRHFCounterInput--error",
-              className
-            )}
+            className={classNames("GeckoUIRHFCounterInput", className)}
+            data-error={hasError || undefined}
             {...rest}
             value={field.value ?? 0}
             onChange={(value) => {

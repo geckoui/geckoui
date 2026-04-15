@@ -5,19 +5,18 @@
 
   @apply border-border-primary mt-px max-w-[320px] min-w-[320px] rounded-md border px-3 py-4 text-sm;
 
-  &--calendars-2 {
+  &[data-calendars="2"] {
     @apply max-w-fit min-w-fit;
   }
 
   &__dual {
     @apply flex gap-4;
+  }
 
-    &--first,
-    &--second {
-      @apply max-w-[296px] min-w-[296px];
-    }
+  &__dual__item {
+    @apply max-w-[296px] min-w-[296px];
 
-    &--second {
+    &[data-position="second"] {
       @apply hidden md:block;
     }
   }

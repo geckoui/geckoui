@@ -6,11 +6,11 @@
 
   @apply bg-surface-active data-[checked]:bg-primary-600 relative inline-flex flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-200 ease-in-out focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50;
 
-  &--size-sm {
+  &[data-size="sm"] {
     @apply h-4 w-7;
   }
 
-  &--size-md {
+  &[data-size="md"] {
     @apply h-6 w-11;
   }
 
@@ -21,11 +21,11 @@
   &__thumb {
     @apply bg-surface-primary pointer-events-none inline-block aspect-square transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out;
 
-    &--size-sm {
+    &[data-size="sm"] {
       @apply w-3.5 translate-x-0 group-data-[checked]:translate-x-3;
     }
 
-    &--size-md {
+    &[data-size="md"] {
       @apply w-5 translate-x-0.5 group-data-[checked]:translate-x-5;
     }
   }

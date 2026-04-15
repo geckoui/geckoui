@@ -1,4 +1,4 @@
-.GeckoUIRHFCounterInput--error {
+.GeckoUIRHFCounterInput[data-error] {
   .GeckoUICounterInput__button,
   .GeckoUICounterInput__input {
     @apply border-red-500;

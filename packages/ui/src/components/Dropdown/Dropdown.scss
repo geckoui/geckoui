@@ -4,7 +4,7 @@
   &__button {
     @apply border-border-secondary text-text-secondary enabled:hover:bg-surface-hover disabled:bg-surface-hover disabled:text-text-disabled flex flex-row items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-xs disabled:cursor-not-allowed;
 
-    &--icon {
+    &[data-icon] {
       @apply p-0;
     }
   }
@@ -17,7 +17,7 @@
     mask-image: url('data:image/svg+xml,<svg width="10" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.230169 0.363673C0.528748 0.076578 1.00353 0.0858874 1.29063 0.384466L5 4.32222L8.70938 0.384466C8.99647 0.0858875 9.47125 0.076578 9.76983 0.363673C10.0684 0.650768 10.0777 1.12555 9.79063 1.42413L5.54063 5.92413C5.39922 6.07119 5.20401 6.1543 5 6.1543C4.79599 6.1543 4.60078 6.07119 4.45938 5.92413L0.209376 1.42413C-0.0777189 1.12555 -0.0684095 0.650768 0.230169 0.363673Z" fill="currentColor"/></svg>');
     -webkit-mask-image: url('data:image/svg+xml,<svg width="10" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.230169 0.363673C0.528748 0.076578 1.00353 0.0858874 1.29063 0.384466L5 4.32222L8.70938 0.384466C8.99647 0.0858875 9.47125 0.076578 9.76983 0.363673C10.0684 0.650768 10.0777 1.12555 9.79063 1.42413L5.54063 5.92413C5.39922 6.07119 5.20401 6.1543 5 6.1543C4.79599 6.1543 4.60078 6.07119 4.45938 5.92413L0.209376 1.42413C-0.0777189 1.12555 -0.0684095 0.650768 0.230169 0.363673Z" fill="currentColor"/></svg>');
 
-    &--icon {
+    &[data-icon] {
       @apply h-[28px] w-[28px];
 
       mask-image: url('data:image/svg+xml,<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 15.3125C14.7249 15.3125 15.3125 14.7249 15.3125 14C15.3125 13.2751 14.7249 12.6875 14 12.6875C13.2751 12.6875 12.6875 13.2751 12.6875 14C12.6875 14.7249 13.2751 15.3125 14 15.3125Z" fill="%234B5563"/><path d="M21 15.3125C21.7249 15.3125 22.3125 14.7249 22.3125 14C22.3125 13.2751 21.7249 12.6875 21 12.6875C20.2751 12.6875 19.6875 13.2751 19.6875 14C19.6875 14.7249 20.2751 15.3125 21 15.3125Z" fill="%234B5563"/><path d="M7 15.3125C7.72487 15.3125 8.3125 14.7249 8.3125 14C8.3125 13.2751 7.72487 12.6875 7 12.6875C6.27513 12.6875 5.6875 13.2751 5.6875 14C5.6875 14.7249 6.27513 15.3125 7 15.3125Z" fill="%234B5563"/></svg>');

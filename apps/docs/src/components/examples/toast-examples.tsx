@@ -141,7 +141,7 @@ export function CustomStyledToastExample() {
           toast("Custom styled toast", {
             className: "border-2 border-blue-500",
             style: {
-              background: "rgb(var(--gecko-ui-surface-secondary))"
+              background: "var(--color-surface-secondary)"
             }
           })
         }>

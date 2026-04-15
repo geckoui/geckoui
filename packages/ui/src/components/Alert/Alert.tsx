@@ -54,23 +54,14 @@ const Alert: FC<AlertProps> = (props) => {
 
   return (
     <div
-      className={classNames(
-        "GeckoUIAlert",
-        `GeckoUIAlert--${variant}`,
-        condensed && "GeckoUIAlert--condensed",
-        className
-      )}>
+      className={classNames("GeckoUIAlert", className)}
+      data-variant={variant}
+      {...(condensed ? { "data-condensed": "" } : {})}>
       <div className="GeckoUIAlert__body">
         {icon ? (
           <DynamicComponentRenderer component={icon} />
         ) : (
-          <div
-            className={classNames(
-              "GeckoUIAlert__icon",
-              `GeckoUIAlert__icon--${variant}`,
-              iconClassName
-            )}
-          />
+          <div className={classNames("GeckoUIAlert__icon", iconClassName)} data-variant={variant} />
         )}
         <DynamicComponentRenderer component={title} className="GeckoUIAlert__title" />
         {Boolean(onRemove) && (

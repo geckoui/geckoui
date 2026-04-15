@@ -275,11 +275,11 @@ const SelectOption = <T,>({ children, ...props }: SelectOptionProps<T>) => {
       ref={ref}
       className={classNames(
         "GeckoUISelectOption",
-        `GeckoUISelectOption--${selected ? "selected" : "unselected"}`,
-        focused && "GeckoUISelectOption--focused",
-        disabled && "GeckoUISelectOption--disabled",
         typeof className === "function" ? className({ value, selected, focused }) : className
       )}
+      data-state={selected ? "selected" : "unselected"}
+      data-focused={focused || undefined}
+      data-disabled={disabled || undefined}
       {...rest}
       onMouseMove={() => {
         if (focusedOption?.value !== value) {

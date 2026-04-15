@@ -71,11 +71,8 @@ const RHFSelect: RHFSelectOverload = <T,>({
             inputRef={ref}
             wrapperClassName={classNames("GeckoUIRHFSelect", wrapperClassName)}
             {...rest}
-            className={classNames(
-              "GeckoUIRHFSelectButton",
-              !!error && "GeckoUIRHFSelectButton--error",
-              className
-            )}
+            className={classNames("GeckoUIRHFSelectButton", className)}
+            data-error={!!error || undefined}
             value={value}
             onChange={(v: unknown) => {
               onChange(v);

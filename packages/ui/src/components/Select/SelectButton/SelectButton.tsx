@@ -61,13 +61,9 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
 
   return (
     <div
-      className={classNames(
-        "GeckoUISelectButton",
-        disabled ? "GeckoUISelectButton--disabled" : "GeckoUISelectButton--enabled",
-        multiple && hasValue && "GeckoUISelectButton--multi-select-default",
-        !filterable && "GeckoUISelectButton--readonly",
-        className
-      )}
+      className={classNames("GeckoUISelectButton", className)}
+      data-state={disabled ? "disabled" : "enabled"}
+      {...(!filterable && { "data-readonly": "" })}
       onClick={() => {
         if (open && !keyword) {
           closeMenu();
@@ -85,25 +81,19 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
           <SelectButtonContent />
         ) : (
           <span
-            className={classNames(
-              "GeckoUISelectButton__value GeckoUISelectButton__value--placeholder",
-              placeholderClassName,
-              keyword && filterable && "GeckoUISelectButton__value--hidden"
-            )}>
+            className={classNames("GeckoUISelectButton__value", placeholderClassName)}
+            data-placeholder=""
+            {...(keyword && filterable && { "data-hidden": "" })}>
             {placeholder ?? "Select Item"}
           </span>
         )}
 
         <div
-          className={classNames(
-            "GeckoUISelectButton__search",
-            !open && hasValue && "GeckoUISelectButton__search--focusonly",
-            !filterable && "GeckoUISelectButton__search--focusonly",
-            multiple &&
-              Array.isArray(value) &&
-              !!value?.length &&
-              "GeckoUISelectButton__search--multi-selected"
-          )}
+          className="GeckoUISelectButton__search"
+          {...(((!open && hasValue) || !filterable) && { "data-focusonly": "" })}
+          {...(multiple &&
+            Array.isArray(value) &&
+            !!value?.length && { "data-multi-selected": "" })}
           data-keyword={filterable ? keyword : ""}>
           <input
             id={id}
@@ -112,12 +102,9 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
             }}
             value={filterable ? keyword : ""}
             disabled={disabled}
-            className={classNames(
-              "GeckoUISelectButton__search__input",
-              open && !hasValue && "GeckoUISelectButton__search__input--initial",
-              !multiple && hasValue && "GeckoUISelectButton__search__input--initial",
-              !filterable && "GeckoUISelectButton__search__input--readonly"
-            )}
+            className="GeckoUISelectButton__search__input"
+            {...(((open && !hasValue) || (!multiple && hasValue)) && { "data-initial": "" })}
+            {...(!filterable && { "data-readonly": "" })}
             onKeyDown={handleKeyboardInteraction}
             onFocusCapture={openMenu}
             onChange={
@@ -136,7 +123,11 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
 
       <div className="GeckoUISelectButton__icons">
         {hasValue && !disabled && clearable && (
-          <button className="GeckoUISelectButton__clear-button" type="button" onClick={handleClear}>
+          <button
+            className="GeckoUISelectButton__clear-button"
+            type="button"
+            onClick={handleClear}
+            data-disabled={disabled || undefined}>
             <div className="GeckoUI-icon__clear" />
           </button>
         )}
@@ -199,10 +190,8 @@ function SelectButtonContent() {
       return (
         <div
           key={JSON.stringify({ value, label })}
-          className={classNames(
-            "GeckoUISelectButton__multiselected-chip",
-            disabled && "GeckoUISelectButton__multiselected-chip--disabled"
-          )}>
+          className="GeckoUISelectButton__multiselected-chip"
+          data-disabled={disabled || undefined}>
           <span>{option.label}</span>
 
           {!disabled && (
@@ -213,15 +202,9 @@ function SelectButtonContent() {
                 remove();
               }}
               disabled={disabled}
-              className={classNames(
-                "GeckoUISelectButton__multiselected-chip__clear-button",
-                disabled && "GeckoUISelectButton__multiselected-chip__clear-button--disabled"
-              )}>
-              <span
-                className={classNames(
-                  "GeckoUISelectButton__multiselected-chip__clear-button__icon"
-                )}
-              />
+              className="GeckoUISelectButton__multiselected-chip__clear-button"
+              data-disabled={disabled || undefined}>
+              <span className="GeckoUISelectButton__multiselected-chip__clear-button__icon" />
             </button>
           )}
         </div>
@@ -241,14 +224,14 @@ function SelectButtonContent() {
   // To display like ghost text when filterable is true
   if (open && selectedOptionLabel && filterable) {
     return (
-      <span className="GeckoUISelectButton__value GeckoUISelectButton__value--placeholder">
+      <span className="GeckoUISelectButton__value" data-placeholder="">
         {selectedOptionLabel}
       </span>
     );
   }
 
   return (
-    <span className="GeckoUISelectButton__value GeckoUISelectButton__value--selected">
+    <span className="GeckoUISelectButton__value" data-selected="">
       {selectedOptionLabel}
     </span>
   );

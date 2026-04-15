@@ -225,11 +225,9 @@ The `onOTPComplete` callback fires when all boxes are filled:
 
 ## Styling
 
-The component uses BEM-style class names:
-
 - `GeckoUIOTPInput` - Main container
-- `GeckoUIOTPInput--enabled` - Applied when not disabled
-- `GeckoUIOTPInput--disabled` - Applied when disabled
+- `GeckoUIOTPInput[data-state="enabled"]` - Applied when not disabled
+- `GeckoUIOTPInput[data-state="disabled"]` - Applied when disabled
 - `GeckoUIOTPInput__input` - Individual input box
 - `GeckoUIOTPInput__overlay-button` - Invisible button for click handling
 

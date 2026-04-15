@@ -9,19 +9,19 @@
     background: var(--color-surface-autofill) !important;
   }
 
-  &--disabled {
+  &[data-state="disabled"] {
     @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
   }
 
-  &--enabled {
+  &[data-state="enabled"] {
     @apply cursor-text;
   }
 
-  &--enabled:focus-within {
+  &[data-state="enabled"]:focus-within {
     @apply border-primary-400;
   }
 
-  &--enabled:hover {
+  &[data-state="enabled"]:hover {
     @apply border-primary-400;
   }
 

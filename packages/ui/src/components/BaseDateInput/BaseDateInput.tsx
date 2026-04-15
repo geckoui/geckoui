@@ -280,19 +280,17 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
   const isEmpty = !month && !day && !year && !hasFocus;
   const isError = (!isEmpty && !isValidDate(year, month, day)) || hasError;
 
-  const containerClasses = classNames(
-    "GeckoUIDateInput",
-    disabled && "GeckoUIDateInput--disabled",
-    readOnly && "GeckoUIDateInput--readOnly",
-    !disabled && !readOnly && "GeckoUIDateInput--enabled",
-    isError && "GeckoUIDateInput--error",
-    isEmpty && "GeckoUIDateInput--empty",
-    hasFocus && "GeckoUIDateInput--focus",
-    className
-  );
+  const state = disabled ? "disabled" : readOnly ? "readonly" : "enabled";
 
   return (
-    <div ref={containerRef} className={containerClasses} onClick={() => handleDisplayClick()}>
+    <div
+      ref={containerRef}
+      className={classNames("GeckoUIDateInput", className)}
+      data-state={state}
+      data-error={isError || undefined}
+      data-empty={isEmpty || undefined}
+      data-focus={hasFocus || undefined}
+      onClick={() => handleDisplayClick()}>
       {Boolean(prefix) && (
         <div className="GeckoUIDateInput__prefix">
           <DynamicComponentRenderer component={prefix} />
@@ -309,10 +307,8 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
         {inputs.map(({ ref, value, onChange, maxLength, segment, display }, index) => (
           <Fragment key={segment}>
             <label
-              className={classNames(
-                "GeckoUIDateInput__segment",
-                !value && "GeckoUIDateInput__segment--empty"
-              )}
+              className="GeckoUIDateInput__segment"
+              data-empty={!value || undefined}
               tabIndex={-1}
               onClick={(e) => {
                 e.stopPropagation();

@@ -109,11 +109,8 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
 
     return (
       <div
-        className={classNames(
-          "GeckoUIOTPInput",
-          disabled ? "GeckoUIOTPInput--disabled" : "GeckoUIOTPInput--enabled",
-          className
-        )}
+        className={classNames("GeckoUIOTPInput", className)}
+        data-state={disabled ? "disabled" : "enabled"}
         ref={divRef}
         style={{ gridTemplateColumns: `repeat(${length}, minmax(0, 1fr))` }}>
         {Array.from({ length })

@@ -3,15 +3,15 @@
 .GeckoUIRHFFilePicker {
   @apply flex w-full flex-col gap-3;
 
-  &--dragging &__upload-area {
+  &[data-dragging] &__upload-area {
     @apply border-primary-400 bg-surface-hover-strong;
   }
 
-  &--error &__upload-area {
+  &[data-error] &__upload-area {
     @apply border-red-500;
   }
 
-  &--loading {
+  &[data-loading] {
     @apply cursor-wait;
   }
 

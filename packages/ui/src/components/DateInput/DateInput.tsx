@@ -184,6 +184,7 @@ const DateInput: FC<DateInputProps> = ({
   return (
     <div
       className={classNames("GeckoUIDateInputWrapper", wrapperClassName)}
+      data-calendar-open={openCalendar || undefined}
       ref={(r) => refs.setReference(r)}>
       <BaseDateInput
         value={value}
@@ -193,7 +194,7 @@ const DateInput: FC<DateInputProps> = ({
         prefix={prefix}
         suffix={suffix}
         hasError={hasError}
-        className={classNames(className, openCalendar && "GeckoUIDateInput--calendar-open")}
+        className={className}
         format={format}
         separator={separator}
         placeholder={placeholder}

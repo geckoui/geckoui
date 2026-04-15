@@ -9,7 +9,7 @@
     @apply border-border-secondary enabled:focus-within:border-primary-300 block h-full w-full rounded-lg border text-center outline-none disabled:cursor-not-allowed;
   }
 
-  &--disabled &__input {
+  &[data-state="disabled"] &__input {
     @apply bg-surface-disabled text-text-disabled;
   }
 
@@ -23,7 +23,7 @@
     @apply absolute inset-0 z-10 cursor-text bg-transparent;
   }
 
-  &--disabled &__overlay-button {
+  &[data-state="disabled"] &__overlay-button {
     @apply cursor-not-allowed;
   }
 }

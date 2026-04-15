@@ -1,4 +1,3 @@
-import { classNames } from "../../../utils/classNames";
 import {
   generateCalendarDates,
   generateMonthNames,
@@ -115,19 +114,17 @@ function CalendarDayPicker(props: CalendarDayPickerProps) {
 
           return (
             <button
-              className={classNames(
-                "GeckoUICalendar__day-picker__button",
-                isToday && "GeckoUICalendar__day-picker__button--today",
-                isSelected && "GeckoUICalendar__day-picker__button--selected",
-                isRangeStart && "GeckoUICalendar__day-picker__button--range-start",
-                isRangeEnd && "GeckoUICalendar__day-picker__button--range-end",
-                isInRange && "GeckoUICalendar__day-picker__button--in-range",
-                isHoverPreview && "GeckoUICalendar__day-picker__button--hover-preview",
-                isHoverPreviewStart && "GeckoUICalendar__day-picker__button--hover-preview-start",
-                isHoverPreviewEnd && "GeckoUICalendar__day-picker__button--hover-preview-end",
-                isDisable && "GeckoUICalendar__day-picker__button--disabled",
-                `GeckoUICalendar__day-picker__button--active-month-${isActiveMonth}`
-              )}
+              className="GeckoUICalendar__day-picker__button"
+              data-today={isToday || undefined}
+              data-selected={isSelected || undefined}
+              data-range-start={isRangeStart || undefined}
+              data-range-end={isRangeEnd || undefined}
+              data-in-range={isInRange || undefined}
+              data-hover-preview={isHoverPreview || undefined}
+              data-hover-preview-start={isHoverPreviewStart || undefined}
+              data-hover-preview-end={isHoverPreviewEnd || undefined}
+              data-disabled={isDisable || undefined}
+              data-active-month={isActiveMonth || undefined}
               disabled={isDisable}
               key={`${date.year}-${date.month}-${date.day}`}
               onClick={() => handleDateClick(formattedDate)}

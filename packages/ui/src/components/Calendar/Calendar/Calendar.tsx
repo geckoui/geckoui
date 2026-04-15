@@ -179,7 +179,7 @@ const Calendar = (props: CalendarProps) => {
 
         return (
           <div className="GeckoUICalendar__dual">
-            <div className="GeckoUICalendar__dual--first">
+            <div className="GeckoUICalendar__dual__item" data-position="first">
               <CalendarDayPicker
                 mode="range"
                 disableDate={disableDate}
@@ -197,7 +197,7 @@ const Calendar = (props: CalendarProps) => {
             </div>
 
             {numberOfMonths === 2 && (
-              <div className="GeckoUICalendar__dual--second">
+              <div className="GeckoUICalendar__dual__item" data-position="second">
                 <CalendarDayPicker
                   mode="range"
                   disableDate={disableDate}
@@ -252,15 +252,12 @@ const Calendar = (props: CalendarProps) => {
 
   return (
     <div
-      className={classNames(
-        `GeckoUICalendar`,
-        `GeckoUICalendar--mode-${view}`,
-        `GeckoUICalendar--selection-${mode}`,
-        mode === "range" &&
-          view === CalendarType.Day &&
-          `GeckoUICalendar--calendars-${numberOfMonths}`,
-        className
-      )}
+      className={classNames(`GeckoUICalendar`, className)}
+      data-mode={view}
+      data-selection={mode}
+      data-calendars={
+        (mode === "range" && view === CalendarType.Day && numberOfMonths) || undefined
+      }
       style={style}>
       {renderContent()}
     </div>

@@ -299,12 +299,12 @@ onClick={({ selectCurrentOption, closeMenu, value, preventDefault }) => void}
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses base class names with `data-*` attributes for states:
 
 - `GeckoUISelectOption` - Base option element
-- `GeckoUISelectOption--selected` - Applied when selected
-- `GeckoUISelectOption--focused` - Applied when focused
-- `GeckoUISelectOption--disabled` - Applied when disabled
+  - `data-state="selected"` / `data-state="unselected"` - Selection state
+  - `data-focused` - Applied when focused
+  - `data-disabled` - Applied when disabled
 
 ## Best Practices
 

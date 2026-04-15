@@ -71,24 +71,17 @@ const CounterInput = forwardRef<HTMLInputElement, CounterInputProps>(
 
     return (
       <div
-        className={classNames(
-          "GeckoUICounterInput",
-          `GeckoUICounterInput--size-${size}`,
-          disabled && "GeckoUICounterInput--disabled",
-          readOnly && "GeckoUICounterInput--readonly",
-          className
-        )}>
+        className={classNames("GeckoUICounterInput", className)}
+        data-size={size}
+        data-state={disabled ? "disabled" : readOnly ? "readonly" : undefined}>
         <button
           type="button"
-          className={classNames(
-            "GeckoUICounterInput__button",
-            "GeckoUICounterInput__button--decrement",
-            buttonClassName
-          )}
+          className={classNames("GeckoUICounterInput__button", buttonClassName)}
+          data-action="decrement"
           onClick={handleDecrement}
           disabled={disabled || readOnly || isAtMin}
           aria-label="Decrement">
-          <span className="GeckoUICounterInput__icon GeckoUICounterInput__icon--minus" />
+          <span className="GeckoUICounterInput__icon" data-icon="minus" />
         </button>
 
         <input
@@ -107,15 +100,12 @@ const CounterInput = forwardRef<HTMLInputElement, CounterInputProps>(
 
         <button
           type="button"
-          className={classNames(
-            "GeckoUICounterInput__button",
-            "GeckoUICounterInput__button--increment",
-            buttonClassName
-          )}
+          className={classNames("GeckoUICounterInput__button", buttonClassName)}
+          data-action="increment"
           onClick={handleIncrement}
           disabled={disabled || readOnly || isAtMax}
           aria-label="Increment">
-          <span className="GeckoUICounterInput__icon GeckoUICounterInput__icon--plus" />
+          <span className="GeckoUICounterInput__icon" data-icon="plus" />
         </button>
       </div>
     );

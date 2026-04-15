@@ -85,7 +85,7 @@ const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, onChange, cl
           onChange(currentPage - 1);
         }}
         type="button">
-        <span className="GeckoUIPagination__arrow__icon GeckoUIPagination__arrow__icon--previous" />
+        <span className="GeckoUIPagination__arrow__icon" data-direction="previous" />
       </button>
 
       <div className="GeckoUIPagination__page-count">
@@ -97,11 +97,9 @@ const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, onChange, cl
       <div className="GeckoUIPagination__page-buttons">
         {pages.map((page, index) => (
           <button
-            className={classNames(
-              "GeckoUIPagination__page-button",
-              page === currentPage && "GeckoUIPagination__page-button--active",
-              page === "..." && "GeckoUIPagination__page-button--ellipsis"
-            )}
+            className="GeckoUIPagination__page-button"
+            data-active={page === currentPage || undefined}
+            data-ellipsis={page === "..." || undefined}
             disabled={page === "..."}
             key={index}
             onClick={() => page !== "..." && onChange(Number(page))}
@@ -118,7 +116,7 @@ const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, onChange, cl
           onChange(currentPage + 1);
         }}
         type="button">
-        <span className="GeckoUIPagination__arrow__icon GeckoUIPagination__arrow__icon--next" />
+        <span className="GeckoUIPagination__arrow__icon" data-direction="next" />
       </button>
     </div>
   );

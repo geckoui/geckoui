@@ -322,14 +322,33 @@ Static elements remain visible during filtering:
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses base class names with `data-*` attributes for states and modifiers:
 
 - `GeckoUISelect` - Main container
 - `GeckoUISelectButton` - Select button
+  - `data-state="enabled"` / `data-state="disabled"` - Enabled/disabled state
+  - `data-readonly` - Applied when not filterable
+- `GeckoUISelectButton__value` - Value display
+  - `data-placeholder` - Placeholder styling
+  - `data-hidden` - Hidden when filtering
+- `GeckoUISelectButton__search` - Search input wrapper
+  - `data-focusonly` - Focus-only mode
+  - `data-multi-selected` - When multi-select has values
+- `GeckoUISelectButton__search__input` - Search input
+  - `data-initial` - Initial positioning
+  - `data-readonly` - Read-only mode
+- `GeckoUISelectButton__multiselected-chip` - Multi-select chip
+  - `data-disabled` - Disabled chip styling
+- `GeckoUISelectButton__clear-button` - Clear button
+  - `data-disabled` - Disabled clear button
 - `GeckoUISelectMenu` - Menu container
+  - `data-with-search` - Applied when dropdown search is enabled
 - `GeckoUISelectOption` - Individual option
-- `GeckoUISelectOption--selected` - Applied to selected options
-- `GeckoUISelectOption--focused` - Applied to focused option
+  - `data-state="selected"` / `data-state="unselected"` - Selection state
+  - `data-focused` - Applied to focused option
+  - `data-disabled` - Applied to disabled option
+- `GeckoUISelectButton__value`
+  - `data-selected` - Applied when displaying a selected value
 
 ## Related Pages
 

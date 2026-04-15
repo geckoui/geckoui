@@ -161,12 +161,12 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ```scss
 .GeckoUISwitch {
-  &--size-lg {
+  &[data-size="lg"] {
     @apply h-8 w-14;
   }
 
   &__thumb {
-    &--size-lg {
+    &[data-size="lg"] {
       @apply w-6 translate-x-0.5 group-data-[checked]:translate-x-3.5;
     }
   }
@@ -190,12 +190,12 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ## Styling
 
-The component uses BEM-style class names:
+The component uses class names with data attributes:
 
 - `GeckoUISwitch` - Main container
-- `GeckoUISwitch--size-{sm|md}` - Size modifiers
+- `GeckoUISwitch[data-size="sm|md"]` - Size modifiers
 - `GeckoUISwitch__thumb` - Toggle thumb element
-- `GeckoUISwitch__thumb--size-{sm|md}` - Thumb size modifiers
+- `GeckoUISwitch__thumb[data-size="sm|md"]` - Thumb size modifiers
 
 The switch also supports HeadlessUI data attributes:
 - `data-[checked]` - Applied when checked

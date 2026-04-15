@@ -5,25 +5,13 @@
 ### Breaking Changes
 
 - **Tailwind CSS v4**: Migrated from Tailwind CSS v3 to v4. Consumers using Tailwind should update to v4.
-- **OKLCH color system**: Theme colors now use full CSS color values (OKLCH) instead of space-separated RGB channels. Any custom overrides using the old `--gecko-ui-*: R G B` format must be updated.
-- **CSS variable rename**: Theme variables changed from `--gecko-ui-*` to `--color-*` (Tailwind v4 convention). Override with any CSS color format — `oklch()`, `hex`, `rgb()`, `hsl()`, etc.
-- **Removed `tailwind.config.ts`**: Theme configuration now lives in CSS via `@theme` block.
-
-### Added
-
-- Support for any CSS color format in theme overrides (oklch, hex, rgb, hsl, etc.)
-- Opacity modifiers (e.g. `bg-primary-600/50`) now work via `color-mix()` with any color format.
+- **OKLCH color system**: Theme colors now use full CSS color values instead of space-separated RGB channels. Override with any CSS color format — `oklch()`, `hex`, `rgb()`, `hsl()`, etc.
+- **CSS variable rename**: Theme variables changed from `--gecko-ui-*` to `--color-*` (Tailwind v4 convention).
+- **Data attributes replace BEM modifiers**: Component modifiers migrated from BEM classes (`GeckoUIButton--filled-primary`) to `data-*` attributes (`data-variant="filled" data-color="primary"`). Update CSS selectors accordingly (e.g. `.GeckoUIButton[data-variant="filled"]`).
 
 ### Fixed
 
-- Focus outline no longer visible on buttons and inputs by default — only shows on keyboard navigation (`focus-visible`).
-
-### Removed
-
-- `tailwind.config.ts` — replaced by CSS-based `@theme` configuration.
-- `tailwind-variables.scss` — Tailwind v4 handles preflight internally.
-- `autoprefixer` and `postcss-import` dependencies — built into Tailwind v4.
-- Deprecated Tailwind v3 utilities (`bg-opacity-*`) replaced with opacity modifier syntax.
+- Focus outline only shows on keyboard navigation (`focus-visible`), no longer visible by default.
 
 ## [1.1.3] - 2025-12-30
 
