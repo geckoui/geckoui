@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.2]
+
+- ConfirmDialog `dismissOnEsc` and `dismissOnOutsideClick` now default to `true`, consistent with Dialog.
+
 ## [1.3.0]
 
 ### Breaking Changes
