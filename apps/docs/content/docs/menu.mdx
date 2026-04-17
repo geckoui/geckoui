@@ -24,9 +24,9 @@ import { Menu, MenuItem, MenuTrigger } from '@geckoui/geckoui';
 
 ```tsx
 <Menu label="Options">
-  <MenuItem label="Edit" onClick={() => console.log('Edit')} />
-  <MenuItem label="Duplicate" onClick={() => console.log('Duplicate')} />
-  <MenuItem label="Delete" onClick={() => console.log('Delete')} />
+  <MenuItem onClick={() => console.log('Edit')}>Edit</MenuItem>
+  <MenuItem onClick={() => console.log('Duplicate')}>Duplicate</MenuItem>
+  <MenuItem onClick={() => console.log('Delete')}>Delete</MenuItem>
 </Menu>
 ```
 
@@ -51,7 +51,6 @@ Individual action item within the menu. Closes the menu on click.
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `label` | `string` | Item text (rendered if no `children`) |
 | `onClick` | `() => void` | Click handler |
 | `disabled` | `boolean` | Disable the item |
 | `className` | `string` | Additional class |
@@ -72,7 +71,7 @@ Custom trigger using render props. Replaces the default button.
       </button>
     )}
   </MenuTrigger>
-  <MenuItem label="Edit" onClick={() => {}} />
+  <MenuItem onClick={() => {}}>Edit</MenuItem>
 </Menu>
 ```
 
@@ -95,13 +94,13 @@ import { Edit, Copy, Trash } from 'lucide-react';
       </Button>
     )}
   </MenuTrigger>
-  <MenuItem label="Edit" onClick={() => console.log('Edit')}>
+  <MenuItem onClick={() => console.log('Edit')}>
     <div className="flex items-center gap-3">
       <Edit className="size-4" />
       <span>Edit</span>
     </div>
   </MenuItem>
-  <MenuItem label="Delete" onClick={() => console.log('Delete')}>
+  <MenuItem onClick={() => console.log('Delete')}>
     <div className="flex items-center gap-3">
       <Trash className="size-4 text-red-600" />
       <span className="text-red-600">Delete</span>
@@ -118,9 +117,9 @@ import { Edit, Copy, Trash } from 'lucide-react';
 
 ```tsx
 <Menu label="Actions">
-  <MenuItem label="Available Action" onClick={() => console.log('Available')} />
-  <MenuItem label="Disabled Action" disabled />
-  <MenuItem label="Another Action" onClick={() => console.log('Another')} />
+  <MenuItem onClick={() => console.log('Available')}>Available Action</MenuItem>
+  <MenuItem disabled>Disabled Action</MenuItem>
+  <MenuItem onClick={() => console.log('Another')}>Another Action</MenuItem>
 </Menu>
 ```
 
@@ -139,9 +138,9 @@ import { Edit, Copy, Trash } from 'lucide-react';
       </Button>
     )}
   </MenuTrigger>
-  <MenuItem label="Profile" onClick={() => console.log('Profile')} />
-  <MenuItem label="Settings" onClick={() => console.log('Settings')} />
-  <MenuItem label="Logout" onClick={() => console.log('Logout')}>
+  <MenuItem onClick={() => console.log('Profile')}>Profile</MenuItem>
+  <MenuItem onClick={() => console.log('Settings')}>Settings</MenuItem>
+  <MenuItem onClick={() => console.log('Logout')}>
     <span className="text-red-600">Logout</span>
   </MenuItem>
 </Menu>
@@ -155,13 +154,13 @@ import { Edit, Copy, Trash } from 'lucide-react';
 
 ```tsx
 <Menu label="Top Start" placement="top-start">
-  <MenuItem label="Option 1" />
-  <MenuItem label="Option 2" />
+  <MenuItem>Option 1</MenuItem>
+  <MenuItem>Option 2</MenuItem>
 </Menu>
 
 <Menu label="Bottom End" placement="bottom-end">
-  <MenuItem label="Option 1" />
-  <MenuItem label="Option 2" />
+  <MenuItem>Option 1</MenuItem>
+  <MenuItem>Option 2</MenuItem>
 </Menu>
 ```
 
@@ -170,7 +169,7 @@ import { Edit, Copy, Trash } from 'lucide-react';
 Use a render function in `children` to access focus state:
 
 ```tsx
-<MenuItem label="Edit" onClick={handleEdit}>
+<MenuItem onClick={handleEdit}>
   {({ focused }) => (
     <div className={focused ? 'font-bold' : ''}>
       {focused ? '→ ' : ''}Edit

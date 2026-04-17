@@ -133,6 +133,16 @@ All components are fully typed. Import types as needed:
 import type { ButtonProps, InputProps } from "@geckoui/geckoui";
 ```
 
+## AI Skills
+
+Install the GeckoUI skill to help AI assistants (Claude Code, etc.) generate accurate component code and themes:
+
+```
+npx skills add GeckoUI/skills
+```
+
+The skill provides component API references, theming variables, and class name mappings so AI agents can generate correct GeckoUI code without hallucination.
+
 ## License
 
 This project is licensed under the MIT License.

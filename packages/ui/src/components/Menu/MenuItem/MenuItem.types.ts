@@ -1,12 +1,4 @@
-import type { ReactNode } from "react";
-
 export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> {
-  /**
-   * Text label for the menu item.
-   * Used as the default rendered content if no `children` is provided.
-   */
-  label: string;
-
   /**
    * Whether the menu item is disabled
    */
@@ -22,10 +14,4 @@ export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>
    * The menu will close automatically after the callback.
    */
   onClick?: () => void;
-
-  /**
-   * Custom content for the menu item.
-   * If not provided, `label` is rendered as text.
-   */
-  children?: ReactNode;
 }

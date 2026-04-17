@@ -2,6 +2,7 @@
 
 ## [1.3.2]
 
+- MenuItem: Removed `label` prop — use `children` instead (e.g. `<MenuItem>Edit</MenuItem>`).
 - ConfirmDialog `dismissOnEsc` and `dismissOnOutsideClick` now default to `true`, consistent with Dialog.
 
 ## [1.3.0]

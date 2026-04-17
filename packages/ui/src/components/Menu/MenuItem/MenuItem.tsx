@@ -2,7 +2,7 @@ import { classNames } from "../../../utils/classNames";
 import { useMenu } from "../useMenu";
 import type { MenuItemProps } from "./MenuItem.types";
 
-const MenuItem = ({ label, disabled, className, onClick, children, ...rest }: MenuItemProps) => {
+const MenuItem = ({ disabled, className, onClick, children, ...rest }: MenuItemProps) => {
   const { closeMenu } = useMenu();
 
   const handleClick = () => {
@@ -28,7 +28,7 @@ const MenuItem = ({ label, disabled, className, onClick, children, ...rest }: Me
       onClick={disabled ? undefined : handleClick}
       onKeyDown={handleKeyDown}
       {...rest}>
-      {children ?? label}
+      {children}
     </div>
   );
 };

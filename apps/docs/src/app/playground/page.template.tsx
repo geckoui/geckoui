@@ -731,9 +731,9 @@ export default function Home() {
               <h3 className="text-lg font-semibold ">Menu</h3>
               <div className="flex gap-3">
                 <Menu label="Actions">
-                  <MenuItem label="Item 1" onClick={() => toast.info("Item 1")} />
-                  <MenuItem label="Item 2" onClick={() => toast.info("Item 2")} />
-                  <MenuItem label="Item 3" onClick={() => toast.info("Item 3")} />
+                  <MenuItem onClick={() => toast.info("Item 1")}>Item 1</MenuItem>
+                  <MenuItem onClick={() => toast.info("Item 2")}>Item 2</MenuItem>
+                  <MenuItem onClick={() => toast.info("Item 3")}>Item 3</MenuItem>
                 </Menu>
               </div>
             </div>
