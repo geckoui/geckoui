@@ -23,7 +23,6 @@ export * from "./ConfirmDialog";
 export * from "./Toast";
 export * from "./GeckoUIPortal";
 export * from "./Drawer";
-export * from "./Dropdown";
 export * from "./Menu";
 export * from "./Select";
 export * from "./Dialog";

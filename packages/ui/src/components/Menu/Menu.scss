@@ -1,20 +1,42 @@
 @import "../../mixins.scss";
 
 .GeckoUIMenu {
+  @apply relative inline-block;
+
   &__button {
     @include button-reset;
+
+    @apply border-border-secondary text-text-secondary enabled:hover:bg-surface-hover disabled:text-text-disabled flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm disabled:cursor-not-allowed;
   }
 
   &__items {
     @include base-reset;
     @include scrollbar;
 
-    @apply border-border-secondary bg-surface-primary z-50 flex flex-col justify-start rounded-md border p-2 shadow-xl;
+    @apply border-border-secondary bg-surface-primary z-50 flex flex-col justify-start rounded-md border p-1 shadow-xl outline-none;
+  }
+
+  &__scroll-container {
+    @apply flex max-h-[300px] flex-col overflow-y-auto;
   }
 
   &__item {
     @include button-reset;
 
-    @apply text-text-secondary hover:bg-surface-hover-strong cursor-pointer rounded px-3 py-2 text-left text-sm;
+    @apply text-text-secondary cursor-pointer rounded px-3 py-2 text-left text-sm text-nowrap outline-none;
+
+    &:hover,
+    &:focus {
+      @apply bg-surface-hover-strong;
+    }
+
+    &[data-disabled] {
+      @apply text-text-disabled cursor-not-allowed;
+
+      &:hover,
+      &:focus {
+        @apply bg-transparent;
+      }
+    }
   }
 }

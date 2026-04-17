@@ -5,6 +5,7 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  transpilePackages: ['@geckoui/geckoui'],
   async redirects() {
     return [
       {

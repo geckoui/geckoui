@@ -39,8 +39,7 @@ const content = `# Gecko UI
 - [Dialog](${RAW_BASE}/dialog.mdx): Modal dialog
 - [ConfirmDialog](${RAW_BASE}/confirm-dialog.mdx): Confirmation modal
 - [Drawer](${RAW_BASE}/drawer.mdx): Side drawer/panel
-- [Dropdown](${RAW_BASE}/dropdown.mdx): Dropdown menu
-- [Menu](${RAW_BASE}/menu.mdx): Headless menu component
+- [Menu](${RAW_BASE}/menu.mdx): Menu component
 - [Tooltip](${RAW_BASE}/tooltip.mdx): Accessible tooltip
 
 ### Form Helpers

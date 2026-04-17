@@ -1,27 +1,19 @@
 ---
 title: Menu
-description: Styled wrapper around HeadlessUI Menu for accessible dropdown menus
+description: Accessible dropdown menu for actions and navigation
 ---
 
-import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator, MenuSection, MenuHeading, Button } from '@geckoui/geckoui';
+import { Menu, MenuItem, MenuTrigger, Button } from '@geckoui/geckoui';
 import { BasicMenuExample, WithIconsExample, WithSectionsExample, DisabledItemsExample, CustomButtonExample, AnchorPositionExample } from '@/components/examples/menu-examples';
 
 # Menu
 
-A styled wrapper around HeadlessUI's Menu component for creating accessible, keyboard-navigable dropdown menus and action lists. Provides pre-styled components with full HeadlessUI functionality for building complex menu patterns.
+An accessible, keyboard-navigable dropdown menu for actions and navigation. Built with Floating UI for positioning.
 
 ## Installation
 
 ```tsx
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuSeparator,
-  MenuSection,
-  MenuHeading
-} from '@geckoui/geckoui';
+import { Menu, MenuItem, MenuTrigger } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
@@ -31,98 +23,57 @@ import {
 </Preview>
 
 ```tsx
-import { Menu, MenuButton, MenuItem, MenuItems } from '@geckoui/geckoui';
-
-function Example() {
-  return (
-    <Menu>
-      <MenuButton as="button">Options</MenuButton>
-      <MenuItems anchor="bottom start" className="w-48">
-        <MenuItem onClick={() => console.log('Edit')}>
-          Edit
-        </MenuItem>
-        <MenuItem onClick={() => console.log('Duplicate')}>
-          Duplicate
-        </MenuItem>
-        <MenuItem onClick={() => console.log('Delete')}>
-          Delete
-        </MenuItem>
-      </MenuItems>
-    </Menu>
-  );
-}
+<Menu label="Options">
+  <MenuItem label="Edit" onClick={() => console.log('Edit')} />
+  <MenuItem label="Duplicate" onClick={() => console.log('Duplicate')} />
+  <MenuItem label="Delete" onClick={() => console.log('Delete')} />
+</Menu>
 ```
 
 ## Components
 
 ### Menu
 
-Root container component that manages menu state.
-
-```tsx
-<Menu>{/* MenuButton and MenuItems */}</Menu>
-```
-
-### MenuButton
-
-Trigger element that opens the menu. Supports polymorphic rendering via the `as` prop.
-
-```tsx
-<MenuButton as="button">Click me</MenuButton>
-<MenuButton as={CustomButton}>Custom Button</MenuButton>
-```
-
-### MenuItems
-
-Container for menu options. Handles positioning and animations.
+Root component that manages state, positioning, and renders the default button.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `anchor` | `Placement` | - | Menu position relative to button |
-| `as` | `ElementType` | `'div'` | Element type to render as |
-| `className` | `string \| Function` | - | CSS class or render function |
+| `label` | `string` | `"Menu"` | Text for the default button |
+| `disabled` | `boolean` | `false` | Disable the menu |
+| `placement` | `Placement` | `"bottom-start"` | Dropdown position |
+| `className` | `string` | - | Wrapper class |
+| `menuClassName` | `string` | - | Dropdown panel class |
+| `buttonClassName` | `string` | - | Default button class |
 
 ### MenuItem
 
-Individual selectable option within the menu.
+Individual action item within the menu. Closes the menu on click.
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `as` | `ElementType` | Element type (default: `'button'`) |
-| `disabled` | `boolean` | Disable the menu item |
+| `label` | `string` | Item text (rendered if no `children`) |
 | `onClick` | `() => void` | Click handler |
-| `children` | `ReactNode \| Function` | Content or render function |
+| `disabled` | `boolean` | Disable the item |
+| `className` | `string` | Additional class |
+| `children` | `ReactNode \| Function` | Custom content or render function |
 
-Render function receives: `{ focus: boolean, disabled: boolean }`
+Render function receives `{ focused: boolean }`.
 
-### MenuSeparator
+### MenuTrigger
 
-Visual divider between menu groups or items.
-
-```tsx
-<MenuSeparator className="my-1 border-t" />
-```
-
-### MenuSection
-
-Groups related menu items together under a heading.
+Custom trigger using render props. Replaces the default button.
 
 ```tsx
-<MenuSection>
-  <MenuHeading>Section Title</MenuHeading>
-  <MenuItem>Item 1</MenuItem>
-  <MenuItem>Item 2</MenuItem>
-</MenuSection>
-```
-
-### MenuHeading
-
-Non-interactive header within menu sections.
-
-```tsx
-<MenuHeading className="px-3 py-2 text-xs font-semibold">
-  Section Title
-</MenuHeading>
+<Menu>
+  <MenuTrigger>
+    {({ open, toggleMenu, disabled }) => (
+      <button onClick={toggleMenu}>
+        Actions {open ? '▲' : '▼'}
+      </button>
+    )}
+  </MenuTrigger>
+  <MenuItem label="Edit" onClick={() => {}} />
+</Menu>
 ```
 
 ## Examples
@@ -137,66 +88,25 @@ Non-interactive header within menu sections.
 import { Edit, Copy, Trash } from 'lucide-react';
 
 <Menu>
-  <MenuButton as="button">Actions</MenuButton>
-  <MenuItems anchor="bottom start" className="w-48">
-    <MenuItem onClick={() => console.log('Edit')}>
-      <div className="flex items-center gap-3">
-        <Edit className="size-4" />
-        <span>Edit</span>
-      </div>
-    </MenuItem>
-    <MenuItem onClick={() => console.log('Delete')}>
-      <div className="flex items-center gap-3">
-        <Trash className="size-4 text-red-600" />
-        <span className="text-red-600">Delete</span>
-      </div>
-    </MenuItem>
-  </MenuItems>
-</Menu>
-```
-
-### With Sections and Separators
-
-<Preview>
-  <WithSectionsExample />
-</Preview>
-
-```tsx
-<Menu>
-  <MenuButton as="button">More Actions</MenuButton>
-  <MenuItems anchor="bottom start" className="w-56">
-    <MenuSection>
-      <MenuHeading className="text-xs font-semibold text-gray-500 uppercase">
-        File Actions
-      </MenuHeading>
-      <MenuItem onClick={() => console.log('Download')}>
-        <div className="flex items-center gap-3">
-          <Download className="size-4" />
-          <span>Download</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => console.log('Share')}>
-        <div className="flex items-center gap-3">
-          <Share className="size-4" />
-          <span>Share</span>
-        </div>
-      </MenuItem>
-    </MenuSection>
-
-    <MenuSeparator className="my-2 border-t" />
-
-    <MenuSection>
-      <MenuHeading className="text-xs font-semibold text-gray-500 uppercase">
-        Manage
-      </MenuHeading>
-      <MenuItem onClick={() => console.log('Settings')}>
-        Settings
-      </MenuItem>
-      <MenuItem onClick={() => console.log('Delete')}>
-        Delete
-      </MenuItem>
-    </MenuSection>
-  </MenuItems>
+  <MenuTrigger>
+    {({ toggleMenu }) => (
+      <Button onClick={toggleMenu}>
+        Actions <ChevronDown className="size-4" />
+      </Button>
+    )}
+  </MenuTrigger>
+  <MenuItem label="Edit" onClick={() => console.log('Edit')}>
+    <div className="flex items-center gap-3">
+      <Edit className="size-4" />
+      <span>Edit</span>
+    </div>
+  </MenuItem>
+  <MenuItem label="Delete" onClick={() => console.log('Delete')}>
+    <div className="flex items-center gap-3">
+      <Trash className="size-4 text-red-600" />
+      <span className="text-red-600">Delete</span>
+    </div>
+  </MenuItem>
 </Menu>
 ```
 
@@ -207,152 +117,93 @@ import { Edit, Copy, Trash } from 'lucide-react';
 </Preview>
 
 ```tsx
-<Menu>
-  <MenuButton as="button">Actions</MenuButton>
-  <MenuItems anchor="bottom start" className="w-48">
-    <MenuItem onClick={() => console.log('Available')}>
-      Available Action
-    </MenuItem>
-    <MenuItem disabled>
-      {({ disabled }) => (
-        <span className={disabled ? 'opacity-50' : ''}>
-          Disabled Action
-        </span>
-      )}
-    </MenuItem>
-    <MenuItem onClick={() => console.log('Another')}>
-      Another Action
-    </MenuItem>
-  </MenuItems>
+<Menu label="Actions">
+  <MenuItem label="Available Action" onClick={() => console.log('Available')} />
+  <MenuItem label="Disabled Action" disabled />
+  <MenuItem label="Another Action" onClick={() => console.log('Another')} />
 </Menu>
 ```
 
-### Custom Button Component
+### Custom Button
 
 <Preview>
   <CustomButtonExample />
 </Preview>
 
 ```tsx
-import { Button } from '@geckoui/geckoui';
-
 <Menu>
-  <MenuButton as={Button} variant="filled">
-    User Menu
-  </MenuButton>
-  <MenuItems anchor="bottom end" className="w-48 mt-2">
-    <MenuItem onClick={() => console.log('Profile')}>Profile</MenuItem>
-    <MenuItem onClick={() => console.log('Settings')}>Settings</MenuItem>
-    <MenuSeparator className="my-1 border-t" />
-    <MenuItem onClick={() => console.log('Logout')}>
-      <span className="text-red-600">Logout</span>
-    </MenuItem>
-  </MenuItems>
+  <MenuTrigger>
+    {({ toggleMenu }) => (
+      <Button variant="filled" onClick={toggleMenu}>
+        User Menu
+      </Button>
+    )}
+  </MenuTrigger>
+  <MenuItem label="Profile" onClick={() => console.log('Profile')} />
+  <MenuItem label="Settings" onClick={() => console.log('Settings')} />
+  <MenuItem label="Logout" onClick={() => console.log('Logout')}>
+    <span className="text-red-600">Logout</span>
+  </MenuItem>
 </Menu>
 ```
 
-### Anchor Positioning
+### Placement
 
 <Preview>
   <AnchorPositionExample />
 </Preview>
 
 ```tsx
-// Opens upward
-<Menu>
-  <MenuButton as="button">Top Start</MenuButton>
-  <MenuItems anchor="top start" className="w-40 mb-2">
-    <MenuItem>Option 1</MenuItem>
-    <MenuItem>Option 2</MenuItem>
-  </MenuItems>
+<Menu label="Top Start" placement="top-start">
+  <MenuItem label="Option 1" />
+  <MenuItem label="Option 2" />
 </Menu>
 
-// Aligns to right edge
-<Menu>
-  <MenuButton as="button">Bottom End</MenuButton>
-  <MenuItems anchor="bottom end" className="w-40 mt-2">
-    <MenuItem>Option 1</MenuItem>
-    <MenuItem>Option 2</MenuItem>
-  </MenuItems>
+<Menu label="Bottom End" placement="bottom-end">
+  <MenuItem label="Option 1" />
+  <MenuItem label="Option 2" />
 </Menu>
 ```
 
-## Render Functions
+### Render Function
 
-Both `MenuItem` and class names can use render functions to access state:
-
-### MenuItem Render Function
+Use a render function in `children` to access focus state:
 
 ```tsx
-<MenuItem onClick={handleClick}>
-  {({ focus, disabled }) => (
-    <span className={`
-      ${focus ? 'font-medium' : ''}
-      ${disabled ? 'opacity-50' : ''}
-    `}>
-      {focus ? '→ ' : ''}Menu Item
-    </span>
+<MenuItem label="Edit" onClick={handleEdit}>
+  {({ focused }) => (
+    <div className={focused ? 'font-bold' : ''}>
+      {focused ? '→ ' : ''}Edit
+    </div>
   )}
-</MenuItem>
-```
-
-### ClassName Render Function
-
-```tsx
-<MenuItem
-  className={({ focus, disabled }) => `
-    ${focus ? 'font-medium' : ''}
-    ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-  `}
->
-  Menu Item
 </MenuItem>
 ```
 
 ## Keyboard Navigation
 
-- **Click/Space/Enter**: Toggle menu
-- **Arrow Up/Down**: Navigate items
-- **Home/End**: Jump to first/last item
-- **Escape**: Close menu
-- **Tab**: Close menu and move focus
-- **Type**: Search items by typing
-
-## Anchor Positions
-
-Available anchor positions:
-
-- `"bottom start"` - Below button, aligned to left
-- `"bottom"` - Below button, centered
-- `"bottom end"` - Below button, aligned to right
-- `"top start"` - Above button, aligned to left
-- `"top"` - Above button, centered
-- `"top end"` - Above button, aligned to right
+- **Enter/Space** on button: Toggle menu
+- **Arrow Down/Up**: Navigate items
+- **Enter/Space** on item: Trigger action
+- **Escape/Tab**: Close menu
 
 ## Styling
 
-- `GeckoUIMenu__button` - Menu button
-- `GeckoUIMenu__items` - Menu items container
-- `GeckoUIMenu__item` - Individual menu item
-
-Additional styling should be applied via the `className` prop.
-
-## HeadlessUI Documentation
-
-This component wraps HeadlessUI's Menu. For complete API documentation, see:
-[HeadlessUI Menu Documentation](https://headlessui.com/react/menu)
+- `GeckoUIMenu` - Wrapper
+- `GeckoUIMenu__button` - Default button
+- `GeckoUIMenu__items` - Dropdown panel
+- `GeckoUIMenu__item` - Individual item
+  - `data-focused` - Present when focused
+  - `data-disabled` - Present when disabled
 
 ## Accessibility
 
-- Fully keyboard navigable
-- ARIA attributes automatically applied
+- `role="menu"` on dropdown panel
+- `role="menuitem"` on items
+- `aria-haspopup` and `aria-expanded` on button
+- Full keyboard navigation
 - Focus management
-- Screen reader support
-- Automatic ID generation
-- Type-to-search functionality
 
 ## Related Components
 
-- [Dropdown](/docs/dropdown) - Simplified dropdown for common use cases
 - [Select](/docs/select) - Form select input
 - [Button](/docs/button) - Standalone button component

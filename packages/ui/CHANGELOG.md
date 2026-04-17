@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0]
+## [1.3.0]
 
 ### Breaking Changes
 
@@ -8,6 +8,8 @@
 - **OKLCH color system**: Theme colors now use full CSS color values instead of space-separated RGB channels. Override with any CSS color format — `oklch()`, `hex`, `rgb()`, `hsl()`, etc.
 - **CSS variable rename**: Theme variables changed from `--gecko-ui-*` to `--color-*` (Tailwind v4 convention).
 - **Data attributes replace BEM modifiers**: Component modifiers migrated from BEM classes (`GeckoUIButton--filled-primary`) to `data-*` attributes (`data-variant="filled" data-color="primary"`). Update CSS selectors accordingly (e.g. `.GeckoUIButton[data-variant="filled"]`).
+- **Menu rewrite**: Menu component rebuilt from scratch with Floating UI. New API uses `Menu`, `MenuItem`, and `MenuTrigger`. Old compound components (`MenuButton`, `MenuItems`, `MenuSection`, `MenuHeading`, `MenuSeparator`) are removed.
+- **Dropdown removed**: Use `Menu` component instead.
 
 ### Fixed
 

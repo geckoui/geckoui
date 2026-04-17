@@ -1,28 +1,26 @@
 {
   "name": "@geckoui",
-  "private": false,
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "build": "turbo run build --filter='./packages/*'",
+    "dev": "turbo run dev --filter='./packages/*' --concurrency=30",
+    "dev:docs": "pnpm --filter docs dev",
+    "build:docs": "pnpm --filter docs build",
+    "typecheck": "turbo run typecheck --filter='./packages/*'",
+    "lint": "turbo run lint --filter='./packages/*'",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "typecheck": "turbo run typecheck",
     "changeset": "changeset",
-    "version": "changeset version",
-    "release": "changeset publish",
-    "publish:dry": "pnpm -r publish --dry-run --access public --no-git-checks",
-    "publish:alpha": "pnpm -r publish --access public --tag alpha",
-    "publish:beta": "pnpm -r publish --access public --tag beta",
-    "publish:latest": "pnpm -r publish --access public"
+    "bump": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
     "prettier": "^3.6.2",
     "turbo": "^2.6.0",
     "typescript": "5.9.2"
-  },
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=18"
   }
 }

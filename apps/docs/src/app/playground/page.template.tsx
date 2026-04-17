@@ -10,15 +10,13 @@ import {
   DateRange,
   Dialog,
   Drawer,
-  Dropdown,
   Input,
   InputError,
   Label,
   LoadingButton,
   Menu,
-  MenuButton,
   MenuItem,
-  MenuItems,
+  MenuTrigger,
   OTPInput,
   Pagination,
   RHFCheckbox,
@@ -41,7 +39,7 @@ import {
 } from "@geckoui/geckoui";
 import "@geckoui/geckoui/styles.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Fragment, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -730,31 +728,12 @@ export default function Home() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold ">Dropdown</h3>
-              <div className="flex gap-3">
-                <Dropdown
-                  items={[
-                    { label: "Edit", onClick: () => toast.info("Edit clicked") },
-                    { label: "Duplicate", onClick: () => toast.info("Duplicate clicked") },
-                    { label: "Delete", onClick: () => toast.error("Delete clicked") }
-                  ]}>
-                  Actions
-                </Dropdown>
-              </div>
-            </div>
-
-            <div className="space-y-4">
               <h3 className="text-lg font-semibold ">Menu</h3>
               <div className="flex gap-3">
-                <Menu>
-                  <MenuButton as={Fragment}>
-                    <Button variant="filled">Open Menu</Button>
-                  </MenuButton>
-                  <MenuItems className="my-1" anchor="bottom start">
-                    <MenuItem onClick={() => toast.info("Item 1")}>Menu Item 1</MenuItem>
-                    <MenuItem onClick={() => toast.info("Item 2")}>Menu Item 2</MenuItem>
-                    <MenuItem onClick={() => toast.info("Item 3")}>Menu Item 3</MenuItem>
-                  </MenuItems>
+                <Menu label="Actions">
+                  <MenuItem label="Item 1" onClick={() => toast.info("Item 1")} />
+                  <MenuItem label="Item 2" onClick={() => toast.info("Item 2")} />
+                  <MenuItem label="Item 3" onClick={() => toast.info("Item 3")} />
                 </Menu>
               </div>
             </div>

@@ -96,9 +96,6 @@ importers:
       '@floating-ui/react':
         specifier: ^0.26.28
         version: 0.26.28(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@headlessui/react':
-        specifier: ^2.2.9
-        version: 2.2.9(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
@@ -552,13 +549,6 @@ packages:
 
   '@formatjs/intl-localematcher@0.6.2':
     resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
-
-  '@headlessui/react@2.2.9':
-    resolution: {integrity: sha512-Mb+Un58gwBn0/yWZfyrCh0TJyurtT+dETj7YHleylHk5od3dv2XqETPGWMyQ5/7sYN7oWdyM1u9MvC0OC8UmzQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^18 || ^19 || ^19.0.0-rc
-      react-dom: ^18 || ^19 || ^19.0.0-rc
 
   '@hookform/resolvers@5.2.2':
     resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
@@ -1295,43 +1285,6 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@react-aria/focus@3.21.2':
-    resolution: {integrity: sha512-JWaCR7wJVggj+ldmM/cb/DXFg47CXR55lznJhZBh4XVqJjMKwaOOqpT5vNN7kpC1wUpXicGNuDnJDN1S/+6dhQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-aria/interactions@3.25.6':
-    resolution: {integrity: sha512-5UgwZmohpixwNMVkMvn9K1ceJe6TzlRlAfuYoQDUuOkk62/JVJNDLAPKIf5YMRc7d2B0rmfgaZLMtbREb0Zvkw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-aria/ssr@3.9.10':
-    resolution: {integrity: sha512-hvTm77Pf+pMBhuBm760Li0BVIO38jv1IBws1xFm1NoL26PU+fe+FMW5+VZWyANR6nYL65joaJKZqOdTQMkO9IQ==}
-    engines: {node: '>= 12'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-aria/utils@3.31.0':
-    resolution: {integrity: sha512-ABOzCsZrWzf78ysswmguJbx3McQUja7yeGj6/vZo4JVsZNlxAN+E9rs381ExBRI0KzVo6iBTeX5De8eMZPJXig==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-stately/flags@3.1.2':
-    resolution: {integrity: sha512-2HjFcZx1MyQXoPqcBGALwWWmgFVUk2TuKVIQxCbRq7fPyWXIl6VHcakCLurdtYC2Iks7zizvz0Idv48MQ38DWg==}
-
-  '@react-stately/utils@3.10.8':
-    resolution: {integrity: sha512-SN3/h7SzRsusVQjQ4v10LaVsDc81jyyR0DD5HnsQitm/I5WDpaSr2nRHtyloPFU48jlql1XX/S04T2DLQM7Y3g==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-types/shared@3.32.1':
-    resolution: {integrity: sha512-famxyD5emrGGpFuUlgOP6fVW2h/ZaF405G5KDi3zPHzyjAWys/8W6NAVJtNbkCkhedmvL0xOhvt8feGXyXaw5w==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
   '@rollup/rollup-android-arm-eabi@4.53.2':
     resolution: {integrity: sha512-yDPzwsgiFO26RJA4nZo8I+xqzh7sJTZIWQOxn+/XOdPE31lAvLIYCKqjV+lNH/vxE2L2iH3plKxDCRK6i+CwhA==}
     cpu: [arm]
@@ -1481,9 +1434,6 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
-  '@swc/helpers@0.5.17':
-    resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
-
   '@tailwindcss/node@4.1.17':
     resolution: {integrity: sha512-csIkHIgLb3JisEFQ0vxr2Y57GUNYh447C8xzwj89U/8fdW8LhProdxvnVH6U8M2Y73QKiTIH+LWbK3V2BBZsAg==}
 
@@ -1571,15 +1521,6 @@ packages:
 
   '@tailwindcss/postcss@4.1.17':
     resolution: {integrity: sha512-+nKl9N9mN5uJ+M7dBOOCzINw94MPstNR/GtIhz1fpZysxL/4a+No64jCBD6CPN+bIHWFx3KWuu8XJRrj/572Dw==}
-
-  '@tanstack/react-virtual@3.13.12':
-    resolution: {integrity: sha512-Gd13QdxPSukP8ZrkbgS2RwoZseTTbQPLnQEn7HY/rqtM+8Zt95f7xKC7N0EsKs7aoz0WzZ+fditZux+F8EzYxA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@tanstack/virtual-core@3.13.12':
-    resolution: {integrity: sha512-1YBOJfRHV4sXUmWsFSf5rQor4Ss82G8dQWLRbnk3GA4jeP8hQt1hxXh0tmflpC0dz3VgEv/1+qwPyLeWkQuPFA==}
 
   '@trivago/prettier-plugin-sort-imports@6.0.0':
     resolution: {integrity: sha512-Xarx55ow0R8oC7ViL5fPmDsg1EBa1dVhyZFVbFXNtPPJyW2w9bJADIla8YFSaNG9N06XfcklA9O9vmw4noNxkQ==}
@@ -4337,11 +4278,6 @@ packages:
       '@types/react':
         optional: true
 
-  use-sync-external-store@1.6.0:
-    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -4832,16 +4768,6 @@ snapshots:
   '@formatjs/intl-localematcher@0.6.2':
     dependencies:
       tslib: 2.8.1
-
-  '@headlessui/react@2.2.9(react-dom@19.2.0(react@19.2.1))(react@19.2.1)':
-    dependencies:
-      '@floating-ui/react': 0.26.28(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@react-aria/focus': 3.21.2(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@react-aria/interactions': 3.25.6(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@tanstack/react-virtual': 3.13.12(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      react: 19.2.1
-      react-dom: 19.2.0(react@19.2.1)
-      use-sync-external-store: 1.6.0(react@19.2.1)
 
   '@hookform/resolvers@5.2.2(react-hook-form@7.66.0(react@19.2.1))':
     dependencies:
@@ -5521,55 +5447,6 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@react-aria/focus@3.21.2(react-dom@19.2.0(react@19.2.1))(react@19.2.1)':
-    dependencies:
-      '@react-aria/interactions': 3.25.6(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@react-aria/utils': 3.31.0(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@react-types/shared': 3.32.1(react@19.2.1)
-      '@swc/helpers': 0.5.17
-      clsx: 2.1.1
-      react: 19.2.1
-      react-dom: 19.2.0(react@19.2.1)
-
-  '@react-aria/interactions@3.25.6(react-dom@19.2.0(react@19.2.1))(react@19.2.1)':
-    dependencies:
-      '@react-aria/ssr': 3.9.10(react@19.2.1)
-      '@react-aria/utils': 3.31.0(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
-      '@react-stately/flags': 3.1.2
-      '@react-types/shared': 3.32.1(react@19.2.1)
-      '@swc/helpers': 0.5.17
-      react: 19.2.1
-      react-dom: 19.2.0(react@19.2.1)
-
-  '@react-aria/ssr@3.9.10(react@19.2.1)':
-    dependencies:
-      '@swc/helpers': 0.5.17
-      react: 19.2.1
-
-  '@react-aria/utils@3.31.0(react-dom@19.2.0(react@19.2.1))(react@19.2.1)':
-    dependencies:
-      '@react-aria/ssr': 3.9.10(react@19.2.1)
-      '@react-stately/flags': 3.1.2
-      '@react-stately/utils': 3.10.8(react@19.2.1)
-      '@react-types/shared': 3.32.1(react@19.2.1)
-      '@swc/helpers': 0.5.17
-      clsx: 2.1.1
-      react: 19.2.1
-      react-dom: 19.2.0(react@19.2.1)
-
-  '@react-stately/flags@3.1.2':
-    dependencies:
-      '@swc/helpers': 0.5.17
-
-  '@react-stately/utils@3.10.8(react@19.2.1)':
-    dependencies:
-      '@swc/helpers': 0.5.17
-      react: 19.2.1
-
-  '@react-types/shared@3.32.1(react@19.2.1)':
-    dependencies:
-      react: 19.2.1
-
   '@rollup/rollup-android-arm-eabi@4.53.2':
     optional: true
 
@@ -5693,10 +5570,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@swc/helpers@0.5.17':
-    dependencies:
-      tslib: 2.8.1
-
   '@tailwindcss/node@4.1.17':
     dependencies:
       '@jridgewell/remapping': 2.3.5
@@ -5765,14 +5638,6 @@ snapshots:
       '@tailwindcss/oxide': 4.1.17
       postcss: 8.5.6
       tailwindcss: 4.1.17
-
-  '@tanstack/react-virtual@3.13.12(react-dom@19.2.0(react@19.2.1))(react@19.2.1)':
-    dependencies:
-      '@tanstack/virtual-core': 3.13.12
-      react: 19.2.1
-      react-dom: 19.2.0(react@19.2.1)
-
-  '@tanstack/virtual-core@3.13.12': {}
 
   '@trivago/prettier-plugin-sort-imports@6.0.0(prettier@3.6.2)':
     dependencies:
@@ -9104,10 +8969,6 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.2.2
-
-  use-sync-external-store@1.6.0(react@19.2.1):
-    dependencies:
-      react: 19.2.1
 
   util-deprecate@1.0.2: {}
 

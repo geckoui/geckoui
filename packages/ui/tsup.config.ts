@@ -1,6 +1,5 @@
 import tailwindcss from "@tailwindcss/postcss";
 import { sassPlugin } from "esbuild-sass-plugin";
-import { globSync } from "glob";
 import { resolve } from "path";
 import postcss from "postcss";
 import { defineConfig } from "tsup";
@@ -16,22 +15,14 @@ const external = [
   "@floating-ui/react",
   "sonner",
   "next-themes",
-  "@headlessui/react",
   "react-textarea-autosize",
   "prop-types",
   "tailwind-merge"
 ];
 
-const watchFiles = ["./src/**/*.scss"].flatMap((pattern) => {
-  return globSync(pattern, { ignore: "node_modules/**" });
-});
-
 export default defineConfig((options) => {
   return {
-    entry: [
-      "src/index.ts",
-      ...(options.watch ? watchFiles.filter((f) => f !== "src/imports.scss") : ["src/styles.scss"])
-    ],
+    entry: ["src/index.ts", "src/styles.scss"],
     outDir: "dist",
     external,
     format: ["cjs", "esm"],
