@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.3]
+
+- Menu: Removed inner `GeckoUIMenu__scroll-container`. Menu panel now fits content width by default and has no max-height — set `menuClassName="max-h-[300px]"` if you need to constrain height.
+
 ## [1.3.2]
 
 - MenuItem: Removed `label` prop — use `children` instead (e.g. `<MenuItem>Edit</MenuItem>`).

@@ -65,7 +65,7 @@ const MenuPanel = ({ children, className }: MenuPanelProps) => {
       style={floatingStyles}
       className={classNames("GeckoUIMenu__items", className)}
       onKeyDown={handleKeyDown}>
-      <div className="GeckoUIMenu__scroll-container">{children}</div>
+      {children}
     </div>
   );
 };

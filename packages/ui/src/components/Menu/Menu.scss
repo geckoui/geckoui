@@ -13,11 +13,7 @@
     @include base-reset;
     @include scrollbar;
 
-    @apply border-border-secondary bg-surface-primary z-50 flex flex-col justify-start rounded-md border p-1 shadow-xl outline-none;
-  }
-
-  &__scroll-container {
-    @apply flex max-h-[300px] flex-col overflow-y-auto;
+    @apply border-border-secondary bg-surface-primary z-50 flex w-fit flex-col justify-start overflow-y-auto rounded-md border p-1 shadow-xl outline-none;
   }
 
   &__item {
