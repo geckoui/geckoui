@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { classNames } from "../../../utils/classNames";
 import { CounterInput } from "../../CounterInput";
 import { RHFController } from "../RHFController";
-import "./RHFCounterInput.scss";
 import type { RHFCounterInputProps } from "./RHFCounterInput.types";
 
 /**
