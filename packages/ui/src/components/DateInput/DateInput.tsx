@@ -12,7 +12,7 @@ import type { DateInputProps } from "./DateInput.types";
 /**
  * DateInput is an accessible date picker component that provides an intuitive keyboard-driven
  * interface for date entry. It features intelligent auto-completion, cross-field validation,
- * and support for multiple date formats (DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD).
+ * and support for multiple date formats (DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD).
  *
  * The component emits ISO 8601 formatted dates (YYYY-MM-DD) while displaying dates in the
  * user's preferred format. It automatically handles leap years, month-specific day limits,

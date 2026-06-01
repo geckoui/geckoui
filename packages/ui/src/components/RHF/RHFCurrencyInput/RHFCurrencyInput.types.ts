@@ -1,8 +1,8 @@
 import type { RHFNumberInputProps } from "../RHFNumberInput";
 
 interface Currency {
-  symbol: string;
-  code: string;
+  symbol?: string;
+  code?: string;
 }
 
 export interface RHFCurrencyInputProps extends Omit<RHFNumberInputProps, "strict"> {

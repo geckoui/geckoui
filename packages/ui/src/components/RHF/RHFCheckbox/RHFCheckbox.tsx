@@ -87,7 +87,7 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
       render={(renderProps) => {
         const { field } = renderProps;
         const isChecked = () => {
-          if (value === undefined) return false;
+          if (value === undefined) return field.value === true;
 
           if (single) return isEqual(field.value, value);
 
@@ -111,7 +111,9 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
               onChange={() => {
                 let v: unknown;
 
-                if (single) {
+                if (value === undefined) {
+                  v = !field.value;
+                } else if (single) {
                   v = isEqual(field.value, value) ? (uncheckedValue ?? null) : value;
                 } else {
                   v = field.value ?? [];

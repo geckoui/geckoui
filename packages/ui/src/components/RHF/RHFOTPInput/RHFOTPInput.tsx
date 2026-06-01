@@ -42,6 +42,8 @@ const RHFOTPInput: FC<RHFOTPInputProps> = ({
   rules,
   disabled,
   className,
+  onChange,
+  onBlur,
   ...rest
 }) => {
   return (
@@ -58,6 +60,14 @@ const RHFOTPInput: FC<RHFOTPInputProps> = ({
             disabled={disabled}
             {...rest}
             {...field}
+            onBlur={() => {
+              field.onBlur();
+              onBlur?.();
+            }}
+            onChange={(value) => {
+              field.onChange(value);
+              onChange?.(value);
+            }}
           />
         );
       }}

@@ -30,7 +30,6 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   calendarPlacement = "bottom-start",
   floatingStrategy = "absolute",
   wrapperClassName,
-  numberOfMonths = 2,
   onStateUpdate,
   onSubmit,
   ...rest
@@ -145,7 +144,6 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
             className={classNames("GeckoUIDateRangeInput__calendar", calendarClassName)}
             onSelectRange={handleRangeSelect}
             selectedRange={value}
-            numberOfMonths={numberOfMonths}
           />
         </div>
       )}

@@ -95,12 +95,6 @@ export interface CalendarRangeModeProps extends BaseCalendarProps {
    * Callback function that is called when a date range is selected
    * */
   onSelectRange?: (range: DateRange | null) => void;
-
-  /**
-   * Number of months to display side by side
-   * @default 2
-   * */
-  numberOfMonths?: 1 | 2;
 }
 
 export type CalendarProps = CalendarSingleModeProps | CalendarRangeModeProps;

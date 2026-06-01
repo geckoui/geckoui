@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.5.0]
+
+### Breaking Changes
+
+- SelectButton: Default placeholder changed from "Select Item" to "Select option" (BREAKING for consumers relying on the old literal in tests).
+- Tooltip: Renamed `side` prop to `placement` (BREAKING).
+- Calendar: Removed `numberOfMonths` from `CalendarRangeModeProps`. Range mode now always renders one month (BREAKING).
+- DateInput / DateRangeInput: Changed `'YYYY/MM/DD'` format option to `'YYYY-MM-DD'` (ISO standard, BREAKING).
+
+## [1.4.0]
+
+### Breaking Changes
+
+- RHFError: Removed deprecated `children` prop — use `render` instead.
+- RHFInput / RHFTextarea: Narrowed `onChange` type from `(value: string | null) => void` to `(value: string) => void`.
+- OTPInput: Switched from CSS grid (`max-w-xs`) to flex layout with cells `flex-1 max-w-[56px]` — adapts to parent width on narrow screens, no longer hard-capped at 320px.
+
+### Fixed
+
+- RHFCheckbox: Boolean-toggle when no `value` prop is passed now works as documented.
+
+### Added
+
+- RHFTextarea: New `transform` prop for input/output value transformation (mirrors RHFInput).
+- RHFOTPInput: New consumer-facing `onChange(value)` and `onBlur()` callbacks fired alongside RHF's internal handlers.
+
+### Changed
+
+- RHFCurrencyInput: Currency `symbol` and `code` are now optional.
+
 ## [1.3.3]
 
 - Menu: Removed inner `GeckoUIMenu__scroll-container`. Menu panel now fits content width by default and has no max-height — set `menuClassName="max-h-[300px]"` if you need to constrain height.

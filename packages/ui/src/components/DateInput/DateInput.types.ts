@@ -2,7 +2,7 @@ import type { Placement, Strategy } from "@floating-ui/react";
 
 import { BaseDateInputProps } from "../BaseDateInput";
 
-export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY/MM/DD";
+export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
 
 export interface DateInputProps
   extends Omit<BaseDateInputProps, "hasFocus" | "renderCalendarIcon"> {

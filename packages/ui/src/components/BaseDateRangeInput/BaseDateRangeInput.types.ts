@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 
 import type { DateRange } from "../Calendar/Calendar/Calendar.types";
 
-export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY/MM/DD";
+export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
 
 export interface BaseDateRangeInputProps
   extends Omit<

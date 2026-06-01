@@ -111,8 +111,7 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
       <div
         className={classNames("GeckoUIOTPInput", className)}
         data-state={disabled ? "disabled" : "enabled"}
-        ref={divRef}
-        style={{ gridTemplateColumns: `repeat(${length}, minmax(0, 1fr))` }}>
+        ref={divRef}>
         {Array.from({ length })
           .map((_, i) => i)
           .map((key, index) => {
@@ -123,6 +122,8 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
                 key={key}
                 style={{
                   position: "relative",
+                  flex: 1,
+                  maxWidth: 56,
                   aspectRatio: aspectRatio === undefined ? 0.94 : aspectRatio
                 }}>
                 <input

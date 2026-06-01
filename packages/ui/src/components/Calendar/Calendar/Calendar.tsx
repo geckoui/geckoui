@@ -26,7 +26,7 @@ import { CalendarType } from "./Calendar.types";
  * ```
  *
  * @example
- * Date range selection with dual calendar:
+ * Date range selection:
  * ```tsx
  * const [selectedRange, setSelectedRange] = useState<DateRange>({ from: null, to: null });
  *
@@ -34,7 +34,6 @@ import { CalendarType } from "./Calendar.types";
  *   mode="range"
  *   selectedRange={selectedRange}
  *   onSelectRange={setSelectedRange}
- *   numberOfMonths={2}
  * />
  * ```
  * */
@@ -53,8 +52,6 @@ const Calendar = (props: CalendarProps) => {
     mode === "range" ? (props as CalendarRangeModeProps).selectedRange : undefined;
   const onSelectRange =
     mode === "range" ? (props as CalendarRangeModeProps).onSelectRange : undefined;
-  const numberOfMonths =
-    mode === "range" ? ((props as CalendarRangeModeProps).numberOfMonths ?? 2) : 1;
 
   let initialDate: string;
   if (mode === "range") {
@@ -174,47 +171,21 @@ const Calendar = (props: CalendarProps) => {
 
     if (view === CalendarType.Day) {
       if (mode === "range") {
-        const secondMonth = activeMonth === 11 ? 0 : activeMonth + 1;
-        const secondYear = activeMonth === 11 ? activeYear + 1 : activeYear;
-
         return (
-          <div className="GeckoUICalendar__dual">
-            <div className="GeckoUICalendar__dual__item" data-position="first">
-              <CalendarDayPicker
-                mode="range"
-                disableDate={disableDate}
-                renderDayCell={renderDayCell}
-                activeMonth={activeMonth}
-                activeYear={activeYear}
-                onClickHeader={() => setView(CalendarType.Month)}
-                onClickLeftArrow={decreaseMonth}
-                onClickRightArrow={increaseMonth}
-                selectedRange={selectedRange}
-                onSelectRange={handleRangeDateClick}
-                hoveredDate={hoveredDate}
-                onHoverDate={handleHoverDate}
-              />
-            </div>
-
-            {numberOfMonths === 2 && (
-              <div className="GeckoUICalendar__dual__item" data-position="second">
-                <CalendarDayPicker
-                  mode="range"
-                  disableDate={disableDate}
-                  renderDayCell={renderDayCell}
-                  activeMonth={secondMonth}
-                  activeYear={secondYear}
-                  onClickHeader={() => setView(CalendarType.Month)}
-                  onClickLeftArrow={decreaseMonth}
-                  onClickRightArrow={increaseMonth}
-                  selectedRange={selectedRange}
-                  onSelectRange={handleRangeDateClick}
-                  hoveredDate={hoveredDate}
-                  onHoverDate={handleHoverDate}
-                />
-              </div>
-            )}
-          </div>
+          <CalendarDayPicker
+            mode="range"
+            disableDate={disableDate}
+            renderDayCell={renderDayCell}
+            activeMonth={activeMonth}
+            activeYear={activeYear}
+            onClickHeader={() => setView(CalendarType.Month)}
+            onClickLeftArrow={decreaseMonth}
+            onClickRightArrow={increaseMonth}
+            selectedRange={selectedRange}
+            onSelectRange={handleRangeDateClick}
+            hoveredDate={hoveredDate}
+            onHoverDate={handleHoverDate}
+          />
         );
       }
 
@@ -255,9 +226,6 @@ const Calendar = (props: CalendarProps) => {
       className={classNames(`GeckoUICalendar`, className)}
       data-mode={view}
       data-selection={mode}
-      data-calendars={
-        (mode === "range" && view === CalendarType.Day && numberOfMonths) || undefined
-      }
       style={style}>
       {renderContent()}
     </div>

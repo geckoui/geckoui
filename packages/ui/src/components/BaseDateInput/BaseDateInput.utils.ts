@@ -66,7 +66,7 @@ export const getSegmentOrder = (format: DateFormat): Array<"day" | "month" | "ye
       return ["day", "month", "year"];
     case "MM/DD/YYYY":
       return ["month", "day", "year"];
-    case "YYYY/MM/DD":
+    case "YYYY-MM-DD":
       return ["year", "month", "day"];
     default:
       return ["day", "month", "year"];

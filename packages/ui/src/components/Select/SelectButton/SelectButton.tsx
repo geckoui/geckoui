@@ -84,7 +84,7 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
             className={classNames("GeckoUISelectButton__value", placeholderClassName)}
             data-placeholder=""
             {...(keyword && filterable && { "data-hidden": "" })}>
-            {placeholder ?? "Select Item"}
+            {placeholder ?? "Select option"}
           </span>
         )}
 

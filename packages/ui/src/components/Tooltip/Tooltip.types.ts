@@ -49,7 +49,7 @@ export interface TooltipProps extends PropsWithChildren {
   /**
    * The side of the tooltip to display
    * */
-  side?: Placement;
+  placement?: Placement;
 
   /**
    * The offset of the tooltip from the trigger

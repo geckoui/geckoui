@@ -1,7 +1,7 @@
 @import "../../mixins.scss";
 
 .GeckoUIOTPInput {
-  @apply grid max-w-xs gap-2;
+  @apply flex w-full max-w-full flex-row justify-center gap-2;
 
   &__input {
     @include form-reset;

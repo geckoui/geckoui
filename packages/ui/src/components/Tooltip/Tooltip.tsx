@@ -22,7 +22,7 @@ const Tooltip: FC<TooltipProps> = ({
   triggerAsChild = false,
   arrowClassName,
   backgroundColor,
-  side = "top",
+  placement = "top",
   sideOffset = 12
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ const Tooltip: FC<TooltipProps> = ({
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    placement: side,
+    placement,
     middleware: [offset(sideOffset), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })]
   });
 

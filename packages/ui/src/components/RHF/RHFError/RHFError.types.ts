@@ -32,9 +32,4 @@ export interface RHFErrorProps extends RHFBaseProps {
    * ```
    * */
   render?: ReactNode | ((props: RHFErrorRenderProps) => JSX.Element);
-
-  /**
-   * @deprecated - Use `render` prop instead
-   * */
-  children?: ReactNode;
 }

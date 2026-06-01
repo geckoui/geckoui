@@ -51,6 +51,7 @@ const RHFTextarea: FC<RHFTextareaProps> = ({
   rules,
   disabled,
   className,
+  transform,
   onChange,
   onBlur,
   ...rest
@@ -62,6 +63,10 @@ const RHFTextarea: FC<RHFTextareaProps> = ({
       rules={rules}
       render={(renderProps) => {
         const { field, fieldState } = renderProps;
+
+        const value = transform?.input
+          ? transform.input(field.value as string)
+          : (field.value as string);
 
         return (
           <Textarea
@@ -75,9 +80,14 @@ const RHFTextarea: FC<RHFTextareaProps> = ({
               onBlur?.(e.target.value);
             }}
             onChange={(e) => {
-              field.onChange(e.target.value);
-              onChange?.(e.target.value);
+              const outputValue = transform?.output
+                ? transform.output(e.target.value)
+                : e.target.value;
+
+              field.onChange(outputValue);
+              onChange?.(outputValue);
             }}
+            value={value ?? ""}
           />
         );
       }}

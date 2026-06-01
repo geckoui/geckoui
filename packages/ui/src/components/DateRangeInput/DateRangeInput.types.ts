@@ -11,5 +11,4 @@ export interface DateRangeInputProps
   calendarClassName?: string;
   calendarPlacement?: Placement;
   floatingStrategy?: Strategy;
-  numberOfMonths?: 1 | 2;
 }

@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 
-export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY/MM/DD";
+export type DateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
 
 export interface BaseDateInputProps {
   value?: string | null;

@@ -61,7 +61,7 @@ export interface RHFInputProps
    * Callback fired when the value changes
    * This is the actual value of the input not the event object
    * */
-  onChange?: (value: string | null) => void;
+  onChange?: (value: string) => void;
 
   /**
    * Callback fired when the input is blurred
