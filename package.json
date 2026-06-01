@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "turbo run build --filter='./packages/*'",
-    "dev": "turbo run dev --filter='./packages/*' --concurrency=30",
+    "dev": "turbo run dev",
     "dev:docs": "pnpm --filter docs dev",
     "build:docs": "pnpm --filter docs build",
     "typecheck": "turbo run typecheck --filter='./packages/*'",
