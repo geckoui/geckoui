@@ -1,6 +1,6 @@
 {
   "name": "@geckoui/geckoui",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "license": "MIT",
   "description": "The only thing our Gecko eats is bugs!",
   "keywords": ["react", "components", "ui", "library"],
