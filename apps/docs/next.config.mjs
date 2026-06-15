@@ -4,16 +4,11 @@ const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const config = {
+  output: 'export',
   reactStrictMode: true,
   transpilePackages: ['@geckoui/geckoui'],
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/docs',
-        permanent: true,
-      },
-    ];
+  images: {
+    unoptimized: true,
   },
 };
 

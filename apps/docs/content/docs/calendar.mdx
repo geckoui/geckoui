@@ -57,7 +57,6 @@ function Example() {
 | `mode` | `'range'` | - | Selection mode for date range |
 | `selectedRange` | `DateRange` | - | Selected date range with `from` and `to` |
 | `onSelectRange` | `(range: DateRange \| null) => void` | - | Callback when range is selected |
-| `numberOfMonths` | `1 \| 2` | `2` | Number of months to display side by side |
 
 ### Common Props
 
@@ -222,8 +221,6 @@ function Example() {
 
 ### Single Month Display
 
-Use `numberOfMonths={1}` for a compact single-month range picker:
-
 <Preview>
   <RangeWithNumberOfMonthsExample />
 </Preview>
@@ -233,7 +230,6 @@ Use `numberOfMonths={1}` for a compact single-month range picker:
   mode="range"
   selectedRange={selectedRange}
   onSelectRange={(range) => setSelectedRange(range ?? undefined)}
-  numberOfMonths={1}
 />
 ```
 

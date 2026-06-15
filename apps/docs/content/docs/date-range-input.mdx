@@ -47,7 +47,6 @@ function Example() {
 | `format` | `'DD/MM/YYYY' \| 'MM/DD/YYYY' \| 'YYYY/MM/DD'` | `'DD/MM/YYYY'` | Display format for date segments |
 | `separator` | `string` | `'/'` | Separator between date segments |
 | `rangeSeparator` | `string` | `' - '` | Separator between from and to dates |
-| `numberOfMonths` | `1 \| 2` | `2` | Number of months to display in calendar |
 | `calendarPlacement` | `Placement` | `'bottom-start'` | Calendar popup position (from @floating-ui/react) |
 | `floatingStrategy` | `'absolute' \| 'fixed'` | `'absolute'` | Floating UI positioning strategy |
 | `disabled` | `boolean` | `false` | Disable the input |
@@ -105,20 +104,7 @@ Choose between different date display formats:
 ```tsx
 <DateRangeInput format="DD/MM/YYYY" />  // 15/06/2024 - 30/06/2024
 <DateRangeInput format="MM/DD/YYYY" />  // 06/15/2024 - 06/30/2024
-<DateRangeInput format="YYYY/MM/DD" />  // 2024/06/15 - 2024/06/30
-```
-
-### Number of Months
-
-Display one or two months in the calendar:
-
-<Preview>
-  <NumberOfMonthsExample />
-</Preview>
-
-```tsx
-<DateRangeInput numberOfMonths={1} />  // Single month view
-<DateRangeInput numberOfMonths={2} />  // Dual month view (default)
+<DateRangeInput format="YYYY-MM-DD" />  // 2024-06-15 - 2024-06-30
 ```
 
 ### Disabled and Read-only

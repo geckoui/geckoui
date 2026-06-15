@@ -1,11 +1,11 @@
 {
-  "name": "docs",
+  "name": "@geckoui/docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev --port 3001",
-    "start": "next start",
+    "start": "serve out",
     "postinstall": "fumadocs-mdx",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
@@ -13,6 +13,7 @@
   "dependencies": {
     "@geckoui/geckoui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@orama/orama": "^3.1.18",
     "fumadocs-core": "16.0.11",
     "fumadocs-mdx": "13.0.8",
     "fumadocs-ui": "16.0.11",

@@ -245,7 +245,7 @@ export default function Home() {
               </div>
               <div className="max-w-md">
                 <DateInput
-                  format="YYYY/MM/DD"
+                  format="YYYY-MM-DD"
                   separator="-"
                   disabled
                   value={selectedDate}
@@ -289,7 +289,6 @@ export default function Home() {
                     toast.info(`Selected Range: ${range.from} to ${range.to}`);
                   }
                 }}
-                numberOfMonths={2}
               />
             </div>
           </section>
@@ -602,16 +601,16 @@ export default function Home() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold ">Tooltip</h3>
               <div className="flex flex-wrap gap-4">
-                <Tooltip content="Tooltip on top" side="top">
+                <Tooltip content="Tooltip on top" placement="top">
                   <Button variant="outlined">Top</Button>
                 </Tooltip>
-                <Tooltip content="Tooltip on right" side="right">
+                <Tooltip content="Tooltip on right" placement="right">
                   <Button variant="outlined">Right</Button>
                 </Tooltip>
-                <Tooltip content="Tooltip on bottom" side="bottom">
+                <Tooltip content="Tooltip on bottom" placement="bottom">
                   <Button variant="outlined">Bottom</Button>
                 </Tooltip>
-                <Tooltip content="Tooltip on left" side="left">
+                <Tooltip content="Tooltip on left" placement="left">
                   <Button variant="outlined">Left</Button>
                 </Tooltip>
               </div>

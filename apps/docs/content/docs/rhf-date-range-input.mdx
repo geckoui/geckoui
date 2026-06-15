@@ -54,7 +54,6 @@ Extends all props from [DateRangeInput](/docs/date-range-input) component plus:
 | `onChange` | `(value: DateRange \| null) => void` | - | Change callback (in addition to form update) |
 | `disabled` | `boolean` | `false` | Disable the input |
 | `format` | `'DD/MM/YYYY' \| 'MM/DD/YYYY' \| 'YYYY/MM/DD'` | `'DD/MM/YYYY'` | Date display format |
-| `numberOfMonths` | `1 \| 2` | `2` | Number of months in calendar |
 | ...rest | `DateRangeInputProps` | - | All DateRangeInput props |
 
 ## Examples
@@ -127,7 +126,7 @@ const methods = useForm({
 </Preview>
 
 ```tsx
-<RHFDateRangeInput name="dateRange" numberOfMonths={1} />
+<RHFDateRangeInput name="dateRange" />
 ```
 
 ### Complete Form

@@ -111,7 +111,6 @@ export function RangeWithNumberOfMonthsExample() {
         mode="range"
         selectedRange={selectedRange}
         onSelectRange={(range) => setSelectedRange(range ?? undefined)}
-        numberOfMonths={1}
       />
       {selectedRange?.from && (
         <p className="text-sm text-gray-600">

@@ -85,7 +85,7 @@ export function NumberOfMonthsExample() {
       <div className="space-y-4">
         <div>
           <p className="text-sm text-gray-600 mb-2">Single month</p>
-          <RHFDateRangeInput name="dateRange" numberOfMonths={1} />
+          <RHFDateRangeInput name="dateRange" />
         </div>
       </div>
     </FormProvider>

@@ -29,6 +29,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.66.0(react@19.2.1))
+      '@orama/orama':
+        specifier: ^3.1.18
+        version: 3.1.18
       fumadocs-core:
         specifier: 16.0.11
         version: 16.0.11(@types/react@19.2.2)(lucide-react@0.552.0(react@19.2.1))(next@16.0.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.1))(react@19.2.1)(sass@1.94.0))(react-dom@19.2.0(react@19.2.1))(react@19.2.1)
@@ -830,8 +833,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@orama/orama@3.1.16':
-    resolution: {integrity: sha512-scSmQBD8eANlMUOglxHrN1JdSW8tDghsPuS83otqealBiIeMukCQMOf/wc0JJjDXomqwNdEQFLXLGHrU6PGxuA==}
+  '@orama/orama@3.1.18':
+    resolution: {integrity: sha512-a61ljmRVVyG5MC/698C8/FfFDw5a8LOIvyOLW5fztgUXqUpc1jOfQzOitSCbge657OgXXThmY3Tk8fpiDb4UcA==}
     engines: {node: '>= 20.0.0'}
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -5025,7 +5028,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@orama/orama@3.1.16': {}
+  '@orama/orama@3.1.18': {}
 
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
@@ -6699,7 +6702,7 @@ snapshots:
   fumadocs-core@16.0.11(@types/react@19.2.2)(lucide-react@0.552.0(react@19.2.1))(next@16.0.10(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.1))(react@19.2.1)(sass@1.94.0))(react-dom@19.2.0(react@19.2.1))(react@19.2.1):
     dependencies:
       '@formatjs/intl-localematcher': 0.6.2
-      '@orama/orama': 3.1.16
+      '@orama/orama': 3.1.18
       '@shikijs/rehype': 3.15.0
       '@shikijs/transformers': 3.15.0
       estree-util-value-to-estree: 3.5.0

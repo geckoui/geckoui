@@ -30,7 +30,7 @@ export function DifferentFormatsExample() {
     <div className="flex flex-col gap-4">
       <DateInput value={date1} onChange={setDate1} format="DD/MM/YYYY" placeholder="DD/MM/YYYY" />
       <DateInput value={date2} onChange={setDate2} format="MM/DD/YYYY" placeholder="MM/DD/YYYY" />
-      <DateInput value={date3} onChange={setDate3} format="YYYY/MM/DD" placeholder="YYYY/MM/DD" />
+      <DateInput value={date3} onChange={setDate3} format="YYYY-MM-DD" placeholder="YYYY-MM-DD" />
     </div>
   );
 }
