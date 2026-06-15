@@ -6,7 +6,7 @@ const content = `# Gecko UI
 
 ## Docs
 
-- [Full Docs](https://gecko.productionbug.com/llms-full.txt): Full documentation of all components.
+- [Full Docs](https://geckoui.dev/llms-full.txt): Full documentation of all components.
 
 ## Examples
 

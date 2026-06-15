@@ -8,7 +8,7 @@
   The only thing our Gecko 🦎 eats is bugs! 🐛<br />
 </p>
 
-📚 **Documentation**: [Gecko](https://gecko.productionbug.com)
+📚 **Documentation**: [Gecko](https://geckoui.dev)
 
 ## Installation
 
