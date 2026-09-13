@@ -31,7 +31,9 @@ export function getPageImage(page: InferPageType<typeof source>) {
   };
 }
 
-export async function getLLMText(page: InferPageType<typeof source>) {
+export type AnyDocsPage = InferPageType<typeof source> | InferPageType<typeof sourceV1>;
+
+export async function getLLMText(page: AnyDocsPage) {
   const processed = await page.data.getText("processed");
 
   return `# ${page.data.title}
