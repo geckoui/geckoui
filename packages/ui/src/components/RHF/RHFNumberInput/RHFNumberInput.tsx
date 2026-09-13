@@ -1,6 +1,7 @@
 import type { FC } from "react";
 
 import { classNames } from "../../../utils/classNames";
+import { formatNumericInput } from "../../../utils/formatNumericInput";
 import { RHFInput } from "../RHFInput";
 import type { RHFNumberInputProps } from "./RHFNumberInput.types";
 
@@ -57,32 +58,12 @@ const RHFNumberInput: FC<RHFNumberInputProps> = ({
   function transformOutput(value: string) {
     if (typeof transform?.output === "function") return transform.output(value);
 
-    const formattedValue = value
-      .replace(/[^0-9.]/g, "")
-      .split(".")
-      .slice(0, maxFractionDigits === 0 ? 1 : 2)
-      .map((part: string, index: number) => {
-        if (index === 0) {
-          const wholeDigit = part.slice(0, maxWholeDigitPlaces);
-
-          if (wholeDigit === "") return "";
-
-          if (strict) {
-            return Number(wholeDigit).toString();
-          }
-
-          return wholeDigit;
-        }
-
-        return part.slice(0, maxFractionDigits);
-      })
-      .join(".");
-
-    if (value.startsWith("-") && !positiveOnly) {
-      return `-${formattedValue}`;
-    }
-
-    return formattedValue;
+    return formatNumericInput(value, {
+      strict,
+      positiveOnly,
+      maxFractionDigits,
+      maxWholeDigitPlaces
+    });
   }
 
   return (

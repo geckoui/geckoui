@@ -56,7 +56,7 @@ export function AlertCustomVariantExample() {
 }
 
 export function CounterInputCustomSizeExample() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("0");
 
   return <CounterInput value={value} onChange={setValue} size="xl" />;
 }

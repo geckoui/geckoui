@@ -8,11 +8,15 @@ export interface CounterInputSizeMap {
 
 export interface CounterInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "onChange"> {
-  /** Current numeric value */
-  value: number;
+  /**
+   * Current value, held as a string so a half-typed value like "2." is not
+   * collapsed to "2" while the user is still typing. Convert with `Number(value)`
+   * when you need a number.
+   * */
+  value: string;
 
-  /** Callback when value changes */
-  onChange: (value: number) => void;
+  /** Callback when the value changes. Receives the sanitised string. */
+  onChange: (value: string) => void;
 
   /** Minimum allowed value */
   min?: number;
@@ -40,4 +44,18 @@ export interface CounterInputProps
 
   /** Class name for the buttons */
   buttonClassName?: string;
+
+  /**
+   * Drop leading zeros and normalise the whole part (default: true)
+   * */
+  strict?: boolean;
+
+  /** Reject a leading minus sign (default: false) */
+  positiveOnly?: boolean;
+
+  /** Digits kept after the decimal point. `0` makes the field integer only. */
+  maxFractionDigits?: number;
+
+  /** Digits kept before the decimal point */
+  maxWholeDigitPlaces?: number;
 }
