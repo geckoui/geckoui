@@ -49,9 +49,14 @@ const CounterInput = forwardRef<HTMLInputElement, CounterInputProps>(
     const format = (raw: string) =>
       formatNumericInput(raw, { strict, positiveOnly, maxFractionDigits, maxWholeDigitPlaces });
 
-    const clamp = (val: number) => Math.min(Math.max(val, min), max);
+    // positiveOnly has no minus sign to strip on the way out, so it has to act as a floor
+    // here instead: without it, stepping down from 0 would produce -1 and format back to 1.
+    const lowerBound = positiveOnly ? Math.max(min, 0) : min;
+    const clamp = (val: number) => Math.min(Math.max(val, lowerBound), max);
 
-    const parsed = parseFloat(value);
+    // Step from the sanitised value so an out-of-shape initial value (say "2.8" with
+    // maxFractionDigits 0) steps from 2 rather than rounding 3.8 up to 4.
+    const parsed = parseFloat(format(value));
     const numeric = Number.isNaN(parsed) ? null : parsed;
 
     const applyStep = (direction: 1 | -1) => {

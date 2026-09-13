@@ -33,6 +33,10 @@ Also changed:
 - New `strict`, `positiveOnly`, `maxFractionDigits` and `maxWholeDigitPlaces`
   props, matching `RHFNumberInput`.
 - Empty input is allowed while typing and settles to `""` on blur.
+- The increment and decrement buttons round to the step's precision, so stepping
+  `0.1` by `0.2` gives `0.3` rather than `0.30000000000000004`.
+- With `positiveOnly`, stepping down from `0` stays at `0` instead of producing
+  `-1` and formatting it back to `1`.
 - `inputMode` is `decimal` rather than `numeric`, so mobile keyboards offer the
   decimal point.
 
