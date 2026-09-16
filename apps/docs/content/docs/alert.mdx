@@ -327,6 +327,38 @@ BEM class names for structural elements:
 - `GeckoUIAlert__remove-button` — Dismiss button
 - `GeckoUIAlert__remove-button__icon` — Dismiss button icon
 
+## Styling with CSS
+
+Alert reads the shared semantic tokens, so changing one updates every component that reports
+status, Toast included:
+
+```css
+:root {
+  --color-error: oklch(0.6 0.22 25);
+  --color-warning: oklch(0.7 0.16 60);
+  --color-info: oklch(0.62 0.19 260);
+  --color-success: oklch(0.65 0.18 150);
+}
+```
+
+The alert itself exposes its own variables:
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-alert-bg` | `--color-surface-primary` | Background |
+| `--gecko-alert-border` | `--color-border-primary` | Border colour |
+| `--gecko-alert-accent` | per variant | Title text and icon |
+| `--gecko-alert-radius` | `0.5rem` | Corner radius |
+
+Scope a variable to one variant to restyle only that one:
+
+```css
+.GeckoUIAlert[data-variant="error"] {
+  --gecko-alert-bg: var(--color-error);
+  --gecko-alert-accent: white;
+}
+```
+
 ## Related Components
 
 - [InputError](/docs/input-error) - Form field error messages
