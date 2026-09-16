@@ -2,6 +2,7 @@
 
 import {
   Alert,
+  Badge,
   Button,
   Calendar,
   Checkbox,
@@ -1066,6 +1067,67 @@ export default function Home() {
               {/* Section 8: Content Display Components */}
               <section className="space-y-6  p-8 rounded-lg shadow">
                 <h2 className="text-2xl font-bold border-b pb-2">Content Display Components</h2>
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Badge</h3>
+
+                  <p className="text-sm text-text-muted">Variants x colors</p>
+                  {(["filled", "soft", "outlined"] as const).map((variant) => (
+                    <div key={variant} className="flex flex-wrap items-center gap-2">
+                      {(["default", "primary", "success", "error", "warning", "info"] as const).map(
+                        (color) => (
+                          <Badge key={color} variant={variant} color={color}>
+                            {variant}/{color}
+                          </Badge>
+                        )
+                      )}
+                    </div>
+                  ))}
+
+                  <p className="text-sm text-text-muted">Sizes</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(["sm", "md", "lg"] as const).map((size) => (
+                      <Badge key={size} size={size} color="primary">
+                        Size {size}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <p className="text-sm text-text-muted">Shapes</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(["rounded", "pill", "square"] as const).map((shape) => (
+                      <Badge key={shape} shape={shape} color="info" variant="outlined">
+                        {shape}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <p className="text-sm text-text-muted">Dot and custom icon</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge color="success" dot>
+                      Live
+                    </Badge>
+                    <Badge color="warning" dot>
+                      Degraded
+                    </Badge>
+                    <Badge color="error" dot variant="filled">
+                      Down
+                    </Badge>
+                    <Badge
+                      color="warning"
+                      shape="pill"
+                      icon={
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                          <path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.5 2.3 11.5l.8-4.2L0 4.4l4.2-.5L6 0z" />
+                        </svg>
+                      }>
+                      Featured
+                    </Badge>
+                    <Badge color="primary" variant="filled">
+                      Plain children <strong>work too</strong>
+                    </Badge>
+                  </div>
+                </div>
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Pagination</h3>

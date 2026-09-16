@@ -15,6 +15,7 @@ export * from "./Switch";
 export * from "./Radio";
 export * from "./Calendar";
 export * from "./Alert";
+export * from "./Badge";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";
