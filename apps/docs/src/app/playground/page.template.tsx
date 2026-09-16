@@ -25,6 +25,7 @@ import {
   RHFDateInput,
   RHFError,
   RHFInput,
+  RHFInputGroup,
   RHFOTPInput,
   RHFRadio,
   RHFSelect,
@@ -47,6 +48,91 @@ import { z } from "zod";
 
 const DemoUserContext = createContext<{ name: string } | null>(null);
 
+
+const COUNTRIES = [
+  ["mm", "Myanmar"], ["th", "Thailand"], ["sg", "Singapore"], ["vn", "Viet Nam"],
+  ["my", "Malaysia"], ["id", "Indonesia"], ["ph", "Philippines"], ["kh", "Cambodia"],
+  ["la", "Laos"], ["bn", "Brunei"], ["jp", "Japan"], ["kr", "South Korea"],
+  ["cn", "China"], ["tw", "Taiwan"], ["hk", "Hong Kong"], ["in", "India"],
+  ["bd", "Bangladesh"], ["lk", "Sri Lanka"], ["np", "Nepal"], ["pk", "Pakistan"],
+  ["au", "Australia"], ["nz", "New Zealand"], ["us", "United States"], ["ca", "Canada"],
+  ["mx", "Mexico"], ["br", "Brazil"], ["ar", "Argentina"], ["uk", "United Kingdom"],
+  ["ie", "Ireland"], ["fr", "France"], ["de", "Germany"], ["es", "Spain"],
+  ["it", "Italy"], ["pt", "Portugal"], ["nl", "Netherlands"], ["be", "Belgium"],
+  ["ch", "Switzerland"], ["at", "Austria"], ["se", "Sweden"], ["no", "Norway"],
+  ["dk", "Denmark"], ["fi", "Finland"], ["pl", "Poland"], ["cz", "Czechia"],
+  ["gr", "Greece"], ["tr", "Turkey"], ["ae", "United Arab Emirates"], ["sa", "Saudi Arabia"],
+  ["za", "South Africa"], ["ng", "Nigeria"], ["ke", "Kenya"], ["eg", "Egypt"]
+] as const;
+
+const FRAMEWORKS = [
+  ["react", "React"], ["vue", "Vue"], ["svelte", "Svelte"], ["solid", "Solid"],
+  ["qwik", "Qwik"], ["angular", "Angular"], ["preact", "Preact"], ["lit", "Lit"],
+  ["alpine", "Alpine.js"], ["ember", "Ember"], ["astro", "Astro"], ["nuxt", "Nuxt"],
+  ["next", "Next.js"], ["remix", "Remix"], ["sveltekit", "SvelteKit"],
+  ["gatsby", "Gatsby"], ["redwood", "RedwoodJS"], ["htmx", "htmx"]
+] as const;
+
+const selectFormSchema = z.object({
+  country: z.string({ message: "Pick a country" }).min(1, "Pick a country"),
+  frameworks: z.array(z.string()).min(1, "Pick at least one framework"),
+  plan: z.string().min(1, "Pick a plan")
+});
+
+function SelectFormDemo() {
+  const methods = useForm({
+    resolver: zodResolver(selectFormSchema) as never,
+    mode: "onChange",
+    defaultValues: { country: "", frameworks: [], plan: "" }
+  });
+
+  const onSubmit = (data: unknown) => {
+    toast.success("Submitted", { description: JSON.stringify(data) });
+  };
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="max-w-md space-y-4">
+        <RHFInputGroup label="Country" required>
+          <RHFSelect name="country" placeholder="Search a country" filterable>
+            {COUNTRIES.map(([value, label]) => (
+              <SelectOption key={value} value={value} label={label} />
+            ))}
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Frameworks" required>
+          <RHFSelect name="frameworks" placeholder="Pick a few" multiple filterable="dropdown">
+            {FRAMEWORKS.map(([value, label]) => (
+              <SelectOption key={value} value={value} label={label} />
+            ))}
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Plan" required>
+          <RHFSelect name="plan" placeholder="Select a plan">
+            <SelectOption value="free" label="Free" />
+            <SelectOption value="pro" label="Pro" />
+            <SelectOption value="team" label="Team" />
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <div className="flex items-center gap-3">
+          <Button type="submit" variant="filled">
+            Submit
+          </Button>
+          <Button type="button" variant="outlined" onClick={() => methods.reset()}>
+            Reset
+          </Button>
+          <span className="text-sm text-text-muted">
+            {methods.formState.isValid ? "valid" : "fill the required fields"}
+          </span>
+        </div>
+      </form>
+    </FormProvider>
+  );
+}
+
 function DialogWithSelect({ dismiss }: { dismiss: () => void }) {
   const [value, setValue] = useState<string>();
 
@@ -54,13 +140,14 @@ function DialogWithSelect({ dismiss }: { dismiss: () => void }) {
     <div className="space-y-4">
       <h3 className="text-xl font-bold">Select Inside a Dialog</h3>
       <p className="text-sm text-gray-600">
-        The Select menu renders in a portal outside the dialog element. Picking an option must not
-        close the dialog.
+        The Select menu renders in a portal outside the dialog element, so picking an option must
+        not close the dialog. A long, filterable list also puts the menu over the dialog edge and
+        over the backdrop.
       </p>
-      <Select value={value} onChange={setValue} placeholder="Choose a fruit">
-        <SelectOption value="apple" label="Apple" />
-        <SelectOption value="banana" label="Banana" />
-        <SelectOption value="orange" label="Orange" />
+      <Select value={value} onChange={setValue} placeholder="Search a country" filterable>
+        {COUNTRIES.map(([code, label]) => (
+          <SelectOption key={code} value={code} label={label} />
+        ))}
       </Select>
       <div className="flex gap-3 justify-end">
         <Button variant="outlined" onClick={dismiss}>
@@ -459,14 +546,20 @@ export default function Home() {
                       onChange={setSingleSelectValue}
                       placeholder="Search and select a country"
                       filterable>
-                      <SelectOption value="us" label="United States" />
-                      <SelectOption value="uk" label="United Kingdom" />
-                      <SelectOption value="ca" label="Canada" />
-                      <SelectOption value="au" label="Australia" />
-                      <SelectOption value="de" label="Germany" />
-                      <SelectOption value="fr" label="France" />
+                      {COUNTRIES.map(([value, label]) => (
+                        <SelectOption key={value} value={value} label={label} />
+                      ))}
                     </Select>
                   </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold ">Select in a form</h3>
+                  <p className="text-sm text-text-muted">
+                    Single, multiple and filterable selects inside react-hook-form with zod
+                    validation. Submit with fields empty to see the errors.
+                  </p>
+                  <SelectFormDemo />
                 </div>
               </section>
 
