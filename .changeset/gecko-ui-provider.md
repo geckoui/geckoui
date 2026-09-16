@@ -126,4 +126,4 @@ The same applies to the options passed to `Drawer.show(node, { onClose })`.
 
 ## Still not handled
 
-Overlays have no focus trap, no focus restore on close, and no body scroll lock.
+Overlays have no focus trap and do not restore focus to the trigger on close.

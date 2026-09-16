@@ -37,7 +37,8 @@
   }
 
   &[data-position$="right"] {
-    right: var(--gecko-toast-offset);
+    /* the scrollbar variable is set while an overlay holds the scroll lock */
+    right: calc(var(--gecko-toast-offset) + var(--gecko-scrollbar-width, 0px));
   }
 
   &[data-position$="center"] {

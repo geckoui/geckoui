@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useEscListener } from "../../hooks";
+import { useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
 import { OVERLAY_ANIMATION_DURATION } from "../GeckoUIProvider/overlay-store";
 
@@ -81,6 +81,9 @@ export function DialogSurface({
       return () => clearTimeout(timer);
     }
   }, [animationState]);
+
+  // hold the lock until the exit animation finishes, or the page jumps mid-close
+  useScrollLock(animationState !== "closed");
 
   const canDismiss = open && isTop && animationState !== "closing";
 

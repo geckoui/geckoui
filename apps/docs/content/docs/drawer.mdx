@@ -197,7 +197,9 @@ The drawer root (`GeckoUIDrawer`) sits at `z-index: 1000`. Drawers opened with `
 - Keyboard navigation with Escape key support
 - Click-outside detection
 
-Not handled yet: there is no focus trap, focus is not restored to the trigger on close, and page scroll is not locked while a drawer is open.
+Page scroll is locked while a drawer is open, unless `allowClickOutside` is set, since that drawer deliberately leaves the page usable. The scrollbar width is paid back as padding so nothing shifts sideways.
+
+Not handled yet: there is no focus trap, and focus is not restored to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
 
 ## Related Components
 

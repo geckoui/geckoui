@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useClickOutside, useEscListener } from "../../hooks";
+import { useClickOutside, useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
-import { overlayStore } from "../GeckoUIProvider/overlay-store";
+import { OVERLAY_ANIMATION_DURATION, overlayStore } from "../GeckoUIProvider/overlay-store";
 import type { DrawerProps } from "./Drawer.types";
 
 /**
@@ -60,6 +60,35 @@ function Drawer({
 }: DrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
 
+  // A drawer mounted already open, as Drawer.show() does, would otherwise appear with no
+  // transition: there is no closed frame for the CSS to animate away from. Holding the
+  // open state back by one frame gives it that frame.
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const visible = open && ready;
+
+  // Hold the scroll lock through the slide out. Releasing it the moment `open` flips
+  // makes the page jump sideways while the drawer is still moving.
+  const [closing, setClosing] = useState(false);
+  const wasOpen = useRef(open);
+
+  useEffect(() => {
+    if (wasOpen.current === open) return;
+    wasOpen.current = open;
+
+    if (open) return;
+
+    setClosing(true);
+    const timer = setTimeout(() => setClosing(false), OVERLAY_ANIMATION_DURATION);
+
+    return () => clearTimeout(timer);
+  }, [open]);
+
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -74,12 +103,15 @@ function Drawer({
 
   useClickOutside(dismissOnClickOutside, [drawerRef]);
 
+  // a click-through drawer deliberately leaves the page usable, so it must not lock scroll
+  useScrollLock((open || closing) && !allowClickOutside);
+
   useEscListener(open && dismissOnEscape ? handleDismiss : undefined);
 
   return (
     <div className="GeckoUIDrawer" style={style}>
       <div
-        data-state={open && !hideBackdrop ? "visible" : "hidden"}
+        data-state={visible && !hideBackdrop ? "visible" : "hidden"}
         data-clickthrough={allowClickOutside || undefined}
         className={classNames("GeckoUIDrawer__backdrop", backdropClassName)}
         onMouseDown={open ? handleDismiss : undefined}
@@ -88,7 +120,7 @@ function Drawer({
       <div
         ref={drawerRef}
         data-placement={placement}
-        data-state={open ? "open" : "closed"}
+        data-state={visible ? "open" : "closed"}
         className={classNames("GeckoUIDrawer__drawer", className)}
         role="dialog"
         aria-modal={!allowClickOutside}>

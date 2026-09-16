@@ -284,7 +284,9 @@ Stacked dialogs get an explicit `z-index` of `2000 + position`, so they never de
 - Escape key support
 - Backdrop click detection
 
-Not handled yet: there is no focus trap, focus is not restored to the trigger on close, and page scroll is not locked while a dialog is open.
+Page scroll is locked while a dialog is open, with the scrollbar width paid back as padding so nothing shifts sideways. Stacked overlays share one reference counted lock.
+
+Not handled yet: there is no focus trap, and focus is not restored to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
 
 ## Related Components
 

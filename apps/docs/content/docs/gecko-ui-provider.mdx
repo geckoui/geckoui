@@ -139,7 +139,9 @@ Dialog.show({
 
 ## Limitations
 
-Overlays have no focus trap, do not restore focus to the trigger on close, and do not lock page scroll while open.
+Overlays lock page scroll while open, sharing one reference counted lock, and compensate for the scrollbar so the page does not shift. The `useScrollLock(enabled)` hook is exported if you need it for your own overlays.
+
+Still missing: overlays have no focus trap and do not restore focus to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
 
 ## Migration from GeckoUIPortal
 
