@@ -108,9 +108,9 @@ export function ToastItem({ toast, defaults, paused }: ToastItemProps) {
       {icon ? <span className="GeckoUIToast__icon">{icon}</span> : null}
 
       <div className="GeckoUIToast__body">
-        <p className="GeckoUIToast__message">{message}</p>
+        <div className="GeckoUIToast__message">{message}</div>
         {options.description ? (
-          <p className="GeckoUIToast__description">{options.description}</p>
+          <div className="GeckoUIToast__description">{options.description}</div>
         ) : null}
 
         {options.action || options.cancel ? (

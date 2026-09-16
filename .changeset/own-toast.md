@@ -54,3 +54,6 @@ and `closeClassName`.
 - Errors use `role="alert"` with `aria-live="assertive"`; everything else uses
   `status` and `polite`.
 - `prefers-reduced-motion` drops the scale animation.
+- The message and description are rendered in `div` elements, not `p`. Both accept
+  arbitrary `ReactNode`, and a caller passing a `div` or another `p` into a `p`
+  produces invalid markup and a hydration error.
