@@ -41,6 +41,11 @@
       @apply delay-100;
     }
 
+    /* the frame where the drawer settles into a new placement must not be animated */
+    &[data-instant] {
+      @apply transition-none delay-0;
+    }
+
     &[data-state="open"][data-placement="top"],
     &[data-state="open"][data-placement="bottom"] {
       @apply translate-y-0;

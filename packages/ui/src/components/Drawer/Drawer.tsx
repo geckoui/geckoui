@@ -60,16 +60,23 @@ function Drawer({
 }: DrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // A drawer mounted already open, as Drawer.show() does, would otherwise appear with no
-  // transition: there is no closed frame for the CSS to animate away from. Holding the
-  // open state back by one frame gives it that frame.
-  const [ready, setReady] = useState(false);
+  // Two problems solved by the same frame of delay.
+  //
+  // A drawer mounted already open, as Drawer.show() does, has no closed frame for the CSS
+  // to animate away from, so it appears instantly.
+  //
+  // And changing placement carries the old transform to the new anchor: going from a closed
+  // left drawer to an open right one snaps the element to right-0 while it still holds
+  // -translate-x-full, so it slides in from the wrong side. Tracking which placement we are
+  // ready for makes `ready` false again the moment placement changes.
+  const [readyFor, setReadyFor] = useState<string | null>(null);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => setReady(true));
+    const frame = requestAnimationFrame(() => setReadyFor(placement));
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [placement]);
 
+  const ready = readyFor === placement;
   const visible = open && ready;
 
   // Hold the scroll lock through the slide out. Releasing it the moment `open` flips
@@ -121,6 +128,7 @@ function Drawer({
         ref={drawerRef}
         data-placement={placement}
         data-state={visible ? "open" : "closed"}
+        data-instant={!ready || undefined}
         className={classNames("GeckoUIDrawer__drawer", className)}
         role="dialog"
         aria-modal={!allowClickOutside}>
