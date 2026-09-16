@@ -50,3 +50,8 @@ together. The badge also exposes `--gecko-badge-accent`, `--gecko-badge-on-accen
 
 `icon` is rendered exactly as given, with no wrapper element and no injected
 classes, so styling lives where the icon is defined.
+
+The text on a `filled` badge follows `--color-surface-primary`, which is light in
+light mode and dark in dark mode, so it stays readable as the accents invert.
+`primary` is the exception and keeps `--color-text-on-primary`, because the
+primary scale is not lifted in dark mode.

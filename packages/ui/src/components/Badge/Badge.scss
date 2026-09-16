@@ -9,7 +9,13 @@
   @include base-reset;
 
   --gecko-badge-accent: var(--color-text-secondary);
-  --gecko-badge-on-accent: var(--color-text-on-primary);
+  /*
+   * The filled foreground inverts with the theme, because the accents do. In dark mode the
+   * semantic tokens are lifted and `default` uses a text colour that flips outright, so a
+   * hard-wired white is unreadable on them. The page surface is light in light mode and dark
+   * in dark mode, which is the contrast partner in both.
+   */
+  --gecko-badge-on-accent: var(--color-surface-primary);
   --gecko-badge-radius: 0.25rem;
   --gecko-badge-soft-mix: 12%;
   --gecko-badge-outline-mix: 40%;
@@ -24,6 +30,9 @@
 
   &[data-color="primary"] {
     --gecko-badge-accent: var(--color-primary-600);
+
+    /* the primary scale is not lifted in dark, so it keeps its own contrast colour */
+    --gecko-badge-on-accent: var(--color-text-on-primary);
   }
 
   &[data-color="success"] {
