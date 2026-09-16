@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -148,9 +148,11 @@ describe("Select", () => {
     it("opens the menu when the search input takes focus", async () => {
       render(<Fruits />);
 
-      searchInput().focus();
+      await act(async () => {
+        searchInput().focus();
+      });
 
-      await waitFor(() => expect(menu()).toBeInTheDocument());
+      expect(menu()).toBeInTheDocument();
     });
 
     it("moves the focused option with the arrow keys", async () => {

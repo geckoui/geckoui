@@ -7,7 +7,13 @@ function reset() {
   overlayStore.getSnapshot().forEach((entry) => overlayStore.remove(entry.id));
 }
 
-beforeEach(reset);
+beforeEach(() => {
+  reset();
+  // These tests drive the store directly, with no provider mounted, so the
+  // "no <GeckoUIProvider>" error is expected. One test below asserts it; the rest
+  // would just flood the output with it.
+  vi.spyOn(console, "error").mockImplementation(() => {});
+});
 afterEach(() => {
   vi.restoreAllMocks();
   reset();
@@ -194,8 +200,6 @@ describe("overlayStore", () => {
 
   describe("z-index", () => {
     it("puts every dialog above every drawer", () => {
-      const drawer = overlayStore.getSnapshot();
-      void drawer;
       overlayStore.pushDrawer(null, {});
       overlayStore.pushDialog({});
       const [first, second] = overlayStore.getSnapshot();
