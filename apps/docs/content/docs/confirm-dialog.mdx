@@ -132,7 +132,18 @@ ConfirmDialog.dismiss(id);
 
 ## Behavior
 
-- If `onConfirm` or `onCancel` is an async function, the respective button shows a loading state until the promise resolves.
+- If `onConfirm` or `onCancel` is declared `async`, the respective button shows a loading state until the promise resolves.
+- The check is on the function itself, not on what it returns. A function that returns a promise without being declared `async` gets no loading state:
+
+  ```tsx
+  // loading state
+  onConfirm: async () => { await deleteUser(id); }
+
+  // no loading state, the dialog closes straight away
+  onConfirm: () => deleteUser(id)
+  ```
+
+  Use this when you deliberately want the dialog to close without waiting.
 - After the callback resolves, the dialog closes automatically unless `preventDefault()` was called.
 - Pressing Enter confirms (when no focusable element is focused), and only when the confirm dialog is the topmost overlay. Stacked dialogs below it ignore Enter.
 

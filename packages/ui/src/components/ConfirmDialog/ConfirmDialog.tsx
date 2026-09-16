@@ -37,14 +37,14 @@ function ConfirmDialogContent({
     attachPreventDefault(dismiss);
   }, [attachPreventDefault, dismiss, onConfirm, preventDefault]);
 
-  const handleCancel = () => {
-    const isAsync = isAsyncFn(onCancel);
-
-    if (isAsync) {
+  const handleCancel = async () => {
+    if (isAsyncFn(onCancel)) {
       setCancelLoading(true);
     }
 
-    onCancel?.({ preventDefault, dismiss });
+    // awaited, so the spinner lasts as long as the work does and preventDefault()
+    // called inside an async onCancel still lands before the dialog closes
+    await onCancel?.({ preventDefault, dismiss });
 
     setCancelLoading(false);
 

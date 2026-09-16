@@ -86,7 +86,7 @@ function DeleteButton({ itemId }) {
 }
 ```
 
-> If you pass an async function to `onConfirm` or `onCancel`, the dialog will show a loading state on the button until the Promise resolves.
+> If you declare `onConfirm` as an `async` function, the dialog shows a loading state on the confirm button until the promise resolves. In v1 `onCancel` is not awaited, so it never shows one.
 
 ### Rich Content
 
@@ -159,10 +159,13 @@ onConfirm: async ({ preventDefault, dismiss }) => {
 
 ### Loading States
 
-When `onConfirm` or `onCancel` returns a Promise (async function), the dialog automatically:
+When `onConfirm` is declared `async`, the dialog automatically:
 - Awaits the Promise
 - Shows loading spinner on the button
 - Closes after completion
+
+The check looks at the function declaration, not at what it returns, so a function that
+returns a promise without the `async` keyword gets no loading state.
 
 ```tsx
 onConfirm: async () => {
