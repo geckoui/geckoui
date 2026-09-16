@@ -147,7 +147,7 @@ export default function Home() {
         <FormProvider {...methods}>
           <div className="min-h-screen p-8">
             <div className="max-w-7xl mx-auto space-y-16">
-              <div className="flex justify-end">
+              <div className="sticky top-0 z-[4000] -mx-8 -mt-8 mb-0 flex justify-end border-b border-border-primary bg-surface-primary/90 px-8 py-3 backdrop-blur">
                 <div className="flex items-center gap-3 px-4 py-2 rounded-lg shadow">
                   <span className="text-sm ">Theme:</span>
                   <div className="flex gap-2">
@@ -622,6 +622,84 @@ export default function Home() {
                     </Button>
                     <Button variant="filled" onClick={() => toast("Default message")}>
                       Default Toast
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Button
+                      variant="outlined"
+                      onClick={() =>
+                        toast.success("Account created", {
+                          description: "We sent a confirmation to you@company.com."
+                        })
+                      }>
+                      With description
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() =>
+                        toast.error("Upload failed", {
+                          description: "The file was larger than 10MB.",
+                          action: { label: "Retry", onClick: () => toast.success("Retrying") },
+                          cancel: { label: "Cancel", onClick: () => undefined }
+                        })
+                      }>
+                      With actions
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => toast("Stays until dismissed", { duration: Infinity, closeButton: true })}>
+                      Persistent
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        const id = toast.loading("Uploading…");
+                        setTimeout(() => toast.success("Uploaded", { id }), 2000);
+                      }}>
+                      Loading then success
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() =>
+                        toast.promise(
+                          new Promise((resolve) => setTimeout(resolve, 1800)),
+                          {
+                            loading: "Saving…",
+                            success: "Saved",
+                            error: "Could not save"
+                          }
+                        )
+                      }>
+                      Promise
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() =>
+                        toast.custom(
+                          <div className="rounded-xl bg-black px-4 py-3 text-white shadow-lg">
+                            Fully custom node
+                          </div>
+                        )
+                      }>
+                      Custom
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    {(["top-left", "top-center", "top-right", "bottom-left", "bottom-center"] as const).map(
+                      (pos) => (
+                        <Button
+                          key={pos}
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toast(`Toast at ${pos}`, { position: pos })}>
+                          {pos}
+                        </Button>
+                      )
+                    )}
+                    <Button variant="ghost" size="sm" onClick={() => toast.dismiss()}>
+                      Dismiss all
                     </Button>
                   </div>
                 </div>

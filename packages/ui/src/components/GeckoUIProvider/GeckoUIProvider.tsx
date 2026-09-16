@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { Toaster } from "sonner";
 
 import { getDataAttributes } from "../../utils";
 import { DialogSurface } from "../Dialog/DialogSurface";
 import { Drawer } from "../Drawer";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
+import { Toaster } from "../Toast";
 import type { GeckoUIProviderProps } from "./GeckoUIProvider.types";
 import type { DialogEntry, DrawerEntry, OverlayEntry } from "./overlay-store";
 import { OVERLAY_ANIMATION_DURATION, getZIndex, overlayStore } from "./overlay-store";
@@ -125,7 +125,7 @@ function OverlayEntryRenderer({
  *
  * It owns the overlay stack for `Dialog.show()` / `Drawer.show()` and renders each
  * open overlay via `ReactDOM.createPortal` so that React context flows into overlay
- * content. It also renders the sonner `<Toaster>`.
+ * content. It also renders the toast stacks.
  *
  * Mount one provider. If you nest another one deeper — to give overlays access to a subtree's
  * context — the innermost provider owns the overlay stack and the `<Toaster>`, and the outer
@@ -170,7 +170,6 @@ export function GeckoUIProvider({ children, toastOptions = {} }: GeckoUIProvider
 
   const isHost = activeHost === hostId;
   const topId = overlayStore.getTopId();
-  const { style, ...restToastOptions } = toastOptions;
 
   return (
     <>
@@ -188,20 +187,7 @@ export function GeckoUIProvider({ children, toastOptions = {} }: GeckoUIProvider
             entry.id
           )
         )}
-      {isHost && (
-        <Toaster
-          position="bottom-right"
-          style={
-            {
-              "--normal-bg": "var(--color-surface-primary)",
-              "--normal-text": "var(--color-text-primary)",
-              "--normal-border": "var(--color-border-primary)",
-              ...style
-            } as React.CSSProperties
-          }
-          {...restToastOptions}
-        />
-      )}
+      {isHost && <Toaster {...toastOptions} />}
     </>
   );
 }

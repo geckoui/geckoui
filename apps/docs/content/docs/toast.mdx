@@ -97,7 +97,8 @@ toast('Hello World', { duration: 5000 });
 | `cancel` | `{ label: string; onClick: () => void }` | - | Cancel button |
 | `id` | `string \| number` | - | Custom toast ID |
 | `onDismiss` | `() => void` | - | Callback when dismissed |
-| `onAutoClose` | `() => void` | - | Callback when auto-closed |
+| `onAutoClose` | `() => void` | - | Callback when the duration elapses |
+| `icon` | `ReactNode \| null` | - | Replace the variant icon. `null` removes it |
 | `className` | `string` | - | Custom CSS class |
 | `style` | `CSSProperties` | - | Inline styles |
 | `closeButton` | `boolean` | `false` | Show close button |
@@ -234,6 +235,25 @@ function Example() {
 }
 ```
 
+### Dismissing a promise toast
+
+Dismissing the loading toast cancels the follow-up, so the success or error toast does not
+appear over your dismissal:
+
+```tsx
+toast.promise(upload(), { loading: 'Uploading…', success: 'Uploaded', error: 'Failed' });
+// user dismisses the loading toast -> nothing appears when the upload settles
+```
+
+Reusing the id yourself still shows the toast, because that is an explicit request rather than
+the library finishing its own lifecycle:
+
+```tsx
+const id = toast.loading('Uploading…');
+// even if the user dismissed it, this shows:
+toast.success('Uploaded', { id });
+```
+
 ### Dismiss Toasts
 
 <Preview>
@@ -311,12 +331,8 @@ Configure toast defaults via the `toastOptions` prop on `GeckoUIProvider`:
     position: 'top-right',
     duration: 3000,
     closeButton: true,
-    richColors: true,
-    className: 'my-toast',
-    style: {
-      background: 'white',
-      color: 'black'
-    }
+    visibleToasts: 5,
+    toastClassName: 'my-toast'
   }}
 >
   <App />
@@ -327,15 +343,87 @@ Configure toast defaults via the `toastOptions` prop on `GeckoUIProvider`:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `position` | `Position` | `'bottom-right'` | Default position |
-| `duration` | `number` | `4000` | Default duration |
-| `closeButton` | `boolean` | `false` | Show close button on all toasts |
-| `richColors` | `boolean` | `false` | Enhanced colors for variants |
-| `expand` | `boolean` | `false` | Expand toasts on hover |
-| `visibleToasts` | `number` | `3` | Max visible toasts |
-| `gap` | `number` | `14` | Gap between toasts |
-| `offset` | `string` | - | Offset from edge |
-| `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | Color theme |
+| `position` | `ToastPosition` | `'bottom-right'` | Where stacks appear |
+| `duration` | `number` | `4000` | Default duration in ms |
+| `closeButton` | `boolean` | `false` | Show the dismiss button on every toast |
+| `visibleToasts` | `number` | `3` | How many toasts render per position at once |
+| `gap` | `number` | `14` | Pixels between stacked toasts |
+| `offset` | `number` | `24` | Pixels between the stack and the viewport edge |
+| `className` | `string` | - | Class on the stack element for each position |
+| `toastClassName` | `string` | - | Class applied to every toast |
+| `toastStyle` | `CSSProperties` | - | Style applied to every toast |
+| `iconClassName` | `string` | - | Class on the variant icon |
+| `messageClassName` | `string` | - | Class on the message line |
+| `descriptionClassName` | `string` | - | Class on the description line |
+| `actionClassName` | `string` | - | Class on the action button |
+| `cancelClassName` | `string` | - | Class on the cancel button |
+| `closeClassName` | `string` | - | Class on the dismiss button |
+
+There is no `theme` option: toasts read the same variables as the rest of the library, so they
+follow your theme automatically.
+
+## Styling with CSS
+
+Every value is a custom property, so you can restyle the whole toast system from your own
+stylesheet without overriding a single class:
+
+```css
+:root {
+  --gecko-toast-width: 28rem;
+  --gecko-toast-offset: 40px;
+  --gecko-toast-radius: 1.5rem;
+  --gecko-toast-padding: 1.25rem;
+  --gecko-toast-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.35);
+  --gecko-toast-duration: 320ms;
+}
+```
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-toast-width` | `min(400px, 100vw - 2rem)` | Stack width |
+| `--gecko-toast-offset` | `24px` | Distance from the viewport edge |
+| `--gecko-toast-z` | `3000` | Stack z-index |
+| `--gecko-toast-bg` | `--color-surface-primary` | Toast background |
+| `--gecko-toast-fg` | `--color-text-primary` | Message colour |
+| `--gecko-toast-muted` | `--color-text-muted` | Description colour |
+| `--gecko-toast-border` | `--color-border-primary` | Border colour |
+| `--gecko-toast-accent` | per variant | Icon, spinner and action button |
+| `--gecko-toast-radius` | `0.5rem` | Corner radius |
+| `--gecko-toast-padding` | `1rem` | Inner padding |
+| `--gecko-toast-gap` | `0.75rem` | Gap between icon and body |
+| `--gecko-toast-shadow` | soft drop shadow | Toast shadow |
+| `--gecko-toast-duration` | `200ms` | Enter and exit transition |
+
+Variant colours come from the shared semantic tokens, so changing them updates every component
+that reports status:
+
+```css
+:root {
+  --color-success: oklch(0.65 0.18 150);
+  --color-error: oklch(0.6 0.22 25);
+  --color-warning: oklch(0.7 0.16 60);
+  --color-info: oklch(0.62 0.19 260);
+}
+```
+
+Scope a variable to one variant when you only want to change that one:
+
+```css
+.GeckoUIToast[data-variant="error"] {
+  --gecko-toast-bg: var(--color-error);
+  --gecko-toast-fg: white;
+  --gecko-toast-accent: white;
+}
+```
+
+### Class names
+
+- `GeckoUIToaster` - The stack, with `data-position`
+- `GeckoUIToaster__item` - Wrapper around each toast
+- `GeckoUIToast` - The toast, with `data-variant` and `data-state`
+- `GeckoUIToast__icon`, `__body`, `__message`, `__description`
+- `GeckoUIToast__actions`, `__action`, `__cancel`, `__close`
+- `GeckoUIToast__custom` - Wrapper for `toast.custom` content
 
 ## Accessibility
 

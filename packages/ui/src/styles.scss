@@ -42,6 +42,12 @@
   --color-border-focus: oklch(0.7155 0 none);
   --color-border-hover: oklch(0.8699 0 none);
   --color-border-disabled: oklch(0.9401 0 none);
+
+  /* Semantic colours, shared by Toast and anything else that reports status */
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
 }
 
 * {
@@ -86,6 +92,11 @@
   --color-border-focus: oklch(0.7155 0 none);
   --color-border-hover: oklch(0.8699 0 none);
   --color-border-disabled: oklch(0.9401 0 none);
+
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
 
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.8717 0.0093 258.34);
