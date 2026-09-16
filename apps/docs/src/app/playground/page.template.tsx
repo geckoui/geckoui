@@ -672,19 +672,19 @@ export default function Home() {
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold ">Alerts</h3>
                   <div className="space-y-3 max-w-2xl">
-                    <Alert variant="error" title="Error" description="Something went wrong!" />
+                    <Alert color="error" title="Error" description="Something went wrong!" />
                     <Alert
-                      variant="warning"
+                      color="warning"
                       title="Warning"
                       description="Please proceed with caution"
                     />
                     <Alert
-                      variant="info"
+                      color="info"
                       title="Information"
                       description="Here's some useful information"
                     />
                     <Alert
-                      variant="success"
+                      color="success"
                       title="Success"
                       description="Operation completed successfully!"
                     />
@@ -695,7 +695,7 @@ export default function Home() {
                         onRemove={() => setShowAlert(false)}
                       />
                     )}
-                    <Alert variant="error" title="Condensed" condensed />
+                    <Alert color="error" title="Condensed" condensed />
                   </div>
                 </div>
 

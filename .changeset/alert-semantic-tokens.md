@@ -31,3 +31,6 @@ without overriding a class:
 
 Variant colours shift very slightly, since the tokens are not pixel-identical to
 the Tailwind values they replace.
+
+The tokens are lifted in dark mode, since the light values sit too dark on a dark
+surface. Override them inside `.dark` as well if you change them.

@@ -81,6 +81,36 @@ Border colors for various states:
 }
 ```
 
+### Semantic Colors
+
+One token per meaning, shared by every component that reports status. Overriding one
+updates [Badge](/docs/badge), [Alert](/docs/alert) and [Toast](/docs/toast) together.
+
+```css
+:root {
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
+}
+```
+
+| Variable | Used by |
+|----------|---------|
+| `--color-success` | Badge, Alert, Toast |
+| `--color-error` | Badge, Alert, Toast |
+| `--color-warning` | Badge, Alert, Toast |
+| `--color-info` | Badge, Alert, Toast |
+
+These are lifted in dark mode, since the light values sit too dark on a dark surface.
+Override them inside `.dark` if you change them:
+
+```css
+.dark {
+  --color-success: oklch(0.72 0.17 149.21);
+}
+```
+
 ### Scrollbar Colors
 
 Custom scrollbar styling (these use the `--gecko-ui-` prefix as they are not Tailwind utilities):
@@ -254,6 +284,45 @@ Components use their own class names for targeted styling:
 /* Style specific button variant */
 .GeckoUIButton[data-variant="filled"] {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+```
+
+## Component Variables
+
+Some components expose their own variables for size, shape and spacing, so you can restyle
+them without overriding a class. They fall back to the tokens above, so theming still
+flows through.
+
+| Component | Prefix | Documented at |
+|-----------|--------|---------------|
+| Toast | `--gecko-toast-*` | [Toast](/docs/toast#styling-with-css) |
+| Badge | `--gecko-badge-*` | [Badge](/docs/badge#styling-with-css) |
+| Alert | `--gecko-alert-*` | [Alert](/docs/alert#styling-with-css) |
+
+For example, widening every toast and rounding it more:
+
+```css
+:root {
+  --gecko-toast-width: 28rem;
+  --gecko-toast-radius: 1.5rem;
+}
+```
+
+Scope a variable to one variant or colour to change just that case:
+
+```css
+.GeckoUIAlert[data-color="error"] {
+  --gecko-alert-bg: var(--color-error);
+  --gecko-alert-accent: white;
+}
+```
+
+While an overlay holds the scroll lock, `--gecko-scrollbar-width` is set on the root
+element, so anything you pin to the right edge can compensate:
+
+```css
+.my-fixed-panel {
+  right: calc(1rem + var(--gecko-scrollbar-width, 0px));
 }
 ```
 

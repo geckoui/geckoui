@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "installation",
+    "migrating-to-v2",
     "gecko-ui-provider",
     "theming",
     "---Components---",

@@ -1,0 +1,142 @@
+---
+title: Migrating to v2
+description: Everything that changed between Gecko UI v1 and v2, and how to update
+---
+
+# Migrating to v2
+
+v2 rebuilds the overlay system, drops the third party toast, and renames several props for consistency.
+
+Most changes fail to compile, so TypeScript will walk you through them. The ones that do **not** fail are listed separately below — read that section, it is where the surprises are.
+
+The v1 docs stay available at [/v1/docs](/v1/docs) for as long as you need them.
+
+## 1. Replace GeckoUIPortal with GeckoUIProvider
+
+The one change every app must make. `GeckoUIPortal` was a self-closing element; `GeckoUIProvider` wraps your tree.
+
+```diff
+ export default function RootLayout({ children }) {
+   return (
+     <html>
+       <body>
+-        {children}
+-        <GeckoUIPortal />
++        <GeckoUIProvider>{children}</GeckoUIProvider>
+       </body>
+     </html>
+   );
+ }
+```
+
+Place it **below** your own context providers, so overlay content opened with `Dialog.show()` can read them:
+
+```tsx
+<AuthProvider>
+  <GeckoUIProvider>
+    <App />
+  </GeckoUIProvider>
+</AuthProvider>
+```
+
+Toast options move onto the provider:
+
+```diff
+-<GeckoUIPortal toastOptions={{ duration: 3000 }} />
++<GeckoUIProvider toastOptions={{ duration: 3000 }}>{children}</GeckoUIProvider>
+```
+
+`GeckoUIPortalProps` is removed; use `GeckoUIProviderProps`.
+
+## 2. Renamed props
+
+| Component | v1 | v2 |
+|---|---|---|
+| `Drawer`, `Drawer.show` options | `handleClose` | `onClose` |
+| `Dialog`, `ConfirmDialog` | `dismissOnEsc` | `dismissOnEscape` |
+| `Alert` | `variant` | `color` |
+| `Checkbox`, `RHFCheckbox` | `partial` | `indeterminate` |
+| `CounterInput` | `editable` | `allowTyping` |
+
+`Alert` also changes its styling hook, so update any CSS overrides:
+
+```diff
+-.GeckoUIAlert[data-variant="error"] { ... }
++.GeckoUIAlert[data-color="error"] { ... }
+```
+
+`AlertVariantMap` is now `AlertColorMap` for module augmentation.
+
+### Why `Alert` changed
+
+`variant` meant the visual treatment on `Button` and `Badge`, but the meaning on `Alert`. Now every component that carries both axes agrees: **`variant` is how it looks, `color` is what it means.**
+
+## 3. CounterInput holds a string
+
+`value` and `onChange` are strings, not numbers. Converting on every keystroke collapsed a half-typed `"2."` to `"2"`, deleting the decimal point as you typed, so `2.5` could not be reached by editing `2.8`.
+
+```diff
+-const [quantity, setQuantity] = useState(0);
++const [quantity, setQuantity] = useState("0");
+
+ <CounterInput value={quantity} onChange={setQuantity} />
+
++const total = Number(quantity || 0) * price;
+```
+
+With `RHFCounterInput` the form value is a string too, so coerce in your schema:
+
+```diff
+ const schema = z.object({
+-  quantity: z.number().min(1)
++  quantity: z.coerce.number().min(1)
+ });
+
+ useForm({
+-  defaultValues: { quantity: 1 }
++  defaultValues: { quantity: "1" }
+ });
+```
+
+## 4. Changes that will not fail to compile
+
+These are the ones to check by hand.
+
+**`Dialog.dismiss()` and `Drawer.dismiss()` only close their own type.** In v1, either one closed whatever was on top. If you relied on `Dialog.dismiss()` closing a drawer, call `Drawer.dismiss()`.
+
+**Clicking inside a dialog no longer dismisses it.** Only a click on the backdrop does, and the press and release must both land there. A `Select` or `Menu` popup inside a dialog no longer closes it.
+
+**A `Drawer` with `allowClickOutside: false` closes on backdrop click again.** This was dropped in v1 and is restored.
+
+**`Drawer.show(node, { onClose })` actually calls your callback.** v1 overwrote it internally and silently dropped it.
+
+**Dialog z-index moved from `1000` to `2000`** so dialogs always sit above drawers. Only matters if you overrode it in CSS.
+
+**Page scroll locks behind `Dialog` and `Drawer`.** The scrollbar width is paid back as padding, so nothing shifts. A drawer with `allowClickOutside` does not lock, since it leaves the page usable.
+
+**`ConfirmDialog` awaits `onCancel`.** In v1 it did not, so an async `onCancel` never showed its loading state and a `preventDefault()` inside it came too late.
+
+**Toast loses three options.** `richColors`, `theme` and `expand` are gone — the first two are meaningless now that variant colours are the default and toasts read your theme variables, and the stack no longer collapses. `toastOptions.className` and `.style` are now `toastClassName` and `toastStyle`, and `offset` is a number of pixels.
+
+**`Checkbox` `indeterminate` is independent of `checked`.** In v1 the dash only rendered when `checked` was also true, which forced the wrong state on a select-all box. Now it matches the native DOM property.
+
+```diff
+ <Checkbox
+-  checked={someSelected}
++  checked={allSelected}
+   indeterminate={someSelected && !allSelected}
+   onChange={handleSelectAll}
+ />
+```
+
+## 5. Removed exports
+
+`BaseDateRangeInput` and `BaseDateRangeInputProps` are no longer exported. They were public by accident — the sibling `BaseDateInput` never was, and neither appeared in any documentation. Use [DateRangeInput](/docs/date-range-input), which wraps it and adds the calendar popup. The `DateRange` type is unaffected.
+
+## 6. Worth adopting while you are here
+
+- **[Dialog](/docs/dialog) works declaratively** — `<Dialog open onClose>` alongside `Dialog.show()`
+- **Overlays stack** — `show()` returns an id, and `dismiss(id)` targets it
+- **[Badge](/docs/badge)** is new
+- **Semantic colour tokens** — `--color-success`, `--color-error`, `--color-warning`, `--color-info` drive Badge, Alert and Toast together
+- **[Toast](/docs/toast) is ours now**, so there is no `sonner` dependency and every value is a CSS variable

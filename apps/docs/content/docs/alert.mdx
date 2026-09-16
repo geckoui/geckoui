@@ -9,7 +9,7 @@ import { AlertCustomVariantExample } from '@/components/examples/module-augmenta
 
 # Alert
 
-An alert component for displaying important messages with different severity levels. Supports multiple variants (error, success, warning, info, default), optional descriptions, custom icons, and dismissal functionality.
+An alert component for displaying important messages with different severity levels. Supports multiple colours (error, success, warning, info, default), optional descriptions, custom icons, and dismissal functionality.
 
 ## Installation
 
@@ -32,7 +32,7 @@ import { Alert } from '@geckoui/geckoui';
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `title` | `ReactNode \| FC` | - | Main message (required) |
-| `variant` | `'error' \| 'success' \| 'warning' \| 'info' \| 'default'` | `'default'` | Alert severity level |
+| `color` | `'error' \| 'success' \| 'warning' \| 'info' \| 'default'` | `'default'` | What the alert means. Named `color` to match `Button` and `Badge` |
 | `description` | `ReactNode \| FC` | - | Additional detailed text |
 | `condensed` | `boolean` | `false` | Reduced vertical padding |
 | `onRemove` | `() => void` | - | Callback for dismiss button |
@@ -46,20 +46,20 @@ import { Alert } from '@geckoui/geckoui';
 
 <Preview>
   <div className="flex flex-col gap-3">
-    <Alert variant="default" title="Default alert" />
-    <Alert variant="error" title="Error alert" />
-    <Alert variant="success" title="Success alert" />
-    <Alert variant="warning" title="Warning alert" />
-    <Alert variant="info" title="Info alert" />
+    <Alert color="default" title="Default alert" />
+    <Alert color="error" title="Error alert" />
+    <Alert color="success" title="Success alert" />
+    <Alert color="warning" title="Warning alert" />
+    <Alert color="info" title="Info alert" />
   </div>
 </Preview>
 
 ```tsx
-<Alert variant="default" title="Default alert" />
-<Alert variant="error" title="Error alert" />
-<Alert variant="success" title="Success alert" />
-<Alert variant="warning" title="Warning alert" />
-<Alert variant="info" title="Info alert" />
+<Alert color="default" title="Default alert" />
+<Alert color="error" title="Error alert" />
+<Alert color="success" title="Success alert" />
+<Alert color="warning" title="Warning alert" />
+<Alert color="info" title="Info alert" />
 ```
 
 ### With Description
@@ -67,12 +67,12 @@ import { Alert } from '@geckoui/geckoui';
 <Preview>
   <div className="flex flex-col gap-3">
     <Alert
-      variant="error"
+      color="error"
       title="Payment failed"
       description="Your payment could not be processed. Please try again or contact support."
     />
     <Alert
-      variant="success"
+      color="success"
       title="Account created"
       description="Welcome! Your account has been successfully created and is ready to use."
     />
@@ -81,13 +81,13 @@ import { Alert } from '@geckoui/geckoui';
 
 ```tsx
 <Alert
-  variant="error"
+  color="error"
   title="Payment failed"
   description="Your payment could not be processed. Please try again or contact support."
 />
 
 <Alert
-  variant="success"
+  color="success"
   title="Account created"
   description="Welcome! Your account has been successfully created and is ready to use."
 />
@@ -113,7 +113,7 @@ function DismissibleAlert() {
 
   return (
     <Alert
-      variant="warning"
+      color="warning"
       title="Storage almost full"
       description="You're using 95% of your storage. Upgrade your plan to avoid interruptions."
       onRemove={() => setShow(false)}
@@ -126,21 +126,21 @@ function DismissibleAlert() {
 
 <Preview>
   <div className="flex flex-col gap-3">
-    <Alert variant="success" condensed title="Changes saved successfully" />
-    <Alert variant="info" condensed title="2 new messages" />
+    <Alert color="success" condensed title="Changes saved successfully" />
+    <Alert color="info" condensed title="2 new messages" />
   </div>
 </Preview>
 
 ```tsx
-<Alert variant="success" condensed title="Changes saved successfully" />
-<Alert variant="info" condensed title="2 new messages" />
+<Alert color="success" condensed title="Changes saved successfully" />
+<Alert color="info" condensed title="2 new messages" />
 ```
 
 ### With Custom Icon
 
 <Preview>
   <Alert
-    variant="info"
+    color="info"
     title="New feature available"
     description="Check out our latest feature in the settings panel."
     icon={<span>🎉</span>}
@@ -151,7 +151,7 @@ function DismissibleAlert() {
 import { RocketIcon } from 'lucide-react';
 
 <Alert
-  variant="info"
+  color="info"
   title="New feature available"
   description="Check out our latest feature in the settings panel."
   icon={<RocketIcon className="w-5 h-5" />}
@@ -163,7 +163,7 @@ import { RocketIcon } from 'lucide-react';
 <Preview>
   <div className="space-y-4">
     <Alert
-      variant="error"
+      color="error"
       title="Form validation failed"
       description="Please fix the following errors before submitting:"
     />
@@ -179,7 +179,7 @@ import { RocketIcon } from 'lucide-react';
 
 ```tsx
 <Alert
-  variant="error"
+  color="error"
   title="Form validation failed"
   description="Please fix the errors before submitting."
 />
@@ -190,17 +190,17 @@ import { RocketIcon } from 'lucide-react';
 <Preview>
   <div className="flex flex-col gap-3">
     <Alert
-      variant="info"
+      color="info"
       condensed
       title="Your session will expire in 5 minutes"
     />
     <Alert
-      variant="warning"
+      color="warning"
       condensed
       title="Background sync in progress"
     />
     <Alert
-      variant="success"
+      color="success"
       condensed
       title="All systems operational"
     />
@@ -209,19 +209,19 @@ import { RocketIcon } from 'lucide-react';
 
 ```tsx
 <Alert
-  variant="info"
+  color="info"
   condensed
   title="Your session will expire in 5 minutes"
 />
 
 <Alert
-  variant="warning"
+  color="warning"
   condensed
   title="Background sync in progress"
 />
 
 <Alert
-  variant="success"
+  color="success"
   condensed
   title="All systems operational"
 />
@@ -253,11 +253,11 @@ The `condensed` prop reduces vertical padding for a more compact appearance, ide
 
 ## Module Augmentation
 
-The Alert component supports TypeScript module augmentation, allowing you to add custom variants with full type safety.
+The Alert component supports TypeScript module augmentation, allowing you to add custom colours with full type safety.
 
 ### Live Example
 
-A custom `critical` variant created using module augmentation:
+A custom `critical` colour created using module augmentation:
 
 <Preview>
   <AlertCustomVariantExample />
@@ -271,7 +271,7 @@ Create a declaration file (e.g., `gecko.d.ts`) in your project:
 import "@geckoui/geckoui";
 
 declare module "@geckoui/geckoui" {
-  interface AlertVariantMap {
+  interface AlertColorMap {
     critical: unknown;
   }
 }
@@ -279,15 +279,15 @@ declare module "@geckoui/geckoui" {
 
 ### Step 2: Add CSS Styles
 
-Add the corresponding styles to your global CSS/SCSS file. You need to define both the container variant and the icon styling:
+Add the corresponding styles to your global CSS/SCSS file. You need to define both the container colour and the icon styling:
 
 ```scss
 .GeckoUIAlert {
-  &[data-variant="critical"] {
+  &[data-color="critical"] {
     @apply text-purple-600;
   }
 
-  &__icon[data-variant="critical"] {
+  &__icon[data-color="critical"] {
     @apply bg-purple-600;
 
     mask-image: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8 3C8.41421 3 8.75 3.33579 8.75 3.75V8.25C8.75 8.66421 8.41421 9 8 9C7.58579 9 7.25 8.66421 7.25 8.25V3.75C7.25 3.33579 7.58579 3 8 3ZM8 13C8.55228 13 9 12.5523 9 12C9 11.4477 8.55228 11 8 11C7.44771 11 7 11.4477 7 12C7 12.5523 7.44771 13 8 13Z" fill="currentColor"/></svg>');
@@ -299,7 +299,7 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 ### Step 3: Use Your Custom Variant
 
 ```tsx
-<Alert variant="critical" title="Critical system alert" />
+<Alert color="critical" title="Critical system alert" />
 ```
 
 ## Accessibility
@@ -312,9 +312,9 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ## Styling
 
-The component uses `data-*` attributes for state and variant styling:
+The component uses `data-*` attributes for state and colour styling:
 
-- `data-variant` — Variant (error, warning, info, success, default)
+- `data-color` — Colour (error, warning, info, success, default)
 - `data-condensed` — Present when condensed mode is enabled
 
 BEM class names for structural elements:
@@ -347,13 +347,13 @@ The alert itself exposes its own variables:
 |----------|---------|------------|
 | `--gecko-alert-bg` | `--color-surface-primary` | Background |
 | `--gecko-alert-border` | `--color-border-primary` | Border colour |
-| `--gecko-alert-accent` | per variant | Title text and icon |
+| `--gecko-alert-accent` | per colour | Title text and icon |
 | `--gecko-alert-radius` | `0.5rem` | Corner radius |
 
-Scope a variable to one variant to restyle only that one:
+Scope a variable to one colour to restyle only that one:
 
 ```css
-.GeckoUIAlert[data-variant="error"] {
+.GeckoUIAlert[data-color="error"] {
   --gecko-alert-bg: var(--color-error);
   --gecko-alert-accent: white;
 }

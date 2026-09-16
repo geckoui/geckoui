@@ -132,4 +132,10 @@
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
   --gecko-ui-scrollbar-thumb-hover: oklch(0.551 0.0234 264.36);
+
+  /* lifted for contrast: the light values sit too dark on a dark surface */
+  --color-success: oklch(0.72 0.17 149.21);
+  --color-error: oklch(0.71 0.19 25.33);
+  --color-warning: oklch(0.76 0.15 58.32);
+  --color-info: oklch(0.72 0.17 259.81);
 }

@@ -48,9 +48,9 @@ export function SwitchCustomSizeExample() {
 export function AlertCustomVariantExample() {
   return (
     <div className="flex flex-col gap-3">
-      <Alert variant="error" title="Error alert" />
-      <Alert variant="warning" title="Warning alert" />
-      <Alert variant="critical" title="Critical alert (custom variant)" />
+      <Alert color="error" title="Error alert" />
+      <Alert color="warning" title="Warning alert" />
+      <Alert color="critical" title="Critical alert (custom variant)" />
     </div>
   );
 }

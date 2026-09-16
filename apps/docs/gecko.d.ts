@@ -10,7 +10,7 @@ declare module "@geckoui/geckoui" {
     lg: unknown;
   }
 
-  interface AlertVariantMap {
+  interface AlertColorMap {
     critical: unknown;
   }
 
