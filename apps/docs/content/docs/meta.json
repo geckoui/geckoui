@@ -5,7 +5,6 @@
     "installation",
     "gecko-ui-provider",
     "theming",
-
     "---Components---",
     "alert",
     "button",
@@ -17,7 +16,6 @@
     "date-range-input",
     "dialog",
     "drawer",
-    "dropdown",
     "input",
     "input-error",
     "label",
@@ -32,7 +30,6 @@
     "textarea",
     "toast",
     "tooltip",
-
     "---React Hook Form---",
     "rhf-input",
     "rhf-textarea",

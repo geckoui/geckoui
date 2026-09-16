@@ -4,7 +4,6 @@
     "index",
     "installation",
     "theming",
-
     "---Components---",
     "alert",
     "button",
@@ -16,7 +15,6 @@
     "date-range-input",
     "dialog",
     "drawer",
-    "dropdown",
     "input",
     "input-error",
     "label",
@@ -31,7 +29,6 @@
     "textarea",
     "toast",
     "tooltip",
-
     "---React Hook Form---",
     "rhf-input",
     "rhf-textarea",
@@ -42,8 +39,6 @@
     "rhf-select",
     "rhf-date-input",
     "rhf-date-range-input",
-    "rhf-number-input",
-    "rhf-currency-input",
     "rhf-otp-input",
     "rhf-file-input",
     "rhf-file-picker",
