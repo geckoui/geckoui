@@ -31,7 +31,7 @@ export interface FormatNumericInputOptions {
  * ```
  * */
 export const formatNumericInput = (
-  value: string,
+  rawValue: string,
   {
     strict = true,
     positiveOnly = false,
@@ -39,6 +39,10 @@ export const formatNumericInput = (
     maxWholeDigitPlaces
   }: FormatNumericInputOptions = {}
 ): string => {
+  // A number can still arrive here from a form default that has not been migrated,
+  // and calling .replace on it would throw.
+  const value = String(rawValue ?? "");
+
   const formattedValue = value
     .replace(/[^0-9.]/g, "")
     .split(".")

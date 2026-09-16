@@ -24,7 +24,22 @@ buttons and for clamping:
 ```
 
 `RHFCounterInput` stores a string in the form too, so a `zod` schema needs
-`z.coerce.number()` or a string field.
+`z.coerce.number()` or a string field, and `defaultValues` should hold strings:
+
+```diff
+ const schema = z.object({
+-  quantity: z.number().min(1)
++  quantity: z.coerce.number().min(1)
+ });
+
+ useForm({
+-  defaultValues: { quantity: 1 }
++  defaultValues: { quantity: "1" }
+ });
+```
+
+`formatNumericInput` coerces with `String()` before sanitising, so an unmigrated
+numeric default renders instead of throwing.
 
 Also changed:
 
