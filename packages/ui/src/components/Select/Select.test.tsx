@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Select, SelectDropdownSearch, SelectEmpty, SelectOption, SelectTrigger } from ".";
+import { Select, SelectEmpty, SelectOption, SelectTrigger } from ".";
 
 const menu = () => document.querySelector<HTMLElement>(".GeckoUISelectMenu");
 const options = () =>

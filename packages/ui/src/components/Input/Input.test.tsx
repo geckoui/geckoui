@@ -59,7 +59,7 @@ describe("Input", () => {
 
   it("renders a component suffix and passes it the input ref", () => {
     const ref = createRef<HTMLInputElement>();
-    const Suffix = vi.fn(() => <span data-testid="suffix" />);
+    const Suffix = vi.fn((_props: Record<string, unknown>) => <span data-testid="suffix" />);
     render(<Input ref={ref} suffix={Suffix} placeholder="Search" />);
 
     expect(screen.getByTestId("suffix")).toBeInTheDocument();

@@ -116,7 +116,7 @@ describe("Checkbox", () => {
 
     it("forwards a ref to the input", () => {
       let node: HTMLInputElement | null = null;
-      render(<Checkbox ref={(el) => (node = el)} />);
+      render(<Checkbox ref={(el) => { node = el; }} />);
 
       expect(node).toBeInstanceOf(HTMLInputElement);
     });

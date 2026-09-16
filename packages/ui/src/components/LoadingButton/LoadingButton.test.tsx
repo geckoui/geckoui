@@ -130,14 +130,14 @@ describe("LoadingButton", () => {
 
   it("passes variant, color and size through to Button", () => {
     render(
-      <LoadingButton variant="outlined" color="danger" size="lg">
+      <LoadingButton variant="outlined" color="primary" size="lg">
         Save
       </LoadingButton>
     );
 
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("data-variant", "outlined");
-    expect(button).toHaveAttribute("data-color", "danger");
+    expect(button).toHaveAttribute("data-color", "primary");
     expect(button).toHaveAttribute("data-size", "lg");
   });
 

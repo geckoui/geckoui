@@ -421,8 +421,9 @@ describe("RHFInput", () => {
         <RHFInput
           name="email"
           rules={{ required: "Required" }}
-          suffix={({ fieldState }: { fieldState: { error?: unknown } }) =>
-            fieldState.error ? <span data-testid="error-icon" /> : null
+          suffix={
+            ((({ fieldState }: { fieldState: { error?: unknown } }) =>
+              fieldState.error ? <span data-testid="error-icon" /> : null) as unknown) as never
           }
         />
       </Form>

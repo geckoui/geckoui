@@ -2,6 +2,8 @@ import { fireEvent, renderHook } from "@testing-library/react";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import useClickOutside from "./useClickOutside";
+
 const mount = (tag = "div") => {
   const el = document.createElement(tag);
   document.body.append(el);
@@ -11,8 +13,6 @@ const mount = (tag = "div") => {
 afterEach(() => {
   document.body.innerHTML = "";
 });
-
-const { default: useClickOutside } = await import("./useClickOutside");
 
 describe("useClickOutside", () => {
   it("calls back on a mousedown outside the ref", () => {

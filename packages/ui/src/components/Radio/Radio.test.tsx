@@ -4,6 +4,7 @@ import { createRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { Radio } from ".";
+import type { RadioProps } from "./Radio.types";
 
 describe("Radio", () => {
   it("renders a radio input", () => {
@@ -74,7 +75,7 @@ describe("Radio", () => {
   });
 
   it("cannot be overridden to a non radio type", () => {
-    render(<Radio type="checkbox" />);
+    render(<Radio {...({ type: "checkbox" } as unknown as RadioProps)} />);
 
     expect(screen.getByRole("radio")).toHaveAttribute("type", "radio");
   });

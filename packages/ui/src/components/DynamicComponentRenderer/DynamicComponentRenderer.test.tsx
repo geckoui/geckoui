@@ -47,7 +47,7 @@ describe("DynamicComponentRenderer", () => {
   });
 
   it("calls a function component with the remaining props", () => {
-    const Component = vi.fn(() => <span data-testid="fn" />);
+    const Component = vi.fn((_props: Record<string, unknown>) => <span data-testid="fn" />);
     render(<DynamicComponentRenderer component={Component} className="custom" extra={1} />);
 
     expect(screen.getByTestId("fn")).toBeInTheDocument();

@@ -176,10 +176,10 @@ describe("RHFFilePicker", () => {
   });
 
   it("gives the render prop the field, the dropzone ref and the picker controls", () => {
-    const render_ = vi.fn(() => <div data-testid="custom" />);
+    const render_ = vi.fn((_props: Record<string, unknown>) => <div data-testid="custom" />);
     render(
       <Form defaultValues={{ files: [pickedFile("a.txt", 1)] }}>
-        <RHFFilePicker name="files" render={render_} />
+        <RHFFilePicker name="files" render={render_ as never} />
       </Form>
     );
 
@@ -188,7 +188,7 @@ describe("RHFFilePicker", () => {
       loading: false,
       field: expect.objectContaining({ name: "files" })
     });
-    expect(typeof (render_.mock.calls[0][0] as { openFilePicker: unknown }).openFilePicker).toBe(
+    expect(typeof render_.mock.calls[0][0].openFilePicker).toBe(
       "function"
     );
   });
