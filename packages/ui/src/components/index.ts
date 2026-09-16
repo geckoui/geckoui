@@ -4,7 +4,6 @@ export * from "./Checkbox";
 export * from "./CounterInput";
 export * from "./DateInput";
 export * from "./DateRangeInput";
-export * from "./BaseDateRangeInput";
 export * from "./Input";
 export * from "./Label";
 export * from "./InputError";
