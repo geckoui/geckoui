@@ -291,12 +291,7 @@ describe("Menu", () => {
     await waitFor(() => expect(screen.getByRole("menuitem", { name: "Edit" })).toHaveFocus());
   });
 
-  // KNOWN BUG, left unfixed on purpose: MenuButton reads
-  // `menuRef.current?.querySelector("[role=menuitem]")` in the same tick it calls
-  // `openMenu()`. The panel is not mounted yet, so `menuRef.current` is null and the
-  // queued focus call has nothing to focus. Opening with ArrowDown therefore leaves
-  // focus on the panel instead of the first item. Delete this marker once fixed.
-  it.fails("focuses the first item when opening with ArrowDown", async () => {
+  it("focuses the first item when opening with ArrowDown", async () => {
     render(
       <Menu label="Actions">
         <MenuItem>Edit</MenuItem>
@@ -308,6 +303,20 @@ describe("Menu", () => {
     await userEvent.keyboard("{ArrowDown}");
 
     await waitFor(() => expect(screen.getByRole("menuitem", { name: "Edit" })).toHaveFocus());
+  });
+
+  it("skips a disabled first item when opening with ArrowDown", async () => {
+    render(
+      <Menu label="Actions">
+        <MenuItem disabled>Edit</MenuItem>
+        <MenuItem>Copy</MenuItem>
+      </Menu>
+    );
+
+    screen.getByRole("button").focus();
+    await userEvent.keyboard("{ArrowDown}");
+
+    await waitFor(() => expect(screen.getByRole("menuitem", { name: "Copy" })).toHaveFocus());
   });
 
   it("applies the custom classes", async () => {
