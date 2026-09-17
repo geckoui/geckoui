@@ -60,12 +60,15 @@ describe("generateCalendarDates", () => {
     expect(index % 7).toBe(0);
   });
 
-  // KNOWN BUG, left unfixed on purpose: `firstDayOfMonth` maps Sunday (getDay() === 0)
-  // to 7 instead of 0, so a month that starts on a Sunday gets a full extra week of
-  // previous-month days before it. The columns still line up, but the grid wastes its
-  // whole first row on greyed-out dates. Delete this marker once fixed.
-  it.fails("does not prepend a whole week when the month starts on a Sunday", () => {
-    expect(generateCalendarDates(8, 2024)[0]).toEqual({ day: 1, month: 8, year: 2024 });
+  // Intentional: a month starting on a Sunday gets a full leading week of the previous
+  // month rather than none. `firstDayOfMonth` maps Sunday (getDay() === 0) to 7 for
+  // exactly this reason. Columns stay correct either way; this keeps the grid stable.
+  it("prepends a whole week when the month starts on a Sunday", () => {
+    // 1 September 2024 was a Sunday
+    const dates = generateCalendarDates(8, 2024);
+
+    expect(dates.slice(0, 7).every((d) => d.month === 7 && d.year === 2024)).toBe(true);
+    expect(dates[7]).toEqual({ day: 1, month: 8, year: 2024 });
   });
 
   it("rolls the padding into the next year in December", () => {

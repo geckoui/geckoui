@@ -551,6 +551,30 @@ describe("RHFCounterInput", () => {
     expect(screen.getByRole("button", { name: "Increment" })).toBeDisabled();
   });
 
+  it("marks the styled container as errored", async () => {
+    const { container } = render(
+      <Form defaultValues={{ qty: "" }}>
+        <RHFCounterInput name="qty" rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() =>
+      expect(container.querySelector(".GeckoUIRHFCounterInput")).toHaveAttribute("data-error")
+    );
+  });
+
+  it("is not marked errored while valid", () => {
+    const { container } = render(
+      <Form defaultValues={{ qty: "1" }}>
+        <RHFCounterInput name="qty" />
+      </Form>
+    );
+
+    expect(container.querySelector(".GeckoUIRHFCounterInput")).not.toHaveAttribute("data-error");
+  });
+
   it("calls onChange with the new value", async () => {
     const onChange = vi.fn();
     render(
@@ -574,6 +598,30 @@ describe("RHFOTPInput", () => {
     );
 
     expect(screen.getAllByRole("textbox")).toHaveLength(4);
+  });
+
+  it("marks the styled container as errored", async () => {
+    const { container } = render(
+      <Form defaultValues={{ code: "" }}>
+        <RHFOTPInput name="code" length={4} rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() =>
+      expect(container.querySelector(".GeckoUIRHFOTPInput")).toHaveAttribute("data-error")
+    );
+  });
+
+  it("is not marked errored while valid", () => {
+    const { container } = render(
+      <Form defaultValues={{ code: "1234" }}>
+        <RHFOTPInput name="code" length={4} />
+      </Form>
+    );
+
+    expect(container.querySelector(".GeckoUIRHFOTPInput")).not.toHaveAttribute("data-error");
   });
 
   it("stores the typed code", async () => {
@@ -636,12 +684,7 @@ describe("RHFSelect", () => {
     expect(container.querySelector(".GeckoUIRHFSelect")).toBeInTheDocument();
   });
 
-  // KNOWN BUG, left unfixed on purpose: RHFSelect.scss styles the error border as
-  // `.GeckoUIRHFSelectButton[data-error]`, but the `data-error` prop is passed into
-  // Select, which never forwards it to any DOM node, so the red border never appears.
-  // The same mismatch affects RHFInput, RHFCounterInput and RHFOTPInput.
-  // Delete this marker once fixed.
-  it.fails("marks the styled trigger as errored", async () => {
+  it("marks the styled trigger as errored", async () => {
     const { container } = render(
       <Form defaultValues={{ fruit: undefined }}>
         <RHFSelect name="fruit" rules={{ required: "Required" }}>

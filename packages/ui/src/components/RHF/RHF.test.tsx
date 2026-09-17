@@ -311,11 +311,7 @@ describe("RHFInput", () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ email: "a@b.com" }));
   });
 
-  // KNOWN BUG, left unfixed on purpose: RHFInput.scss styles the error border as
-  // `.GeckoUIRHFInput[data-error]`, but `.GeckoUIRHFInput` is the wrapping <label> while
-  // `data-error` is spread onto the inner <input>, so the two never meet and the red
-  // border never appears. Delete this marker once fixed.
-  it.fails("marks the styled container as errored", async () => {
+  it("marks the styled container as errored", async () => {
     const { container } = render(
       <Form defaultValues={{ email: "" }}>
         <RHFInput name="email" rules={{ required: "Required" }} />
@@ -329,7 +325,7 @@ describe("RHFInput", () => {
     );
   });
 
-  it("puts data-error on the inner input", async () => {
+  it("keeps data-error off the inner input", async () => {
     render(
       <Form defaultValues={{ email: "" }}>
         <RHFInput name="email" rules={{ required: "Required" }} />
@@ -339,18 +335,19 @@ describe("RHFInput", () => {
     await submit();
 
     await waitFor(() =>
-      expect(screen.getByRole("textbox")).toHaveAttribute("data-error", "true")
+      expect(document.querySelector(".GeckoUIRHFInput")).toHaveAttribute("data-error")
     );
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("data-error");
   });
 
   it("is not marked errored while valid", () => {
-    render(
+    const { container } = render(
       <Form defaultValues={{ email: "a@b.com" }}>
         <RHFInput name="email" />
       </Form>
     );
 
-    expect(screen.getByRole("textbox")).not.toHaveAttribute("data-error");
+    expect(container.querySelector(".GeckoUIRHFInput")).not.toHaveAttribute("data-error");
   });
 
   it("formats the displayed value with transform.input", () => {

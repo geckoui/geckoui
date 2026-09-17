@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 
 import { classNames } from "../../utils/classNames";
+import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import { formatNumericInput } from "../../utils/formatNumericInput";
 import type { CounterInputProps } from "./CounterInput.types";
 
@@ -42,10 +43,12 @@ const CounterInput = forwardRef<HTMLInputElement, CounterInputProps>(
       maxFractionDigits,
       maxWholeDigitPlaces,
       onBlur,
-      ...rest
+      ...props
     },
     ref
   ) => {
+    const { dataAttributes, rest } = splitDataAttributes(props);
+
     const format = (raw: string) =>
       formatNumericInput(raw, { strict, positiveOnly, maxFractionDigits, maxWholeDigitPlaces });
 
@@ -93,6 +96,7 @@ const CounterInput = forwardRef<HTMLInputElement, CounterInputProps>(
     return (
       <div
         className={classNames("GeckoUICounterInput", className)}
+        {...dataAttributes}
         data-size={size}
         data-state={disabled ? "disabled" : readOnly ? "readonly" : undefined}>
         <button

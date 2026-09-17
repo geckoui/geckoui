@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef } from "react";
 
 import { classNames } from "../../utils/classNames";
+import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import type { OTPInputProps } from "./OTPInput.types";
 
 /**
@@ -65,11 +66,13 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
       numberOnly = true,
       aspectRatio,
       onOTPComplete,
-      disabled
+      disabled,
+      ...props
     },
     ref
   ) => {
     const divRef = useRef<HTMLDivElement>(null);
+    const { dataAttributes } = splitDataAttributes(props);
 
     const focus = (index: number) => {
       const children = divRef.current?.children;
@@ -110,6 +113,7 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
     return (
       <div
         className={classNames("GeckoUIOTPInput", className)}
+        {...dataAttributes}
         data-state={disabled ? "disabled" : "enabled"}
         ref={divRef}>
         {Array.from({ length })

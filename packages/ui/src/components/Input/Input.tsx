@@ -1,5 +1,6 @@
 import { forwardRef, useId } from "react";
 
+import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import { classNames } from "../../utils/classNames";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
 import type { InputProps } from "./Input.types";
@@ -49,12 +50,14 @@ import type { InputProps } from "./Input.types";
  * ```
  */
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ name, prefix, id, suffix, inputClassName, className, disabled, readOnly, ...rest }, ref) => {
+  ({ name, prefix, id, suffix, inputClassName, className, disabled, readOnly, ...props }, ref) => {
     const _id = useId();
+    const { dataAttributes, rest } = splitDataAttributes(props);
 
     return (
       <label
         aria-disabled={disabled}
+        {...dataAttributes}
         data-state={disabled ? "disabled" : "enabled"}
         data-readonly={readOnly || undefined}
         className={classNames("GeckoUIInput group", className)}
