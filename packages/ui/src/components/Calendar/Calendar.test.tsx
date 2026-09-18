@@ -44,7 +44,7 @@ describe("Calendar", () => {
   });
 
   it("falls back to today for an invalid selected date", () => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
     render(<Calendar selectedDate="04/07/2023" onSelectDate={() => {}} />);
 
     expect(header()).toHaveTextContent("January 2024");
@@ -52,7 +52,7 @@ describe("Calendar", () => {
   });
 
   it("warns about an invalid selected date", () => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
     render(<Calendar selectedDate="04/07/2023" onSelectDate={() => {}} />);
 
     expect(spy).toHaveBeenCalledWith(expect.stringContaining("Invalid date format"));

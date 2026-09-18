@@ -237,7 +237,7 @@ describe("RHFInputGroup", () => {
   });
 
   it("warns and renders nothing without children", () => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const { container } = render(
       <Form defaultValues={{}}>
         <RHFInputGroup label="Email">{null}</RHFInputGroup>
@@ -245,7 +245,7 @@ describe("RHFInputGroup", () => {
     );
 
     expect(container.querySelector(".GeckoUIRHFInputGroup")).toBeNull();
-    expect(spy).toHaveBeenCalledWith("RHFInputGroup must have children");
+    expect(spy).toHaveBeenCalledWith("[GeckoUI] RHFInputGroup must have children");
     spy.mockRestore();
   });
 
@@ -259,7 +259,9 @@ describe("RHFInputGroup", () => {
       </Form>
     );
 
-    expect(spy).toHaveBeenCalledWith("RHFInputGroup not containing any `RHF` input component");
+    expect(spy).toHaveBeenCalledWith(
+      "[GeckoUI] RHFInputGroup does not contain any RHF input component"
+    );
     spy.mockRestore();
   });
 

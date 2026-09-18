@@ -1,6 +1,7 @@
 import { useEffect, useImperativeHandle, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
+import { devWarn } from "../../../utils/devWarn";
 import { getTodayDate, isValidISOFormat, shouldSwapDates } from "../Calendar.utils";
 import { CalendarDayPicker } from "../CalendarDayPicker";
 import { CalendarMonthPicker } from "../CalendarMonthPicker";
@@ -116,18 +117,18 @@ const Calendar = (props: CalendarProps) => {
   useEffect(() => {
     if (mode === "single") {
       if (selectedDate && !isValidISOFormat(selectedDate)) {
-        console.error(
+        devWarn(
           `Invalid date format. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedDate}`
         );
       }
     } else {
       if (selectedRange?.from && !isValidISOFormat(selectedRange.from)) {
-        console.error(
+        devWarn(
           `Invalid date format for range.from. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedRange.from}`
         );
       }
       if (selectedRange?.to && !isValidISOFormat(selectedRange.to)) {
-        console.error(
+        devWarn(
           `Invalid date format for range.to. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedRange.to}`
         );
       }

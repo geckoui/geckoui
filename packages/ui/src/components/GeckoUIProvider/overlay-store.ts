@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import type { DialogOptions } from "../Dialog/Dialog.types";
 import type { DrawerProps } from "../Drawer/Drawer.types";
+import { devWarn } from "../../utils/devWarn";
 
 export type OverlayType = "dialog" | "drawer";
 
@@ -46,8 +47,8 @@ function notify() {
 function warnWhenNoHost() {
   if (hosts.length > 0) return;
 
-  console.error(
-    "[GeckoUI] No <GeckoUIProvider> is mounted, so the overlay cannot be rendered. " +
+  devWarn(
+    "No <GeckoUIProvider> is mounted, so the overlay cannot be rendered. " +
       "Wrap your app with <GeckoUIProvider> to use Dialog.show() and Drawer.show()."
   );
 }
@@ -58,8 +59,8 @@ function warnWhenManyHosts() {
   queueMicrotask(() => {
     if (hosts.length < 2) return;
 
-    console.warn(
-      "[GeckoUI] More than one <GeckoUIProvider> is mounted. The innermost one owns the " +
+    devWarn(
+      "More than one <GeckoUIProvider> is mounted. The innermost one owns the " +
         "overlay stack and the <Toaster>; the others render nothing. Mount a single provider " +
         "unless you nest one deliberately to give overlays access to a subtree's context."
     );

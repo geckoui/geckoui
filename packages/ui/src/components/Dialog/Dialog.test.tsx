@@ -162,15 +162,15 @@ describe("Dialog", () => {
       expect(screen.getByText("first")).toBeInTheDocument();
     });
 
-    it("logs an error when no provider is mounted", () => {
-      const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    it("warns when no provider is mounted", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
       act(() => {
         Dialog.show({ content: () => <p>orphan</p> });
       });
 
-      expect(error).toHaveBeenCalledWith(expect.stringContaining("GeckoUIProvider"));
-      error.mockRestore();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("GeckoUIProvider"));
+      warn.mockRestore();
     });
   });
 });

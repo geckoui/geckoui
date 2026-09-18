@@ -12,7 +12,7 @@ beforeEach(() => {
   // These tests drive the store directly, with no provider mounted, so the
   // "no <GeckoUIProvider>" error is expected. One test below asserts it; the rest
   // would just flood the output with it.
-  vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 afterEach(() => {
   vi.restoreAllMocks();
@@ -189,12 +189,12 @@ describe("overlayStore", () => {
       expect(overlayStore.getActiveHost()).toBeNull();
     });
 
-    it("errors when an overlay is opened with no provider mounted", () => {
-      const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    it("warns when an overlay is opened with no provider mounted", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
       overlayStore.pushDialog({});
 
-      expect(error).toHaveBeenCalledWith(expect.stringContaining("GeckoUIProvider"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("GeckoUIProvider"));
     });
   });
 
