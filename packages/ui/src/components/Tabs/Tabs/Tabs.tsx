@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
-import { findTabs } from "../Tabs.utils";
 import type { TabsProps } from "../Tabs.types";
+import { findTabs } from "../Tabs.utils";
 import { TabsContext } from "../useTabs";
 
 /**

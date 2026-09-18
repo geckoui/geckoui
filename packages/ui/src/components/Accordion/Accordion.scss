@@ -1,0 +1,132 @@
+@import "../../mixins.scss";
+
+/*
+ * The open and close animates a grid row from 0fr to 1fr rather than a height, so it
+ * runs to the content's real height with no measuring and no max-height guess.
+ */
+.GeckoUIAccordion {
+  @include base-reset;
+
+  --gecko-accordion-radius: 0.5rem;
+  --gecko-accordion-gap: 0.5rem;
+  --gecko-accordion-padding-x: 1rem;
+  --gecko-accordion-padding-y: 0.75rem;
+  --gecko-accordion-font-size: 0.875rem;
+  --gecko-accordion-duration: 200ms;
+
+  @apply flex flex-col;
+
+  gap: var(--gecko-accordion-gap);
+
+  &[data-size="sm"] {
+    --gecko-accordion-padding-x: 0.75rem;
+    --gecko-accordion-padding-y: 0.5rem;
+    --gecko-accordion-font-size: 0.8125rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-accordion-padding-x: 1.25rem;
+    --gecko-accordion-padding-y: 1rem;
+    --gecko-accordion-font-size: 1rem;
+  }
+
+  &__item {
+    @apply overflow-hidden;
+  }
+
+  &__header {
+    @include button-reset;
+
+    @apply flex w-full cursor-pointer items-center justify-between gap-3 text-left font-medium transition-colors;
+
+    padding: var(--gecko-accordion-padding-y) var(--gecko-accordion-padding-x);
+    font-size: var(--gecko-accordion-font-size);
+    color: var(--color-text-primary);
+
+    &:hover:not([data-disabled]) {
+      @apply bg-surface-hover;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: -2px;
+    }
+
+    &[data-disabled] {
+      @apply cursor-not-allowed opacity-50;
+    }
+
+    &__content {
+      @apply flex min-w-0 items-center gap-2;
+    }
+
+    &__icon {
+      @apply shrink-0 transition-transform;
+
+      transition-duration: var(--gecko-accordion-duration);
+      color: var(--color-text-tertiary);
+    }
+
+    &[data-state="open"] &__icon {
+      @apply rotate-180;
+    }
+  }
+
+  /* the animated part: one grid row, 0fr closed and 1fr open */
+  &__panel {
+    @apply grid;
+
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--gecko-accordion-duration) ease;
+
+    &[data-state="open"] {
+      grid-template-rows: 1fr;
+    }
+
+    &__inner {
+      @apply overflow-hidden;
+    }
+
+    &__content {
+      font-size: var(--gecko-accordion-font-size);
+      color: var(--color-text-secondary);
+      padding: 0 var(--gecko-accordion-padding-x) var(--gecko-accordion-padding-y);
+    }
+  }
+
+  /* separated — each item its own card */
+  &[data-variant="separated"] &__item {
+    @apply border-border-primary border;
+
+    border-radius: var(--gecko-accordion-radius);
+  }
+
+  /* contained — one box, dividers between */
+  &[data-variant="contained"] {
+    --gecko-accordion-gap: 0;
+
+    @apply border-border-primary overflow-hidden border;
+
+    border-radius: var(--gecko-accordion-radius);
+  }
+
+  &[data-variant="contained"] &__item + &__item {
+    @apply border-border-primary border-t;
+  }
+
+  /* plain — dividers only */
+  &[data-variant="plain"] {
+    --gecko-accordion-gap: 0;
+  }
+
+  &[data-variant="plain"] &__item + &__item {
+    @apply border-border-primary border-t;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__panel,
+    &__header__icon {
+      transition: none;
+    }
+  }
+}

@@ -129,7 +129,7 @@
   }
 
   &[data-variant="underline"][data-orientation="vertical"] &__list {
-    @apply border-b-0 border-r;
+    @apply border-r border-b-0;
   }
 
   &[data-variant="underline"][data-orientation="vertical"] &__tab {

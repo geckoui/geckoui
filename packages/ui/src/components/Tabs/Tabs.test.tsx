@@ -602,7 +602,8 @@ describe("Tabs", () => {
       Object.defineProperty(strip, "scrollWidth", { value: 1200, configurable: true });
       Object.defineProperty(strip, "clientWidth", { value: 400, configurable: true });
       Object.defineProperty(strip, "scrollLeft", { value: 100, configurable: true });
-      strip.getBoundingClientRect = () => ({ left: 200, top: 0, width: 400, height: 40 }) as DOMRect;
+      strip.getBoundingClientRect = () =>
+        ({ left: 200, top: 0, width: 400, height: 40 }) as DOMRect;
     };
 
     it("centres the selected tab when the strip overflows", async () => {
@@ -617,7 +618,9 @@ describe("Tabs", () => {
       await userEvent.click(target);
 
       // scrollLeft 100 + (320 - 200) - (400 - 80) / 2
-      await waitFor(() => expect(scrollTo).toHaveBeenLastCalledWith({ left: 60, behavior: "smooth" }));
+      await waitFor(() =>
+        expect(scrollTo).toHaveBeenLastCalledWith({ left: 60, behavior: "smooth" })
+      );
     });
 
     it("leaves the strip alone when the tabs fit", async () => {
