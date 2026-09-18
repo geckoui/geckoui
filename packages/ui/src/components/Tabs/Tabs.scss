@@ -139,7 +139,12 @@
 
   /* segmented — the whole strip sits in a track, the selected tab is a raised surface */
   &[data-variant="segmented"] &__list {
-    @apply bg-surface-tertiary w-fit p-1;
+    /*
+     * `w-fit` lets the track hug the tabs when there are few of them, and `max-w-full`
+     * stops it growing past its container when there are many — without that it never
+     * overflows itself, so it never scrolls.
+     */
+    @apply bg-surface-tertiary w-fit max-w-full p-1;
 
     border-radius: calc(var(--gecko-tabs-radius) + 0.25rem);
   }
