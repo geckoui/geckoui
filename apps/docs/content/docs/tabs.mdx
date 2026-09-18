@@ -3,7 +3,7 @@ title: Tabs
 description: Switch between panels, or lay out navigation, with one component
 ---
 
-import { TabsBasicExample, TabsVariantsExample, TabsSizesExample, TabsFullWidthExample, TabsVerticalExample, TabsRichLabelExample, TabsIconExample, TabsScrollableExample, TabsControlledExample, TabsKeepMountedExample, TabsNavExample } from '@/components/examples/tabs-examples';
+import { TabsBasicExample, TabsVariantsExample, TabsSizesExample, TabsFullWidthExample, TabsVerticalExample, TabsRichLabelExample, TabsIconExample, TabsScrollableExample, TabsControlledExample, TabsKeepMountedExample, TabsLayoutExample, TabsNavExample } from '@/components/examples/tabs-examples';
 
 # Tabs
 
@@ -13,7 +13,7 @@ the markup switched to match.
 ## Installation
 
 ```tsx
-import { Tabs, Tab } from '@geckoui/geckoui';
+import { Tabs, TabList, Tab, TabPanel } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
@@ -24,16 +24,22 @@ import { Tabs, Tab } from '@geckoui/geckoui';
 
 ```tsx
 <Tabs defaultValue="profile">
-  <Tab value="profile" label="Profile">
+  <TabList>
+    <Tab value="profile">Profile</Tab>
+    <Tab value="billing">Billing</Tab>
+  </TabList>
+
+  <TabPanel value="profile">
     <ProfileForm />
-  </Tab>
-  <Tab value="billing" label="Billing">
+  </TabPanel>
+  <TabPanel value="billing">
     <BillingForm />
-  </Tab>
+  </TabPanel>
 </Tabs>
 ```
 
-`label` is what the tab shows. `children` is the panel it reveals.
+Four parts. `Tabs` holds the state, `TabList` is the strip, each `Tab` is one tab, and each
+`TabPanel` is what its tab reveals — paired by `value`.
 
 ## Props API
 
@@ -50,21 +56,33 @@ import { Tabs, Tab } from '@geckoui/geckoui';
 | `fullWidth` | `boolean` | `false` | Share the width between the tabs instead of hugging their labels |
 | `as` | `'div' \| 'nav'` | `'div'` | Render as navigation rather than as tabs |
 | `keepMounted` | `boolean` | `false` | Keep hidden panels in the DOM |
-| `listClassName` | `string` | - | Class for the strip of tabs |
-| `className` | `string` | - | Class for the outer container |
 | ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the container |
+
+### TabList
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | The `Tab` elements |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the strip |
 
 ### Tab
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `value` | `string` | required | Matched against `value` on `Tabs` |
-| `label` | `ReactNode \| FC<TabLabelRenderProps>` | required | What the tab shows |
+| `value` | `string` | required | Pairs the tab with its `TabPanel` |
 | `disabled` | `boolean` | `false` | Skipped by the keyboard and cannot be selected |
+| `asChild` | `boolean` | `false` | Use the child element as the tab, so a navigation tab can be a real link |
+| `children` | `ReactNode` | - | What the tab shows |
+| ...rest | `HTMLAttributes<HTMLElement>` | - | Spread onto the tab |
+
+### TabPanel
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | Pairs the panel with its `Tab` |
 | `keepMounted` | `boolean` | - | Overrides `keepMounted` on `Tabs` for this panel |
-| `className` | `string` | - | Class for the tab. Ignored when `label` is a function |
-| `panelClassName` | `string` | - | Class for this tab's panel |
-| `children` | `ReactNode` | - | The panel. Leave it out for navigation tabs |
+| `children` | `ReactNode` | - | The panel contents |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the panel |
 
 ## Examples
 
@@ -76,9 +94,15 @@ import { Tabs, Tab } from '@geckoui/geckoui';
 
 ```tsx
 <Tabs defaultValue="one" variant="underline">
-  <Tab value="one" label="One">First panel</Tab>
-  <Tab value="two" label="Two">Second panel</Tab>
-  <Tab value="three" label="Three">Third panel</Tab>
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+    <Tab value="three">Three</Tab>
+  </TabList>
+
+  <TabPanel value="one">First panel</TabPanel>
+  <TabPanel value="two">Second panel</TabPanel>
+  <TabPanel value="three">Third panel</TabPanel>
 </Tabs>
 ```
 
@@ -92,8 +116,13 @@ Swap `variant` for `"segmented"` or `"soft"`; everything else stays the same.
 
 ```tsx
 <Tabs defaultValue="one" variant="segmented" size="sm">
-  <Tab value="one" label="Small">First panel</Tab>
-  <Tab value="two" label="Another">Second panel</Tab>
+  <TabList>
+    <Tab value="one">Small</Tab>
+    <Tab value="two">Another</Tab>
+  </TabList>
+
+  <TabPanel value="one">First panel</TabPanel>
+  <TabPanel value="two">Second panel</TabPanel>
 </Tabs>
 ```
 
@@ -107,9 +136,15 @@ Swap `variant` for `"segmented"` or `"soft"`; everything else stays the same.
 
 ```tsx
 <Tabs defaultValue="overview" fullWidth>
-  <Tab value="overview" label="Overview">Overview panel</Tab>
-  <Tab value="activity" label="Activity">Activity panel</Tab>
-  <Tab value="settings" label="Settings">Settings panel</Tab>
+  <TabList>
+    <Tab value="overview">Overview</Tab>
+    <Tab value="activity">Activity</Tab>
+    <Tab value="settings">Settings</Tab>
+  </TabList>
+
+  <TabPanel value="overview">Overview panel</TabPanel>
+  <TabPanel value="activity">Activity panel</TabPanel>
+  <TabPanel value="settings">Settings panel</TabPanel>
 </Tabs>
 ```
 
@@ -121,9 +156,15 @@ Swap `variant` for `"segmented"` or `"soft"`; everything else stays the same.
 
 ```tsx
 <Tabs defaultValue="general" orientation="vertical" variant="soft">
-  <Tab value="general" label="General">General panel</Tab>
-  <Tab value="security" label="Security">Security panel</Tab>
-  <Tab value="advanced" label="Advanced">Advanced panel</Tab>
+  <TabList>
+    <Tab value="general">General</Tab>
+    <Tab value="security">Security</Tab>
+    <Tab value="advanced">Advanced</Tab>
+  </TabList>
+
+  <TabPanel value="general">General panel</TabPanel>
+  <TabPanel value="security">Security panel</TabPanel>
+  <TabPanel value="advanced">Advanced panel</TabPanel>
 </Tabs>
 ```
 
@@ -137,21 +178,19 @@ Swap `variant` for `"segmented"` or `"soft"`; everything else stays the same.
 
 ```tsx
 <Tabs defaultValue="inbox">
-  <Tab
-    value="inbox"
-    label={
-      <>
-        Inbox <Badge color="error">12</Badge>
-      </>
-    }>
-    <InboxPanel />
-  </Tab>
-  <Tab value="sent" label="Sent">
-    <SentPanel />
-  </Tab>
-  <Tab value="archive" label="Archive" disabled>
-    <ArchivePanel />
-  </Tab>
+  <TabList>
+    <Tab value="inbox">
+      Inbox <Badge color="error">12</Badge>
+    </Tab>
+    <Tab value="sent">Sent</Tab>
+    <Tab value="archive" disabled>
+      Archive
+    </Tab>
+  </TabList>
+
+  <TabPanel value="inbox"><InboxPanel /></TabPanel>
+  <TabPanel value="sent"><SentPanel /></TabPanel>
+  <TabPanel value="archive"><ArchivePanel /></TabPanel>
 </Tabs>
 ```
 
@@ -164,37 +203,25 @@ There is no icon prop. An icon is part of the `label`, like anything else.
 </Preview>
 
 ```tsx
-import { Tabs, Tab, Badge } from '@geckoui/geckoui';
+import { Tabs, TabList, Tab, TabPanel, Badge } from '@geckoui/geckoui';
 import { UserIcon, CardIcon, BellIcon } from './icons';
 
 <Tabs defaultValue="profile" variant="segmented">
-  <Tab
-    value="profile"
-    label={
-      <>
-        <UserIcon /> Profile
-      </>
-    }>
-    <ProfileForm />
-  </Tab>
-  <Tab
-    value="billing"
-    label={
-      <>
-        <CardIcon /> Billing
-      </>
-    }>
-    <BillingForm />
-  </Tab>
-  <Tab
-    value="alerts"
-    label={
-      <>
-        <BellIcon /> Alerts <Badge color="error">7</Badge>
-      </>
-    }>
-    <AlertList />
-  </Tab>
+  <TabList>
+    <Tab value="profile">
+      <UserIcon /> Profile
+    </Tab>
+    <Tab value="billing">
+      <CardIcon /> Billing
+    </Tab>
+    <Tab value="alerts">
+      <BellIcon /> Alerts <Badge color="error">7</Badge>
+    </Tab>
+  </TabList>
+
+  <TabPanel value="profile"><ProfileForm /></TabPanel>
+  <TabPanel value="billing"><BillingForm /></TabPanel>
+  <TabPanel value="alerts"><AlertList /></TabPanel>
 </Tabs>
 ```
 
@@ -205,12 +232,17 @@ announce:
 
 ```tsx
 <Tabs defaultValue="profile" variant="soft">
-  <Tab value="profile" label={<span aria-label="Profile"><UserIcon /></span>}>
-    <ProfileForm />
-  </Tab>
-  <Tab value="billing" label={<span aria-label="Billing"><CardIcon /></span>}>
-    <BillingForm />
-  </Tab>
+  <TabList>
+    <Tab value="profile" aria-label="Profile">
+      <UserIcon />
+    </Tab>
+    <Tab value="billing" aria-label="Billing">
+      <CardIcon />
+    </Tab>
+  </TabList>
+
+  <TabPanel value="profile"><ProfileForm /></TabPanel>
+  <TabPanel value="billing"><BillingForm /></TabPanel>
 </Tabs>
 ```
 
@@ -229,11 +261,17 @@ Nothing to switch on. Narrow the window, or add enough tabs, and it happens.
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'];
 
-<Tabs defaultValue="july">
+<Tabs defaultValue="July">
+  <TabList>
+    {MONTHS.map((month) => (
+      <Tab key={month} value={month}>{month}</Tab>
+    ))}
+  </TabList>
+
   {MONTHS.map((month) => (
-    <Tab key={month} value={month.toLowerCase()} label={month}>
+    <TabPanel key={month} value={month}>
       <MonthPanel month={month} />
-    </Tab>
+    </TabPanel>
   ))}
 </Tabs>
 ```
@@ -249,7 +287,7 @@ suits a handful of tabs rather than a long list.
 
 ```tsx
 import { useState } from 'react';
-import { Tabs, Tab } from '@geckoui/geckoui';
+import { Tabs, TabList, Tab, TabPanel } from '@geckoui/geckoui';
 
 function AccountTabs() {
   const [tab, setTab] = useState('profile');
@@ -259,12 +297,17 @@ function AccountTabs() {
       <p>Currently showing: {tab}</p>
 
       <Tabs value={tab} onChange={setTab}>
-        <Tab value="profile" label="Profile">
+        <TabList>
+          <Tab value="profile">Profile</Tab>
+          <Tab value="billing">Billing</Tab>
+        </TabList>
+
+        <TabPanel value="profile">
           <ProfileForm />
-        </Tab>
-        <Tab value="billing" label="Billing">
+        </TabPanel>
+        <TabPanel value="billing">
           <BillingForm />
-        </Tab>
+        </TabPanel>
       </Tabs>
     </>
   );
@@ -283,18 +326,54 @@ A hidden panel unmounts by default, so a half filled form inside it loses its st
 ```tsx
 // keep every panel mounted
 <Tabs defaultValue="form" keepMounted>
-  <Tab value="form" label="Form">
+  <TabList>
+    <Tab value="form">Form</Tab>
+    <Tab value="other">Other</Tab>
+  </TabList>
+
+  <TabPanel value="form">
     <Input placeholder="Type here, switch tab, come back" />
-  </Tab>
-  <Tab value="other" label="Other">Other panel</Tab>
+  </TabPanel>
+  <TabPanel value="other">Other panel</TabPanel>
 </Tabs>
 
 // or just the one that needs it
 <Tabs defaultValue="form">
-  <Tab value="form" label="Form" keepMounted>
+  <TabList>
+    <Tab value="form">Form</Tab>
+    <Tab value="other">Other</Tab>
+  </TabList>
+
+  <TabPanel value="form" keepMounted>
     <Input placeholder="Type here, switch tab, come back" />
-  </Tab>
-  <Tab value="other" label="Other">Other panel</Tab>
+  </TabPanel>
+  <TabPanel value="other">Other panel</TabPanel>
+</Tabs>
+```
+
+### Strip and panels in different places
+
+`TabList` can sit anywhere in the layout, so the strip and the panels do not have to be
+neighbours. Here the strip is pinned in a header while the panel scrolls under it.
+
+<Preview>
+  <TabsLayoutExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="profile" className="rounded-lg border">
+  <header className="sticky top-0 border-b bg-white px-4 pt-3">
+    <h2>Settings</h2>
+    <TabList>
+      <Tab value="profile">Profile</Tab>
+      <Tab value="billing">Billing</Tab>
+    </TabList>
+  </header>
+
+  <div className="h-80 overflow-y-auto p-4">
+    <TabPanel value="profile"><ProfileForm /></TabPanel>
+    <TabPanel value="billing"><BillingForm /></TabPanel>
+  </div>
 </Tabs>
 ```
 
@@ -319,7 +398,7 @@ through the `label` function:
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Tabs, Tab } from '@geckoui/geckoui';
+import { Tabs, TabList, Tab } from '@geckoui/geckoui';
 
 export default function SettingsLayout({ children }) {
   const pathname = usePathname();
@@ -327,22 +406,14 @@ export default function SettingsLayout({ children }) {
   return (
     <>
       <Tabs as="nav" value={pathname}>
-        <Tab
-          value="/settings/profile"
-          label={({ props }) => (
-            <Link href="/settings/profile" {...props} className="GeckoUITabs__tab">
-              Profile
-            </Link>
-          )}
-        />
-        <Tab
-          value="/settings/billing"
-          label={({ props }) => (
-            <Link href="/settings/billing" {...props} className="GeckoUITabs__tab">
-              Billing
-            </Link>
-          )}
-        />
+        <TabList>
+          <Tab value="/settings/profile" asChild>
+            <Link href="/settings/profile">Profile</Link>
+          </Tab>
+          <Tab value="/settings/billing" asChild>
+            <Link href="/settings/billing">Billing</Link>
+          </Tab>
+        </TabList>
       </Tabs>
 
       {children}
@@ -353,20 +424,31 @@ export default function SettingsLayout({ children }) {
 
 There are no panels here — the page below is the content.
 
-### The label render function
+### asChild
 
-Pass a function to `label` whenever you want to render the element yourself:
+`Tab` renders a `<button>` by default. Pass `asChild` and it renders your element instead,
+handing it the id, tab index, aria wiring and the `data-state` the styles key off:
 
-| Argument | Type | Description |
-|---|---|---|
-| `value` | `string` | This tab's value |
-| `selected` | `boolean` | Whether it is the selected tab |
-| `disabled` | `boolean` | Whether it is disabled |
-| `select` | `() => void` | Select this tab |
-| `props` | `TabElementProps` | `id`, `tabIndex` and the aria wiring |
+```tsx
+<Tab value="/settings/profile" asChild>
+  <Link href="/settings/profile">Profile</Link>
+</Tab>
+```
 
-Spread `props` onto whatever you render, or the keyboard navigation and the screen reader
-wiring stop working.
+The child keeps its own `className`; the tab class is added alongside. Use it for anything
+that has to be a real element — a router link, an anchor, your own button.
+
+If you need the selected state in JavaScript rather than in CSS, read it from the context:
+
+```tsx
+import { useTabs } from '@geckoui/geckoui';
+
+function TabCount() {
+  const { selectedValue } = useTabs();
+
+  return <span>Showing {selectedValue}</span>;
+}
+```
 
 ## Keyboard
 

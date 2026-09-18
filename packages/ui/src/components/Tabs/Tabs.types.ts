@@ -1,4 +1,4 @@
-import type { FC, HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 /** Extensible variant map - To allow module augmentation */
 export interface TabsVariantMap {
@@ -15,87 +15,6 @@ export interface TabsSizeMap {
 }
 
 export type TabsOrientation = "horizontal" | "vertical";
-
-/**
- * The attributes a tab element needs to behave like one.
- *
- * Deliberately exact rather than `HTMLAttributes`, which carries the legacy `color`
- * attribute and so collides with any component of ours that has its own `color` prop.
- */
-export interface TabElementProps {
-  id: string;
-  tabIndex: number;
-  role?: "tab";
-  "aria-selected"?: boolean;
-  "aria-controls"?: string;
-  "aria-current"?: "page";
-  "data-gecko-tab": string;
-  "data-state": "selected" | "unselected";
-  "data-disabled"?: true;
-}
-
-/**
- * What a `label` render function receives.
- *
- * Spread `props` onto whatever you render, or the keyboard navigation and the
- * screen reader wiring stop working.
- */
-export interface TabLabelRenderProps {
-  /** This tab's value */
-  value: string;
-
-  /** Whether this tab is the selected one */
-  selected: boolean;
-
-  /** Whether this tab is disabled */
-  disabled: boolean;
-
-  /** Select this tab */
-  select: () => void;
-
-  /** id, tabIndex and the aria wiring. Spread these. */
-  props: TabElementProps;
-}
-
-export interface TabProps {
-  /**
-   * Identifies the tab. Matched against the `value` on `Tabs`.
-   * */
-  value: string;
-
-  /**
-   * What the tab itself shows. A string, a node, or a function when you want to
-   * render the element yourself — a router link, say.
-   * */
-  label: ReactNode | FC<TabLabelRenderProps>;
-
-  /**
-   * Take the tab out of the keyboard order and stop it being selected.
-   * */
-  disabled?: boolean;
-
-  /**
-   * Class name for the tab itself. Ignored when `label` is a function, since you
-   * render the element in that case.
-   * */
-  className?: string;
-
-  /**
-   * Class name for this tab's panel.
-   * */
-  panelClassName?: string;
-
-  /**
-   * Keep this panel mounted while another tab is selected, overriding `keepMounted`
-   * on `Tabs`. Worth it for a panel holding a half filled form.
-   * */
-  keepMounted?: boolean;
-
-  /**
-   * The panel. Leave it out for navigation tabs, where the page below is the content.
-   * */
-  children?: ReactNode;
-}
 
 export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
   /**
@@ -153,12 +72,63 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChang
   keepMounted?: boolean;
 
   /**
-   * Class name for the strip of tabs.
+   * A `TabList`, the `TabPanel`s, and whatever layout you want around them.
    * */
-  listClassName?: string;
+  children?: ReactNode;
+}
 
+export interface TabListProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * `Tab` elements.
+   * */
+  children?: ReactNode;
+}
+
+export interface TabProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
+  /**
+   * Identifies the tab. Matched against the `value` on `Tabs`, and against the
+   * `TabPanel` it reveals.
+   * */
+  value: string;
+
+  /**
+   * Take the tab out of the keyboard order and stop it being selected.
+   * */
+  disabled?: boolean;
+
+  /**
+   * Use the child element as the tab instead of rendering a button, so navigation tabs
+   * can be real links. The child receives the id, tab index and aria wiring.
+   *
+   * @example
+   * ```tsx
+   * <Tab value="/settings/profile" asChild>
+   *   <Link href="/settings/profile">Profile</Link>
+   * </Tab>
+   * ```
+   * */
+  asChild?: boolean;
+
+  /**
+   * What the tab shows. Anything: text, an icon beside text, a badge.
+   * */
+  children?: ReactNode;
+}
+
+export interface TabPanelProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * Matched against the `Tab` that reveals this panel.
+   * */
+  value: string;
+
+  /**
+   * Keep this panel mounted while another tab is selected, overriding `keepMounted`
+   * on `Tabs`. Worth it for a panel holding a half filled form.
+   * */
+  keepMounted?: boolean;
+
+  /**
+   * The panel contents.
    * */
   children?: ReactNode;
 }
@@ -168,4 +138,5 @@ export interface TabsContextProps {
   select: (value: string) => void;
   keepMounted: boolean;
   isNav: boolean;
+  orientation: TabsOrientation;
 }

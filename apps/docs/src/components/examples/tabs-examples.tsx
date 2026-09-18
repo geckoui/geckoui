@@ -1,121 +1,11 @@
 "use client";
 
-import { Badge, Button, Input, Tab, Tabs } from "@geckoui/geckoui";
+import { Badge, Button, Input, Tab, TabList, TabPanel, Tabs } from "@geckoui/geckoui";
 import { useState } from "react";
 
 const panel = (name: string) => (
   <p className="text-sm text-fd-muted-foreground">{name} panel content.</p>
 );
-
-export function TabsBasicExample() {
-  return (
-    <Tabs defaultValue="profile">
-      <Tab value="profile" label="Profile">
-        {panel("Profile")}
-      </Tab>
-      <Tab value="billing" label="Billing">
-        {panel("Billing")}
-      </Tab>
-      <Tab value="team" label="Team">
-        {panel("Team")}
-      </Tab>
-    </Tabs>
-  );
-}
-
-export function TabsVariantsExample() {
-  return (
-    <div className="flex flex-col gap-8">
-      {(["underline", "segmented", "soft"] as const).map((variant) => (
-        <div key={variant} className="flex flex-col gap-2">
-          <p className="font-mono text-xs text-fd-muted-foreground">{variant}</p>
-          <Tabs defaultValue="one" variant={variant}>
-            <Tab value="one" label="One">
-              {panel("One")}
-            </Tab>
-            <Tab value="two" label="Two">
-              {panel("Two")}
-            </Tab>
-            <Tab value="three" label="Three">
-              {panel("Three")}
-            </Tab>
-          </Tabs>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function TabsSizesExample() {
-  return (
-    <div className="flex flex-col gap-8">
-      {(["sm", "md", "lg"] as const).map((size) => (
-        <Tabs key={size} defaultValue="one" variant="segmented" size={size}>
-          <Tab value="one" label={`Size ${size}`}>
-            {panel(size)}
-          </Tab>
-          <Tab value="two" label="Another">
-            {panel("Another")}
-          </Tab>
-        </Tabs>
-      ))}
-    </div>
-  );
-}
-
-export function TabsFullWidthExample() {
-  return (
-    <Tabs defaultValue="overview" fullWidth>
-      <Tab value="overview" label="Overview">
-        {panel("Overview")}
-      </Tab>
-      <Tab value="activity" label="Activity">
-        {panel("Activity")}
-      </Tab>
-      <Tab value="settings" label="Settings">
-        {panel("Settings")}
-      </Tab>
-    </Tabs>
-  );
-}
-
-export function TabsVerticalExample() {
-  return (
-    <Tabs defaultValue="general" orientation="vertical" variant="soft">
-      <Tab value="general" label="General">
-        {panel("General")}
-      </Tab>
-      <Tab value="security" label="Security">
-        {panel("Security")}
-      </Tab>
-      <Tab value="advanced" label="Advanced">
-        {panel("Advanced")}
-      </Tab>
-    </Tabs>
-  );
-}
-
-export function TabsRichLabelExample() {
-  return (
-    <Tabs defaultValue="inbox">
-      <Tab
-        value="inbox"
-        label={
-          <>
-            Inbox <Badge color="error">12</Badge>
-          </>
-        }>
-        {panel("Inbox")}
-      </Tab>
-      <Tab value="sent" label="Sent">
-        {panel("Sent")}
-      </Tab>
-      <Tab value="archive" label="Archive" disabled>
-        {panel("Archive")}
-      </Tab>
-    </Tabs>
-  );
-}
 
 const UserIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -138,76 +28,187 @@ const BellIcon = () => (
   </svg>
 );
 
+export function TabsBasicExample() {
+  return (
+    <Tabs defaultValue="profile">
+      <TabList>
+        <Tab value="profile">Profile</Tab>
+        <Tab value="billing">Billing</Tab>
+        <Tab value="team">Team</Tab>
+      </TabList>
+
+      <TabPanel value="profile">{panel("Profile")}</TabPanel>
+      <TabPanel value="billing">{panel("Billing")}</TabPanel>
+      <TabPanel value="team">{panel("Team")}</TabPanel>
+    </Tabs>
+  );
+}
+
+export function TabsVariantsExample() {
+  return (
+    <div className="flex flex-col gap-8">
+      {(["underline", "segmented", "soft"] as const).map((variant) => (
+        <div key={variant} className="flex flex-col gap-2">
+          <p className="font-mono text-xs text-fd-muted-foreground">{variant}</p>
+          <Tabs defaultValue="one" variant={variant}>
+            <TabList>
+              <Tab value="one">One</Tab>
+              <Tab value="two">Two</Tab>
+              <Tab value="three">Three</Tab>
+            </TabList>
+
+            <TabPanel value="one">{panel("One")}</TabPanel>
+            <TabPanel value="two">{panel("Two")}</TabPanel>
+            <TabPanel value="three">{panel("Three")}</TabPanel>
+          </Tabs>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function TabsSizesExample() {
+  return (
+    <div className="flex flex-col gap-8">
+      {(["sm", "md", "lg"] as const).map((size) => (
+        <Tabs key={size} defaultValue="one" variant="segmented" size={size}>
+          <TabList>
+            <Tab value="one">Size {size}</Tab>
+            <Tab value="two">Another</Tab>
+          </TabList>
+
+          <TabPanel value="one">{panel(size)}</TabPanel>
+          <TabPanel value="two">{panel("Another")}</TabPanel>
+        </Tabs>
+      ))}
+    </div>
+  );
+}
+
+export function TabsFullWidthExample() {
+  return (
+    <Tabs defaultValue="overview" fullWidth>
+      <TabList>
+        <Tab value="overview">Overview</Tab>
+        <Tab value="activity">Activity</Tab>
+        <Tab value="settings">Settings</Tab>
+      </TabList>
+
+      <TabPanel value="overview">{panel("Overview")}</TabPanel>
+      <TabPanel value="activity">{panel("Activity")}</TabPanel>
+      <TabPanel value="settings">{panel("Settings")}</TabPanel>
+    </Tabs>
+  );
+}
+
+export function TabsVerticalExample() {
+  return (
+    <Tabs defaultValue="general" orientation="vertical" variant="soft">
+      <TabList>
+        <Tab value="general">General</Tab>
+        <Tab value="security">Security</Tab>
+        <Tab value="advanced">Advanced</Tab>
+      </TabList>
+
+      <TabPanel value="general">{panel("General")}</TabPanel>
+      <TabPanel value="security">{panel("Security")}</TabPanel>
+      <TabPanel value="advanced">{panel("Advanced")}</TabPanel>
+    </Tabs>
+  );
+}
+
+export function TabsRichLabelExample() {
+  return (
+    <Tabs defaultValue="inbox">
+      <TabList>
+        <Tab value="inbox">
+          Inbox <Badge color="error">12</Badge>
+        </Tab>
+        <Tab value="sent">Sent</Tab>
+        <Tab value="archive" disabled>
+          Archive
+        </Tab>
+      </TabList>
+
+      <TabPanel value="inbox">{panel("Inbox")}</TabPanel>
+      <TabPanel value="sent">{panel("Sent")}</TabPanel>
+      <TabPanel value="archive">{panel("Archive")}</TabPanel>
+    </Tabs>
+  );
+}
+
 export function TabsIconExample() {
   return (
     <div className="flex flex-col gap-8">
       <Tabs defaultValue="profile" variant="segmented">
-        <Tab
-          value="profile"
-          label={
-            <>
-              <UserIcon /> Profile
-            </>
-          }>
-          {panel("Profile")}
-        </Tab>
-        <Tab
-          value="billing"
-          label={
-            <>
-              <CardIcon /> Billing
-            </>
-          }>
-          {panel("Billing")}
-        </Tab>
-        <Tab
-          value="alerts"
-          label={
-            <>
-              <BellIcon /> Alerts <Badge color="error">7</Badge>
-            </>
-          }>
-          {panel("Alerts")}
-        </Tab>
+        <TabList>
+          <Tab value="profile">
+            <UserIcon /> Profile
+          </Tab>
+          <Tab value="billing">
+            <CardIcon /> Billing
+          </Tab>
+          <Tab value="alerts">
+            <BellIcon /> Alerts <Badge color="error">7</Badge>
+          </Tab>
+        </TabList>
+
+        <TabPanel value="profile">{panel("Profile")}</TabPanel>
+        <TabPanel value="billing">{panel("Billing")}</TabPanel>
+        <TabPanel value="alerts">{panel("Alerts")}</TabPanel>
       </Tabs>
 
       <Tabs defaultValue="profile" variant="soft">
-        <Tab value="profile" label={<span aria-label="Profile"><UserIcon /></span>}>
-          {panel("Profile")}
-        </Tab>
-        <Tab value="billing" label={<span aria-label="Billing"><CardIcon /></span>}>
-          {panel("Billing")}
-        </Tab>
-        <Tab value="alerts" label={<span aria-label="Alerts"><BellIcon /></span>}>
-          {panel("Alerts")}
-        </Tab>
+        <TabList>
+          <Tab value="profile" aria-label="Profile">
+            <UserIcon />
+          </Tab>
+          <Tab value="billing" aria-label="Billing">
+            <CardIcon />
+          </Tab>
+          <Tab value="alerts" aria-label="Alerts">
+            <BellIcon />
+          </Tab>
+        </TabList>
+
+        <TabPanel value="profile">{panel("Profile")}</TabPanel>
+        <TabPanel value="billing">{panel("Billing")}</TabPanel>
+        <TabPanel value="alerts">{panel("Alerts")}</TabPanel>
       </Tabs>
     </div>
   );
 }
 
-export function TabsScrollableExample() {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
 
+export function TabsScrollableExample() {
   return (
-    <Tabs defaultValue="m7">
-      {months.map((month, i) => (
-        <Tab key={month} value={`m${i + 1}`} label={month}>
+    <Tabs defaultValue="July">
+      <TabList>
+        {MONTHS.map((month) => (
+          <Tab key={month} value={month}>
+            {month}
+          </Tab>
+        ))}
+      </TabList>
+
+      {MONTHS.map((month) => (
+        <TabPanel key={month} value={month}>
           {panel(month)}
-        </Tab>
+        </TabPanel>
       ))}
     </Tabs>
   );
@@ -227,12 +228,13 @@ export function TabsControlledExample() {
       </div>
 
       <Tabs value={tab} onChange={setTab} variant="soft">
-        <Tab value="profile" label="Profile">
-          {panel("Profile")}
-        </Tab>
-        <Tab value="billing" label="Billing">
-          {panel("Billing")}
-        </Tab>
+        <TabList>
+          <Tab value="profile">Profile</Tab>
+          <Tab value="billing">Billing</Tab>
+        </TabList>
+
+        <TabPanel value="profile">{panel("Profile")}</TabPanel>
+        <TabPanel value="billing">{panel("Billing")}</TabPanel>
       </Tabs>
     </div>
   );
@@ -240,13 +242,35 @@ export function TabsControlledExample() {
 
 export function TabsKeepMountedExample() {
   return (
-    <Tabs defaultValue="form" variant="segmented" keepMounted>
-      <Tab value="form" label="Form">
+    <Tabs defaultValue="form" variant="segmented">
+      <TabList>
+        <Tab value="form">Form</Tab>
+        <Tab value="other">Other</Tab>
+      </TabList>
+
+      <TabPanel value="form" keepMounted>
         <Input placeholder="Type here, switch tab, come back" />
-      </Tab>
-      <Tab value="other" label="Other">
-        {panel("Other")}
-      </Tab>
+      </TabPanel>
+      <TabPanel value="other">{panel("Other")}</TabPanel>
+    </Tabs>
+  );
+}
+
+export function TabsLayoutExample() {
+  return (
+    <Tabs defaultValue="profile" className="overflow-hidden rounded-lg border">
+      <header className="bg-fd-muted border-b px-4 pt-3">
+        <p className="mb-2 text-sm font-semibold">Settings</p>
+        <TabList>
+          <Tab value="profile">Profile</Tab>
+          <Tab value="billing">Billing</Tab>
+        </TabList>
+      </header>
+
+      <div className="h-32 overflow-y-auto p-4">
+        <TabPanel value="profile">{panel("Profile")}</TabPanel>
+        <TabPanel value="billing">{panel("Billing")}</TabPanel>
+      </div>
     </Tabs>
   );
 }
@@ -263,23 +287,17 @@ export function TabsNavExample() {
   return (
     <div className="flex flex-col gap-3">
       <Tabs as="nav" value={route}>
-        {links.map(([href, label]) => (
-          <Tab
-            key={href}
-            value={href}
-            label={({ props, selected }) => (
-              <button
-                {...props}
-                type="button"
-                onClick={() => setRoute(href)}
-                className="GeckoUITabs__tab"
-                data-state={selected ? "selected" : "unselected"}>
+        <TabList>
+          {links.map(([href, label]) => (
+            <Tab key={href} value={href} asChild>
+              <button type="button" onClick={() => setRoute(href)}>
                 {label}
               </button>
-            )}
-          />
-        ))}
+            </Tab>
+          ))}
+        </TabList>
       </Tabs>
+
       <p className="text-sm text-fd-muted-foreground">
         Pretend route: <code>{route}</code>
       </p>
