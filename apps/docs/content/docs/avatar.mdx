@@ -1,0 +1,260 @@
+---
+title: Avatar
+description: A picture of someone, falling back to their initials
+---
+
+import { AvatarBasicExample, AvatarSizesExample, AvatarShapesExample, AvatarColorsExample, AvatarFallbackExample, AvatarGroupExample, AvatarGroupOverflowExample, AvatarGroupStaticExample, AvatarClickableExample } from '@/components/examples/avatar-examples';
+
+# Avatar
+
+A picture of someone, falling back to their initials.
+
+## Installation
+
+```tsx
+import { Avatar, AvatarGroup } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <AvatarBasicExample />
+</Preview>
+
+```tsx
+<Avatar name="Ada Lovelace" src={user.image} />
+<Avatar name="Grace Hopper" color="primary" />
+<Avatar name="Cher" color="success" />
+<Avatar />
+```
+
+## Props API
+
+### Avatar
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | - | Image to show. The fallback takes over when it is missing or fails |
+| `alt` | `string` | - | Alternative text for the image. Falls back to `name` |
+| `name` | `string` | - | Whose avatar this is. Its initials are drawn when there is no image |
+| `fallback` | `ReactNode \| FC` | - | What to draw instead of the initials |
+| `size` | `keyof AvatarSizeMap` | `'md'` | `xs`, `sm`, `md`, `lg` or `xl`. Taken from the group when unset |
+| `shape` | `keyof AvatarShapeMap` | `'circle'` | `circle`, `rounded` or `square`. Taken from the group when unset |
+| `color` | `keyof AvatarColorMap` | `'default'` | Accent behind the fallback |
+| `onClick` | `MouseEventHandler` | - | Makes it a button, reachable and usable by keyboard |
+| `className` | `string` | - | CSS class for the avatar |
+| ...rest | `HTMLAttributes<HTMLSpanElement>` | - | All standard span attributes |
+
+### AvatarGroup
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `max` | `number` | - | How many to show before the rest are counted |
+| `size` | `keyof AvatarSizeMap` | `'md'` | Size for every avatar in the group |
+| `shape` | `keyof AvatarShapeMap` | `'circle'` | Corner treatment for every avatar in the group |
+| `interactive` | `boolean` | `true` | Lift and name each avatar on hover, and open the overflow from the count |
+| `renderOverflow` | `({ avatars }) => ReactNode` | the list of names | What fills the overflow overlay |
+| `className` | `string` | - | CSS class for the group |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | All standard div attributes |
+
+## Examples
+
+### Sizes
+
+<Preview>
+  <AvatarSizesExample />
+</Preview>
+
+```tsx
+<Avatar name="Ada Lovelace" size="xs" />
+<Avatar name="Ada Lovelace" size="xl" />
+```
+
+### Shapes
+
+<Preview>
+  <AvatarShapesExample />
+</Preview>
+
+```tsx
+<Avatar name="Ada Lovelace" shape="circle" />
+<Avatar name="Ada Lovelace" shape="rounded" />
+<Avatar name="Ada Lovelace" shape="square" />
+```
+
+### Colours
+
+<Preview>
+  <AvatarColorsExample />
+</Preview>
+
+```tsx
+<Avatar name="Ada Lovelace" color="primary" />
+<Avatar name="Ada Lovelace" color="success" />
+```
+
+The colour is the accent behind the fallback, drawn from the same semantic tokens as Badge and Alert. An avatar showing a photo does not use it.
+
+### What it falls back to
+
+<Preview>
+  <AvatarFallbackExample />
+</Preview>
+
+In order: the image, then `fallback`, then the initials from `name`, then a person icon.
+
+```tsx
+<Avatar name="Ada Lovelace" src={user.image} />  {/* photo */}
+<Avatar name="Ada Lovelace" />                    {/* AL */}
+<Avatar name="Cher" />                            {/* C */}
+<Avatar />                                        {/* person icon */}
+<Avatar fallback="AI" color="primary" />          {/* AI */}
+```
+
+An image that fails to load falls through to the same chain, and a new `src` is given a fresh attempt, so one dead URL does not hide every image after it in a list.
+
+Initials are the first letter of the first and last word, uppercased.
+
+### Groups
+
+<Preview>
+  <AvatarGroupExample />
+</Preview>
+
+```tsx
+<AvatarGroup max={3}>
+  <Avatar name="Ada Lovelace" />
+  <Avatar name="Grace Hopper" />
+  <Avatar name="Alan Turing" />
+  <Avatar name="Katherine Johnson" />
+  <Avatar name="Margaret Hamilton" />
+</AvatarGroup>
+```
+
+Avatars overlap, each sitting over the one after it. `size` and `shape` on the group apply to everything inside, and an avatar can still set its own.
+
+Hover one for its name, or the count for everyone who did not fit.
+
+### What is behind the count
+
+<Preview>
+  <AvatarGroupOverflowExample />
+</Preview>
+
+```tsx
+<AvatarGroup
+  max={3}
+  renderOverflow={({ avatars }) => (
+    <div>
+      <p>{avatars.length} more on this project</p>
+      <ul>
+        {avatars.map((avatar) => (
+          <li key={avatar.name}>{avatar.name}</li>
+        ))}
+      </ul>
+    </div>
+  )}>
+  …
+</AvatarGroup>
+```
+
+`avatars` holds the props of everyone past `max` — `name`, `src`, and anything else you put on them — so the overlay can show whatever you like, not only avatars.
+
+The overlay opens on hover and is placed for you. `renderOverflow` fills it.
+
+### Static
+
+<Preview>
+  <AvatarGroupStaticExample />
+</Preview>
+
+```tsx
+<AvatarGroup max={3} interactive={false}>
+  …
+</AvatarGroup>
+```
+
+`interactive={false}` drops the lift, the names and the overflow overlay. The count stays.
+
+### Clickable
+
+<Preview>
+  <AvatarClickableExample />
+</Preview>
+
+```tsx
+<Avatar name="Ada Lovelace" onClick={() => open(user)} />
+```
+
+An `onClick` turns the avatar into a button: it joins the tab order, answers <kbd>Enter</kbd> and <kbd>Space</kbd>, takes a focus ring and shows a pointer. Without one it stays a plain image.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-avatar-accent` | per `color` | Fallback text and tint |
+| `--gecko-avatar-bg-base` | `--color-surface-hover-strong` | What the accent is tinted into |
+| `--gecko-avatar-bg-mix` | `14%` | How much accent goes into the tint |
+| `--gecko-avatar-size` | per `size` | Width and height |
+| `--gecko-avatar-radius` | per `shape` | Corner radius |
+| `--gecko-avatar-font-size` | per `size` | Initials |
+| `--gecko-avatar-group-overlap` | per `size` | How far each avatar tucks under the last |
+| `--gecko-avatar-group-ring` | `--color-surface-primary` | The ring separating overlapping avatars |
+| `--gecko-avatar-group-ring-width` | `2px` | Ring thickness |
+| `--gecko-avatar-group-lift` | `0.375rem` | How far an avatar rises on hover |
+
+The fallback is opaque, because avatars overlap. Set `--gecko-avatar-bg-base` to whatever they sit on if that is not the page background:
+
+```css
+.GeckoUIAvatarGroup {
+  --gecko-avatar-bg-base: var(--color-surface-secondary);
+  --gecko-avatar-group-ring: var(--color-surface-secondary);
+}
+```
+
+### Class names and data attributes
+
+- `GeckoUIAvatar` - The avatar, with `data-size`, `data-shape`, `data-color` and `data-clickable`
+- `GeckoUIAvatar__image` - The image
+- `GeckoUIAvatar__fallback` - What shows in its place
+- `GeckoUIAvatarGroup` - The group, with `data-size` and `data-interactive`
+- `GeckoUIAvatarGroup__slot` - Holds one avatar's place in the row. It stays put while the avatar inside it lifts, so the hover target does not move
+- `GeckoUIAvatarGroup__overflow` - The count
+- `GeckoUIAvatarGroup__list` - The default overflow list
+
+## Adding your own sizes
+
+Every axis is an extensible map, so you can add keys through module augmentation and style them with CSS. No component change is needed:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface AvatarSizeMap {
+    '2xl': unknown;
+  }
+}
+
+<Avatar name="Ada Lovelace" size="2xl" />
+```
+
+```css
+.GeckoUIAvatar[data-size="2xl"] {
+  --gecko-avatar-size: 6rem;
+  --gecko-avatar-font-size: 1.75rem;
+}
+```
+
+The same works for `AvatarShapeMap` and `AvatarColorMap`.
+
+## Accessibility
+
+An avatar showing a photo is labelled by the image's `alt`, which falls back to `name`. When the fallback is on screen the avatar itself takes `role="img"` and that label, and the initials are hidden so they are not read out letter by letter.
+
+With `onClick` it becomes `role="button"` and enters the tab order, keeping the same label.
+
+The count is labelled `"2 more"`.
+
+## Related Components
+
+- [Skeleton](/docs/skeleton) - `shape="circle"` holds an avatar's place while it loads
+- [Badge](/docs/badge) - Small inline labels, sharing the same colour tokens
+- [Tooltip](/docs/tooltip) - What the group uses to name an avatar on hover
