@@ -18,6 +18,7 @@ export * from "./Calendar";
 export * from "./Accordion";
 export * from "./Alert";
 export * from "./Badge";
+export * from "./Skeleton";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";

@@ -1,0 +1,177 @@
+---
+title: Skeleton
+description: Placeholder that holds the space content will take while it loads
+---
+
+import { Skeleton } from '@geckoui/geckoui';
+import { SkeletonBasicExample, SkeletonShapesExample, SkeletonAnimationsExample, SkeletonLoadingExample, SkeletonThemedExample } from '@/components/examples/skeleton-examples';
+
+# Skeleton
+
+A placeholder that holds the space content will take while it loads.
+
+Size it with `className` the way you would size the real thing, so the page does not move when the content arrives. That is the whole job: a spinner says something is happening, a skeleton says what shape it will be.
+
+## Installation
+
+```tsx
+import { Skeleton } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <SkeletonBasicExample />
+</Preview>
+
+```tsx
+<Skeleton />          {/* one line */}
+<Skeleton lines={3} /> {/* a paragraph */}
+```
+
+The last line of a multi-line block is drawn short. That is what makes a stack of bars read as text rather than as a table.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `shape` | `'text' \| 'rounded' \| 'circle'` | `'text'` | The outline of the placeholder |
+| `animation` | `'pulse' \| 'wave' \| 'none'` | `'pulse'` | How it animates while it waits |
+| `lines` | `number` | `1` | How many stacked lines to draw. Only applies to `text` |
+| `loading` | `boolean` | `true` | While true the placeholder is drawn, otherwise `children` render |
+| `children` | `ReactNode` | - | What replaces the placeholder once `loading` is false |
+| `className` | `string` | - | CSS class for the placeholder, and where you size it |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | All standard div attributes |
+
+## Examples
+
+### Shapes
+
+<Preview>
+  <SkeletonShapesExample />
+</Preview>
+
+```tsx
+<Skeleton shape="circle" className="size-12" />
+<Skeleton shape="rounded" className="h-24 w-40" />
+<Skeleton lines={2} />
+```
+
+There are no `width` and `height` props. Size a skeleton the same way you size the element it stands in for, so the two cannot drift apart.
+
+A `text` skeleton takes its height from the current font size, so `<Skeleton />` on its own already matches the line it replaces without being measured.
+
+### Animation
+
+<Preview>
+  <SkeletonAnimationsExample />
+</Preview>
+
+```tsx
+<Skeleton animation="pulse" shape="rounded" className="h-16 w-full" />
+<Skeleton animation="wave" shape="rounded" className="h-16 w-full" />
+<Skeleton animation="none" shape="rounded" className="h-16 w-full" />
+```
+
+`pulse` fades the whole bar, `wave` sweeps a highlight across it. Both are dropped under `prefers-reduced-motion`, so `none` is for when you want it still for everyone.
+
+### Swapping in the real content
+
+<Preview>
+  <SkeletonLoadingExample />
+</Preview>
+
+```tsx
+<Skeleton loading={isLoading} shape="circle" className="size-12">
+  <Avatar src={user.image} />
+</Skeleton>
+
+<Skeleton loading={isLoading} className="w-40">
+  <p className="font-semibold">{user.name}</p>
+</Skeleton>
+
+<Skeleton loading={isLoading} lines={2}>
+  <p>{user.bio}</p>
+</Skeleton>
+```
+
+This replaces the ternary that would otherwise appear at every call site:
+
+```tsx
+{isLoading ? <Skeleton lines={2} /> : <p>{user.bio}</p>}
+```
+
+Children are **never rendered while loading**, so `user.bio` is not read until `user` exists. Nothing inside needs to guard against data that has not arrived. Once loading is over the wrapper is gone too, leaving only your own markup.
+
+Because you give the skeleton and the content the same size, the layout does not shift when it flips.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-skeleton-bg` | `--color-surface-hover-strong` | Bar fill |
+| `--gecko-skeleton-highlight` | `rgb(255 255 255 / 55%)` | The sweep on `wave` |
+| `--gecko-skeleton-radius` | `0.25rem` | Corner radius, except on `circle` |
+| `--gecko-skeleton-duration` | `1.6s` | One cycle of either animation |
+| `--gecko-skeleton-line-height` | `1em` | Height of a `text` bar |
+| `--gecko-skeleton-line-gap` | `0.5rem` | Space between stacked lines |
+| `--gecko-skeleton-last-line-width` | `60%` | Width of the short last line |
+
+```css
+.GeckoUISkeleton {
+  --gecko-skeleton-bg: oklch(0.92 0 none);
+  --gecko-skeleton-duration: 1s;
+}
+```
+
+<Preview>
+  <SkeletonThemedExample />
+</Preview>
+
+The highlight is a translucent white rather than a surface token. Every surface token below the base one is darker in dark mode, so a token-based highlight would read as a shadow there. White works against both.
+
+### Class names and data attributes
+
+- `GeckoUISkeleton` - The placeholder, with `data-shape` and `data-animation`
+- `GeckoUISkeleton__bar` - One bar. A `text` skeleton has one per line, every other shape has exactly one
+
+## Adding your own shapes
+
+Both axes are extensible maps, so you can add keys through module augmentation and style them with CSS. No component change is needed:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface SkeletonShapeMap {
+    pill: unknown;
+  }
+}
+
+<Skeleton shape="pill" className="h-6 w-24" />
+```
+
+```css
+.GeckoUISkeleton[data-shape="pill"] > .GeckoUISkeleton__bar {
+  border-radius: 9999px;
+}
+```
+
+The same works for `SkeletonAnimationMap`.
+
+## Accessibility
+
+The placeholder is marked `aria-busy="true"` and has no role of its own. There is no text to read, and giving every placeholder a `status` role would make a loading page announce itself once per placeholder.
+
+If a whole region is loading, put the announcement on the region rather than on each skeleton:
+
+```tsx
+<section aria-busy={isLoading} aria-live="polite">
+  <Skeleton loading={isLoading} lines={3}>
+    <Article body={article.body} />
+  </Skeleton>
+</section>
+```
+
+## Related Components
+
+- [Spinner](/docs/spinner) - For work with no shape to hold, like a button that is submitting
+- [Badge](/docs/badge) - Small inline labels

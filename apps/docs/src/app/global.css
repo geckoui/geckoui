@@ -2,6 +2,16 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+/*
+ * The playground page is gitignored, and Tailwind skips gitignored files when it detects
+ * sources on its own. Without this, a utility used only there is never generated and the
+ * demo silently renders unstyled.
+ *
+ * It has to name the file. Pointing @source at the directory still applies gitignore to
+ * what is inside it, so only an explicit path gets the page scanned.
+ */
+@source "./playground/page.tsx";
+
 body {
   background-color: white;
 }
