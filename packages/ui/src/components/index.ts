@@ -21,6 +21,7 @@ export * from "./Badge";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";
+export * from "./Popover";
 export * from "./ConfirmDialog";
 export * from "./Toast";
 export * from "./GeckoUIProvider";
