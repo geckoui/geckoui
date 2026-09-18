@@ -1,5 +1,5 @@
 import type { KeyboardEvent, ReactElement } from "react";
-import { Children, useMemo, useRef, useState } from "react";
+import { Children, useEffect, useMemo, useRef, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
@@ -72,6 +72,34 @@ const Tabs = ({
 
     onChange?.(next);
   };
+
+  // Keep the selected tab in view when the strip is scrollable, centring it where there
+  // is room. Only the strip scrolls; scrollIntoView would take the page with it.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const tab = list.querySelector<HTMLElement>('[data-gecko-tab][data-state="selected"]');
+    if (!tab) return;
+
+    if (orientation === "vertical") {
+      if (list.scrollHeight <= list.clientHeight) return;
+
+      list.scrollTo({
+        top: tab.offsetTop - (list.clientHeight - tab.clientHeight) / 2,
+        behavior: "smooth"
+      });
+
+      return;
+    }
+
+    if (list.scrollWidth <= list.clientWidth) return;
+
+    list.scrollTo({
+      left: tab.offsetLeft - (list.clientWidth - tab.clientWidth) / 2,
+      behavior: "smooth"
+    });
+  }, [selectedValue, orientation]);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     // Navigation is a list of links, so the arrow keys are left to the browser and Tab
