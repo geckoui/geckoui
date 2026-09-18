@@ -13,6 +13,13 @@ export interface DateInputProps
   hideCalendar?: boolean;
 
   /**
+   * Always render six weeks in the calendar, so the popup keeps the same height as you
+   * page between months. A month otherwise takes the 4 to 6 weeks it needs.
+   * @default false
+   */
+  fixedWeeks?: boolean;
+
+  /**
    * Additional CSS class name for the wrapper div that contains input field and calendar
    */
   wrapperClassName?: string;

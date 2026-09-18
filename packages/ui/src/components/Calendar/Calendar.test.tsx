@@ -63,6 +63,38 @@ describe("Calendar", () => {
     render(<Calendar selectedDate={null} onSelectDate={() => {}} />);
 
     expect(container()).toHaveAttribute("data-mode", "day");
+    // January 2024 starts on a Monday and needs only five weeks
+    expect(dayButtons()).toHaveLength(35);
+  });
+
+  it("renders six weeks with fixedWeeks", () => {
+    render(<Calendar selectedDate={null} onSelectDate={() => {}} fixedWeeks />);
+
+    expect(dayButtons()).toHaveLength(42);
+  });
+
+  it("keeps the height steady across months with fixedWeeks", async () => {
+    render(<Calendar selectedDate={null} onSelectDate={() => {}} fixedWeeks />);
+
+    expect(dayButtons()).toHaveLength(42);
+
+    await userEvent.click(rightArrow());
+    expect(dayButtons()).toHaveLength(42);
+
+    await userEvent.click(rightArrow());
+    expect(dayButtons()).toHaveLength(42);
+  });
+
+  it("lets the height follow the month without fixedWeeks", async () => {
+    render(<Calendar selectedDate={null} onSelectDate={() => {}} />);
+
+    expect(dayButtons()).toHaveLength(35);
+
+    // February 2024 also fits in five weeks, March needs six
+    await userEvent.click(rightArrow());
+    expect(dayButtons()).toHaveLength(35);
+
+    await userEvent.click(rightArrow());
     expect(dayButtons()).toHaveLength(42);
   });
 
@@ -267,11 +299,41 @@ describe("Calendar", () => {
       expect(container()).toHaveAttribute("data-selection", "range");
     });
 
-    it("renders only the active month as buttons", () => {
+    it("renders outside days too, marked as outside the month", () => {
       render(<RangeCalendar />);
 
-      expect(dayButtons().every((b) => b.dataset.activeMonth === "true")).toBe(true);
-      expect(dayButtons()).toHaveLength(31);
+      // January 2024 needs five weeks: 31 of its own days plus four from December
+      expect(dayButtons()).toHaveLength(35);
+      expect(dayButtons().filter((b) => b.dataset.activeMonth === "true")).toHaveLength(31);
+      expect(dayButtons()[0]).not.toHaveAttribute("data-active-month");
+    });
+
+    it("highlights a range that runs into the next month", () => {
+      render(
+        <Calendar
+          mode="range"
+          selectedRange={{ from: "2024-01-30", to: "2024-02-02" }}
+          onSelectRange={() => {}}
+        />
+      );
+
+      // January 2024 trails into 1, 2 and 3 February
+      const [february1, february2, february3] = dayButtons().slice(-3);
+
+      expect(dayOfActiveMonth(30)).toHaveAttribute("data-range-start", "true");
+      expect(february1).not.toHaveAttribute("data-active-month");
+      expect(february1).toHaveAttribute("data-in-range", "true");
+      expect(february2).toHaveAttribute("data-range-end", "true");
+      expect(february3).not.toHaveAttribute("data-in-range");
+    });
+
+    it("can select an outside day", async () => {
+      const onSelectRange = vi.fn();
+      render(<RangeCalendar onSelectRange={onSelectRange} />);
+
+      await userEvent.click(dayButtons()[0]);
+
+      expect(onSelectRange).toHaveBeenCalledWith({ from: "2023-12-31", to: undefined });
     });
 
     it("reports the start on the first click", async () => {

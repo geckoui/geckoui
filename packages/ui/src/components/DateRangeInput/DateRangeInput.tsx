@@ -26,6 +26,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   hideCalendarIcon = false,
   hideClearIcon = false,
   hideCalendar = false,
+  fixedWeeks,
   calendarClassName,
   calendarPlacement = "bottom-start",
   floatingStrategy = "absolute",
@@ -141,6 +142,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
           <Calendar
             mode="range"
             calendarRef={calendarRef}
+            fixedWeeks={fixedWeeks}
             className={classNames("GeckoUIDateRangeInput__calendar", calendarClassName)}
             onSelectRange={handleRangeSelect}
             selectedRange={value}

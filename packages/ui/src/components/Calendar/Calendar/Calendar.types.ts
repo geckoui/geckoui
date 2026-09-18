@@ -60,6 +60,14 @@ interface BaseCalendarProps {
    * Use this to customize the appearance of individual day cells
    * */
   renderDayCell?: (props: DayCellRenderProps) => ReactNode;
+
+  /**
+   * Always render six weeks, so the calendar keeps the same height as you page
+   * between months. A month otherwise takes the 4 to 6 weeks it needs, which means
+   * the container resizes as you navigate.
+   * @default false
+   * */
+  fixedWeeks?: boolean;
 }
 
 export interface CalendarSingleModeProps extends BaseCalendarProps {

@@ -20,12 +20,13 @@ function CalendarDayPicker(props: CalendarDayPickerProps) {
     mode = "single",
     disableDate,
     renderDayCell,
+    fixedWeeks,
     ...headerProps
   } = props;
 
   const today = getTodayDate();
   const { months } = generateMonthNames();
-  const dates = generateCalendarDates(activeMonth, activeYear);
+  const dates = generateCalendarDates(activeMonth, activeYear, { fixedWeeks });
 
   const isRangeMode = mode === "range";
   const selectedRange = isRangeMode
@@ -64,10 +65,6 @@ function CalendarDayPicker(props: CalendarDayPickerProps) {
         {dates.map((date) => {
           const isActiveMonth = activeMonth === date.month;
 
-          if (isRangeMode && !isActiveMonth) {
-            return <span key={`${date.year}-${date.month}-${date.day}`} />;
-          }
-
           const formattedDate = `${date.year}-${(date.month + 1)
             .toString()
             .padStart(2, "0")}-${date.day.toString().padStart(2, "0")}`;
@@ -84,7 +81,7 @@ function CalendarDayPicker(props: CalendarDayPickerProps) {
           let isHoverPreviewStart = false;
           let isHoverPreviewEnd = false;
 
-          if (isRangeMode && selectedRange && isActiveMonth) {
+          if (isRangeMode && selectedRange) {
             const needsSwap = shouldSwapDates(selectedRange.from, selectedRange.to);
             const normalizedFrom = needsSwap ? selectedRange.to : selectedRange.from;
             const normalizedTo = needsSwap ? selectedRange.from : selectedRange.to;

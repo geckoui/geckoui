@@ -38,7 +38,15 @@ import { CalendarType } from "./Calendar.types";
  * ```
  * */
 const Calendar = (props: CalendarProps) => {
-  const { className, style, calendarRef, disableDate, renderDayCell, mode = "single" } = props;
+  const {
+    className,
+    style,
+    calendarRef,
+    disableDate,
+    renderDayCell,
+    fixedWeeks,
+    mode = "single"
+  } = props;
 
   const [view, setView] = useState<CalendarType>(CalendarType.Day);
   const [rangeSelectionStart, setRangeSelectionStart] = useState<string | null>(null);
@@ -176,6 +184,7 @@ const Calendar = (props: CalendarProps) => {
             mode="range"
             disableDate={disableDate}
             renderDayCell={renderDayCell}
+            fixedWeeks={fixedWeeks}
             activeMonth={activeMonth}
             activeYear={activeYear}
             onClickHeader={() => setView(CalendarType.Month)}
@@ -194,6 +203,7 @@ const Calendar = (props: CalendarProps) => {
           mode="single"
           disableDate={disableDate}
           renderDayCell={renderDayCell}
+          fixedWeeks={fixedWeeks}
           activeMonth={activeMonth}
           activeYear={activeYear}
           onClickHeader={() => setView(CalendarType.Month)}

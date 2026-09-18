@@ -118,6 +118,17 @@ These are the ones to check by hand.
 
 **Toast loses three options.** `richColors`, `theme` and `expand` are gone — the first two are meaningless now that variant colours are the default and toasts read your theme variables, and the stack no longer collapses. `toastOptions.className` and `.style` are now `toastClassName` and `toastStyle`, and `offset` is a number of pixels.
 
+**Calendars size themselves to the month.** In v1 the grid was always six weeks tall, so it never changed height. Now a month takes the four to six weeks it needs, matching MUI X and react-day-picker. Pass `fixedWeeks` to `Calendar`, `DateInput` or `DateRangeInput` to get the old behaviour back — worth doing if the calendar sits in a popup or beside content you do not want shifting.
+
+```diff
+-<DateInput value={date} onChange={setDate} />
++<DateInput fixedWeeks value={date} onChange={setDate} />
+```
+
+**A month starting on Sunday no longer wastes its first row.** v1 gave those months a full leading week of the previous month, pushing the 1st down to row two. The 1st now sits in the first row for every month. This is independent of `fixedWeeks`, which pads at the end of the grid.
+
+**Range calendars show the days either side of the month.** v1 rendered blank cells for them, so a range running from one month into the next appeared to stop at the boundary. They are now greyed out, highlighted as part of the range, and selectable, exactly as in single mode.
+
 **`Checkbox` `indeterminate` is independent of `checked`.** In v1 the dash only rendered when `checked` was also true, which forced the wrong state on a select-all box. Now it matches the native DOM property.
 
 ```diff

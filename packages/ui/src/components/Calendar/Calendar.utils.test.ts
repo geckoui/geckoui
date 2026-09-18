@@ -16,9 +16,44 @@ afterEach(() => {
 });
 
 describe("generateCalendarDates", () => {
-  it("always returns a six week grid", () => {
-    expect(generateCalendarDates(0, 2024)).toHaveLength(42);
-    expect(generateCalendarDates(1, 2021)).toHaveLength(42);
+  const rows = (dates: unknown[]) => dates.length / 7;
+
+  it("gives a month only the weeks it needs by default", () => {
+    // 1 January 2024 was a Monday: 1 leading day + 31 = 32 cells, so five weeks
+    expect(generateCalendarDates(0, 2024)).toHaveLength(35);
+    expect(rows(generateCalendarDates(0, 2024))).toBe(5);
+  });
+
+  it("can need only four weeks", () => {
+    // February 1998 started on a Sunday and had 28 days, so it fits exactly
+    const dates = generateCalendarDates(1, 1998);
+
+    expect(rows(dates)).toBe(4);
+    expect(dates[0]).toEqual({ day: 1, month: 1, year: 1998 });
+  });
+
+  it("can need six weeks", () => {
+    // 1 March 2024 was a Friday: 5 leading days + 31 = 36 cells, which spills into a sixth row
+    expect(rows(generateCalendarDates(2, 2024))).toBe(6);
+  });
+
+  it("always ends on a complete week", () => {
+    for (let month = 0; month < 12; month++) {
+      expect(generateCalendarDates(month, 2024).length % 7).toBe(0);
+    }
+  });
+
+  it("pads to six weeks with fixedWeeks", () => {
+    expect(generateCalendarDates(0, 2024, { fixedWeeks: true })).toHaveLength(42);
+    expect(generateCalendarDates(1, 1998, { fixedWeeks: true })).toHaveLength(42);
+    expect(generateCalendarDates(2, 2024, { fixedWeeks: true })).toHaveLength(42);
+  });
+
+  it("pads at the end, not the start, with fixedWeeks", () => {
+    const dates = generateCalendarDates(1, 1998, { fixedWeeks: true });
+
+    expect(dates[0]).toEqual({ day: 1, month: 1, year: 1998 });
+    expect(dates.at(-1)).toMatchObject({ month: 2, year: 1998 });
   });
 
   it("includes every day of the month", () => {
@@ -31,6 +66,11 @@ describe("generateCalendarDates", () => {
     // 1 January 2024 was a Monday, so one leading day comes from December
     expect(generateCalendarDates(0, 2024)[0]).toEqual({ day: 31, month: 11, year: 2023 });
     expect(generateCalendarDates(0, 2024)[1]).toEqual({ day: 1, month: 0, year: 2024 });
+  });
+
+  it("starts a Sunday month on the 1st, with no leading week", () => {
+    // 1 September 2024 was a Sunday, so it owns the first cell
+    expect(generateCalendarDates(8, 2024)[0]).toEqual({ day: 1, month: 8, year: 2024 });
   });
 
   it("pads the start with the previous month", () => {
@@ -53,23 +93,12 @@ describe("generateCalendarDates", () => {
   });
 
   it("keeps the first of the month in the right weekday column", () => {
-    // 1 September 2024 was a Sunday, so it must sit in the first (Sunday) column
-    const dates = generateCalendarDates(8, 2024);
-    const index = dates.findIndex((d) => d.day === 1 && d.month === 8);
+    for (let month = 0; month < 12; month++) {
+      const dates = generateCalendarDates(month, 2024);
+      const index = dates.findIndex((d) => d.day === 1 && d.month === month);
 
-    expect(index % 7).toBe(0);
-  });
-
-  // Current behaviour: `generateCalendarDates` maps Sunday (getDay() === 0) to 7, so a
-  // month starting on a Sunday gets a full leading week of the previous month and its
-  // 1st lands on row 2. The six-row height comes from the unconditional pad to 42 cells,
-  // not from this mapping, so both are stable; the mapping only moves the 1st.
-  it("prepends a whole week when the month starts on a Sunday", () => {
-    // 1 September 2024 was a Sunday
-    const dates = generateCalendarDates(8, 2024);
-
-    expect(dates.slice(0, 7).every((d) => d.month === 7 && d.year === 2024)).toBe(true);
-    expect(dates[7]).toEqual({ day: 1, month: 8, year: 2024 });
+      expect(index % 7).toBe(new Date(2024, month, 1).getDay());
+    }
   });
 
   it("rolls the padding into the next year in December", () => {

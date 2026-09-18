@@ -118,6 +118,7 @@ const DateInput: FC<DateInputProps> = ({
   hideCalendarIcon = false,
   hideClearIcon = false,
   hideCalendar = false,
+  fixedWeeks,
   calendarClassName,
   calendarPlacement = "bottom-start",
   floatingStrategy = "absolute",
@@ -212,6 +213,7 @@ const DateInput: FC<DateInputProps> = ({
         <div ref={(r) => refs.setFloating(r)} style={{ ...floatingStyles, zIndex: 9999 }}>
           <Calendar
             calendarRef={calendarRef}
+            fixedWeeks={fixedWeeks}
             className={classNames("GeckoUIDateInput__calendar", calendarClassName)}
             onSelectDate={(date) => {
               onChange?.(date);
