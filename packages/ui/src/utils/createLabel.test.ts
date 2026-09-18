@@ -15,11 +15,27 @@ describe("createLabel", () => {
 
   // KNOWN BUG, left unfixed on purpose: `typeof null === "object"`, so null falls into
   // the object branch and `Object.values(null)` throws
-  // "Cannot convert undefined or null to object". SelectButton calls createLabel(value)
-  // whenever the value is not undefined and matches no option, so <Select value={null}>
-  // with no matching option crashes. Delete this marker once fixed.
+  // "Cannot convert undefined or null to object".
+  //
+  // A bare null never reaches createLabel through Select, because `hasValue` in
+  // useSelectTrigger returns false for it. What does reach it is a null nested inside an
+  // object value: createLabel walks to the object's first value and recurses, so
+  // <Select value={{ id: null, name: "Ann" }} /> with no matching option crashes.
+  // Delete this marker once fixed.
   it.fails("stringifies null", () => {
     expect(createLabel(null)).toBe("null");
+  });
+
+  it.fails("handles an object whose first value is null", () => {
+    expect(() => createLabel({ id: null, name: "Ann" })).not.toThrow();
+  });
+
+  it("does not throw when the object has a label key", () => {
+    expect(createLabel({ id: null, label: "Ann" })).toBe("Ann");
+  });
+
+  it("does not throw when the first value is not null", () => {
+    expect(createLabel({ name: "Ann", id: null })).toBe("Ann");
   });
 
   it("uses the label key of an object", () => {
