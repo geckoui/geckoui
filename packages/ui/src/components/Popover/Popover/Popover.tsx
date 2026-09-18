@@ -6,10 +6,8 @@ import {
   shift,
   useFloating
 } from "@floating-ui/react";
-import type { RefObject } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { useClickOutside } from "../../../hooks";
 import { classNames } from "../../../utils/classNames";
 import type { PopoverProps } from "../Popover.types";
 import { PopoverContext } from "../usePopover";
@@ -84,9 +82,22 @@ const Popover = ({
     onOpenChange: setOpen
   });
 
-  useClickOutside(dismissOnOutsideClick && open ? () => setOpen(false) : undefined, [
-    rootRef as RefObject<HTMLElement>
-  ]);
+  useEffect(() => {
+    if (!dismissOnOutsideClick || !open) return;
+
+    // Listening for `click` rather than `mousedown` on purpose. On mousedown this would
+    // close before the clicked element's own handler ran, so an outside button wired to
+    // `setOpen(o => !o)` would read the closed state and open it straight back up.
+    const dismiss = (event: MouseEvent) => {
+      if (rootRef.current?.contains(event.target as Node)) return;
+
+      setOpen(false);
+    };
+
+    document.addEventListener("click", dismiss);
+
+    return () => document.removeEventListener("click", dismiss);
+  });
 
   return (
     <PopoverContext.Provider

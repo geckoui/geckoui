@@ -178,6 +178,34 @@ describe("Popover", () => {
       expect(content()).toBeNull();
     });
 
+    // The dismissal listens for `click`, not `mousedown`. On mousedown it would close
+    // before the button's own handler ran, and a toggle would read the closed state and
+    // reopen it on every press.
+    it("can be toggled shut by a button outside it", async () => {
+      function Controlled() {
+        const [open, setOpen] = useState(false);
+        return (
+          <>
+            <button type="button" onClick={() => setOpen((prev) => !prev)}>
+              outside
+            </button>
+            <Basic open={open} onOpenChange={setOpen} />
+          </>
+        );
+      }
+
+      render(<Controlled />);
+
+      await userEvent.click(trigger("outside"));
+      expect(content()).toBeInTheDocument();
+
+      await userEvent.click(trigger("outside"));
+      expect(content()).toBeNull();
+
+      await userEvent.click(trigger("outside"));
+      expect(content()).toBeInTheDocument();
+    });
+
     it("opens when the value changes from outside", async () => {
       function Controlled() {
         const [open, setOpen] = useState(false);
@@ -270,6 +298,19 @@ describe("Popover", () => {
       render(<Basic defaultOpen arrow />);
 
       expect(document.querySelector(".GeckoUIPopover__arrow")).toBeInTheDocument();
+    });
+
+    // The outline is a second path that floating-ui only draws when it is told the stroke
+    // width, because it uses that to size the shape and clip the base. Colour it in CSS,
+    // but the width has to be a prop or there is no outline at all.
+    it("draws the arrow's outline as well as its body", () => {
+      render(<Basic defaultOpen arrow />);
+
+      const paths = document.querySelectorAll(".GeckoUIPopover__arrow path");
+
+      expect(paths).toHaveLength(2);
+      expect(paths[0]).toHaveAttribute("fill", "none");
+      expect(Number(paths[0].getAttribute("stroke-width"))).toBeGreaterThan(0);
     });
   });
 

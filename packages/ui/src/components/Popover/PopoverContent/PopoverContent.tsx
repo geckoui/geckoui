@@ -47,6 +47,9 @@ const PopoverContent = ({ className, children, ...rest }: PopoverContentProps) =
         <FloatingArrow
           ref={arrowRef}
           context={floating.context}
+          // Passed as a prop, not styled: the outline path only exists when the width is
+          // known here, and it is used to size the shape and cover its base.
+          strokeWidth={1}
           className="GeckoUIPopover__arrow"
         />
       )}

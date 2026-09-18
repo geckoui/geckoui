@@ -31,11 +31,20 @@
     }
   }
 
+  /*
+   * The arrow is two paths: an outline clipped to the two outer edges, then the body,
+   * whose own stroke covers the panel border it sits against. They are coloured here
+   * rather than through props, so the CSS variables drive them.
+   */
   &__arrow {
-    fill: var(--gecko-popover-bg);
+    path:nth-of-type(1) {
+      fill: none;
+      stroke: var(--gecko-popover-border);
+    }
 
-    /* the arrow's outline, so it matches the panel border it pokes out of */
-    stroke: var(--gecko-popover-border);
-    stroke-width: 1px;
+    path:nth-of-type(2) {
+      fill: var(--gecko-popover-bg);
+      stroke: var(--gecko-popover-bg);
+    }
   }
 }
