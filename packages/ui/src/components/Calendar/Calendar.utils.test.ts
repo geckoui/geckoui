@@ -60,9 +60,10 @@ describe("generateCalendarDates", () => {
     expect(index % 7).toBe(0);
   });
 
-  // Intentional: a month starting on a Sunday gets a full leading week of the previous
-  // month rather than none. `firstDayOfMonth` maps Sunday (getDay() === 0) to 7 for
-  // exactly this reason. Columns stay correct either way; this keeps the grid stable.
+  // Current behaviour: `generateCalendarDates` maps Sunday (getDay() === 0) to 7, so a
+  // month starting on a Sunday gets a full leading week of the previous month and its
+  // 1st lands on row 2. The six-row height comes from the unconditional pad to 42 cells,
+  // not from this mapping, so both are stable; the mapping only moves the 1st.
   it("prepends a whole week when the month starts on a Sunday", () => {
     // 1 September 2024 was a Sunday
     const dates = generateCalendarDates(8, 2024);
