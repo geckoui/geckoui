@@ -7,7 +7,7 @@ import {
   shift,
   useFloating
 } from "@floating-ui/react";
-import { type FC, cloneElement, useRef, useState } from "react";
+import { type CSSProperties, type FC, cloneElement, useRef, useState } from "react";
 
 import { asChildElement } from "../../utils/asChildElement";
 import { classNames } from "../../utils/classNames";
@@ -87,7 +87,12 @@ const Tooltip: FC<TooltipProps> = ({
         <FloatingPortal>
           <div
             ref={refs.setFloating}
-            style={{ ...floatingStyles, backgroundColor }}
+            style={
+              {
+                ...floatingStyles,
+                ...(backgroundColor ? { "--gecko-tooltip-bg": backgroundColor } : {})
+              } as CSSProperties
+            }
             className={classNames("GeckoUITooltip", className)}
             role="tooltip">
             <DynamicComponentRenderer component={content} />
@@ -95,7 +100,6 @@ const Tooltip: FC<TooltipProps> = ({
               ref={arrowRef}
               context={context}
               className={classNames("GeckoUITooltip__arrow", arrowClassName)}
-              style={{ fill: backgroundColor }}
             />
           </div>
         </FloatingPortal>

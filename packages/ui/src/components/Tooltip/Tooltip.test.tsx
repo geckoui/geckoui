@@ -115,7 +115,11 @@ describe("Tooltip", () => {
 
     await userEvent.hover(screen.getByText("Hover me"));
 
-    expect(await screen.findByRole("tooltip")).toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    // Set as a custom property rather than `background` directly, so the arrow, which is
+    // a sibling, picks up the same colour from the cascade.
+    const tooltip = await screen.findByRole("tooltip");
+
+    expect(tooltip.style.getPropertyValue("--gecko-tooltip-bg")).toBe("rgb(255, 0, 0)");
   });
 
   it("renders a component as content", async () => {
