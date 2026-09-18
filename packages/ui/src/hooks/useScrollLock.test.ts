@@ -50,9 +50,9 @@ describe("useScrollLock", () => {
   it("exposes the scrollbar width as a custom property", () => {
     renderHook(() => useScrollLock(true));
 
-    expect(
-      document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")
-    ).toBe(`${scrollbarWidth}px`);
+    expect(document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")).toBe(
+      `${scrollbarWidth}px`
+    );
   });
 
   it("restores the original styles on unmount", () => {
@@ -63,9 +63,7 @@ describe("useScrollLock", () => {
 
     expect(document.body.style.overflow).toBe("");
     expect(document.body.style.paddingRight).toBe("10px");
-    expect(
-      document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")
-    ).toBe("");
+    expect(document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")).toBe("");
   });
 
   it("restores the styles when it is turned off", () => {
@@ -105,9 +103,7 @@ describe("useScrollLock", () => {
     renderHook(() => useScrollLock(true));
 
     expect(document.body.style.paddingRight).toBe("");
-    expect(
-      document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")
-    ).toBe("");
+    expect(document.documentElement.style.getPropertyValue("--gecko-scrollbar-width")).toBe("");
   });
 
   it("locks again after being fully released", () => {

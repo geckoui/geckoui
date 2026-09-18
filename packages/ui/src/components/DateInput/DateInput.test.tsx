@@ -190,9 +190,7 @@ describe("DateInput", () => {
   });
 
   it("applies wrapperClassName and className separately", () => {
-    render(
-      <DateInput value="" onChange={() => {}} wrapperClassName="wrap" className="field" />
-    );
+    render(<DateInput value="" onChange={() => {}} wrapperClassName="wrap" className="field" />);
 
     expect(wrapper()).toHaveClass("GeckoUIDateInputWrapper", "wrap");
     expect(input()).toHaveClass("GeckoUIDateInput", "field");

@@ -106,14 +106,7 @@ describe("DateRangeInput", () => {
     await userEvent.click(dayOfActiveMonth(10));
     await userEvent.click(dayOfActiveMonth(20));
 
-    expect(segments().map((s) => s.textContent)).toEqual([
-      "10",
-      "01",
-      "2024",
-      "20",
-      "01",
-      "2024"
-    ]);
+    expect(segments().map((s) => s.textContent)).toEqual(["10", "01", "2024", "20", "01", "2024"]);
   });
 
   it("closes the calendar on Enter", async () => {
@@ -144,14 +137,7 @@ describe("DateRangeInput", () => {
     await userEvent.click(clearButton()!);
 
     expect(calendar()).toBeNull();
-    expect(segments().map((s) => s.textContent)).toEqual([
-      "DD",
-      "MM",
-      "YYYY",
-      "DD",
-      "MM",
-      "YYYY"
-    ]);
+    expect(segments().map((s) => s.textContent)).toEqual(["DD", "MM", "YYYY", "DD", "MM", "YYYY"]);
   });
 
   it("closes the calendar when clicking outside", async () => {
@@ -189,19 +175,16 @@ describe("DateRangeInput", () => {
   it("passes the format through to the segments", () => {
     render(<DateRangeInput value={empty} onChange={() => {}} format="YYYY-MM-DD" />);
 
-    expect(segments().map((s) => s.textContent)).toEqual([
-      "YYYY",
-      "MM",
-      "DD",
-      "YYYY",
-      "MM",
-      "DD"
-    ]);
+    expect(segments().map((s) => s.textContent)).toEqual(["YYYY", "MM", "DD", "YYYY", "MM", "DD"]);
   });
 
   it("passes hasError through", () => {
     render(
-      <DateRangeInput value={{ from: "2024-01-05", to: "2024-01-10" }} onChange={() => {}} hasError />
+      <DateRangeInput
+        value={{ from: "2024-01-05", to: "2024-01-10" }}
+        onChange={() => {}}
+        hasError
+      />
     );
 
     expect(input()).toHaveAttribute("data-error", "true");

@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 
 import { classNames } from "../../utils/classNames";
-import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import { formatNumericInput } from "../../utils/formatNumericInput";
+import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import type { CounterInputProps } from "./CounterInput.types";
 
 const countDecimals = (value: number) => (String(value).split(".")[1] ?? "").length;

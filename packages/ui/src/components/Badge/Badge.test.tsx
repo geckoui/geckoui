@@ -129,7 +129,14 @@ describe("Badge", () => {
 
     it("forwards a ref to the element", () => {
       let node: HTMLSpanElement | null = null;
-      render(<Badge ref={(el) => { node = el; }}>x</Badge>);
+      render(
+        <Badge
+          ref={(el) => {
+            node = el;
+          }}>
+          x
+        </Badge>
+      );
 
       expect(node).toBeInstanceOf(HTMLSpanElement);
     });

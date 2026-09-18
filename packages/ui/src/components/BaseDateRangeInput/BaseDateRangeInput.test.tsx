@@ -52,10 +52,7 @@ describe("BaseDateRangeInput", () => {
 
   it("fills the segments from a range value", () => {
     render(
-      <BaseDateRangeInput
-        value={{ from: "2024-01-05", to: "2024-02-10" }}
-        onChange={() => {}}
-      />
+      <BaseDateRangeInput value={{ from: "2024-01-05", to: "2024-02-10" }} onChange={() => {}} />
     );
 
     expect(segmentText()).toEqual(["05", "01", "2024", "10", "02", "2024"]);
@@ -148,10 +145,7 @@ describe("BaseDateRangeInput", () => {
   it("clears every segment from the clear button", async () => {
     const onChange = vi.fn();
     render(
-      <BaseDateRangeInput
-        value={{ from: "2024-01-05", to: "2024-02-10" }}
-        onChange={onChange}
-      />
+      <BaseDateRangeInput value={{ from: "2024-01-05", to: "2024-02-10" }} onChange={onChange} />
     );
 
     await userEvent.click(clearButton()!);
@@ -232,9 +226,7 @@ describe("BaseDateRangeInput", () => {
 
   it("reports the segment state as it changes", async () => {
     const onStateUpdate = vi.fn();
-    render(
-      <BaseDateRangeInput value={empty} onChange={() => {}} onStateUpdate={onStateUpdate} />
-    );
+    render(<BaseDateRangeInput value={empty} onChange={() => {}} onStateUpdate={onStateUpdate} />);
 
     await userEvent.click(segments()[0]);
     await userEvent.keyboard("5");

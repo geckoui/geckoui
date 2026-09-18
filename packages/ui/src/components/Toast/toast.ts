@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { ToastOptions, ToastPromiseMessages } from "./Toast.types";
 import { toastStore } from "./toast-store";
 
-const resolve = <T,>(value: ReactNode | ((arg: T) => ReactNode), arg: T): ReactNode =>
+const resolve = <T>(value: ReactNode | ((arg: T) => ReactNode), arg: T): ReactNode =>
   typeof value === "function" ? (value as (arg: T) => ReactNode)(arg) : value;
 
 /**
@@ -62,7 +62,7 @@ toast.custom = (content: ReactNode, options?: ToastOptions) =>
  * });
  * ```
  */
-toast.promise = <T,>(
+toast.promise = <T>(
   promise: Promise<T>,
   messages: ToastPromiseMessages<T>,
   options?: ToastOptions

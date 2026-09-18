@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { source } from "@/lib/source";
 import { LATEST } from "@/lib/versions";
+import Link from "next/link";
 
 export function VersionNotice({ slugs }: { slugs: string[] }) {
   const samePage = source.getPage(slugs);

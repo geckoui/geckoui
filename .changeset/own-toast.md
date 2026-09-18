@@ -13,11 +13,11 @@ the stacks.
 
 `toastOptions` no longer accepts these sonner-specific settings:
 
-| Removed | Why |
-| --- | --- |
-| `richColors` | Variant colours are the default now, so there is nothing to opt into |
-| `theme` | Toasts read the library's own colour variables and follow your theme |
-| `expand` | The collapsed stack that expanded on hover is gone; the stack is always expanded |
+| Removed      | Why                                                                              |
+| ------------ | -------------------------------------------------------------------------------- |
+| `richColors` | Variant colours are the default now, so there is nothing to opt into             |
+| `theme`      | Toasts read the library's own colour variables and follow your theme             |
+| `expand`     | The collapsed stack that expanded on hover is gone; the stack is always expanded |
 
 `toastOptions.className` and `toastOptions.style` are renamed to `toastClassName`
 and `toastStyle`, since `className` now targets the stack element. `offset` is a

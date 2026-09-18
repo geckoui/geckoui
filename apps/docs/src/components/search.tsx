@@ -1,4 +1,5 @@
 "use client";
+import { type DocsVersion, LATEST, versionFromPathname } from "@/lib/versions";
 import { create } from "@orama/orama";
 import { useDocsSearch } from "fumadocs-core/search/client";
 import {
@@ -14,8 +15,6 @@ import {
 } from "fumadocs-ui/components/dialog/search";
 import { useI18n } from "fumadocs-ui/contexts/i18n";
 import { usePathname } from "next/navigation";
-
-import { LATEST, versionFromPathname, type DocsVersion } from "@/lib/versions";
 
 function initOrama() {
   return create({

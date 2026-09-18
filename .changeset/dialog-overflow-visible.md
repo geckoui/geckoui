@@ -16,5 +16,8 @@ If you relied on the panel clipping its own content to the rounded corners, set
 it back on your own content:
 
 ```css
-.GeckoUIDialog__dialog > .my-media { overflow: hidden; border-radius: inherit; }
+.GeckoUIDialog__dialog > .my-media {
+  overflow: hidden;
+  border-radius: inherit;
+}
 ```

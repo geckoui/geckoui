@@ -23,7 +23,11 @@ describe("InputError", () => {
   });
 
   it("passes through native attributes", () => {
-    render(<InputError role="alert" id="err">Oops</InputError>);
+    render(
+      <InputError role="alert" id="err">
+        Oops
+      </InputError>
+    );
 
     const el = screen.getByRole("alert");
     expect(el).toHaveAttribute("id", "err");

@@ -1,7 +1,7 @@
 import { forwardRef, useId } from "react";
 
-import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import { classNames } from "../../utils/classNames";
+import { splitDataAttributes } from "../../utils/splitDataAttributes";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
 import type { InputProps } from "./Input.types";
 

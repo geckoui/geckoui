@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
-import { FormProvider, useForm, type UseFormProps } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
 
 import { RHFFilePicker } from ".";
@@ -82,7 +82,11 @@ describe("RHFFilePicker", () => {
     render(
       <Form
         defaultValues={{
-          files: [pickedFile("zero.txt", 0), pickedFile("kb.txt", 2048), pickedFile("mb.txt", 1572864)]
+          files: [
+            pickedFile("zero.txt", 0),
+            pickedFile("kb.txt", 2048),
+            pickedFile("mb.txt", 1572864)
+          ]
         }}>
         <RHFFilePicker name="files" />
       </Form>
@@ -188,8 +192,6 @@ describe("RHFFilePicker", () => {
       loading: false,
       field: expect.objectContaining({ name: "files" })
     });
-    expect(typeof render_.mock.calls[0][0].openFilePicker).toBe(
-      "function"
-    );
+    expect(typeof render_.mock.calls[0][0].openFilePicker).toBe("function");
   });
 });

@@ -2,8 +2,7 @@ import { useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 import { classNames } from "../../utils/classNames";
-
-import type { ToastPosition, ToasterOptions, ToastRecord } from "./Toast.types";
+import type { ToastPosition, ToastRecord, ToasterOptions } from "./Toast.types";
 import { ToastItem } from "./ToastItem";
 import { toastStore } from "./toast-store";
 

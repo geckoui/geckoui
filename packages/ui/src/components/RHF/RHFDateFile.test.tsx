@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
-import { FormProvider, useForm, type UseFormProps } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { RHFDateInput, RHFDateRangeInput, RHFFileInput } from ".";
@@ -130,14 +130,7 @@ describe("RHFDateRangeInput", () => {
       </Form>
     );
 
-    expect(segments().map((s) => s.textContent)).toEqual([
-      "05",
-      "01",
-      "2024",
-      "10",
-      "01",
-      "2024"
-    ]);
+    expect(segments().map((s) => s.textContent)).toEqual(["05", "01", "2024", "10", "01", "2024"]);
   });
 
   it("shows an empty input for a missing value", () => {
@@ -147,14 +140,7 @@ describe("RHFDateRangeInput", () => {
       </Form>
     );
 
-    expect(segments().map((s) => s.textContent)).toEqual([
-      "DD",
-      "MM",
-      "YYYY",
-      "DD",
-      "MM",
-      "YYYY"
-    ]);
+    expect(segments().map((s) => s.textContent)).toEqual(["DD", "MM", "YYYY", "DD", "MM", "YYYY"]);
   });
 
   it("stores a range picked from the calendar", async () => {

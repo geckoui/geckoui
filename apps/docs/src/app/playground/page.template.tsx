@@ -48,29 +48,80 @@ import { z } from "zod";
 
 const DemoUserContext = createContext<{ name: string } | null>(null);
 
-
 const COUNTRIES = [
-  ["mm", "Myanmar"], ["th", "Thailand"], ["sg", "Singapore"], ["vn", "Viet Nam"],
-  ["my", "Malaysia"], ["id", "Indonesia"], ["ph", "Philippines"], ["kh", "Cambodia"],
-  ["la", "Laos"], ["bn", "Brunei"], ["jp", "Japan"], ["kr", "South Korea"],
-  ["cn", "China"], ["tw", "Taiwan"], ["hk", "Hong Kong"], ["in", "India"],
-  ["bd", "Bangladesh"], ["lk", "Sri Lanka"], ["np", "Nepal"], ["pk", "Pakistan"],
-  ["au", "Australia"], ["nz", "New Zealand"], ["us", "United States"], ["ca", "Canada"],
-  ["mx", "Mexico"], ["br", "Brazil"], ["ar", "Argentina"], ["uk", "United Kingdom"],
-  ["ie", "Ireland"], ["fr", "France"], ["de", "Germany"], ["es", "Spain"],
-  ["it", "Italy"], ["pt", "Portugal"], ["nl", "Netherlands"], ["be", "Belgium"],
-  ["ch", "Switzerland"], ["at", "Austria"], ["se", "Sweden"], ["no", "Norway"],
-  ["dk", "Denmark"], ["fi", "Finland"], ["pl", "Poland"], ["cz", "Czechia"],
-  ["gr", "Greece"], ["tr", "Turkey"], ["ae", "United Arab Emirates"], ["sa", "Saudi Arabia"],
-  ["za", "South Africa"], ["ng", "Nigeria"], ["ke", "Kenya"], ["eg", "Egypt"]
+  ["mm", "Myanmar"],
+  ["th", "Thailand"],
+  ["sg", "Singapore"],
+  ["vn", "Viet Nam"],
+  ["my", "Malaysia"],
+  ["id", "Indonesia"],
+  ["ph", "Philippines"],
+  ["kh", "Cambodia"],
+  ["la", "Laos"],
+  ["bn", "Brunei"],
+  ["jp", "Japan"],
+  ["kr", "South Korea"],
+  ["cn", "China"],
+  ["tw", "Taiwan"],
+  ["hk", "Hong Kong"],
+  ["in", "India"],
+  ["bd", "Bangladesh"],
+  ["lk", "Sri Lanka"],
+  ["np", "Nepal"],
+  ["pk", "Pakistan"],
+  ["au", "Australia"],
+  ["nz", "New Zealand"],
+  ["us", "United States"],
+  ["ca", "Canada"],
+  ["mx", "Mexico"],
+  ["br", "Brazil"],
+  ["ar", "Argentina"],
+  ["uk", "United Kingdom"],
+  ["ie", "Ireland"],
+  ["fr", "France"],
+  ["de", "Germany"],
+  ["es", "Spain"],
+  ["it", "Italy"],
+  ["pt", "Portugal"],
+  ["nl", "Netherlands"],
+  ["be", "Belgium"],
+  ["ch", "Switzerland"],
+  ["at", "Austria"],
+  ["se", "Sweden"],
+  ["no", "Norway"],
+  ["dk", "Denmark"],
+  ["fi", "Finland"],
+  ["pl", "Poland"],
+  ["cz", "Czechia"],
+  ["gr", "Greece"],
+  ["tr", "Turkey"],
+  ["ae", "United Arab Emirates"],
+  ["sa", "Saudi Arabia"],
+  ["za", "South Africa"],
+  ["ng", "Nigeria"],
+  ["ke", "Kenya"],
+  ["eg", "Egypt"]
 ] as const;
 
 const FRAMEWORKS = [
-  ["react", "React"], ["vue", "Vue"], ["svelte", "Svelte"], ["solid", "Solid"],
-  ["qwik", "Qwik"], ["angular", "Angular"], ["preact", "Preact"], ["lit", "Lit"],
-  ["alpine", "Alpine.js"], ["ember", "Ember"], ["astro", "Astro"], ["nuxt", "Nuxt"],
-  ["next", "Next.js"], ["remix", "Remix"], ["sveltekit", "SvelteKit"],
-  ["gatsby", "Gatsby"], ["redwood", "RedwoodJS"], ["htmx", "htmx"]
+  ["react", "React"],
+  ["vue", "Vue"],
+  ["svelte", "Svelte"],
+  ["solid", "Solid"],
+  ["qwik", "Qwik"],
+  ["angular", "Angular"],
+  ["preact", "Preact"],
+  ["lit", "Lit"],
+  ["alpine", "Alpine.js"],
+  ["ember", "Ember"],
+  ["astro", "Astro"],
+  ["nuxt", "Nuxt"],
+  ["next", "Next.js"],
+  ["remix", "Remix"],
+  ["sveltekit", "SvelteKit"],
+  ["gatsby", "Gatsby"],
+  ["redwood", "RedwoodJS"],
+  ["htmx", "htmx"]
 ] as const;
 
 const selectFormSchema = z.object({
@@ -742,7 +793,9 @@ export default function Home() {
                     </Button>
                     <Button
                       variant="outlined"
-                      onClick={() => toast("Stays until dismissed", { duration: Infinity, closeButton: true })}>
+                      onClick={() =>
+                        toast("Stays until dismissed", { duration: Infinity, closeButton: true })
+                      }>
                       Persistent
                     </Button>
                     <Button
@@ -756,14 +809,11 @@ export default function Home() {
                     <Button
                       variant="outlined"
                       onClick={() =>
-                        toast.promise(
-                          new Promise((resolve) => setTimeout(resolve, 1800)),
-                          {
-                            loading: "Saving…",
-                            success: "Saved",
-                            error: "Could not save"
-                          }
-                        )
+                        toast.promise(new Promise((resolve) => setTimeout(resolve, 1800)), {
+                          loading: "Saving…",
+                          success: "Saved",
+                          error: "Could not save"
+                        })
                       }>
                       Promise
                     </Button>
@@ -781,17 +831,23 @@ export default function Home() {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {(["top-left", "top-center", "top-right", "bottom-left", "bottom-center"] as const).map(
-                      (pos) => (
-                        <Button
-                          key={pos}
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toast(`Toast at ${pos}`, { position: pos })}>
-                          {pos}
-                        </Button>
-                      )
-                    )}
+                    {(
+                      [
+                        "top-left",
+                        "top-center",
+                        "top-right",
+                        "bottom-left",
+                        "bottom-center"
+                      ] as const
+                    ).map((pos) => (
+                      <Button
+                        key={pos}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toast(`Toast at ${pos}`, { position: pos })}>
+                        {pos}
+                      </Button>
+                    ))}
                     <Button variant="ghost" size="sm" onClick={() => toast.dismiss()}>
                       Dismiss all
                     </Button>

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
+import { devWarn } from "../../utils/devWarn";
 import type { DialogOptions } from "../Dialog/Dialog.types";
 import type { DrawerProps } from "../Drawer/Drawer.types";
-import { devWarn } from "../../utils/devWarn";
 
 export type OverlayType = "dialog" | "drawer";
 

@@ -6,8 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Select, SelectEmpty, SelectOption, SelectTrigger } from ".";
 
 const menu = () => document.querySelector<HTMLElement>(".GeckoUISelectMenu");
-const options = () =>
-  Array.from(document.querySelectorAll<HTMLElement>(".GeckoUISelectOption"));
+const options = () => Array.from(document.querySelectorAll<HTMLElement>(".GeckoUISelectOption"));
 const optionByLabel = (label: string) => options().find((o) => o.textContent?.includes(label))!;
 const trigger = () => document.querySelector<HTMLElement>(".GeckoUISelectButton")!;
 const searchInput = () =>
@@ -215,14 +214,14 @@ describe("Select", () => {
       expect(showsPlaceholder()).toBe(true);
     });
 
-    it.each([["0", 0, "0"], ["false", false, "false"]])(
-      "keeps %s, which does print",
-      (_label, value, expected) => {
-        withValue(value);
+    it.each([
+      ["0", 0, "0"],
+      ["false", false, "false"]
+    ])("keeps %s, which does print", (_label, value, expected) => {
+      withValue(value);
 
-        expect(triggerText()).toBe(expected);
-      }
-    );
+      expect(triggerText()).toBe(expected);
+    });
 
     it("selects nothing in the menu, since nothing matches", async () => {
       withValue({ id: null, name: "Ann" });
@@ -262,21 +261,22 @@ describe("Select", () => {
       spy.mockRestore();
     });
 
-    it.each([["null", null], ["undefined", undefined], ["an empty string", ""]])(
-      "stays quiet for %s, which just means nothing is chosen",
-      (_label, value) => {
-        const spy = warn();
+    it.each([
+      ["null", null],
+      ["undefined", undefined],
+      ["an empty string", ""]
+    ])("stays quiet for %s, which just means nothing is chosen", (_label, value) => {
+      const spy = warn();
 
-        render(
-          <Select value={value as never} onChange={() => {}}>
-            <SelectOption value="apple" label="Apple" />
-          </Select>
-        );
+      render(
+        <Select value={value as never} onChange={() => {}}>
+          <SelectOption value="apple" label="Apple" />
+        </Select>
+      );
 
-        expect(spy).not.toHaveBeenCalled();
-        spy.mockRestore();
-      }
-    );
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
 
     it("stays quiet in multiple mode", () => {
       const spy = warn();

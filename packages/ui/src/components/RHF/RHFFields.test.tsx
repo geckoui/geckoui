@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
-import { FormProvider, useForm, type UseFormProps } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
 
 import {

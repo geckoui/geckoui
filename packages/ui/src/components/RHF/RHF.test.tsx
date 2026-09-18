@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
-import { FormProvider, useForm, type UseFormProps } from "react-hook-form";
+import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
 
 import { RHFController, RHFError, RHFInput, RHFInputGroup } from ".";
@@ -112,7 +112,10 @@ describe("RHFError", () => {
     render(
       <Form defaultValues={{ email: "" }}>
         <RHFInput name="email" rules={{ required: "Email is required" }} />
-        <RHFError name="email" render={({ error }) => <b data-testid="custom">{error?.message}</b>} />
+        <RHFError
+          name="email"
+          render={({ error }) => <b data-testid="custom">{error?.message}</b>}
+        />
       </Form>
     );
 
@@ -421,8 +424,8 @@ describe("RHFInput", () => {
           name="email"
           rules={{ required: "Required" }}
           suffix={
-            ((({ fieldState }: { fieldState: { error?: unknown } }) =>
-              fieldState.error ? <span data-testid="error-icon" /> : null) as unknown) as never
+            (({ fieldState }: { fieldState: { error?: unknown } }) =>
+              fieldState.error ? <span data-testid="error-icon" /> : null) as unknown as never
           }
         />
       </Form>

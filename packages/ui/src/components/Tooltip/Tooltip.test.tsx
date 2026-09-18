@@ -151,10 +151,14 @@ describe("Tooltip", () => {
       render(<Tooltip content="Help">Hover me</Tooltip>);
 
       fireEvent.mouseEnter(screen.getByText("Hover me"));
-      await act(async () => { await vi.advanceTimersByTimeAsync(699); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(699);
+      });
       expect(screen.queryByRole("tooltip")).toBeNull();
 
-      await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
       expect(screen.getByRole("tooltip")).toBeInTheDocument();
     });
 
@@ -162,9 +166,13 @@ describe("Tooltip", () => {
       render(<Tooltip content="Help">Hover me</Tooltip>);
 
       fireEvent.mouseEnter(screen.getByText("Hover me"));
-      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(300);
+      });
       fireEvent.mouseLeave(screen.getByText("Hover me"));
-      await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
 
       expect(screen.queryByRole("tooltip")).toBeNull();
     });
@@ -177,10 +185,14 @@ describe("Tooltip", () => {
       );
 
       fireEvent.mouseEnter(screen.getByText("Hover me"));
-      await act(async () => { await vi.advanceTimersByTimeAsync(199); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(199);
+      });
       expect(screen.queryByRole("tooltip")).toBeNull();
 
-      await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
       expect(screen.getByRole("tooltip")).toBeInTheDocument();
     });
   });

@@ -17,14 +17,14 @@ what it says.
 <Badge shape="pill" color="primary">New</Badge>
 ```
 
-| Prop | Values | Default |
-| --- | --- | --- |
-| `variant` | `filled`, `soft`, `outlined` | `soft` |
-| `color` | `default`, `primary`, `success`, `error`, `warning`, `info` | `default` |
-| `size` | `sm`, `md`, `lg` | `md` |
-| `shape` | `rounded`, `pill`, `square` | `rounded` |
-| `dot` | `boolean` | `false` |
-| `icon` | `ReactNode \| FC` | - |
+| Prop      | Values                                                      | Default   |
+| --------- | ----------------------------------------------------------- | --------- |
+| `variant` | `filled`, `soft`, `outlined`                                | `soft`    |
+| `color`   | `default`, `primary`, `success`, `error`, `warning`, `info` | `default` |
+| `size`    | `sm`, `md`, `lg`                                            | `md`      |
+| `shape`   | `rounded`, `pill`, `square`                                 | `rounded` |
+| `dot`     | `boolean`                                                   | `false`   |
+| `icon`    | `ReactNode \| FC`                                           | -         |
 
 All four axes are extensible maps, so a consumer can add keys through module
 augmentation and style them with CSS alone:

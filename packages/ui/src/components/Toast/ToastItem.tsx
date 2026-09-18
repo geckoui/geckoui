@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "../../icons";
 import { classNames } from "../../utils/classNames";
 import { Spinner } from "../Spinner";
-import type { ToastRecord, ToasterOptions, ToastVariant } from "./Toast.types";
+import type { ToastRecord, ToastVariant, ToasterOptions } from "./Toast.types";
 import { ToastErrorIcon, ToastInfoIcon, ToastSuccessIcon, ToastWarningIcon } from "./ToastIcons";
 import { toastStore } from "./toast-store";
 
@@ -36,14 +36,11 @@ export function ToastItem({ toast, defaults, paused }: ToastItemProps) {
   const startedAt = useRef(0);
   const closedBy = useRef<"auto" | "manual" | null>(null);
 
-  const close = useCallback(
-    (reason: "auto" | "manual") => {
-      if (closedBy.current) return;
-      closedBy.current = reason;
-      setState("closing");
-    },
-    []
-  );
+  const close = useCallback((reason: "auto" | "manual") => {
+    if (closedBy.current) return;
+    closedBy.current = reason;
+    setState("closing");
+  }, []);
 
   // register first so `toast.dismiss(id)` can reach this toast immediately
   useEffect(() => toastStore.registerDismiss(toast.id, () => close("manual")), [toast.id, close]);

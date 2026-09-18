@@ -10,10 +10,7 @@ const sourcesById: Record<string, typeof source | typeof sourceV1> = {
 /** slug -> versions containing it, so switching keeps you on the same page */
 function slugsByVersion(): Record<string, string[]> {
   return Object.fromEntries(
-    VERSIONS.map((v) => [
-      v.id,
-      (sourcesById[v.id]?.getPages() ?? []).map((p) => p.slugs.join("/"))
-    ])
+    VERSIONS.map((v) => [v.id, (sourcesById[v.id]?.getPages() ?? []).map((p) => p.slugs.join("/"))])
   );
 }
 

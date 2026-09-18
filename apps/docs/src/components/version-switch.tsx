@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { VERSIONS, hrefForVersion, slugFromPathname, versionFromPathname } from "@/lib/versions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import { VERSIONS, hrefForVersion, slugFromPathname, versionFromPathname } from "@/lib/versions";
+import { useEffect, useRef, useState } from "react";
 
 export interface VersionSwitchProps {
   /** version id -> slugs it contains, so switching keeps you on the same page */

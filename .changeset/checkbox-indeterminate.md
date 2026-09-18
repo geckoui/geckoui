@@ -28,12 +28,12 @@ and the styles respond to `:indeterminate` as well as `:checked`:
 
 `indeterminate` is now independent of `checked`, matching the platform:
 
-| `checked` | `indeterminate` | Shows |
-| --- | --- | --- |
-| `false` | `false` | empty box |
-| `false` | `true` | dash |
-| `true` | `false` | tick |
-| `true` | `true` | dash |
+| `checked` | `indeterminate` | Shows     |
+| --------- | --------------- | --------- |
+| `false`   | `false`         | empty box |
+| `false`   | `true`          | dash      |
+| `true`    | `false`         | tick      |
+| `true`    | `true`          | dash      |
 
 Because the property is set on the element, `:indeterminate` now matches in CSS
 and assistive tech reports the mixed state. The same applies to `RHFCheckbox`,

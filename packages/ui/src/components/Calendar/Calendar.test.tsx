@@ -17,7 +17,9 @@ const dayButtons = () =>
 const dayOfActiveMonth = (day: number) =>
   dayButtons().find((b) => b.dataset.activeMonth === "true" && b.textContent === String(day))!;
 const monthButtons = () =>
-  Array.from(document.querySelectorAll<HTMLButtonElement>(".GeckoUICalendar__month-picker__button"));
+  Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".GeckoUICalendar__month-picker__button")
+  );
 const yearButtons = () =>
   Array.from(document.querySelectorAll<HTMLButtonElement>(".GeckoUICalendar__year-picker__button"));
 

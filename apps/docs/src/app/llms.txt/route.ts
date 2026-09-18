@@ -22,7 +22,8 @@ export async function GET() {
       "",
       `- [Full Docs](${siteUrl}/llms-full.txt): Full text of every page in ${LATEST.label}.`,
       ...older.map(
-        (v) => `- [${v.label} Docs](${siteUrl}${v.basePath.replace(/\/docs$/, "")}/llms.txt): Superseded ${v.label} documentation.`
+        (v) =>
+          `- [${v.label} Docs](${siteUrl}${v.basePath.replace(/\/docs$/, "")}/llms.txt): Superseded ${v.label} documentation.`
       )
     ]
   });

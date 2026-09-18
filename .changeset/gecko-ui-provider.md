@@ -69,7 +69,7 @@ const [open, setOpen] = useState(false);
 
 <Dialog open={open} onClose={() => setOpen(false)}>
   <h2>Hello</h2>
-</Dialog>
+</Dialog>;
 ```
 
 `Dialog.show()` / `Dialog.dismiss()` keep working unchanged. The declarative form renders in
@@ -90,12 +90,12 @@ The same applies to the options passed to `Drawer.show(node, { onClose })`.
 
 ## Prop renames for consistency
 
-| Component | Before | After |
-| --- | --- | --- |
-| `Drawer`, `Dialog` | `handleClose` | `onClose` |
-| `Dialog` | `dismissOnEsc` | `dismissOnEscape` (matches `Drawer`) |
-| `CounterInput` | `editable` | `allowTyping` (it sat next to `readOnly` and read like its opposite) |
-| `Checkbox`, `RHFCheckbox` | `partial` | `indeterminate` (the standard DOM name) |
+| Component                 | Before         | After                                                                |
+| ------------------------- | -------------- | -------------------------------------------------------------------- |
+| `Drawer`, `Dialog`        | `handleClose`  | `onClose`                                                            |
+| `Dialog`                  | `dismissOnEsc` | `dismissOnEscape` (matches `Drawer`)                                 |
+| `CounterInput`            | `editable`     | `allowTyping` (it sat next to `readOnly` and read like its opposite) |
+| `Checkbox`, `RHFCheckbox` | `partial`      | `indeterminate` (the standard DOM name)                              |
 
 ## Other behaviour changes
 

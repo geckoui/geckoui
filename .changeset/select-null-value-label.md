@@ -8,7 +8,7 @@ an empty trigger.
 When a value is not in the options list, `Select` works out the trigger text from
 the value itself. It walked into an object and took the first property, and
 because `typeof null === "object"` a null property fell through to
-`Object.values(null)` and threw *"Cannot convert undefined or null to object"*.
+`Object.values(null)` and threw _"Cannot convert undefined or null to object"_.
 
 ```tsx
 // crashed, because `id` is null and no option matches

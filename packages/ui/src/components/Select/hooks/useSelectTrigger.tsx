@@ -2,8 +2,8 @@ import isEqual from "lodash.isequal";
 import { useEffect, useMemo } from "react";
 
 import createLabel, { isBlankLabel } from "../../../utils/createLabel";
-import isNil from "../../../utils/isNil";
 import { devWarn } from "../../../utils/devWarn";
+import isNil from "../../../utils/isNil";
 import isTextIncludes from "../../../utils/isTextIncludes";
 import { isHideSelectOption } from "../Select.utils";
 import { useSelect } from "../useSelect";

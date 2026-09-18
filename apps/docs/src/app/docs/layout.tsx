@@ -1,9 +1,8 @@
+import { VersionSelect } from "@/components/version-select";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import type { Node, Root } from "fumadocs-core/page-tree";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
-
-import { VersionSelect } from "@/components/version-select";
 
 const llmSection: Node[] = [
   { type: "separator", name: "LLM" },

@@ -91,7 +91,14 @@ describe("Button", () => {
 
     it("forwards a ref", () => {
       let node: HTMLButtonElement | null = null;
-      render(<Button ref={(el) => { node = el; }}>x</Button>);
+      render(
+        <Button
+          ref={(el) => {
+            node = el;
+          }}>
+          x
+        </Button>
+      );
 
       expect(node).toBeInstanceOf(HTMLButtonElement);
     });

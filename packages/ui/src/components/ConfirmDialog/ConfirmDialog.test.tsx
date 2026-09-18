@@ -2,9 +2,9 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { ConfirmDialog } from ".";
 import { GeckoUIProvider } from "../GeckoUIProvider";
 import { overlayStore } from "../GeckoUIProvider/overlay-store";
-import { ConfirmDialog } from ".";
 
 function setup() {
   return render(

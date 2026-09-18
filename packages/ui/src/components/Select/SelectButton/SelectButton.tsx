@@ -2,8 +2,8 @@ import { Children, useId, useMemo, useRef } from "react";
 
 import { usePreventDefault } from "../../../hooks";
 import { classNames } from "../../../utils/classNames";
-import { getDataAttributes } from "../../../utils/getDataAttributes";
 import createLabel from "../../../utils/createLabel";
+import { getDataAttributes } from "../../../utils/getDataAttributes";
 import isEqual from "../../../utils/isEqual";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
 import { isSelectTrigger } from "../Select.utils";
