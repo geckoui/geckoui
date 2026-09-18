@@ -1,0 +1,321 @@
+---
+title: Accordion
+description: A stack of items that open one at a time, or several at once
+---
+
+import { AccordionBasicExample, AccordionVariantsExample, AccordionSizesExample, AccordionMultipleExample, AccordionCollapsibleExample, AccordionRichHeaderExample, AccordionFormExample, AccordionControlledExample } from '@/components/examples/accordion-examples';
+
+# Accordion
+
+A stack of items that open one at a time, or several at once.
+
+## Installation
+
+```tsx
+import { Accordion, AccordionItem, AccordionHeader, AccordionPanel } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <AccordionBasicExample />
+</Preview>
+
+```tsx
+<Accordion defaultValue="shipping">
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+
+  <AccordionItem value="returns">
+    <AccordionHeader>Returns</AccordionHeader>
+    <AccordionPanel>Thirty days, unopened.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+The header and the panel sit inside their item, so nothing needs pairing up by hand.
+
+## Props API
+
+### Accordion
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string \| string[]` | - | What is open. An array when `multiple` is set. Leave it out to let the component hold the state |
+| `defaultValue` | `string \| string[]` | - | What starts open when uncontrolled |
+| `onChange` | `(value: string \| string[]) => void` | - | Called with what is open now. An empty string when the last item closes |
+| `multiple` | `boolean` | `false` | Let several items be open at once |
+| `collapsible` | `boolean` | `true` | Whether the open item can be closed, leaving nothing open |
+| `variant` | `keyof AccordionVariantMap` | `'plain'` | `plain`, `separated` or `contained` |
+| `size` | `keyof AccordionSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `keepMounted` | `boolean` | `true` | Keep closed panels in the DOM |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the container |
+
+### AccordionItem
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | What `value` and `onChange` report |
+| `disabled` | `boolean` | `false` | Cannot be opened, and skipped by the keyboard |
+| `children` | `ReactNode` | - | An `AccordionHeader` and an `AccordionPanel` |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the item |
+
+### AccordionHeader
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `hideIcon` | `boolean` | `false` | Drop the chevron |
+| `icon` | `ReactNode` | - | Replace the chevron with your own |
+| `children` | `ReactNode` | - | What the header shows |
+| ...rest | `HTMLAttributes<HTMLButtonElement>` | - | Spread onto the button |
+
+### AccordionPanel
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `keepMounted` | `boolean` | - | Overrides `keepMounted` on `Accordion` for this panel |
+| `children` | `ReactNode` | - | The panel contents |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the panel |
+
+## Examples
+
+### Variants
+
+`plain` is the default: dividers and nothing else, sitting flush with whatever contains it.
+Reach for the others when the accordion needs a frame of its own.
+
+<Preview>
+  <AccordionVariantsExample />
+</Preview>
+
+```tsx
+<Accordion defaultValue="shipping" variant="plain">
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+Swap `variant` for `"separated"` (each item its own card) or `"contained"` (one box with
+dividers).
+
+### Sizes
+
+<Preview>
+  <AccordionSizesExample />
+</Preview>
+
+```tsx
+<Accordion defaultValue="shipping" size="lg">
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+### Several at once
+
+<Preview>
+  <AccordionMultipleExample />
+</Preview>
+
+```tsx
+<Accordion multiple defaultValue={['shipping', 'returns']}>
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+  <AccordionItem value="returns">
+    <AccordionHeader>Returns</AccordionHeader>
+    <AccordionPanel>Thirty days, unopened.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+`value`, `defaultValue` and `onChange` all deal in arrays once `multiple` is set.
+
+### Always one open
+
+By default, clicking the open item shuts it and leaves nothing open. Pass
+`collapsible={false}` to keep one open at all times.
+
+<Preview>
+  <AccordionCollapsibleExample />
+</Preview>
+
+```tsx
+<Accordion defaultValue="shipping" collapsible={false}>
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+### Anything in a header
+
+Whatever sits inside `AccordionHeader` is what it shows, so icons and badges need no props
+of their own.
+
+<Preview>
+  <AccordionRichHeaderExample />
+</Preview>
+
+```tsx
+<AccordionItem value="shipping">
+  <AccordionHeader>
+    <TruckIcon /> Shipping <Badge color="info">free</Badge>
+  </AccordionHeader>
+  <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+</AccordionItem>
+```
+
+Use `hideIcon` to drop the chevron, or `icon` to replace it:
+
+```tsx
+<AccordionHeader icon={<PlusIcon />}>Shipping</AccordionHeader>
+<AccordionHeader hideIcon>Shipping</AccordionHeader>
+```
+
+### Forms inside panels
+
+Closed panels stay in the DOM, so a half filled form survives being shut. Type below, close
+the panel, and open it again.
+
+<Preview>
+  <AccordionFormExample />
+</Preview>
+
+Turn that off with `keepMounted={false}` when the panels are expensive to render. Closing
+then happens without the animation, because there is nothing left to animate:
+
+```tsx
+// lighter DOM, no closing animation
+<Accordion keepMounted={false}>…</Accordion>
+
+// or per panel
+<AccordionPanel keepMounted={false}>…</AccordionPanel>
+```
+
+### Controlled
+
+<Preview>
+  <AccordionControlledExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import type { AccordionValue } from '@geckoui/geckoui';
+
+function Faq() {
+  const [open, setOpen] = useState<AccordionValue>('shipping');
+
+  return (
+    <>
+      <button onClick={() => setOpen('')}>Close all</button>
+
+      <Accordion value={open} onChange={setOpen}>
+        <AccordionItem value="shipping">
+          <AccordionHeader>Shipping</AccordionHeader>
+          <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+    </>
+  );
+}
+```
+
+`onChange` reports an empty string when the last open item closes, so `setOpen('')` closes
+everything.
+
+## Keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>↑</kbd> <kbd>↓</kbd> | Move focus between headers, wrapping at the ends |
+| <kbd>Home</kbd> <kbd>End</kbd> | Move focus to the first or last header |
+| <kbd>Enter</kbd> <kbd>Space</kbd> | Open or close the focused item |
+| <kbd>Tab</kbd> | Move through the headers and whatever is inside an open panel |
+
+Disabled items are skipped. The arrow keys only steer while a header has focus, so they
+behave normally inside a panel — a text field there keeps them.
+
+## Accessibility
+
+- Each header is a `<button>` with `aria-expanded` and `aria-controls` pointing at its panel
+- Each panel is a `region` labelled by its header
+- A disabled item's header is a disabled button, and the arrow keys pass over it
+- The open and close animation is dropped under `prefers-reduced-motion`
+
+## Styling with CSS
+
+```
+.GeckoUIAccordion                    [data-variant] [data-size]
+.GeckoUIAccordion__item              [data-state="open|closed"] [data-disabled]
+.GeckoUIAccordion__header            [data-state] [data-disabled]
+.GeckoUIAccordion__header__content
+.GeckoUIAccordion__header__icon
+.GeckoUIAccordion__panel             [data-state]
+.GeckoUIAccordion__panel__content
+```
+
+Retheming is a handful of variables:
+
+```css
+.GeckoUIAccordion {
+  --gecko-accordion-radius: 1rem;
+  --gecko-accordion-gap: 0.75rem;
+  --gecko-accordion-padding-x: 1.25rem;
+  --gecko-accordion-padding-y: 1rem;
+  --gecko-accordion-font-size: 0.875rem;
+  --gecko-accordion-duration: 200ms;
+}
+```
+
+### How the animation works
+
+The panel is a CSS grid whose single row goes from `0fr` to `1fr`:
+
+```css
+.GeckoUIAccordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--gecko-accordion-duration) ease;
+}
+
+.GeckoUIAccordion__panel[data-state="open"] {
+  grid-template-rows: 1fr;
+}
+```
+
+That animates to the content's real height with nothing measured in JavaScript, and no
+`max-height` guess that clips tall content or drags on short content. It is also why closed
+panels stay mounted by default — there is nothing to collapse otherwise.
+
+## Adding your own variants
+
+`AccordionVariantMap` and `AccordionSizeMap` are open, so a new variant is a type
+declaration and a CSS block:
+
+```ts title="geckoui.d.ts"
+declare module '@geckoui/geckoui' {
+  interface AccordionVariantMap {
+    ghost: unknown;
+  }
+}
+```
+
+```css
+.GeckoUIAccordion[data-variant="ghost"] .GeckoUIAccordion__header[data-state="open"] {
+  background: var(--color-surface-secondary);
+}
+```
+
+## Related Components
+
+- [Tabs](/docs/tabs) - When the sections are peers and only one shows at a time
+- [Badge](/docs/badge) - For counts inside a header

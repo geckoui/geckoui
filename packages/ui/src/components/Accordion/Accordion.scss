@@ -43,10 +43,6 @@
     font-size: var(--gecko-accordion-font-size);
     color: var(--color-text-primary);
 
-    &:hover:not([data-disabled]) {
-      @apply bg-surface-hover;
-    }
-
     &:focus-visible {
       outline: 2px solid var(--color-primary-300);
       outline-offset: -2px;
@@ -65,6 +61,10 @@
 
       transition-duration: var(--gecko-accordion-duration);
       color: var(--color-text-tertiary);
+    }
+
+    &:hover:not([data-disabled]) &__icon {
+      color: var(--color-text-primary);
     }
 
     &[data-state="open"] &__icon {
@@ -92,6 +92,19 @@
       color: var(--color-text-secondary);
       padding: 0 var(--gecko-accordion-padding-x) var(--gecko-accordion-padding-y);
     }
+  }
+
+  /*
+   * A filled hover only belongs where a box is drawn to fill. In `plain` there is none,
+   * so the fill runs edge to edge and reads as a selected row rather than a hover.
+   */
+  &[data-variant="separated"] &__header:hover:not([data-disabled]),
+  &[data-variant="contained"] &__header:hover:not([data-disabled]) {
+    @apply bg-surface-hover;
+  }
+
+  &[data-variant="plain"] &__header:hover:not([data-disabled]) &__header__content {
+    @apply underline decoration-1 underline-offset-4;
   }
 
   /* separated — each item its own card */
