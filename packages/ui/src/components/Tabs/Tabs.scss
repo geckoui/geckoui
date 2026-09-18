@@ -36,7 +36,7 @@
   }
 
   &__list {
-    @apply flex items-center overflow-x-auto;
+    @apply flex items-stretch overflow-x-auto overflow-y-hidden;
 
     gap: var(--gecko-tabs-gap);
 
@@ -50,7 +50,7 @@
   }
 
   &[data-orientation="vertical"] &__list {
-    @apply flex-col items-stretch overflow-x-visible overflow-y-auto;
+    @apply flex-col items-stretch overflow-x-hidden overflow-y-auto;
   }
 
   &[data-full-width] &__list {
@@ -114,13 +114,13 @@
     @apply border-border-primary border-b;
   }
 
-  &[data-variant="underline"] &__tab {
-    margin-bottom: calc(var(--gecko-tabs-indicator) * -1);
-    border-bottom: var(--gecko-tabs-indicator) solid transparent;
-  }
-
+  /*
+   * The indicator is an inset shadow rather than a border with a negative margin.
+   * A negative margin pushes the tab past the strip, and any overflow on one axis
+   * turns the other axis scrollable, so the strip could be scrolled vertically.
+   */
   &[data-variant="underline"] &__tab[data-state="selected"] {
-    border-bottom-color: var(--gecko-tabs-accent);
+    box-shadow: inset 0 calc(var(--gecko-tabs-indicator) * -1) 0 0 var(--gecko-tabs-accent);
   }
 
   &[data-variant="underline"][data-orientation="vertical"] &__list {
@@ -128,14 +128,13 @@
   }
 
   &[data-variant="underline"][data-orientation="vertical"] &__tab {
-    @apply mb-0 justify-start border-b-0;
+    @apply justify-start;
 
-    margin-right: calc(var(--gecko-tabs-indicator) * -1);
-    border-right: var(--gecko-tabs-indicator) solid transparent;
+    box-shadow: none;
   }
 
   &[data-variant="underline"][data-orientation="vertical"] &__tab[data-state="selected"] {
-    border-right-color: var(--gecko-tabs-accent);
+    box-shadow: inset calc(var(--gecko-tabs-indicator) * -1) 0 0 0 var(--gecko-tabs-accent);
   }
 
   /* segmented — the whole strip sits in a track, the selected tab is a raised surface */
