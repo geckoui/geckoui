@@ -12,6 +12,7 @@ export * from "./LoadingButton";
 export * from "./RHF";
 export * from "./Tooltip";
 export * from "./Switch";
+export * from "./Tabs";
 export * from "./Radio";
 export * from "./Calendar";
 export * from "./Alert";

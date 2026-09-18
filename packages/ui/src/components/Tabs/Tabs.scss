@@ -1,0 +1,164 @@
+@import "../../mixins.scss";
+
+/*
+ * One accent drives every variant, so a new variant added through module augmentation
+ * only needs to decide how to use `--gecko-tabs-accent` — it does not need its own
+ * colour rules.
+ */
+.GeckoUITabs {
+  @include base-reset;
+
+  --gecko-tabs-accent: var(--color-primary-600);
+  --gecko-tabs-muted: var(--color-text-secondary);
+  --gecko-tabs-indicator: 2px;
+  --gecko-tabs-radius: 0.375rem;
+  --gecko-tabs-gap: 0.25rem;
+  --gecko-tabs-padding-x: 0.75rem;
+  --gecko-tabs-padding-y: 0.5rem;
+  --gecko-tabs-font-size: 0.875rem;
+
+  @apply flex flex-col;
+
+  &[data-size="sm"] {
+    --gecko-tabs-padding-x: 0.625rem;
+    --gecko-tabs-padding-y: 0.375rem;
+    --gecko-tabs-font-size: 0.8125rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-tabs-padding-x: 1rem;
+    --gecko-tabs-padding-y: 0.625rem;
+    --gecko-tabs-font-size: 1rem;
+  }
+
+  &[data-orientation="vertical"] {
+    @apply flex-row items-start gap-4;
+  }
+
+  &__list {
+    @apply flex items-center;
+
+    gap: var(--gecko-tabs-gap);
+  }
+
+  &[data-orientation="vertical"] &__list {
+    @apply flex-col items-stretch;
+  }
+
+  &[data-full-width] &__list {
+    @apply w-full;
+  }
+
+  &[data-full-width] &__tab {
+    @apply flex-1;
+  }
+
+  &__tab {
+    @include button-reset;
+
+    @apply relative inline-flex cursor-pointer items-center justify-center gap-2 font-medium whitespace-nowrap transition-colors duration-150;
+
+    padding: var(--gecko-tabs-padding-y) var(--gecko-tabs-padding-x);
+    font-size: var(--gecko-tabs-font-size);
+    color: var(--gecko-tabs-muted);
+
+    &:hover:not([data-disabled]) {
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: -2px;
+      border-radius: var(--gecko-tabs-radius);
+    }
+
+    &[data-state="selected"] {
+      color: var(--gecko-tabs-accent);
+    }
+
+    &[data-disabled] {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  &__panel {
+    @apply flex-1 pt-4;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+  }
+
+  &[data-orientation="vertical"] &__panel {
+    @apply pt-0;
+  }
+
+  /* underline — the strip carries a hairline, the selected tab an accent bar */
+  &[data-variant="underline"] {
+    --gecko-tabs-gap: 0;
+  }
+
+  &[data-variant="underline"] &__list {
+    @apply border-border-primary border-b;
+  }
+
+  &[data-variant="underline"] &__tab {
+    margin-bottom: calc(var(--gecko-tabs-indicator) * -1);
+    border-bottom: var(--gecko-tabs-indicator) solid transparent;
+  }
+
+  &[data-variant="underline"] &__tab[data-state="selected"] {
+    border-bottom-color: var(--gecko-tabs-accent);
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__list {
+    @apply border-b-0 border-r;
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__tab {
+    @apply mb-0 justify-start border-b-0;
+
+    margin-right: calc(var(--gecko-tabs-indicator) * -1);
+    border-right: var(--gecko-tabs-indicator) solid transparent;
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__tab[data-state="selected"] {
+    border-right-color: var(--gecko-tabs-accent);
+  }
+
+  /* segmented — the whole strip sits in a track, the selected tab is a raised surface */
+  &[data-variant="segmented"] &__list {
+    @apply bg-surface-tertiary w-fit p-1;
+
+    border-radius: calc(var(--gecko-tabs-radius) + 0.25rem);
+  }
+
+  &[data-variant="segmented"][data-full-width] &__list {
+    @apply w-full;
+  }
+
+  &[data-variant="segmented"] &__tab {
+    border-radius: var(--gecko-tabs-radius);
+  }
+
+  &[data-variant="segmented"] &__tab[data-state="selected"] {
+    @apply bg-surface-primary shadow-sm;
+
+    color: var(--color-text-primary);
+  }
+
+  /* soft — a tinted accent behind the selected tab, no track */
+  &[data-variant="soft"] &__tab {
+    border-radius: var(--gecko-tabs-radius);
+  }
+
+  &[data-variant="soft"] &__tab[data-state="selected"] {
+    background: color-mix(in oklch, var(--gecko-tabs-accent) 12%, transparent);
+    color: var(--gecko-tabs-accent);
+  }
+
+  &[data-variant="soft"] &__tab:hover:not([data-disabled]):not([data-state="selected"]) {
+    @apply bg-surface-hover;
+  }
+}
