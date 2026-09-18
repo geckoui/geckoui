@@ -47,7 +47,7 @@ export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, "on
   collapsible?: boolean;
 
   /**
-   * How the items are framed.(Default: 'separated')
+   * How the items are framed.(Default: 'plain')
    * */
   variant?: keyof AccordionVariantMap;
 

@@ -115,8 +115,13 @@
   }
 
   /* plain — dividers only */
+  /*
+   * plain — dividers and nothing else. No frame of its own, so the text sits flush with
+   * whatever it is placed in rather than looking indented from a box that is not drawn.
+   */
   &[data-variant="plain"] {
     --gecko-accordion-gap: 0;
+    --gecko-accordion-padding-x: 0;
   }
 
   &[data-variant="plain"] &__item + &__item {

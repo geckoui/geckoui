@@ -30,7 +30,7 @@ const Accordion = ({
   onChange,
   multiple = false,
   collapsible = true,
-  variant = "separated",
+  variant = "plain",
   size = "md",
   keepMounted = true,
   className,
