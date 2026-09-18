@@ -75,6 +75,10 @@ const Tabs = ({
 
   // Keep the selected tab in view when the strip is scrollable, centring it where there
   // is room. Only the strip scrolls; scrollIntoView would take the page with it.
+  //
+  // Measured from the rectangles rather than offsetLeft, which is relative to the
+  // nearest positioned ancestor. The strip is not positioned, so offsetLeft would fold
+  // in whatever the caller wrapped the tabs in.
   useEffect(() => {
     const list = listRef.current;
     if (!list) return;
@@ -82,11 +86,16 @@ const Tabs = ({
     const tab = list.querySelector<HTMLElement>('[data-gecko-tab][data-state="selected"]');
     if (!tab) return;
 
+    const listBox = list.getBoundingClientRect();
+    const tabBox = tab.getBoundingClientRect();
+
     if (orientation === "vertical") {
       if (list.scrollHeight <= list.clientHeight) return;
 
+      const offset = tabBox.top - listBox.top;
+
       list.scrollTo({
-        top: tab.offsetTop - (list.clientHeight - tab.clientHeight) / 2,
+        top: list.scrollTop + offset - (list.clientHeight - tabBox.height) / 2,
         behavior: "smooth"
       });
 
@@ -95,8 +104,10 @@ const Tabs = ({
 
     if (list.scrollWidth <= list.clientWidth) return;
 
+    const offset = tabBox.left - listBox.left;
+
     list.scrollTo({
-      left: tab.offsetLeft - (list.clientWidth - tab.clientWidth) / 2,
+      left: list.scrollLeft + offset - (list.clientWidth - tabBox.width) / 2,
       behavior: "smooth"
     });
   }, [selectedValue, orientation]);
