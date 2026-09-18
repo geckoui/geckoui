@@ -20,6 +20,7 @@ export * from "./Alert";
 export * from "./Avatar";
 export * from "./Badge";
 export * from "./Skeleton";
+export * from "./Progress";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";
