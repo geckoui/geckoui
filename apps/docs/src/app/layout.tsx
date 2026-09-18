@@ -1,4 +1,5 @@
 import SearchDialog from "@/components/search";
+import { siteUrl } from "@/lib/site";
 import { GeckoUIProvider } from "@geckoui/geckoui";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
@@ -7,6 +8,7 @@ import { Inter } from "next/font/google";
 import "./global.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Gecko UI",
     template: "%s | Gecko UI"
