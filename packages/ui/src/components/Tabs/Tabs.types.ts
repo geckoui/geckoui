@@ -17,6 +17,24 @@ export interface TabsSizeMap {
 export type TabsOrientation = "horizontal" | "vertical";
 
 /**
+ * The attributes a tab element needs to behave like one.
+ *
+ * Deliberately exact rather than `HTMLAttributes`, which carries the legacy `color`
+ * attribute and so collides with any component of ours that has its own `color` prop.
+ */
+export interface TabElementProps {
+  id: string;
+  tabIndex: number;
+  role?: "tab";
+  "aria-selected"?: boolean;
+  "aria-controls"?: string;
+  "aria-current"?: "page";
+  "data-gecko-tab": string;
+  "data-state": "selected" | "unselected";
+  "data-disabled"?: true;
+}
+
+/**
  * What a `label` render function receives.
  *
  * Spread `props` onto whatever you render, or the keyboard navigation and the
@@ -35,8 +53,8 @@ export interface TabLabelRenderProps {
   /** Select this tab */
   select: () => void;
 
-  /** id, tabIndex, aria wiring and the keyboard handler. Spread these. */
-  props: HTMLAttributes<HTMLElement> & { id: string; tabIndex: number };
+  /** id, tabIndex and the aria wiring. Spread these. */
+  props: TabElementProps;
 }
 
 export interface TabProps {
@@ -127,13 +145,6 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChang
    * and the arrow keys left alone so Tab moves through the links.(Default: 'div')
    * */
   as?: "div" | "nav";
-
-  /**
-   * Whether moving between tabs with the arrow keys selects as it goes, or only moves
-   * focus until Enter or Space. Use 'manual' when the panels are expensive to
-   * render.(Default: 'automatic')
-   * */
-  activation?: "automatic" | "manual";
 
   /**
    * Keep every panel mounted, so a panel holding form state survives being hidden.

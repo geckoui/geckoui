@@ -3,7 +3,12 @@ import { Children, useMemo, useRef, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
-import type { TabLabelRenderProps, TabProps, TabsProps } from "../Tabs.types";
+import type {
+  TabElementProps,
+  TabLabelRenderProps,
+  TabProps,
+  TabsProps
+} from "../Tabs.types";
 import { isTab } from "../Tabs.utils";
 import { TabsContext } from "../useTabs";
 
@@ -17,6 +22,8 @@ import { TabsContext } from "../useTabs";
  *   <Tab value="billing" label="Billing"><BillingForm /></Tab>
  * </Tabs>
  * ```
+ *
+ * Arrow keys and Home/End move focus along the strip; Enter or Space selects.
  *
  * @example
  * As navigation, with the router holding the state:
@@ -39,7 +46,6 @@ const Tabs = ({
   orientation = "horizontal",
   fullWidth = false,
   as = "div",
-  activation = "automatic",
   keepMounted = false,
   className,
   listClassName,
@@ -67,37 +73,46 @@ const Tabs = ({
     onChange?.(next);
   };
 
-  const focusTab = (index: number) => {
-    const buttons = listRef.current?.querySelectorAll<HTMLElement>("[data-gecko-tab]");
-    buttons?.[index]?.focus();
-  };
-
   const handleKeyDown = (e: KeyboardEvent) => {
     // Navigation is a list of links, so the arrow keys are left to the browser and Tab
     // walks through them as it would anywhere else.
     if (isNav) return;
 
-    const enabled = tabs.filter((tab) => !tab.disabled);
-    if (!enabled.length) return;
+    // Read the tabs from the DOM rather than from props, so a label rendered by the
+    // caller is navigated the same as one we rendered.
+    const items = Array.from(
+      listRef.current?.querySelectorAll<HTMLElement>("[data-gecko-tab]:not([data-disabled])") ?? []
+    );
+
+    if (!items.length) return;
 
     const [previousKey, nextKey] =
       orientation === "vertical" ? ["ArrowUp", "ArrowDown"] : ["ArrowLeft", "ArrowRight"];
 
-    const current = enabled.findIndex((tab) => tab.value === selectedValue);
+    // Where focus is now, falling back to the selected tab when focus sits elsewhere
+    const focusedIndex = items.indexOf(document.activeElement as HTMLElement);
+    const current =
+      focusedIndex === -1
+        ? Math.max(
+            items.findIndex((item) => item.dataset.state === "selected"),
+            0
+          )
+        : focusedIndex;
+
     let next = current;
 
     switch (e.key) {
       case previousKey:
-        next = (current - 1 + enabled.length) % enabled.length;
+        next = (current - 1 + items.length) % items.length;
         break;
       case nextKey:
-        next = (current + 1) % enabled.length;
+        next = (current + 1) % items.length;
         break;
       case "Home":
         next = 0;
         break;
       case "End":
-        next = enabled.length - 1;
+        next = items.length - 1;
         break;
       default:
         return;
@@ -105,13 +120,10 @@ const Tabs = ({
 
     e.preventDefault();
 
-    const target = enabled[next];
-
-    if (activation === "automatic") {
-      select(target.value);
-    }
-
-    focusTab(tabs.findIndex((tab) => tab.value === target.value));
+    // Arrow keys move focus only. Selecting as focus travels mounts every panel on the
+    // way past, and it surprises people who expect arrows to browse rather than choose.
+    // Enter or Space on the focused tab selects it, which a button does for free.
+    items[next].focus();
   };
 
   const ListElement = isNav ? "nav" : "div";
@@ -134,7 +146,7 @@ const Tabs = ({
           {tabs.map((tab) => {
             const selected = tab.value === selectedValue;
 
-            const tabProps = {
+            const tabProps: TabElementProps = {
               id: `GeckoUITabs-tab-${tab.value}`,
               // Only the selected tab is in the tab order, so Tab leaves the strip
               // rather than walking through every tab. Navigation keeps them all
