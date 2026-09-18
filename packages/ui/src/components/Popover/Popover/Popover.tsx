@@ -28,6 +28,9 @@ import { PopoverContext } from "../usePopover";
  * </Popover>
  * ```
  */
+/** The height of floating-ui's default arrow, which pokes out beyond the panel edge. */
+const ARROW_HEIGHT = 7;
+
 const Popover = ({
   open: controlledOpen,
   defaultOpen = false,
@@ -72,7 +75,10 @@ const Popover = ({
     placement,
     strategy: floatingStrategy,
     middleware: [
-      offsetMiddleware(offset),
+      // `offset` is the gap between the trigger and the nearest part of the popover. The
+      // arrow sticks out past the panel edge, so it has to be paid for here or the tip
+      // lands on the trigger.
+      offsetMiddleware(arrow ? offset + ARROW_HEIGHT : offset),
       flip({ padding: 6 }),
       shift({ padding: 6 }),
       ...(arrow ? [arrowMiddleware({ element: arrowRef })] : [])

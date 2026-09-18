@@ -24,7 +24,9 @@ export interface PopoverProps extends Omit<HTMLAttributes<HTMLDivElement>, "onCh
   placement?: Placement;
 
   /**
-   * How far the content sits from the trigger, in pixels.(Default: 6)
+   * The gap between the trigger and the nearest part of the popover, in pixels. With
+   * `arrow` on that is the arrow's tip rather than the panel edge, so the gap looks the
+   * same either way.(Default: 6)
    * */
   offset?: number;
 

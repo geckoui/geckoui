@@ -46,7 +46,7 @@ its own tag, styling and click handler.
 | `defaultOpen` | `boolean` | `false` | Whether it starts open when uncontrolled |
 | `onOpenChange` | `(open: boolean) => void` | - | Called whenever it opens or closes |
 | `placement` | `Placement` | `'bottom-start'` | Where the panel sits. It flips when there is no room |
-| `offset` | `number` | `6` | How far the panel sits from the trigger, in pixels |
+| `offset` | `number` | `6` | The gap between the trigger and the nearest part of the popover, in pixels |
 | `floatingStrategy` | `Strategy` | - | Positioning strategy, for the rare case absolute does not work |
 | `dismissOnEscape` | `boolean` | `true` | Close on Escape |
 | `dismissOnOutsideClick` | `boolean` | `true` | Close when something outside is clicked |
@@ -90,6 +90,10 @@ its own tag, styling and click handler.
 `placement` takes any floating-ui placement — `top`, `bottom-end`, `right-start` and so on.
 The panel flips to the opposite side when there is no room, and shifts sideways to stay on
 screen.
+
+`offset` is the gap between the trigger and the nearest part of the popover. With `arrow`
+on, that is measured to the arrow's tip rather than the panel edge, so the gap looks the
+same whether or not there is an arrow.
 
 ### A form inside
 
