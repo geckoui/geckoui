@@ -7,8 +7,9 @@ import {
   shift,
   useFloating
 } from "@floating-ui/react";
-import { Children, type FC, cloneElement, isValidElement, useRef, useState } from "react";
+import { type FC, cloneElement, useRef, useState } from "react";
 
+import { asChildElement } from "../../utils/asChildElement";
 import { classNames } from "../../utils/classNames";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
 import type { TooltipProps } from "./Tooltip.types";
@@ -63,14 +64,13 @@ const Tooltip: FC<TooltipProps> = ({
   };
 
   const renderTrigger = () => {
-    if (triggerAsChild) {
-      const child = Children.only(children);
-      if (isValidElement(child)) {
-        return cloneElement(child, {
-          ...triggerProps,
-          className: classNames((child.props as { className?: string }).className, triggerClassName)
-        } as React.HTMLAttributes<HTMLElement>);
-      }
+    const child = triggerAsChild ? asChildElement(children) : null;
+
+    if (child) {
+      return cloneElement(child, {
+        ...triggerProps,
+        className: classNames((child.props as { className?: string }).className, triggerClassName)
+      } as React.HTMLAttributes<HTMLElement>);
     }
 
     return (

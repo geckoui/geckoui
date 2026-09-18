@@ -196,4 +196,16 @@ describe("Tooltip", () => {
       expect(screen.getByRole("tooltip")).toBeInTheDocument();
     });
   });
+
+  it("falls back to the wrapper trigger when triggerAsChild gets something it cannot clone", () => {
+    // Under RSC a child can arrive as an unresolved lazy chunk rather than an element.
+    // `Children.only` used to throw there and take the whole page down.
+    render(
+      <Tooltip content="Help" triggerAsChild>
+        {"plain text" as unknown as React.ReactElement}
+      </Tooltip>
+    );
+
+    expect(document.querySelector(".GeckoUITooltip__trigger")).toHaveTextContent("plain text");
+  });
 });

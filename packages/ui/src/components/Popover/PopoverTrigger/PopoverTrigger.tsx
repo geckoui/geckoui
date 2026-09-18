@@ -1,6 +1,7 @@
 import type { HTMLAttributes, MouseEvent, Ref } from "react";
-import { Children, cloneElement, isValidElement } from "react";
+import { cloneElement } from "react";
 
+import { asChildElement } from "../../../utils/asChildElement";
 import type { PopoverTriggerProps } from "../Popover.types";
 import { usePopover } from "../usePopover";
 
@@ -18,13 +19,12 @@ import { usePopover } from "../usePopover";
 const PopoverTrigger = ({ children }: PopoverTriggerProps) => {
   const { open, toggle, disabled, floating, setTriggerNode } = usePopover();
 
-  const child = Children.only(children);
+  const child = asChildElement(children);
+  const childProps = (child?.props ?? {}) as HTMLAttributes<HTMLElement> & {
+    ref?: Ref<HTMLElement>;
+  };
 
-  if (!isValidElement(child)) return null;
-
-  const childProps = child.props as HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> };
-
-  return cloneElement(child, {
+  const triggerProps = {
     ref: (node: HTMLElement | null) => {
       floating.refs.setReference(node);
       setTriggerNode(node);
@@ -47,7 +47,11 @@ const PopoverTrigger = ({ children }: PopoverTriggerProps) => {
 
       toggle();
     }
-  } as HTMLAttributes<HTMLElement>);
+  } as HTMLAttributes<HTMLElement>;
+
+  if (child) return cloneElement(child, triggerProps);
+
+  return <span {...triggerProps}>{children}</span>;
 };
 
 PopoverTrigger.displayName = "PopoverTrigger";

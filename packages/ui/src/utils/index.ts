@@ -7,3 +7,4 @@ export * from "./getDataAttributes";
 export * from "./splitDataAttributes";
 export * from "./isAsyncFn";
 export * from "./devWarn";
+export * from "./asChildElement";

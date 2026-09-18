@@ -1,6 +1,7 @@
 import type { HTMLAttributes, ReactElement } from "react";
-import { Children, cloneElement, isValidElement } from "react";
+import { cloneElement } from "react";
 
+import { asChildElement } from "../../../utils/asChildElement";
 import { classNames } from "../../../utils/classNames";
 import type { TabProps } from "../Tabs.types";
 import { useTabs } from "../useTabs";
@@ -46,20 +47,18 @@ const Tab = ({ value, disabled, asChild, className, children, ...rest }: TabProp
         })
   };
 
-  if (asChild) {
-    const child = Children.only(children);
+  const child = asChild ? asChildElement(children) : null;
 
-    if (isValidElement(child)) {
-      return cloneElement(child, {
-        ...tabProps,
-        ...rest,
-        className: classNames(
-          "GeckoUITabs__tab",
-          (child.props as { className?: string }).className,
-          className
-        )
-      } as HTMLAttributes<HTMLElement>) as ReactElement;
-    }
+  if (child) {
+    return cloneElement(child, {
+      ...tabProps,
+      ...rest,
+      className: classNames(
+        "GeckoUITabs__tab",
+        (child.props as { className?: string }).className,
+        className
+      )
+    } as HTMLAttributes<HTMLElement>) as ReactElement;
   }
 
   return (
