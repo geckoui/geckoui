@@ -63,6 +63,15 @@
       color: var(--color-text-tertiary);
     }
 
+    /*
+     * The same hover in every variant: underline the text and darken the chevron. A
+     * filled background only reads correctly where a box is drawn to fill, and `plain`
+     * has none, so the fill would run edge to edge and look like a selected row.
+     */
+    &:hover:not([data-disabled]) &__content {
+      @apply underline decoration-1 underline-offset-4;
+    }
+
     &:hover:not([data-disabled]) &__icon {
       color: var(--color-text-primary);
     }
@@ -92,19 +101,6 @@
       color: var(--color-text-secondary);
       padding: 0 var(--gecko-accordion-padding-x) var(--gecko-accordion-padding-y);
     }
-  }
-
-  /*
-   * A filled hover only belongs where a box is drawn to fill. In `plain` there is none,
-   * so the fill runs edge to edge and reads as a selected row rather than a hover.
-   */
-  &[data-variant="separated"] &__header:hover:not([data-disabled]),
-  &[data-variant="contained"] &__header:hover:not([data-disabled]) {
-    @apply bg-surface-hover;
-  }
-
-  &[data-variant="plain"] &__header:hover:not([data-disabled]) &__header__content {
-    @apply underline decoration-1 underline-offset-4;
   }
 
   /* separated — each item its own card */
