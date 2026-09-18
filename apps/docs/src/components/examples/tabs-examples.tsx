@@ -117,6 +117,75 @@ export function TabsRichLabelExample() {
   );
 }
 
+const UserIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
+const CardIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="2" y="5" width="20" height="14" rx="2" />
+    <path d="M2 10h20" />
+  </svg>
+);
+
+const BellIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+    <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+  </svg>
+);
+
+export function TabsIconExample() {
+  return (
+    <div className="flex flex-col gap-8">
+      <Tabs defaultValue="profile" variant="segmented">
+        <Tab
+          value="profile"
+          label={
+            <>
+              <UserIcon /> Profile
+            </>
+          }>
+          {panel("Profile")}
+        </Tab>
+        <Tab
+          value="billing"
+          label={
+            <>
+              <CardIcon /> Billing
+            </>
+          }>
+          {panel("Billing")}
+        </Tab>
+        <Tab
+          value="alerts"
+          label={
+            <>
+              <BellIcon /> Alerts <Badge color="error">7</Badge>
+            </>
+          }>
+          {panel("Alerts")}
+        </Tab>
+      </Tabs>
+
+      <Tabs defaultValue="profile" variant="soft">
+        <Tab value="profile" label={<span aria-label="Profile"><UserIcon /></span>}>
+          {panel("Profile")}
+        </Tab>
+        <Tab value="billing" label={<span aria-label="Billing"><CardIcon /></span>}>
+          {panel("Billing")}
+        </Tab>
+        <Tab value="alerts" label={<span aria-label="Alerts"><BellIcon /></span>}>
+          {panel("Alerts")}
+        </Tab>
+      </Tabs>
+    </div>
+  );
+}
+
 export function TabsScrollableExample() {
   const months = [
     "January",

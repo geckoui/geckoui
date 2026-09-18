@@ -32,7 +32,12 @@
   }
 
   &[data-orientation="vertical"] {
-    @apply flex-row items-start gap-4;
+    /*
+     * Centred rather than top aligned, so a short panel sits beside the middle of the
+     * strip instead of stranded against the first tab. Whichever side is taller sets
+     * the height and the other centres against it.
+     */
+    @apply flex-row items-center gap-4;
   }
 
   &__list {
