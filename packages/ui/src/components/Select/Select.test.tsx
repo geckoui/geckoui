@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Select, SelectEmpty, SelectOption, SelectTrigger } from ".";
 
@@ -145,6 +145,16 @@ describe("Select", () => {
   });
 
   describe("a value that is not in the options list", () => {
+    // Every test here passes a value on purpose that no option owns, which is exactly
+    // what the developer warning is for. It is asserted in its own block below.
+    beforeEach(() => {
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
     const withValue = (value: unknown, children?: React.ReactNode) =>
       render(
         <Select value={value as never} placeholder="Select option" onChange={() => {}}>
