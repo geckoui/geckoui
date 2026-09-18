@@ -80,6 +80,24 @@ function Example() {
 | `suffix`               | `ReactNode`                         | -                | Content after select button                |
 | `clearable`            | `boolean`                           | `false`          | Show a clear button to reset the selection |
 
+### Values that are not in the list
+
+Normally the trigger shows the `label` of the option whose `value` matches. When no
+option matches, the text is worked out from the value itself:
+
+| `value`                          | Trigger shows                           |
+| -------------------------------- | --------------------------------------- |
+| `"ghost"` or `42`                | `ghost` / `42`                          |
+| `{ id: 7, name: "Ann" }`         | `7` — the first property                |
+| `{ id: null, name: "Ann" }`      | `Ann` — nil properties are skipped      |
+| `{ id: null, label: "Ann" }`     | `Ann` — a `label` key always wins       |
+| `{ id: null, name: null }`       | nothing                                 |
+| `null` or `undefined`            | the placeholder                         |
+
+Nothing is marked as selected in the menu in any of these cases, because nothing
+matches. If the value is an object and you care which field is shown, give it a
+`label` key rather than relying on property order.
+
 ## Examples
 
 ### With Placeholder

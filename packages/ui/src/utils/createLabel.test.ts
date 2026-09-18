@@ -9,33 +9,39 @@ describe("createLabel", () => {
     expect(createLabel(true)).toBe("true");
   });
 
-  it("stringifies undefined", () => {
-    expect(createLabel(undefined)).toBe("undefined");
+  it("returns nil values as they are, so nothing is rendered", () => {
+    expect(createLabel(null)).toBeNull();
+    expect(createLabel(undefined)).toBeUndefined();
   });
 
-  // KNOWN BUG, left unfixed on purpose: `typeof null === "object"`, so null falls into
-  // the object branch and `Object.values(null)` throws
-  // "Cannot convert undefined or null to object".
-  //
-  // A bare null never reaches createLabel through Select, because `hasValue` in
-  // useSelectTrigger returns false for it. What does reach it is a null nested inside an
-  // object value: createLabel walks to the object's first value and recurses, so
-  // <Select value={{ id: null, name: "Ann" }} /> with no matching option crashes.
-  // Delete this marker once fixed.
-  it.fails("stringifies null", () => {
-    expect(createLabel(null)).toBe("null");
+  it("skips a nil property and uses the first one with a value", () => {
+    expect(createLabel({ id: null, name: "Ann" })).toBe("Ann");
+    expect(createLabel({ id: undefined, ref: null, name: "Ann" })).toBe("Ann");
   });
 
-  it.fails("handles an object whose first value is null", () => {
-    expect(() => createLabel({ id: null, name: "Ann" })).not.toThrow();
+  it("renders nothing when every property is nil", () => {
+    expect(createLabel({ id: null, name: null })).toBeNull();
   });
 
-  it("does not throw when the object has a label key", () => {
+  it("skips nil properties when walking into a nested object", () => {
+    expect(createLabel({ user: { id: null, name: "Ann" } })).toBe("Ann");
+  });
+
+  it("skips nil items in an array", () => {
+    expect(createLabel([null, "Ann"])).toBe("Ann");
+    expect(createLabel([{ id: null, name: "Ann" }])).toBe("Ann");
+  });
+
+  it("still prefers an explicit label key over a nil property", () => {
     expect(createLabel({ id: null, label: "Ann" })).toBe("Ann");
   });
 
-  it("does not throw when the first value is not null", () => {
+  it("leaves a non nil first property alone", () => {
     expect(createLabel({ name: "Ann", id: null })).toBe("Ann");
+  });
+
+  it("still uses the first property even when a later one reads better", () => {
+    expect(createLabel({ id: 7, name: "Ann" })).toBe("7");
   });
 
   it("uses the label key of an object", () => {
