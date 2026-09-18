@@ -1,6 +1,9 @@
 import isEqual from "lodash.isequal";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
+import createLabel, { isBlankLabel } from "../../../utils/createLabel";
+import isNil from "../../../utils/isNil";
+import { devWarn } from "../../../utils/devWarn";
 import isTextIncludes from "../../../utils/isTextIncludes";
 import { isHideSelectOption } from "../Select.utils";
 import { useSelect } from "../useSelect";
@@ -96,17 +99,30 @@ export const useSelectTrigger = <T,>() => {
     }
   };
 
+  const matchesAnOption = options.some((opt) => isEqual(opt.value, value));
+
+  useEffect(() => {
+    if (multiple || matchesAnOption || isNil(value) || value === "") return;
+
+    devWarn(
+      "Select was given a value that matches no SelectOption, so the label was worked out " +
+        "from the value itself. Add an option for it, or give the value a `label` key."
+    );
+  }, [multiple, matchesAnOption, value]);
+
   const hasValue = useMemo(() => {
     if (multiple) {
       return Array.isArray(value) && !!value?.length;
     }
 
-    if (value === "" || value === null) {
-      return !!options.find((opt) => isEqual(opt.value, value));
-    }
+    // An option owns the value, so its label is what the trigger shows
+    if (matchesAnOption) return true;
 
-    return value !== undefined;
-  }, [options, multiple, value]);
+    // Otherwise the trigger shows text worked out from the value. If that comes out
+    // blank there is nothing worth showing, so fall through to the placeholder rather
+    // than render an empty box.
+    return !isBlankLabel(createLabel(value));
+  }, [matchesAnOption, multiple, value]);
 
   return {
     hasValue,

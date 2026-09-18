@@ -52,8 +52,12 @@ describe("createLabel", () => {
     expect(createLabel({ name: "Apple", value: 1 })).toBe("Apple");
   });
 
-  it("stringifies an empty object", () => {
-    expect(createLabel({})).toBe("[object Object]");
+  it("renders nothing for an object with no printable text", () => {
+    expect(createLabel({})).toBeNull();
+  });
+
+  it("uses an object's own text when it has one", () => {
+    expect(createLabel(new Date(2024, 0, 15))).toContain("Jan 15 2024");
   });
 
   it("walks into a nested object", () => {
@@ -68,9 +72,50 @@ describe("createLabel", () => {
     expect(createLabel([{ label: "Apple" }])).toBe("Apple");
   });
 
-  it("returns the nil first item of an array as is", () => {
+  it("renders nothing for an array of only nil items", () => {
     expect(createLabel([null])).toBeNull();
-    expect(createLabel([undefined])).toBeUndefined();
+    expect(createLabel([undefined])).toBeNull();
+    expect(createLabel([null, undefined])).toBeNull();
+  });
+
+  it("keeps an empty string, which is a stored value rather than a missing one", () => {
+    expect(createLabel({ id: null, name: "" })).toBe("");
+    expect(createLabel({ name: "", id: 7 })).toBe("");
+    expect(createLabel([null, "", "Ann"])).toBe("");
+  });
+
+  it("keeps a whitespace only string", () => {
+    expect(createLabel({ id: null, name: "   " })).toBe("   ");
+  });
+
+  it("renders nothing for an empty array", () => {
+    expect(createLabel([])).toBeNull();
+  });
+
+  it("moves on when a nested object has nothing to print", () => {
+    expect(createLabel({ a: { id: null }, b: "Ann" })).toBe("Ann");
+  });
+
+  it("renders nothing when a nested object is the only candidate and is empty", () => {
+    expect(createLabel({ a: {} })).toBeNull();
+  });
+
+  it("walks into a nested object and skips its nil properties", () => {
+    expect(createLabel({ a: { id: null, name: "Ann" } })).toBe("Ann");
+  });
+
+  it("keeps an empty label key but not a nil one", () => {
+    expect(createLabel({ label: "" })).toBe("");
+    expect(createLabel({ label: null })).toBeNull();
+  });
+
+  it("keeps a whitespace only top level string", () => {
+    expect(createLabel("   ")).toBe("   ");
+  });
+
+  it("keeps a falsy value", () => {
+    expect(createLabel({ count: 0, name: "Ann" })).toBe("0");
+    expect(createLabel({ active: false, name: "Ann" })).toBe("false");
   });
 
   it("throws for a function", () => {

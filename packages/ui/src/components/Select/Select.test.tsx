@@ -144,6 +144,167 @@ describe("Select", () => {
     expect(within(trigger()).getByText("Cherry")).toBeInTheDocument();
   });
 
+  describe("a value that is not in the options list", () => {
+    const withValue = (value: unknown, children?: React.ReactNode) =>
+      render(
+        <Select value={value as never} placeholder="Select option" onChange={() => {}}>
+          {children ?? <SelectOption value="apple" label="Apple" />}
+        </Select>
+      );
+
+    const triggerText = () => trigger().textContent;
+    const showsPlaceholder = () => !!trigger().querySelector("[data-placeholder]");
+
+    it("shows text worked out from the value", () => {
+      withValue("ghost");
+
+      expect(triggerText()).toBe("ghost");
+    });
+
+    it("uses the first property of an object", () => {
+      withValue({ id: 7, name: "Ann" });
+
+      expect(triggerText()).toBe("7");
+    });
+
+    it("skips a nil property rather than crashing", () => {
+      withValue({ id: null, name: "Ann" });
+
+      expect(triggerText()).toBe("Ann");
+    });
+
+    it("prefers a label key", () => {
+      withValue({ id: null, label: "Ann" });
+
+      expect(triggerText()).toBe("Ann");
+    });
+
+    it("uses an object's own text when it has one", () => {
+      withValue(new Date(2024, 0, 15));
+
+      expect(triggerText()).toContain("Jan 15 2024");
+    });
+
+    // Anything that would render as an empty box falls through to the placeholder
+    it.each([
+      ["null", null],
+      ["undefined", undefined],
+      ["an empty string", ""],
+      ["a whitespace only string", "   "],
+      ["an object whose properties are all nil", { id: null, name: null }],
+      ["an object whose first property is an empty string", { id: null, name: "" }],
+      ["an object that stops at an empty string", { id: null, name: "", nickname: "Ann" }],
+      ["an object whose first property is whitespace", { id: null, name: "   " }],
+      ["an object with no properties", {}],
+      ["an object with an empty label key", { label: "" }],
+      ["an empty array", []],
+      ["an array of only nil", [null]]
+    ])("shows the placeholder for %s", (_label, value) => {
+      withValue(value);
+
+      expect(showsPlaceholder()).toBe(true);
+    });
+
+    it.each([["0", 0, "0"], ["false", false, "false"]])(
+      "keeps %s, which does print",
+      (_label, value, expected) => {
+        withValue(value);
+
+        expect(triggerText()).toBe(expected);
+      }
+    );
+
+    it("selects nothing in the menu, since nothing matches", async () => {
+      withValue({ id: null, name: "Ann" });
+
+      await userEvent.click(trigger());
+
+      expect(options().every((o) => o.dataset.state === "unselected")).toBe(true);
+    });
+  });
+
+  describe("the developer warning", () => {
+    const warn = () => vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    it("warns when a value matches no option", () => {
+      const spy = warn();
+
+      render(
+        <Select value={{ id: 7, name: "Ann" } as never} onChange={() => {}}>
+          <SelectOption value="apple" label="Apple" />
+        </Select>
+      );
+
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining("matches no SelectOption"));
+      spy.mockRestore();
+    });
+
+    it("stays quiet when an option matches", () => {
+      const spy = warn();
+
+      render(
+        <Select value="apple" onChange={() => {}}>
+          <SelectOption value="apple" label="Apple" />
+        </Select>
+      );
+
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it.each([["null", null], ["undefined", undefined], ["an empty string", ""]])(
+      "stays quiet for %s, which just means nothing is chosen",
+      (_label, value) => {
+        const spy = warn();
+
+        render(
+          <Select value={value as never} onChange={() => {}}>
+            <SelectOption value="apple" label="Apple" />
+          </Select>
+        );
+
+        expect(spy).not.toHaveBeenCalled();
+        spy.mockRestore();
+      }
+    );
+
+    it("stays quiet in multiple mode", () => {
+      const spy = warn();
+
+      render(
+        <Select multiple value={["ghost"] as never} onChange={() => {}}>
+          <SelectOption value="apple" label="Apple" />
+        </Select>
+      );
+
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+  });
+
+  describe("a matching option always wins", () => {
+    const cases: [string, unknown][] = [
+      ["an empty string", ""],
+      ["null", null],
+      ["an object whose properties are all nil", { id: null, name: null }],
+      ["an empty object", {}]
+    ];
+
+    cases.forEach(([label, value]) => {
+      it(`shows the option label for ${label}`, () => {
+        render(
+          <Select value={value as never} placeholder="Select option" onChange={() => {}}>
+            <SelectOption value={value as never} label="None" />
+            <SelectOption value="apple" label="Apple" />
+          </Select>
+        );
+
+        expect(trigger()).toHaveTextContent("None");
+        expect(trigger().querySelector("[data-placeholder]")).toBeNull();
+      });
+    });
+  });
+
   describe("keyboard", () => {
     it("opens the menu when the search input takes focus", async () => {
       render(<Fruits />);
