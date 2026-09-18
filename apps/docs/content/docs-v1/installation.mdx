@@ -127,3 +127,36 @@ function App() {
 
 export default App;
 ```
+
+## AI Agent Skill
+
+If you build with an AI coding agent, install the GeckoUI skill so it knows this
+library's components, props and theming without being told each time.
+
+```bash
+npx skills add https://github.com/geckoui/skills/tree/v1/skills/geckoui
+```
+
+The `tree/v1` part matters. It pins the install to the v1 branch, which is recorded in
+`skills-lock.json` in your project:
+
+```json title="skills-lock.json"
+{
+  "skills": {
+    "geckoui": {
+      "source": "geckoui/skills",
+      "ref": "v1",
+      "skillPath": "skills/geckoui/SKILL.md"
+    }
+  }
+}
+```
+
+So `npx skills update` keeps you on v1 and picks up corrections to the v1 skill, rather
+than moving you to documentation for a version you are not running.
+
+The installer works with Claude Code, Cursor, Codex, Copilot, Gemini CLI, Zed and others,
+and asks which to install to. Commit `skills-lock.json` so your team gets the same skill.
+
+Dropping the `tree/v1` path installs the latest skill instead, which documents v2 and does
+not match this version.
