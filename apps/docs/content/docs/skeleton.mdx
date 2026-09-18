@@ -10,7 +10,7 @@ import { SkeletonBasicExample, SkeletonShapesExample, SkeletonAnimationsExample,
 
 A placeholder that holds the space content will take while it loads.
 
-Size it with `className` the way you would size the real thing, so the page does not move when the content arrives. That is the whole job: a spinner says something is happening, a skeleton says what shape it will be.
+Size it with `className` the way you would size the real thing, so the page does not move when the content arrives.
 
 ## Installation
 
@@ -29,7 +29,7 @@ import { Skeleton } from '@geckoui/geckoui';
 <Skeleton lines={3} /> {/* a paragraph */}
 ```
 
-The last line of a multi-line block is drawn short. That is what makes a stack of bars read as text rather than as a table.
+The last line of a multi-line block is drawn short.
 
 ## Props API
 
@@ -57,9 +57,7 @@ The last line of a multi-line block is drawn short. That is what makes a stack o
 <Skeleton lines={2} />
 ```
 
-There are no `width` and `height` props. Size a skeleton the same way you size the element it stands in for, so the two cannot drift apart.
-
-A `text` skeleton takes its height from the current font size, so `<Skeleton />` on its own already matches the line it replaces without being measured.
+Size a skeleton through `className`. A `text` skeleton takes its height from the current font size.
 
 ### Animation
 
@@ -73,7 +71,7 @@ A `text` skeleton takes its height from the current font size, so `<Skeleton />`
 <Skeleton animation="none" shape="rounded" className="h-16 w-full" />
 ```
 
-`pulse` fades the whole bar, `wave` sweeps a highlight across it. Both are dropped under `prefers-reduced-motion`, so `none` is for when you want it still for everyone.
+`pulse` fades the whole bar, `wave` sweeps a highlight across it. Both are dropped under `prefers-reduced-motion`.
 
 ### Swapping in the real content
 
@@ -95,15 +93,7 @@ A `text` skeleton takes its height from the current font size, so `<Skeleton />`
 </Skeleton>
 ```
 
-This replaces the ternary that would otherwise appear at every call site:
-
-```tsx
-{isLoading ? <Skeleton lines={2} /> : <p>{user.bio}</p>}
-```
-
-Children are **never rendered while loading**, so `user.bio` is not read until `user` exists. Nothing inside needs to guard against data that has not arrived. Once loading is over the wrapper is gone too, leaving only your own markup.
-
-Because you give the skeleton and the content the same size, the layout does not shift when it flips.
+Children are **never rendered while loading**, so `user.bio` is not read until `user` exists. Once loading is over the wrapper is gone too, leaving only your own markup.
 
 ## Styling with CSS
 
@@ -127,8 +117,6 @@ Because you give the skeleton and the content the same size, the layout does not
 <Preview>
   <SkeletonThemedExample />
 </Preview>
-
-The highlight is a translucent white rather than a surface token. Every surface token below the base one is darker in dark mode, so a token-based highlight would read as a shadow there. White works against both.
 
 ### Class names and data attributes
 
@@ -159,9 +147,9 @@ The same works for `SkeletonAnimationMap`.
 
 ## Accessibility
 
-The placeholder is marked `aria-busy="true"` and has no role of its own. There is no text to read, and giving every placeholder a `status` role would make a loading page announce itself once per placeholder.
+The placeholder is marked `aria-busy="true"` and has no role of its own.
 
-If a whole region is loading, put the announcement on the region rather than on each skeleton:
+To announce a loading region, put the announcement on the region rather than on each skeleton:
 
 ```tsx
 <section aria-busy={isLoading} aria-live="polite">
