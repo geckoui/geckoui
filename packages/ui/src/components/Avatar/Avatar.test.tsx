@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -62,7 +62,7 @@ describe("Avatar", () => {
     it("falls back to the initials when the image fails to load", async () => {
       render(<Avatar name="Ada Lovelace" src="/gone.png" />);
 
-      screen.getByRole("img").dispatchEvent(new Event("error"));
+      fireEvent.error(screen.getByRole("img"));
 
       expect(await screen.findByText("AL")).toBeInTheDocument();
     });
@@ -70,7 +70,7 @@ describe("Avatar", () => {
     it("tries again when a new src arrives, so one dead url does not hide the next", async () => {
       const { rerender } = render(<Avatar name="Ada Lovelace" src="/gone.png" />);
 
-      screen.getByRole("img").dispatchEvent(new Event("error"));
+      fireEvent.error(screen.getByRole("img"));
 
       expect(await screen.findByText("AL")).toBeInTheDocument();
 
