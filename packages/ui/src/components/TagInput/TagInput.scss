@@ -1,0 +1,140 @@
+@import "../../mixins.scss";
+
+/*
+ * Taken from the Select styles rather than sharing them. The two look alike on purpose, but
+ * a TagInput is not a Select, and tying them together would mean neither could move without
+ * the other.
+ */
+.GeckoUITagInputWrapper {
+  --gecko-tag-input-menu-max-height: 15rem;
+  --gecko-tag-input-z: 10;
+
+  @apply relative w-full;
+}
+
+.GeckoUITagInput {
+  @include base-reset;
+
+  @apply border-border-secondary text-text-primary relative flex min-h-10 w-full items-start gap-2 rounded-md border px-3 py-1.5;
+
+  &[data-state="enabled"] {
+    @apply cursor-text;
+
+    &:hover,
+    &:focus-within {
+      @apply border-primary-400;
+    }
+  }
+
+  &[data-state="disabled"] {
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+  }
+
+  /*
+   * Stated for the focused state too. `[data-state="enabled"]:focus-within` outweighs a
+   * bare `[data-error]`, so without this the border goes back to blue the moment the field
+   * is used, which is exactly when the error matters most.
+   */
+  &[data-error],
+  &[data-error]:focus-within {
+    @apply border-red-500;
+  }
+
+  &[data-error]:hover {
+    @apply border-red-600;
+  }
+
+  &__tags {
+    @apply flex min-w-0 flex-1 flex-wrap items-center gap-1;
+  }
+
+  &__tag {
+    @apply border-border-secondary/70 bg-surface-tertiary text-text-primary inline-flex items-center gap-1 rounded border px-2 py-1 text-left text-xs;
+
+    &__remove {
+      @include button-reset;
+
+      @apply flex h-4 w-4 cursor-pointer items-center justify-center rounded-sm;
+
+      &:hover .GeckoUI-icon__clear {
+        @apply bg-text-secondary;
+      }
+    }
+  }
+
+  &[data-state="disabled"] &__tag {
+    @apply text-text-disabled opacity-70;
+  }
+
+  /*
+   * Copied from the Select search box: an inline grid whose `::after` mirrors the typed
+   * text, so the field measures its own content. With a fixed minimum width it would wrap
+   * onto a new line while there was still room beside the last tag.
+   */
+  &__placeholder {
+    @apply text-text-placeholder self-center py-1 text-sm;
+
+    &[data-hidden] {
+      @apply hidden;
+    }
+  }
+
+  &__field {
+    @apply inline-grid flex-auto;
+
+    grid-template-columns: 0 min-content;
+    color: inherit;
+
+    &::after {
+      content: attr(data-keyword) " ";
+      grid-area: 1 / 2;
+      visibility: hidden;
+      white-space: pre;
+      font: inherit;
+      min-width: 2px;
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
+  }
+
+  &__input {
+    @apply text-text-primary w-full min-w-0 border-none bg-transparent py-1 text-sm outline-none;
+
+    grid-area: 1 / 1 / 2 / 3;
+
+    &:disabled {
+      @apply cursor-not-allowed;
+    }
+  }
+
+  &__prefix,
+  &__suffix {
+    @apply flex items-center self-center;
+  }
+
+  &__menu {
+    @include base-reset;
+    @include scrollbar;
+
+    @apply bg-surface-primary ring-border-primary flex w-full min-w-0 flex-col gap-[1px] overflow-x-hidden overflow-y-auto overscroll-contain rounded-md p-2 shadow-lg ring-1;
+
+    z-index: var(--gecko-tag-input-z);
+    max-height: var(--gecko-tag-input-menu-max-height);
+    scrollbar-gutter: stable overlay;
+  }
+
+  &__option {
+    @include button-reset;
+
+    @apply flex min-w-0 cursor-pointer scroll-m-2 flex-row items-center justify-between gap-3 rounded py-2 pr-4 pl-3 text-left wrap-anywhere;
+
+    &[data-focused] {
+      @apply bg-surface-hover-strong;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+}

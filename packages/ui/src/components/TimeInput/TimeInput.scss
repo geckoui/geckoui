@@ -43,8 +43,18 @@
     }
   }
 
-  &[data-error] {
-    @apply border-red-500 hover:border-red-600;
+  /*
+   * Stated for the focused state too. `[data-state="enabled"]:focus-within` outweighs a
+   * bare `[data-error]`, so without this the border goes back to blue the moment the field
+   * is used, which is exactly when the error matters most.
+   */
+  &[data-error],
+  &[data-error]:focus-within {
+    @apply border-red-500;
+  }
+
+  &[data-error]:hover {
+    @apply border-red-600;
   }
 
   /* the segments give the row to the placeholder until there is something to show */
