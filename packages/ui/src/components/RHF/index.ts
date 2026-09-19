@@ -10,6 +10,8 @@ export * from "./RHFSwitch";
 export * from "./RHFRadio";
 export * from "./RHFDateInput";
 export * from "./RHFTimeInput";
+export * from "./RHFSlider";
+export * from "./RHFRangeSlider";
 export * from "./RHFDateRangeInput";
 export * from "./RHFFileInput";
 export * from "./RHFOTPInput";

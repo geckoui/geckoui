@@ -1,0 +1,224 @@
+---
+title: Slider
+description: Pick a number, or a span, by dragging
+---
+
+import { SliderBasicExample, SliderChangeEndExample, SliderMarksExample, SliderRangeExample, SliderColorsExample, SliderSizesExample, SliderStepExample } from '@/components/examples/slider-examples';
+
+# Slider
+
+Pick a number, or a span, by dragging.
+
+## Installation
+
+```tsx
+import { Slider, RangeSlider } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <SliderBasicExample />
+</Preview>
+
+```tsx
+const [volume, setVolume] = useState(40);
+
+<Slider value={volume} onChange={setVolume} label={({ value }) => `${value}%`} />
+```
+
+## Props API
+
+### Slider
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | required | Where the thumb sits |
+| `onChange` | `(value: number) => void` | required | Called on every move |
+| `onChangeEnd` | `(value: number) => void` | - | Called once, when the drag or key press finishes |
+| `min` | `number` | `0` | Bottom of the range |
+| `max` | `number` | `100` | Top of the range |
+| `step` | `number` | `1` | How far one move goes |
+| `marks` | `SliderMark[]` | - | Ticks along the track |
+| `label` | `ReactNode \| ({ value, index }) => ReactNode` | - | Bubble above the thumb while it is in use |
+| `color` | `keyof SliderColorMap` | `'primary'` | Accent on the filled part |
+| `size` | `keyof SliderSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `disabled` | `boolean` | `false` | |
+| `aria-label` | `string` | - | Names the thumb |
+| `className` | `string` | - | CSS class for the slider |
+
+### RangeSlider
+
+Everything above except `value`, `onChange`, `onChangeEnd` and `aria-label`, plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `[number, number]` | required | Where the two thumbs sit, lower first |
+| `onChange` | `(value: [number, number]) => void` | required | Called on every move |
+| `onChangeEnd` | `(value: [number, number]) => void` | - | Called once, on release |
+| `minGap` | `number` | `0` | How close the thumbs may get |
+| `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | Names each thumb |
+
+## Examples
+
+### onChange against onChangeEnd
+
+<Preview>
+  <SliderChangeEndExample />
+</Preview>
+
+```tsx
+<Slider value={volume} onChange={setVolume} onChangeEnd={save} />
+```
+
+`onChange` fires all the way through a drag, which is what keeps the slider controlled and following the pointer. `onChangeEnd` fires once, when it is let go or a key press finishes.
+
+Put anything expensive in `onChangeEnd`: a request, a recalculation, a write to storage.
+
+### Steps and marks
+
+<Preview>
+  <SliderMarksExample />
+</Preview>
+
+```tsx
+<Slider
+  value={volume}
+  onChange={setVolume}
+  step={25}
+  marks={[
+    { value: 0, label: 'Off' },
+    { value: 25 },
+    { value: 50, label: 'Half' },
+    { value: 75 },
+    { value: 100, label: 'Max' }
+  ]}
+/>
+```
+
+A mark with no `label` is a tick on its own. Marks outside `min` and `max` are dropped.
+
+Marks and `step` are separate: marks are where the labels go, `step` is what the thumb lands on.
+
+### Fractional steps
+
+<Preview>
+  <SliderStepExample />
+</Preview>
+
+```tsx
+<Slider value={value} onChange={setValue} min={0} max={10} step={0.1} />
+```
+
+Steps are measured from `min` rather than from zero, so `min={1} step={5}` gives 1, 6, 11 and not 0, 5, 10. The result is rounded to the step's own precision, so `0.1` steps give `0.3` rather than `0.30000000000000004`.
+
+### A span
+
+<Preview>
+  <SliderRangeExample />
+</Preview>
+
+```tsx
+const [price, setPrice] = useState<[number, number]>([120, 380]);
+
+<RangeSlider
+  value={price}
+  onChange={setPrice}
+  min={0}
+  max={500}
+  step={10}
+  minGap={50}
+  label={({ value }) => `$${value}`}
+/>
+```
+
+The thumbs stop at each other rather than swapping, so the lower one stays the lower one and `value` is always in order. `minGap` holds them further apart than that.
+
+Pressing the track moves whichever thumb is nearer.
+
+### Colours
+
+<Preview>
+  <SliderColorsExample />
+</Preview>
+
+### Sizes
+
+<Preview>
+  <SliderSizesExample />
+</Preview>
+
+## The keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>←</kbd> <kbd>↓</kbd> | Back one step |
+| <kbd>→</kbd> <kbd>↑</kbd> | On one step |
+| <kbd>Shift</kbd> + arrow | Ten steps |
+| <kbd>Page Up</kbd> <kbd>Page Down</kbd> | A tenth of the range |
+| <kbd>Home</kbd> <kbd>End</kbd> | To either end |
+
+Every key press also fires `onChangeEnd`, so a keyboard user commits the same way a dragging one does.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-slider-accent` | per `color` | Filled track and thumb border |
+| `--gecko-slider-track` | `--color-surface-hover-strong` | The empty part |
+| `--gecko-slider-track-height` | per `size` | Track thickness |
+| `--gecko-slider-thumb-size` | per `size` | Thumb width and height |
+| `--gecko-slider-thumb-bg` | `--color-surface-primary` | Inside the thumb |
+| `--gecko-slider-radius` | `9999px` | Track and thumb corners |
+| `--gecko-slider-mark-size` | `0.25rem` | Tick size |
+
+```css
+.GeckoUISlider {
+  --gecko-slider-track-height: 0.75rem;
+  --gecko-slider-radius: 0.25rem;
+}
+```
+
+### Class names and data attributes
+
+- `GeckoUISlider` - The slider, with `data-color`, `data-size` and `data-disabled`
+- `GeckoUISlider__track` - The groove
+- `GeckoUISlider__fill` - The filled part
+- `GeckoUISlider__thumb` - One thumb, with `data-dragging`
+- `GeckoUISlider__label` - The bubble
+- `GeckoUISlider__mark` - One tick, with `data-filled` when it is behind the thumb
+- `GeckoUISlider__mark-label` - The text under a tick
+
+## Adding your own colours
+
+Both axes are extensible maps, so you can add keys through module augmentation and style them with CSS:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface SliderColorMap {
+    brand: unknown;
+  }
+}
+
+<Slider value={60} onChange={setValue} color="brand" />
+```
+
+```css
+.GeckoUISlider[data-color="brand"] {
+  --gecko-slider-accent: oklch(0.62 0.21 320);
+}
+```
+
+## Accessibility
+
+Each thumb is a `role="slider"` in the tab order, carrying `aria-valuemin`, `aria-valuemax` and `aria-valuenow`.
+
+On a `RangeSlider`, each thumb reports **its own** room rather than the whole track: the lower thumb's `aria-valuemax` is wherever the upper one is. A screen reader then says how far this thumb can actually go.
+
+Name a single slider with `aria-label`, and the two ends of a range with `thumbLabels`.
+
+## Related Components
+
+- [RHFSlider](/docs/rhf-slider) - Both sliders, wired to React Hook Form
+- [CounterInput](/docs/counter-input) - For a number typed rather than dragged
+- [Progress](/docs/progress) - For showing a number rather than picking one
