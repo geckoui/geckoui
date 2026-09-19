@@ -1,0 +1,85 @@
+---
+title: RHFTimeInput
+description: TimeInput wired to React Hook Form
+---
+
+# RHFTimeInput
+
+[TimeInput](/docs/time-input) wired to React Hook Form.
+
+## Installation
+
+```tsx
+import { RHFTimeInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFTimeInput } from '@geckoui/geckoui';
+
+function BookingForm() {
+  const methods = useForm({ defaultValues: { startsAt: '' } });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(save)}>
+        <RHFTimeInput name="startsAt" rules={{ required: 'Pick a time' }} />
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+The field holds the 24 hour string, whatever `format` shows, so a resolver can compare two times without parsing them:
+
+```tsx
+<RHFTimeInput name="startsAt" format="hh:mm A" />
+<RHFTimeInput
+  name="endsAt"
+  format="hh:mm A"
+  rules={{
+    validate: (endsAt, { startsAt }) => endsAt > startsAt || 'Must be after the start'
+  }}
+/>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | required | The field path |
+| `control` | `Control` | - | Taken from `FormProvider` when left out |
+| `rules` | `RegisterOptions` | - | Validation rules |
+| `onChange` | `(time: string \| null) => void` | - | Called alongside the form update |
+| ...rest | `TimeInputProps` | - | Everything [TimeInput](/docs/time-input) takes, except `hasError` |
+
+`hasError` is driven by the field's own error state, so it is not yours to set.
+
+## Errors
+
+The field is marked in error whenever React Hook Form has one for it. Pair it with [RHFError](/docs/rhf-error) to show the message:
+
+```tsx
+<RHFTimeInput name="startsAt" rules={{ required: 'Pick a time' }} />
+<RHFError name="startsAt" />
+```
+
+## Ruling times out
+
+`disabledTime` works as it does on [TimeInput](/docs/time-input), and the field holds `null` while the rule turns the time down. Pair it with a rule so the form says why:
+
+```tsx
+<RHFTimeInput
+  name="startsAt"
+  disabledTime={({ hour }) => hour < 9 || hour >= 17}
+  rules={{ required: 'Pick a time inside working hours' }}
+/>
+```
+
+## Related Components
+
+- [TimeInput](/docs/time-input) - The field on its own
+- [RHFDateInput](/docs/rhf-date-input) - The date half
+- [RHFError](/docs/rhf-error) - Shows the message
