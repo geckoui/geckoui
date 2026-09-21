@@ -1,0 +1,174 @@
+---
+title: Breadcrumb
+description: The trail of pages above the one you are on
+---
+
+import { BreadcrumbBasicExample, BreadcrumbCollapsedExample, BreadcrumbSeparatorExample, BreadcrumbIconsExample, BreadcrumbCurrentExample, BreadcrumbSizesExample } from '@/components/examples/breadcrumb-examples';
+
+# Breadcrumb
+
+The trail of pages above the one you are on.
+
+## Installation
+
+```tsx
+import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BreadcrumbBasicExample />
+</Preview>
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbItem href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem href="/settings">Settings</BreadcrumbItem>
+  <BreadcrumbItem>Profile</BreadcrumbItem>
+</Breadcrumb>
+```
+
+The last crumb is the page you are on, so it is drawn as text rather than a link and carries `aria-current="page"`.
+
+## Props API
+
+### Breadcrumb
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `separator` | `ReactNode` | a chevron | What goes between the crumbs |
+| `maxItems` | `number` | - | How many to show before the middle is folded away |
+| `itemsBeforeCollapse` | `number` | `1` | How many to keep at the start when folded |
+| `itemsAfterCollapse` | `number` | `1` | How many to keep at the end when folded |
+| `expandLabel` | `string` | `'Show the rest'` | What the ellipsis is called |
+| `menuPlacement` | `Placement` | `'bottom-start'` | Where the folded list opens |
+| `menuClassName` | `string` | - | CSS class for that list |
+| `aria-label` | `string` | `'Breadcrumb'` | What the whole trail is called |
+| `size` | `keyof BreadcrumbSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `className` | `string` | - | CSS class for the nav |
+
+### BreadcrumbItem
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | - | Where it goes. Without one the crumb is text |
+| `current` | `boolean` | last crumb | Whether this is the page you are on |
+| `asChild` | `boolean` | `false` | Hand the crumb to your own element |
+| ...rest | `AnchorHTMLAttributes` | - | All standard anchor attributes |
+
+## Examples
+
+### A long trail
+
+<Preview>
+  <BreadcrumbCollapsedExample />
+</Preview>
+
+```tsx
+<Breadcrumb maxItems={3}>…</Breadcrumb>
+<Breadcrumb maxItems={4} itemsBeforeCollapse={2} itemsAfterCollapse={2}>…</Breadcrumb>
+```
+
+Past `maxItems` the middle is folded away behind an ellipsis, which opens it as a list. The ends are what is kept, because they are what tell you where you started and where you are.
+
+The folded crumbs open as a **list rather than unfolding in place**. On a narrow screen unfolding a deep trail only wraps it over three lines, which is no easier to read than the ellipsis was.
+
+### Separators
+
+<Preview>
+  <BreadcrumbSeparatorExample />
+</Preview>
+
+```tsx
+<Breadcrumb separator="/">…</Breadcrumb>
+<Breadcrumb separator={<span>•</span>}>…</Breadcrumb>
+```
+
+### Icons
+
+<Preview>
+  <BreadcrumbIconsExample />
+</Preview>
+
+```tsx
+<BreadcrumbItem href="/">
+  <HomeIcon /> Home
+</BreadcrumbItem>
+```
+
+There is no icon prop. An icon is part of the crumb, like anything else in it.
+
+### Your own link
+
+```tsx
+<BreadcrumbItem asChild>
+  <Link href="/settings">Settings</Link>
+</BreadcrumbItem>
+```
+
+`asChild` hands the crumb to your element rather than rendering an anchor, so a router link keeps its own behaviour. The child keeps its class name, with the crumb's added alongside.
+
+### When the last crumb is not where you are
+
+<Preview>
+  <BreadcrumbCurrentExample />
+</Preview>
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbItem href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem current>Settings</BreadcrumbItem>
+  <BreadcrumbItem href="/settings/profile">Profile</BreadcrumbItem>
+</Breadcrumb>
+```
+
+`current` **moves** the marker rather than adding a second one: the last crumb gives it up and goes back to being a link. There is only ever one page you are on.
+
+### Sizes
+
+<Preview>
+  <BreadcrumbSizesExample />
+</Preview>
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-breadcrumb-link` | `--color-text-primary` | The crumbs you can go to |
+| `--gecko-breadcrumb-current` | `--color-text-tertiary` | The page you are on |
+| `--gecko-breadcrumb-separator` | `--color-text-placeholder` | What goes between |
+| `--gecko-breadcrumb-gap` | per `size` | Space around each separator |
+| `--gecko-breadcrumb-separator-size` | per `size` | The chevron |
+
+The links are the loud ones and the current page is quiet, with the separators quieter again. You already know where you are; what the trail is for is the way back.
+
+```css
+.GeckoUIBreadcrumb {
+  --gecko-breadcrumb-link: var(--color-primary-600);
+}
+```
+
+The list wraps rather than overflowing, because a trail running off the edge of the screen tells you nothing.
+
+### Class names and data attributes
+
+- `GeckoUIBreadcrumb` - The nav, with `data-size`
+- `GeckoUIBreadcrumb__list` - The ordered list
+- `GeckoUIBreadcrumb__crumb` - One item
+- `GeckoUIBreadcrumb__link` - The crumb itself, with `data-current` on the page you are on
+- `GeckoUIBreadcrumb__separator` - What goes between
+- `GeckoUIBreadcrumb__expand` - The ellipsis
+- `GeckoUIBreadcrumb__menu` - The folded crumbs, with `__item` for each
+
+## Accessibility
+
+It renders a named `<nav>` around an `<ol>`, which is what a screen reader expects of a trail: the list gives the order and the depth without the separators being read out, so they are hidden.
+
+The page you are on carries `aria-current="page"`, and there is only ever one. The ellipsis says whether it is open.
+
+## Related Components
+
+- [Tabs](/docs/tabs) - For moving between pages at the same level
+- [Pagination](/docs/pagination) - For moving through a list
+- [Menu](/docs/menu) - For actions rather than a trail

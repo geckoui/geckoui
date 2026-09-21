@@ -25,6 +25,7 @@ export * from "./TimeInput";
 export * from "./Slider";
 export * from "./TagInput";
 export * from "./Rating";
+export * from "./Breadcrumb";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";
