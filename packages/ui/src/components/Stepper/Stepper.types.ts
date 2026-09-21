@@ -40,11 +40,39 @@ export interface StepperProps extends Omit<HTMLAttributes<HTMLElement>, "onChang
   /** Which way the steps run.(Default: 'horizontal') */
   orientation?: keyof StepperOrientationMap;
 
+  /**
+   * What goes between the steps. A line that fills as you go, unless you give something
+   * else — an arrow, a dot, whatever suits.
+   * */
+  separator?: ReactNode;
+
   size?: keyof StepperSizeMap;
   className?: string;
 
   /** What the whole thing is called.(Default: 'Progress') */
   "aria-label"?: string;
+}
+
+/** Everything a step knows about itself, for drawing one yourself. */
+export interface StepRenderArgs {
+  value: string;
+
+  /** Which number it is, counting from one. */
+  index: number;
+
+  status: StepStatus;
+
+  /** Whether picking it would go anywhere. */
+  reachable: boolean;
+
+  disabled: boolean;
+
+  /** Go to this step. Does nothing when it cannot be reached. */
+  select: () => void;
+
+  /** What was passed as the step's name and second line. */
+  children: ReactNode;
+  description: ReactNode;
 }
 
 export interface StepProps extends Omit<HTMLAttributes<HTMLButtonElement>, "children"> {
@@ -68,4 +96,26 @@ export interface StepProps extends Omit<HTMLAttributes<HTMLButtonElement>, "chil
 
   /** Cannot be picked, whatever else is true. */
   disabled?: boolean;
+
+  /**
+   * Draw the step yourself. Everything it knows is handed over and nothing of its own is
+   * rendered — no marker, no classes, no styles to work around.
+   *
+   * The list item and the joint to the next step stay, so it is still a list and still
+   * joined up. Reach for this when the design is not a marker beside a label; the props
+   * above are quicker when it is.
+   *
+   * @example
+   * ```tsx
+   * <Step
+   *   value="dev"
+   *   render={({ index, status, select }) => (
+   *     <button onClick={select} data-current={status === "current"}>
+   *       <span className="chip">{index}</span> Dev
+   *     </button>
+   *   )}
+   * />
+   * ```
+   * */
+  render?: (step: StepRenderArgs) => ReactNode;
 }

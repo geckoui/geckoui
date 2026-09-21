@@ -35,14 +35,50 @@ const Step = ({
   status,
   icon,
   disabled = false,
+  render,
   className,
   onClick,
   ...rest
 }: StepProps) => {
-  const { statusOf, isReachable, select, indexOf, interactive } = useStepper();
+  const { statusOf, isReachable, select, indexOf, interactive, separator } = useStepper();
 
   const state = status ?? statusOf(value);
   const reachable = !disabled && isReachable(value) && state !== "current";
+
+  const pick = () => {
+    if (reachable) select(value);
+  };
+
+  const joint = separator ? (
+    <span className="GeckoUIStepper__separator" aria-hidden="true">
+      {separator}
+    </span>
+  ) : (
+    /* the run between one marker and the next, filled as far as you have got */
+    <span className="GeckoUIStepper__line" aria-hidden="true" />
+  );
+
+  /*
+   * Handed over whole. The list item and the joint stay, so it is still a list and still
+   * joined up, but nothing else of the step's own is there to be worked around.
+   */
+  if (render) {
+    return (
+      <li className="GeckoUIStepper__step" data-status={state}>
+        {render({
+          value,
+          index: indexOf(value),
+          status: state,
+          reachable,
+          disabled,
+          select: pick,
+          children,
+          description
+        })}
+        {joint}
+      </li>
+    );
+  }
 
   const marker =
     icon ??
@@ -61,7 +97,7 @@ const Step = ({
         className={classNames("GeckoUIStepper__button", className)}
         onClick={(event) => {
           onClick?.(event);
-          if (reachable) select(value);
+          pick();
         }}
         {...rest}>
         <span className="GeckoUIStepper__marker" aria-hidden="true">
@@ -74,8 +110,7 @@ const Step = ({
         </span>
       </button>
 
-      {/* the run between one marker and the next, filled as far as you have got */}
-      <span className="GeckoUIStepper__line" aria-hidden="true" />
+      {joint}
     </li>
   );
 };

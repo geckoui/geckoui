@@ -41,6 +41,7 @@ const [volume, setVolume] = useState(40);
 | `step` | `number` | `1` | How far one move goes |
 | `marks` | `SliderMark[]` | - | Ticks along the track |
 | `label` | `ReactNode \| ({ value, index }) => ReactNode` | - | Bubble above the thumb while it is in use |
+| `renderThumb` | `({ value, index, percent, dragging, focused }) => ReactNode` | - | Draw the thumb yourself |
 | `color` | `keyof SliderColorMap` | `'primary'` | Accent on the filled part |
 | `size` | `keyof SliderSizeMap` | `'md'` | `sm`, `md` or `lg` |
 | `disabled` | `boolean` | `false` | |
@@ -135,6 +136,22 @@ const [price, setPrice] = useState<[number, number]>([120, 380]);
 The thumbs stop at each other rather than swapping, so the lower one stays the lower one and `value` is always in order. `minGap` holds them further apart than that.
 
 Pressing the track moves whichever thumb is nearer.
+
+### A thumb of your own
+
+```tsx
+<Slider
+  value={volume}
+  onChange={setVolume}
+  renderThumb={({ value, dragging }) => (
+    <span className={dragging ? 'handle handle--held' : 'handle'}>{value}</span>
+  )}
+/>
+```
+
+`renderThumb` draws **inside** the thumb rather than in place of it. The drag, the arrow keys and the `role="slider"` all stay on the element that is positioned, so handing over what it looks like does not hand over how it works.
+
+The component's own circle is dropped when you do, so there is nothing left behind whatever you draw.
 
 ### Colours
 

@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { type ReactNode, createContext, useContext } from "react";
 
 import type { StepStatus } from "./Stepper.types";
 
@@ -13,6 +13,9 @@ export interface StepperContextValue {
 
   /** Whether the stepper is something to use rather than only to read. */
   interactive: boolean;
+
+  /** What goes between the steps, when the line is not wanted. */
+  separator?: ReactNode;
 }
 
 export const StepperContext = createContext<StepperContextValue | null>(null);

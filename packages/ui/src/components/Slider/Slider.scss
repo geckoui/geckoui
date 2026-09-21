@@ -103,6 +103,14 @@
     &[data-dragging] {
       @apply cursor-grabbing;
     }
+
+    /*
+     * A thumb of your own gets the position, the drag and the keyboard, and none of the
+     * looks: no circle left behind whatever is drawn in its place.
+     */
+    &[data-custom] {
+      @apply h-auto w-auto border-0 bg-transparent shadow-none;
+    }
   }
 
   &[data-disabled] &__thumb {

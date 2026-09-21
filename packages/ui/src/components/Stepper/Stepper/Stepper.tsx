@@ -25,6 +25,7 @@ const Stepper = ({
   children,
   linear = true,
   orientation = "horizontal",
+  separator,
   size = "md",
   className,
   "aria-label": ariaLabel = "Progress",
@@ -38,6 +39,7 @@ const Stepper = ({
     <StepperContext.Provider
       value={{
         interactive,
+        separator,
         indexOf: (step) => values.indexOf(step) + 1,
         statusOf: (step) => statusAt(values.indexOf(step), currentIndex),
         isReachable: (step) =>

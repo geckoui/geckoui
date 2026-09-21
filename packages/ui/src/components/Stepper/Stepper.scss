@@ -7,6 +7,14 @@
   --gecko-stepper-line-done: var(--color-primary-600);
   --gecko-stepper-line-width: 2px;
 
+  /*
+   * The marker reads these rather than having its fill written into a rule, so another look
+   * is a handful of variables on a `data-status` instead of a more specific selector.
+   */
+  --gecko-stepper-marker-bg: transparent;
+  --gecko-stepper-marker-text: currentcolor;
+  --gecko-stepper-marker-border: currentcolor;
+
   --gecko-stepper-upcoming: var(--color-text-tertiary);
   --gecko-stepper-current: var(--color-primary-600);
   --gecko-stepper-complete: var(--color-primary-600);
@@ -40,8 +48,9 @@
   &__step {
     @apply relative flex min-w-0;
 
-    /* the last step has nothing to join, so it keeps no line */
-    &:last-child .GeckoUIStepper__line {
+    /* the last step has nothing to join, so it keeps neither line nor separator */
+    &:last-child .GeckoUIStepper__line,
+    &:last-child .GeckoUIStepper__separator {
       @apply hidden;
     }
   }
@@ -85,7 +94,9 @@
 
     width: var(--gecko-stepper-marker-size);
     height: var(--gecko-stepper-marker-size);
-    border-color: currentcolor;
+    border-color: var(--gecko-stepper-marker-border);
+    background: var(--gecko-stepper-marker-bg);
+    color: var(--gecko-stepper-marker-text);
     font-size: 0.8em;
 
     svg {
@@ -93,24 +104,18 @@
     }
   }
 
-  /*
-   * Done and current are filled in; what is still ahead is an outline. Each fill names its
-   * own colour rather than taking `currentcolor`: the text inside has to be the contrast
-   * colour, and a marker that reads `background: currentcolor` after that is white on white.
-   */
-  &__button[data-status="complete"] &__marker,
-  &__button[data-status="current"] &__marker {
-    @apply text-text-on-primary;
-
-    background: var(--gecko-stepper-current);
-    border-color: var(--gecko-stepper-current);
+  /* done and current are filled in; what is still ahead is an outline */
+  &__button[data-status="complete"],
+  &__button[data-status="current"] {
+    --gecko-stepper-marker-bg: var(--gecko-stepper-current);
+    --gecko-stepper-marker-border: var(--gecko-stepper-current);
+    --gecko-stepper-marker-text: var(--color-text-on-primary);
   }
 
-  &__button[data-status="error"] &__marker {
-    @apply text-text-on-primary;
-
-    background: var(--gecko-stepper-error);
-    border-color: var(--gecko-stepper-error);
+  &__button[data-status="error"] {
+    --gecko-stepper-marker-bg: var(--gecko-stepper-error);
+    --gecko-stepper-marker-border: var(--gecko-stepper-error);
+    --gecko-stepper-marker-text: var(--color-text-on-primary);
   }
 
   &__body {
@@ -127,6 +132,12 @@
 
   &__line {
     background: var(--gecko-stepper-line);
+  }
+
+  &__separator {
+    @apply flex shrink-0 items-center justify-center select-none;
+
+    color: var(--gecko-stepper-line);
   }
 
   /* the run behind you is filled, so progress reads at a glance */
@@ -150,6 +161,11 @@
     @apply h-0 min-w-4 flex-1;
 
     height: var(--gecko-stepper-line-width);
+  }
+
+  /* a given separator keeps its own size rather than stretching the way the line does */
+  &[data-orientation="horizontal"] &__step:has(> .GeckoUIStepper__separator) {
+    @apply flex-none;
   }
 
   /* ---- vertical ---- */

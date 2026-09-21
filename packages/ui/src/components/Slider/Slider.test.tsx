@@ -241,6 +241,65 @@ describe("Slider", () => {
     });
   });
 
+  describe("renderThumb", () => {
+    it("draws it yourself, and keeps how it works", async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <Slider
+          value={40}
+          onChange={onChange}
+          renderThumb={({ value, dragging }) => (
+            <span data-testid="handle" data-held={dragging || undefined}>
+              {value}
+            </span>
+          )}
+        />
+      );
+
+      expect(screen.getByTestId("handle")).toHaveTextContent("40");
+      // still the thing that is positioned, and still the slider a reader sees
+      expect(container.querySelector(".GeckoUISlider__thumb")).toHaveAttribute("data-custom", "");
+      expect(thumb()).toHaveAttribute("aria-valuenow", "40");
+
+      await userEvent.tab();
+      await userEvent.keyboard("{ArrowRight}");
+
+      expect(onChange).toHaveBeenLastCalledWith(41);
+    });
+
+    it("says when it is being dragged", () => {
+      const { container } = render(
+        <Slider
+          value={0}
+          onChange={() => {}}
+          renderThumb={({ dragging }) => (
+            <span data-testid="handle" data-held={dragging || undefined} />
+          )}
+        />
+      );
+      const track = sizeTrack(container);
+
+      expect(screen.getByTestId("handle")).not.toHaveAttribute("data-held");
+
+      fireEvent.pointerDown(track, { clientX: 100, pointerId: 1 });
+
+      expect(screen.getByTestId("handle")).toHaveAttribute("data-held", "true");
+    });
+
+    it("gives each end of a range its own", () => {
+      render(
+        <RangeSlider
+          value={[20, 60]}
+          onChange={() => {}}
+          renderThumb={({ index, value }) => <span data-testid={`h${index}`}>{value}</span>}
+        />
+      );
+
+      expect(screen.getByTestId("h0")).toHaveTextContent("20");
+      expect(screen.getByTestId("h1")).toHaveTextContent("60");
+    });
+  });
+
   describe("marks", () => {
     it("draws one tick each, with labels where there are any", () => {
       const { container } = render(

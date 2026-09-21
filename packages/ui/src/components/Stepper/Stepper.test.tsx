@@ -232,6 +232,104 @@ describe("Stepper", () => {
     });
   });
 
+  describe("render", () => {
+    it("hands the whole step over, keeping the list and the joint", () => {
+      const { container } = render(
+        <Stepper value="payment" onChange={() => {}}>
+          <Step value="cart" render={({ index }) => <b data-testid="mine">{index}</b>}>
+            cart
+          </Step>
+          <Step value="payment">payment</Step>
+        </Stepper>
+      );
+
+      expect(screen.getByTestId("mine")).toHaveTextContent("1");
+      // nothing of the step's own is drawn to be worked around
+      expect(container.querySelectorAll(".GeckoUIStepper__marker")).toHaveLength(1);
+      expect(container.querySelectorAll(".GeckoUIStepper__step")).toHaveLength(2);
+      expect(container.querySelectorAll(".GeckoUIStepper__line")).toHaveLength(2);
+    });
+
+    it("tells it where the step stands and whether it can be picked", () => {
+      const seen: unknown[] = [];
+
+      render(
+        <Stepper value="payment" onChange={() => {}}>
+          {STEPS.map((step) => (
+            <Step
+              key={step}
+              value={step}
+              render={(args) => {
+                seen.push({ value: args.value, status: args.status, reachable: args.reachable });
+                return <span>{args.value}</span>;
+              }}
+            />
+          ))}
+        </Stepper>
+      );
+
+      expect(seen).toEqual([
+        { value: "cart", status: "complete", reachable: true },
+        { value: "delivery", status: "complete", reachable: true },
+        { value: "payment", status: "current", reachable: false },
+        { value: "done", status: "upcoming", reachable: false }
+      ]);
+    });
+
+    it("goes to the step when its select is called", async () => {
+      const onChange = vi.fn();
+
+      render(
+        <Stepper value="payment" onChange={onChange}>
+          <Step
+            value="cart"
+            render={({ select }) => (
+              <button type="button" onClick={select}>
+                cart
+              </button>
+            )}
+          />
+          <Step value="payment">payment</Step>
+        </Stepper>
+      );
+
+      await userEvent.click(screen.getByRole("button", { name: "cart" }));
+
+      expect(onChange).toHaveBeenCalledWith("cart");
+    });
+
+    it("will not go somewhere it cannot reach, even when asked", async () => {
+      const onChange = vi.fn();
+
+      render(
+        <Stepper value="cart" onChange={onChange}>
+          <Step value="cart">cart</Step>
+          <Step
+            value="done"
+            render={({ select }) => (
+              <button type="button" onClick={select}>
+                done
+              </button>
+            )}
+          />
+        </Stepper>
+      );
+
+      await userEvent.click(screen.getByRole("button", { name: "done" }));
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("separator", () => {
+    it("takes one of its own in place of the line", () => {
+      const { container } = render(trail({ value: "cart", separator: "→" }));
+
+      expect(container.querySelectorAll(".GeckoUIStepper__separator")).toHaveLength(4);
+      expect(container.querySelectorAll(".GeckoUIStepper__line")).toHaveLength(0);
+    });
+  });
+
   it("shows a description under the name", () => {
     render(
       <Stepper value="cart">

@@ -3,7 +3,13 @@ import { useRef, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
-import type { SliderColorMap, SliderLabel, SliderMark, SliderSizeMap } from "../Slider.types";
+import type {
+  SliderColorMap,
+  SliderLabel,
+  SliderMark,
+  SliderSizeMap,
+  SliderThumb
+} from "../Slider.types";
 import { clamp, nearestThumb, percentOf, snapToStep, valueAtPercent } from "../Slider.utils";
 
 export interface SliderBaseProps {
@@ -19,6 +25,7 @@ export interface SliderBaseProps {
   step: number;
   marks?: SliderMark[];
   label?: ReactNode | ((thumb: SliderLabel) => ReactNode);
+  renderThumb?: (thumb: SliderThumb) => ReactNode;
   color: keyof SliderColorMap;
   size: keyof SliderSizeMap;
   disabled: boolean;
@@ -42,6 +49,7 @@ const SliderBase = ({
   step,
   marks,
   label,
+  renderThumb,
   color,
   size,
   disabled,
@@ -176,6 +184,7 @@ const SliderBase = ({
 
         {values.map((value, index) => {
           const showLabel = label !== undefined && (active === index || focused === index);
+          const percent = percentOf(value, min, max);
 
           return (
             <div
@@ -190,10 +199,24 @@ const SliderBase = ({
               aria-orientation="horizontal"
               data-dragging={active === index || undefined}
               className="GeckoUISlider__thumb"
-              style={{ left: `${percentOf(value, min, max)}%` }}
+              data-custom={renderThumb ? "" : undefined}
+              style={{ left: `${percent}%` }}
               onKeyDown={(event) => handleKeyDown(event, index)}
               onFocus={() => setFocused(index)}
               onBlur={() => setFocused(null)}>
+              {/*
+               * Drawn inside the thumb rather than in place of it: the drag, the keyboard
+               * and the aria all live on the element that is positioned, so handing over
+               * what it looks like does not hand over how it works.
+               */}
+              {renderThumb?.({
+                value,
+                index,
+                percent,
+                dragging: active === index,
+                focused: focused === index
+              })}
+
               {showLabel && (
                 <span className="GeckoUISlider__label">
                   {typeof label === "function" ? (

@@ -33,6 +33,18 @@ export interface SliderLabel {
   index: number;
 }
 
+/** Everything a thumb knows about itself, for drawing one yourself. */
+export interface SliderThumb extends SliderLabel {
+  /** How far along the track it sits, 0 to 100. */
+  percent: number;
+
+  /** Whether it is being dragged right now. */
+  dragging: boolean;
+
+  /** Whether the keyboard is on it. */
+  focused: boolean;
+}
+
 interface SliderSharedProps {
   /** Bottom of the range.(Default: 0) */
   min?: number;
@@ -57,6 +69,22 @@ interface SliderSharedProps {
 
   /** Track and thumb size.(Default: 'md') */
   size?: keyof SliderSizeMap;
+
+  /**
+   * Draw the thumb yourself. Everything it knows is handed over and nothing of its own is
+   * rendered, so a labelled handle or a grip needs no working around the component.
+   *
+   * It is still placed on the track, still takes the drag and the keyboard, and still
+   * carries its own `role` and `aria` — only what it looks like is yours.
+   *
+   * @example
+   * ```tsx
+   * renderThumb={({ value, dragging }) => (
+   *   <span className={dragging ? "handle handle--held" : "handle"}>{value}</span>
+   * )}
+   * ```
+   * */
+  renderThumb?: (thumb: SliderThumb) => ReactNode;
 
   disabled?: boolean;
   className?: string;

@@ -43,6 +43,7 @@ It shows progress and takes you back through it. **What each step holds is yours
 | `value` | `string` | required | Which step you are on |
 | `onChange` | `(value: string) => void` | - | Called when a step is picked. Without it the stepper is read-only |
 | `linear` | `boolean` | `true` | Whether the steps have to be taken in order |
+| `separator` | `ReactNode` | a line | What goes between the steps |
 | `orientation` | `keyof StepperOrientationMap` | `'horizontal'` | `horizontal` or `vertical` |
 | `size` | `keyof StepperSizeMap` | `'md'` | `sm`, `md` or `lg` |
 | `aria-label` | `string` | `'Progress'` | What the whole thing is called |
@@ -57,6 +58,7 @@ It shows progress and takes you back through it. **What each step holds is yours
 | `status` | `'complete' \| 'current' \| 'upcoming' \| 'error'` | from position | Where this step stands |
 | `icon` | `ReactNode` | number, or a tick | What goes in the marker |
 | `disabled` | `boolean` | `false` | Cannot be picked, whatever else is true |
+| `render` | `({ value, index, status, reachable, disabled, select, children, description }) => ReactNode` | - | Draw the step yourself |
 | ...rest | `HTMLAttributes<HTMLButtonElement>` | - | All standard button attributes |
 
 ## Examples
@@ -121,6 +123,27 @@ Without an `onChange` nothing is clickable and the keyboard walks straight past,
 <Preview>
   <StepperSizesExample />
 </Preview>
+
+### Drawing the steps yourself
+
+When the design is not a marker beside a label, `render` hands the whole step over. Nothing of the step's own is drawn — no marker, no classes, no styles to work around:
+
+```tsx
+<Stepper value={step} onChange={setStep} separator={<span>&rarr;</span>}>
+  <Step
+    value="dev"
+    render={({ index, status, select }) => (
+      <button onClick={select} className={status === 'current' ? 'pill pill--now' : 'pill'}>
+        <span className="pill__number">{index}</span> Dev
+      </button>
+    )}
+  />
+</Stepper>
+```
+
+The list item and the joint to the next step stay, so it is still a list and still joined up, and the reachability rules still hold — `select` does nothing on a step you cannot get to.
+
+Use it when overriding would mean fighting the component. The props above are quicker when the shape already suits.
 
 ## Styling with CSS
 
