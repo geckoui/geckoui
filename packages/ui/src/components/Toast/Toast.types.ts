@@ -40,6 +40,12 @@ export interface ToastOptions {
   /** Show the dismiss button */
   closeButton?: boolean;
 
+  /**
+   * Whether the toast can be swiped away. Set it to false for one that has to be answered
+   * rather than waved off.(Default: true)
+   * */
+  dismissible?: boolean;
+
   /** Called whenever the toast leaves, including on auto close */
   onDismiss?: () => void;
 
@@ -75,8 +81,16 @@ export interface ToasterOptions {
   /** Default duration in ms. Default `4000`. */
   duration?: number;
 
-  /** Show the dismiss button on every toast. Default `false`. */
+  /**
+   * Show the dismiss button on every toast. Default `false`.
+   *
+   * Worth turning on for a toast that neither closes itself nor can be swiped: swiping is
+   * pointer only, so that combination leaves a keyboard user no way to be rid of it.
+   * */
   closeButton?: boolean;
+
+  /** Whether toasts can be swiped away. Default `true`. */
+  dismissible?: boolean;
 
   /** How many toasts are rendered per position at once. Default `3`. */
   visibleToasts?: number;

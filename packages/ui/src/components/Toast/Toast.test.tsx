@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -13,6 +13,22 @@ beforeEach(() => {
 async function settle() {
   await act(async () => {
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  });
+}
+
+const toastEl = () => document.querySelector(".GeckoUIToast") as HTMLElement;
+
+/** jsdom has no pointer capture, so the calls it would make are stubbed out. */
+async function swipeAway(el: HTMLElement, to: { x?: number; y?: number }) {
+  el.setPointerCapture = () => {};
+  el.releasePointerCapture = () => {};
+
+  fireEvent.pointerDown(el, { clientX: 0, clientY: 0, pointerId: 1 });
+  fireEvent.pointerMove(el, { clientX: to.x ?? 0, clientY: to.y ?? 0, pointerId: 1 });
+  fireEvent.pointerUp(el, { clientX: to.x ?? 0, clientY: to.y ?? 0, pointerId: 1 });
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 400));
   });
 }
 
@@ -218,6 +234,107 @@ describe("toast", () => {
 
       expect(screen.getByTestId("mine")).toBeInTheDocument();
       expect(document.querySelector(".GeckoUIToast")).toBeNull();
+    });
+
+    it("can still be swiped away, because it is still a toast", async () => {
+      await show(() => toast.custom(<div data-testid="mine">mine</div>));
+
+      const custom = document.querySelector(".GeckoUIToast__custom") as HTMLElement;
+
+      expect(custom).toHaveAttribute("data-swipe", "both");
+
+      await swipeAway(custom, { x: 120 });
+
+      expect(screen.queryByTestId("mine")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("swiping", () => {
+    it("goes either way out from where it sits", async () => {
+      await show(() => toast("Saved"));
+
+      expect(toastEl()).toHaveAttribute("data-swipe", "both");
+
+      await swipeAway(toastEl(), { y: 120 });
+
+      expect(screen.queryByText("Saved")).not.toBeInTheDocument();
+    });
+
+    it("has one way out when it is centred", async () => {
+      render(<Toaster position="bottom-center" />);
+      act(() => toast("Saved"));
+      await settle();
+
+      expect(toastEl()).toHaveAttribute("data-swipe", "y");
+    });
+
+    it("springs back from a drag that did not go far enough", async () => {
+      await show(() => toast("Saved"));
+
+      const el = toastEl();
+
+      // under both the distance and the flick floor, however fast the events arrive
+      fireEvent.pointerDown(el, { clientX: 0, clientY: 0, pointerId: 1 });
+      fireEvent.pointerMove(el, { clientX: 15, clientY: 0, pointerId: 1 });
+      fireEvent.pointerUp(el, { clientX: 15, clientY: 0, pointerId: 1 });
+      await settle();
+
+      expect(screen.getByText("Saved")).toBeInTheDocument();
+      expect(el.style.transform).toBe("");
+    });
+
+    it("does not move when dragged back into the screen", async () => {
+      await show(() => toast("Saved"));
+
+      const el = toastEl();
+
+      fireEvent.pointerDown(el, { clientX: 100, clientY: 100, pointerId: 1 });
+      fireEvent.pointerMove(el, { clientX: 0, clientY: 100, pointerId: 1 });
+      await settle();
+
+      expect(el.style.transform).toBe("");
+    });
+
+    it("stays put when it was told not to be swiped", async () => {
+      await show(() => toast("Saved", { dismissible: false }));
+
+      expect(toastEl()).not.toHaveAttribute("data-swipe");
+
+      await swipeAway(toastEl(), { x: 120 });
+
+      expect(screen.getByText("Saved")).toBeInTheDocument();
+    });
+
+    it("leaves the buttons inside it alone", async () => {
+      // the drag captures the pointer, which would otherwise take the press away from the
+      // button it started on and the click would never land
+      const onClick = vi.fn();
+
+      await show(() => toast("Saved", { closeButton: true, action: { label: "Undo", onClick } }));
+
+      await userEvent.click(screen.getByRole("button", { name: "Undo" }));
+
+      expect(onClick).toHaveBeenCalled();
+    });
+
+    it("closes from the dismiss button", async () => {
+      await show(() => toast("Saved", { duration: Infinity, closeButton: true }));
+
+      await userEvent.click(screen.getByRole("button", { name: "Dismiss notification" }));
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 400));
+      });
+
+      expect(screen.queryByText("Saved")).not.toBeInTheDocument();
+    });
+
+    it("never grows a dismiss button on its own", async () => {
+      // whether one is shown is the caller's to decide, even on a toast that never leaves
+      await show(() => toast("Saved", { duration: Infinity }));
+
+      expect(
+        screen.queryByRole("button", { name: "Dismiss notification" })
+      ).not.toBeInTheDocument();
     });
   });
 });

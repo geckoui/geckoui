@@ -102,6 +102,29 @@ toast('Hello World', { duration: 5000 });
 | `className` | `string` | - | Custom CSS class |
 | `style` | `CSSProperties` | - | Inline styles |
 | `closeButton` | `boolean` | `false` | Show close button |
+| `dismissible` | `boolean` | `true` | Whether it can be swiped away |
+
+## Dismissing
+
+Every toast can be swiped away, whatever is in it — a custom one as much as a plain one.
+
+A toast leaves by the edges it sits near, so a `bottom-right` one goes **right or down**, and a `top-left` one goes **up or left**. A centred toast has only the one way out, since either side would be across the screen rather than off it. Dragging it back inwards does nothing.
+
+Either a long drag or a quick flick will do it, so neither has to be done carefully.
+
+```tsx
+// this one has to be answered rather than waved off
+toast.warning('Your session is about to end', {
+  duration: Infinity,
+  dismissible: false,
+  closeButton: true,
+  action: { label: 'Stay signed in', onClick: renew }
+});
+```
+
+Buttons inside a toast still work: a press that starts on one is never taken as the start of a drag.
+
+Swiping is pointer only. A toast that neither closes itself nor can be swiped leaves a keyboard user no way to be rid of it, so give that combination a `closeButton` — nothing turns one on for you.
 
 ## Examples
 
@@ -347,6 +370,7 @@ Configure toast defaults via the `toastOptions` prop on `GeckoUIProvider`:
 | `duration` | `number` | `4000` | Default duration in ms |
 | `closeButton` | `boolean` | `false` | Show the dismiss button on every toast |
 | `visibleToasts` | `number` | `3` | How many toasts render per position at once |
+| `dismissible` | `boolean` | `true` | Whether toasts can be swiped away |
 | `gap` | `number` | `14` | Pixels between stacked toasts |
 | `offset` | `number` | `24` | Pixels between the stack and the viewport edge |
 | `className` | `string` | - | Class on the stack element for each position |

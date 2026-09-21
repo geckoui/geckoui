@@ -186,3 +186,33 @@
     transition-property: opacity;
   }
 }
+
+/*
+ * Swiping away. The toast follows the pointer with no transition, so it does not lag
+ * behind it, and springs back with one when it is let go short of the threshold.
+ */
+.GeckoUIToast[data-dismissible],
+.GeckoUIToast__custom[data-dismissible] {
+  cursor: grab;
+}
+
+/*
+ * A toast that only leaves downwards leaves the sideways gesture to the page. One that
+ * leaves either way has to take both, or the vertical swipe would be a scroll instead.
+ */
+.GeckoUIToast[data-swipe="y"],
+.GeckoUIToast__custom[data-swipe="y"] {
+  touch-action: pan-x;
+}
+
+.GeckoUIToast[data-swipe="both"],
+.GeckoUIToast__custom[data-swipe="both"] {
+  touch-action: none;
+}
+
+.GeckoUIToast[data-dragging],
+.GeckoUIToast__custom[data-dragging] {
+  cursor: grabbing;
+  transition: none;
+  user-select: none;
+}

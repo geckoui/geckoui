@@ -26,6 +26,7 @@ export function Toaster({
   position = "bottom-right",
   duration = 4000,
   closeButton = false,
+  dismissible = true,
   visibleToasts = 3,
   gap = 14,
   offset = 24,
@@ -42,7 +43,7 @@ export function Toaster({
 
   if (!isMounted || toasts.length === 0) return null;
 
-  const defaults = { duration, closeButton, ...rest };
+  const defaults = { duration, closeButton, dismissible, ...rest };
 
   return createPortal(
     <>
@@ -65,7 +66,12 @@ export function Toaster({
             onBlur={() => setPausedRegion(null)}>
             {visible.map((toast) => (
               <li key={toast.id} className="GeckoUIToaster__item">
-                <ToastItem toast={toast} defaults={defaults} paused={pausedRegion === region} />
+                <ToastItem
+                  toast={toast}
+                  defaults={defaults}
+                  paused={pausedRegion === region}
+                  position={region}
+                />
               </li>
             ))}
           </ol>
