@@ -72,6 +72,27 @@ export function SliderRangeExample() {
   );
 }
 
+export function SliderThumbExample() {
+  const [value, setValue] = useState(40);
+
+  return (
+    <div className="w-full max-w-md">
+      <Slider
+        value={value}
+        onChange={setValue}
+        renderThumb={({ value: at, dragging }) => (
+          <span
+            className={`flex h-7 min-w-9 items-center justify-center rounded-md px-1.5 text-xs font-semibold text-white shadow ${
+              dragging ? "bg-gray-900 dark:bg-white dark:text-gray-900" : "bg-blue-600"
+            }`}>
+            {at}
+          </span>
+        )}
+      />
+    </div>
+  );
+}
+
 export function SliderColorsExample() {
   return (
     <div className="w-full max-w-md space-y-6">

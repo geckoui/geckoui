@@ -3,7 +3,7 @@ title: Stepper
 description: How far along a set of steps you are
 ---
 
-import { StepperBasicExample, StepperVerticalExample, StepperErrorExample, StepperFreeExample, StepperReadOnlyExample, StepperSizesExample } from '@/components/examples/stepper-examples';
+import { StepperBasicExample, StepperVerticalExample, StepperErrorExample, StepperFreeExample, StepperReadOnlyExample, StepperRenderExample, StepperSizesExample } from '@/components/examples/stepper-examples';
 
 # Stepper
 
@@ -125,6 +125,10 @@ Without an `onChange` nothing is clickable and the keyboard walks straight past,
 </Preview>
 
 ### Drawing the steps yourself
+
+<Preview>
+  <StepperRenderExample />
+</Preview>
 
 When the design is not a marker beside a label, `render` hands the whole step over. Nothing of the step's own is drawn — no marker, no classes, no styles to work around:
 
