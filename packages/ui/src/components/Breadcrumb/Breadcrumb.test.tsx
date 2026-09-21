@@ -232,6 +232,104 @@ describe("Breadcrumb", () => {
 
       expect(onClick).toHaveBeenCalled();
     });
+
+    it("passes its own onClick down to your element", async () => {
+      const onClick = vi.fn();
+
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem asChild onClick={onClick}>
+            <a href="/">Home</a>
+          </BreadcrumbItem>
+          <BreadcrumbItem>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      await userEvent.click(screen.getByRole("link", { name: "Home" }));
+
+      expect(onClick).toHaveBeenCalled();
+    });
+  });
+
+  describe("a crumb that runs code", () => {
+    it("is a button when it has an onClick and no href", async () => {
+      const onClick = vi.fn();
+
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem onClick={onClick}>Home</BreadcrumbItem>
+          <BreadcrumbItem>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      const crumb = screen.getByRole("button", { name: "Home" });
+
+      expect(crumb).toHaveAttribute("type", "button");
+
+      await userEvent.click(crumb);
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("answers the keyboard, which a span with a handler would not", async () => {
+      const onClick = vi.fn();
+
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem onClick={onClick}>Home</BreadcrumbItem>
+          <BreadcrumbItem>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      await userEvent.tab();
+
+      expect(screen.getByRole("button", { name: "Home" })).toHaveFocus();
+
+      await userEvent.keyboard("{Enter}");
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("stays an anchor when it has a href, still calling onClick", async () => {
+      const onClick = vi.fn();
+
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem href="/" onClick={onClick}>
+            Home
+          </BreadcrumbItem>
+          <BreadcrumbItem>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      await userEvent.click(screen.getByRole("link", { name: "Home" }));
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("is plain text on the page you are on, handler or not", () => {
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem href="/">Home</BreadcrumbItem>
+          <BreadcrumbItem onClick={vi.fn()}>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      expect(screen.queryByRole("button", { name: "Here" })).not.toBeInTheDocument();
+      expect(screen.getByText("Here")).toHaveAttribute("aria-current", "page");
+    });
+
+    it("is plain text with neither a href nor a handler", () => {
+      render(
+        <Breadcrumb>
+          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem>Here</BreadcrumbItem>
+        </Breadcrumb>
+      );
+
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+      expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    });
   });
 
   it.each(["sm", "md", "lg"] as const)("exposes size %s", (size) => {

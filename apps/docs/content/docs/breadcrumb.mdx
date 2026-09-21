@@ -3,7 +3,7 @@ title: Breadcrumb
 description: The trail of pages above the one you are on
 ---
 
-import { BreadcrumbBasicExample, BreadcrumbCollapsedExample, BreadcrumbSeparatorExample, BreadcrumbIconsExample, BreadcrumbCurrentExample, BreadcrumbSizesExample } from '@/components/examples/breadcrumb-examples';
+import { BreadcrumbBasicExample, BreadcrumbRouterExample, BreadcrumbCollapsedExample, BreadcrumbSeparatorExample, BreadcrumbIconsExample, BreadcrumbCurrentExample, BreadcrumbButtonExample, BreadcrumbSizesExample } from '@/components/examples/breadcrumb-examples';
 
 # Breadcrumb
 
@@ -17,9 +17,65 @@ import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
 
 ## Basic Usage
 
+Give each crumb your own router link with `asChild`. **This is how a breadcrumb is meant to be used.** Client routing is what you want in almost every app, and `asChild` is what keeps it.
+
 <Preview>
   <BreadcrumbBasicExample />
 </Preview>
+
+```tsx
+import Link from 'next/link';
+import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
+
+<Breadcrumb>
+  <BreadcrumbItem asChild>
+    <Link href="/">Home</Link>
+  </BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/settings">Settings</Link>
+  </BreadcrumbItem>
+  <BreadcrumbItem>Profile</BreadcrumbItem>
+</Breadcrumb>
+```
+
+`asChild` hands the crumb to your element rather than rendering an anchor of its own, so the link keeps its own behaviour: prefetching, no reload, and whatever else your router does. The child keeps its class name, with the crumb's added alongside.
+
+The last crumb is the page you are on, so it is drawn as text rather than a link and carries `aria-current="page"`.
+
+### Routing without a reload
+
+<Preview>
+  <BreadcrumbRouterExample />
+</Preview>
+
+```tsx
+import Link from 'next/link';
+import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
+
+const TRAIL = [
+  ['/', 'Home'],
+  ['/library', 'Library'],
+  ['/library/data', 'Data']
+];
+
+export function Trail() {
+  return (
+    <Breadcrumb>
+      {TRAIL.map(([href, label]) => (
+        <BreadcrumbItem key={label} asChild>
+          <Link href={href}>{label}</Link>
+        </BreadcrumbItem>
+      ))}
+    </Breadcrumb>
+  );
+}
+```
+
+Works the same with any router — React Router's `Link`, TanStack Router's `Link`, or your own.
+
+### A plain anchor
+
+`href` is there for when you have no router: a static site, a multi page app, or a link off to somewhere else.
 
 ```tsx
 <Breadcrumb>
@@ -29,7 +85,34 @@ import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
 </Breadcrumb>
 ```
 
-The last crumb is the page you are on, so it is drawn as text rather than a link and carries `aria-current="page"`.
+It renders a plain `<a href>`, so the browser reloads the page. **Inside a router app reach for `asChild` instead.**
+
+### A crumb that runs code
+
+When there is no link to hand, an `onClick` makes the crumb a `<button>`: it joins the tab order and answers <kbd>Enter</kbd> and <kbd>Space</kbd>.
+
+<Preview>
+  <BreadcrumbButtonExample />
+</Preview>
+
+```tsx
+import { useRouter } from 'next/navigation';
+import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
+
+export function Trail() {
+  const router = useRouter();
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbItem onClick={() => router.push('/')}>Home</BreadcrumbItem>
+      <BreadcrumbItem onClick={() => router.push('/library')}>Library</BreadcrumbItem>
+      <BreadcrumbItem>Data</BreadcrumbItem>
+    </Breadcrumb>
+  );
+}
+```
+
+A link is still better where you have one: it can be opened in a new tab, copied, and read as a link.
 
 ## Props API
 
@@ -52,9 +135,10 @@ The last crumb is the page you are on, so it is drawn as text rather than a link
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `href` | `string` | - | Where it goes. Without one the crumb is text |
+| `asChild` | `boolean` | `false` | Hand the crumb to your own element. **The way to use a router link** |
+| `href` | `string` | - | Where it goes, as a plain `<a>`. Reloads the page, so it is for apps without a router |
+| `onClick` | `MouseEventHandler` | - | Makes the crumb a `<button>` when there is no `href` |
 | `current` | `boolean` | last crumb | Whether this is the page you are on |
-| `asChild` | `boolean` | `false` | Hand the crumb to your own element |
 | ...rest | `AnchorHTMLAttributes` | - | All standard anchor attributes |
 
 ## Examples
@@ -66,6 +150,9 @@ The last crumb is the page you are on, so it is drawn as text rather than a link
 </Preview>
 
 ```tsx
+import Link from 'next/link';
+import { Breadcrumb, BreadcrumbItem } from '@geckoui/geckoui';
+
 const TRAIL = [
   ['/', 'Home'],
   ['/library', 'Library'],
@@ -77,8 +164,8 @@ const TRAIL = [
 
 <Breadcrumb maxItems={3}>
   {TRAIL.map(([href, label]) => (
-    <BreadcrumbItem key={label} href={href}>
-      {label}
+    <BreadcrumbItem key={label} asChild={Boolean(href)}>
+      {href ? <Link href={href}>{label}</Link> : label}
     </BreadcrumbItem>
   ))}
 </Breadcrumb>
@@ -86,8 +173,8 @@ const TRAIL = [
 // keep two at each end instead of one
 <Breadcrumb maxItems={4} itemsBeforeCollapse={2} itemsAfterCollapse={2}>
   {TRAIL.map(([href, label]) => (
-    <BreadcrumbItem key={label} href={href}>
-      {label}
+    <BreadcrumbItem key={label} asChild={Boolean(href)}>
+      {href ? <Link href={href}>{label}</Link> : label}
     </BreadcrumbItem>
   ))}
 </Breadcrumb>
@@ -105,14 +192,22 @@ The folded crumbs open as a **list rather than unfolding in place**. On a narrow
 
 ```tsx
 <Breadcrumb separator="/">
-  <BreadcrumbItem href="/">Home</BreadcrumbItem>
-  <BreadcrumbItem href="/docs">Docs</BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/">Home</Link>
+  </BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/docs">Docs</Link>
+  </BreadcrumbItem>
   <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
 </Breadcrumb>
 
 <Breadcrumb separator={<span className="text-xs">•</span>}>
-  <BreadcrumbItem href="/">Home</BreadcrumbItem>
-  <BreadcrumbItem href="/docs">Docs</BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/">Home</Link>
+  </BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/docs">Docs</Link>
+  </BreadcrumbItem>
   <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
 </Breadcrumb>
 ```
@@ -124,22 +219,14 @@ The folded crumbs open as a **list rather than unfolding in place**. On a narrow
 </Preview>
 
 ```tsx
-<BreadcrumbItem href="/">
-  <HomeIcon /> Home
+<BreadcrumbItem asChild>
+  <Link href="/">
+    <HomeIcon /> Home
+  </Link>
 </BreadcrumbItem>
 ```
 
 There is no icon prop. An icon is part of the crumb, like anything else in it.
-
-### Your own link
-
-```tsx
-<BreadcrumbItem asChild>
-  <Link href="/settings">Settings</Link>
-</BreadcrumbItem>
-```
-
-`asChild` hands the crumb to your element rather than rendering an anchor, so a router link keeps its own behaviour. The child keeps its class name, with the crumb's added alongside.
 
 ### When the last crumb is not where you are
 
@@ -149,9 +236,13 @@ There is no icon prop. An icon is part of the crumb, like anything else in it.
 
 ```tsx
 <Breadcrumb>
-  <BreadcrumbItem href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/">Home</Link>
+  </BreadcrumbItem>
   <BreadcrumbItem current>Settings</BreadcrumbItem>
-  <BreadcrumbItem href="/settings/profile">Profile</BreadcrumbItem>
+  <BreadcrumbItem asChild>
+    <Link href="/settings/profile">Profile</Link>
+  </BreadcrumbItem>
 </Breadcrumb>
 ```
 
@@ -198,6 +289,8 @@ The list wraps rather than overflowing, because a trail running off the edge of 
 It renders a named `<nav>` around an `<ol>`, which is what a screen reader expects of a trail: the list gives the order and the depth without the separators being read out, so they are hidden.
 
 The page you are on carries `aria-current="page"`, and there is only ever one. The ellipsis says whether it is open.
+
+A crumb with an `onClick` and no `href` is a real `<button>`, so it takes focus and answers the keyboard. It is never a `<span>` with a handler on it.
 
 ## Related Components
 

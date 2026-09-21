@@ -54,7 +54,10 @@ export interface BreadcrumbItemProps
   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
   children?: ReactNode;
 
-  /** Where it goes. Without one the crumb is text rather than a link. */
+  /**
+   * Where it goes, as a plain anchor. That reloads the page, so for client side routing
+   * reach for `asChild` with your own link, or give the crumb an `onClick`.
+   * */
   href?: string;
 
   /**
@@ -66,6 +69,8 @@ export interface BreadcrumbItemProps
   /**
    * Hand the crumb to your own element, a router link most often, rather than rendering an
    * anchor. It keeps its own class name, with the crumb's added.
+   *
+   * This is the one to use with a router: an `href` is a plain anchor and reloads.
    * */
   asChild?: boolean;
 }
