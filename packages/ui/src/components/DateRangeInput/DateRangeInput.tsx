@@ -138,7 +138,10 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
       />
 
       {!hideCalendar && openCalendar && (
-        <div ref={(r) => refs.setFloating(r)} style={{ ...floatingStyles, zIndex: 9999 }}>
+        <div
+          ref={(r) => refs.setFloating(r)}
+          className="GeckoUIDateRangeInput__calendar-layer"
+          style={floatingStyles}>
           <Calendar
             mode="range"
             calendarRef={calendarRef}

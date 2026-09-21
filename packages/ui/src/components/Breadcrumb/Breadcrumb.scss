@@ -84,7 +84,9 @@
   &__menu {
     @include base-reset;
 
-    @apply border-border-secondary bg-surface-primary z-10 flex list-none flex-col rounded-md border p-1 shadow-lg;
+    @apply border-border-secondary bg-surface-primary flex list-none flex-col rounded-md border p-1 shadow-lg;
+
+    z-index: var(--gecko-breadcrumb-z, 10);
 
     min-width: 10rem;
   }

@@ -11,3 +11,15 @@
 .GeckoUIDateRangeInput__calendar {
   @apply bg-surface-primary;
 }
+
+/*
+ * The calendar sits with the other floating panels rather than above everything. It used to
+ * be pinned inline at 9999, which put it over Dialog and Toast and could not be retuned.
+ */
+.GeckoUIDateRangeInputWrapper {
+  --gecko-date-range-input-z: 50;
+}
+
+.GeckoUIDateRangeInput__calendar-layer {
+  z-index: var(--gecko-date-range-input-z, 50);
+}

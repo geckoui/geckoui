@@ -14,7 +14,9 @@
   --gecko-tooltip-text: var(--color-surface-primary);
   --gecko-tooltip-radius: 0.5rem;
 
-  @apply z-50 max-w-[320px] min-w-[0px] p-2 text-xs font-normal;
+  @apply max-w-[320px] min-w-[0px] p-2 text-xs font-normal;
+
+  z-index: var(--gecko-tooltip-z, 50);
 
   border-radius: var(--gecko-tooltip-radius);
   background: var(--gecko-tooltip-bg);

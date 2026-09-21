@@ -326,6 +326,28 @@ element, so anything you pin to the right edge can compensate:
 }
 ```
 
+## Stacking Order
+
+Overlays sit in three tiers:
+
+| Tier | Components | z-index |
+|------|------------|---------|
+| Inline dropdowns | Select menu, Breadcrumb list, TagInput list, TimeInput picker | `10` |
+| Floating panels | Tooltip, Menu, Popover, DateInput and DateRangeInput calendars | `50` |
+| Overlays | Drawer `1000`, Dialog `2000`, Toast `3000` | |
+
+Each is a variable, so a tier can be moved without overriding anything:
+
+```css
+:root {
+  --gecko-toast-z: 5000;
+}
+```
+
+`--gecko-select-menu-z`, `--gecko-breadcrumb-z`, `--gecko-tag-input-z`, `--gecko-time-input-z`, `--gecko-tooltip-z`, `--gecko-menu-z`, `--gecko-popover-z`, `--gecko-date-input-z`, `--gecko-date-range-input-z`, `--gecko-toast-z`.
+
+**Keep your own chrome below `1000`.** A sticky header at a higher z-index sits over drawers, dialogs and toasts — a toast you cannot reach is the usual way this shows up.
+
 ## Customizing Icons
 
 Gecko UI uses CSS `mask-image` with inline SVGs for icons. This approach allows icons to inherit color from parent elements and be styled with CSS.

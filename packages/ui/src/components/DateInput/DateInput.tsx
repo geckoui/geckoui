@@ -210,7 +210,10 @@ const DateInput: FC<DateInputProps> = ({
       />
 
       {!hideCalendar && openCalendar && (
-        <div ref={(r) => refs.setFloating(r)} style={{ ...floatingStyles, zIndex: 9999 }}>
+        <div
+          ref={(r) => refs.setFloating(r)}
+          className="GeckoUIDateInput__calendar-layer"
+          style={floatingStyles}>
           <Calendar
             calendarRef={calendarRef}
             fixedWeeks={fixedWeeks}
