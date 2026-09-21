@@ -156,7 +156,7 @@ describe("Tooltip", () => {
 
       fireEvent.mouseEnter(screen.getByText("Hover me"));
       await act(async () => {
-        await vi.advanceTimersByTimeAsync(699);
+        await vi.advanceTimersByTimeAsync(199);
       });
       expect(screen.queryByRole("tooltip")).toBeNull();
 
@@ -183,14 +183,14 @@ describe("Tooltip", () => {
 
     it("honours a custom delay", async () => {
       render(
-        <Tooltip content="Help" delayDuration={200}>
+        <Tooltip content="Help" delayDuration={600}>
           Hover me
         </Tooltip>
       );
 
       fireEvent.mouseEnter(screen.getByText("Hover me"));
       await act(async () => {
-        await vi.advanceTimersByTimeAsync(199);
+        await vi.advanceTimersByTimeAsync(599);
       });
       expect(screen.queryByRole("tooltip")).toBeNull();
 

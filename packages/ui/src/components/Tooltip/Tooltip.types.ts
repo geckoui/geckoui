@@ -8,7 +8,9 @@ export interface TooltipProps extends PropsWithChildren {
   content?: string | ReactNode | FC;
 
   /**
-   * The duration of the delay before the tooltip appears
+   * How long the pointer has to rest on the trigger before the tooltip appears, in ms.
+   *
+   * @default 200
    * */
   delayDuration?: number;
 

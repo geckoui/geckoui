@@ -16,7 +16,7 @@ import type { TooltipProps } from "./Tooltip.types";
 
 const Tooltip: FC<TooltipProps> = ({
   children,
-  delayDuration = 700,
+  delayDuration = 200,
   content,
   className,
   triggerClassName,

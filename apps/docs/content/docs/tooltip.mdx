@@ -35,7 +35,7 @@ import { Tooltip } from '@geckoui/geckoui';
 |------|------|---------|-------------|
 | `content` | `string \| ReactNode \| FC` | - | Tooltip content |
 | `placement` | `Placement` | `'top'` | Where the tooltip sits. Accepts any floating-ui placement, e.g. `'top'`, `'right-start'` |
-| `delayDuration` | `number` | `700` | Delay before showing (ms) |
+| `delayDuration` | `number` | `200` | How long the pointer rests on the trigger before it shows (ms) |
 | `sideOffset` | `number` | `12` | Distance from trigger (px) |
 | `backgroundColor` | `string` | CSS variable `surface-emphasis` | Tooltip background color |
 | `className` | `string` | - | CSS class for tooltip |
@@ -157,10 +157,10 @@ import { Tooltip } from '@geckoui/geckoui';
     <Tooltip content="Instant tooltip" delayDuration={0} triggerAsChild>
       <Button size="sm">No delay</Button>
     </Tooltip>
-    <Tooltip content="Quick tooltip" delayDuration={200} triggerAsChild>
+    <Tooltip content="Quick tooltip" triggerAsChild>
       <Button size="sm">200ms</Button>
     </Tooltip>
-    <Tooltip content="Standard tooltip" delayDuration={700} triggerAsChild>
+    <Tooltip content="Slow tooltip" delayDuration={700} triggerAsChild>
       <Button size="sm">700ms</Button>
     </Tooltip>
   </div>
@@ -171,14 +171,19 @@ import { Tooltip } from '@geckoui/geckoui';
   <Button>No delay</Button>
 </Tooltip>
 
-<Tooltip content="Quick tooltip" delayDuration={200} triggerAsChild>
-  <Button>200ms</Button>
+<Tooltip content="Quick tooltip" triggerAsChild>
+  <Button>200ms (default)</Button>
 </Tooltip>
 
-<Tooltip content="Standard tooltip" delayDuration={700} triggerAsChild>
-  <Button>700ms (default)</Button>
+<Tooltip content="Slow tooltip" delayDuration={700} triggerAsChild>
+  <Button>700ms</Button>
 </Tooltip>
 ```
+
+The default is 200ms: long enough that the tooltip stays quiet while the pointer crosses a
+row of buttons on its way somewhere else, short enough that resting on one feels like an
+answer rather than a wait. Raise it where a trigger sits among many others, or set `0`
+where the tooltip is the only way to read a control.
 
 ### Custom Colors
 
