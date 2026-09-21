@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 /** Extensible size map - To allow module augmentation */
 export interface RatingSizeMap {
@@ -9,6 +9,7 @@ export interface RatingSizeMap {
 
 /** Extensible color map - To allow module augmentation */
 export interface RatingColorMap {
+  gold: unknown;
   default: unknown;
   primary: unknown;
   success: unknown;
@@ -17,7 +18,7 @@ export interface RatingColorMap {
   info: unknown;
 }
 
-export interface RatingProps {
+export interface RatingProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
   /**
    * How many are filled. Any fraction is drawn exactly, whether it can be picked or not, so
    * an average of 4.3 reads as 4.3.
@@ -64,6 +65,7 @@ export interface RatingProps {
   /** Ties the radios together. One is made from `name` or generated when left out. */
   name?: string;
 
+  /** What colour the filled part is.(Default: 'gold') */
   color?: keyof RatingColorMap;
   size?: keyof RatingSizeMap;
   className?: string;

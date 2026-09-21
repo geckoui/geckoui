@@ -1,8 +1,16 @@
 @import "../../mixins.scss";
 
 .GeckoUIRating {
-  --gecko-rating-accent: var(--color-warning);
+  --gecko-rating-accent: var(--gecko-rating-gold);
   --gecko-rating-empty: var(--color-surface-active);
+
+  /*
+   * Amazon's star gold rather than #FFD700. Not a theme token, because gold is gold in
+   * either theme, and a shade down from a true gold on purpose: at #FFD700's lightness a
+   * filled star and an empty one differ only in saturation unless the empty is washed out
+   * to nearly white, which is worse.
+   */
+  --gecko-rating-gold: oklch(0.7845 0.1633 68.5);
   --gecko-rating-size: 1.5rem;
   --gecko-rating-gap: 0.125rem;
 
@@ -11,6 +19,10 @@
   @apply relative inline-flex items-center;
 
   gap: var(--gecko-rating-gap);
+
+  &[data-color="gold"] {
+    --gecko-rating-accent: var(--gecko-rating-gold);
+  }
 
   &[data-color="default"] {
     --gecko-rating-accent: var(--color-text-secondary);

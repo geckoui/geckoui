@@ -45,7 +45,7 @@ Picking the rating it already has sets it back to `0`, which is the only way to 
 | `getLabel` | `(value: number) => string` | `'3 of 5'` | What each one is called, for a screen reader |
 | `name` | `string` | generated | Ties the radios together |
 | `aria-label` | `string` | - | What the whole thing is called |
-| `color` | `keyof RatingColorMap` | `'warning'` | |
+| `color` | `keyof RatingColorMap` | `'gold'` | `gold`, or any of the six semantic colours |
 | `size` | `keyof RatingSizeMap` | `'md'` | |
 | `className` | `string` | - | |
 
@@ -107,6 +107,10 @@ A fraction is drawn exactly whether the rating can be picked or not, so an avera
   <RatingColorsExample />
 </Preview>
 
+Stars are `gold` by default, and the six semantic colours are there for the times a rating means something else — a red heart, a green score.
+
+The gold is a fixed colour rather than a theme token, because gold is gold in either theme. It is a shade below a true `#FFD700` on purpose: at that lightness a filled star and an empty one differ only in saturation unless the empty is washed out to nearly white, which reads worse on a light background than the problem it solves.
+
 ## The keyboard
 
 | Key | Does |
@@ -121,6 +125,7 @@ A fraction is drawn exactly whether the rating can be picked or not, so an avera
 | Variable | Default | Applies to |
 |----------|---------|------------|
 | `--gecko-rating-accent` | per `color` | The filled part |
+| `--gecko-rating-gold` | `oklch(0.7845 0.1633 68.5)` | The default gold |
 | `--gecko-rating-empty` | `--color-surface-active` | The empty part |
 | `--gecko-rating-size` | per `size` | Each icon |
 | `--gecko-rating-gap` | `0.125rem` | Between them |

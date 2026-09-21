@@ -37,10 +37,11 @@ const Rating = ({
   emptyIcon,
   getLabel,
   name,
-  color = "warning",
+  color = "gold",
   size = "md",
   className,
-  "aria-label": ariaLabel
+  "aria-label": ariaLabel,
+  ...rest
 }: RatingProps) => {
   const generated = useId();
   const iconsRef = useRef<(HTMLElement | null)[]>([]);
@@ -101,7 +102,8 @@ const Rating = ({
       data-readonly={readOnly || undefined}
       data-disabled={disabled || undefined}
       onKeyDown={handleKeyDown}
-      onPointerLeave={() => setHovered(null)}>
+      onPointerLeave={() => setHovered(null)}
+      {...rest}>
       {Array.from({ length: max }, (_, index) => {
         const fill = fillOf(shown, index);
 
