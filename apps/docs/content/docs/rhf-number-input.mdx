@@ -3,6 +3,8 @@ title: RHFNumberInput
 description: Number-only text input for React Hook Form with digit and decimal limits
 ---
 
+import { BasicRHFNumberInputExample, IntegerOnlyExample, WithDecimalsExample, PositiveOnlyExample, NonStrictExample, WithValidationExample } from '@/components/examples/rhf-number-input-examples';
+
 # RHFNumberInput
 
 A text input wired to React Hook Form that accepts only digits and a single decimal point. It sanitises as you type rather than converting to a number, so a half-typed value like `2.` survives until you finish.
@@ -14,6 +16,10 @@ import { RHFNumberInput } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFNumberInputExample />
+</Preview>
 
 ```tsx
 <FormProvider {...methods}>
@@ -47,17 +53,29 @@ const schema = z.object({
 
 ### Integer only
 
+<Preview>
+  <IntegerOnlyExample />
+</Preview>
+
 ```tsx
 <RHFNumberInput name="quantity" maxFractionDigits={0} />
 ```
 
 ### Fixed precision
 
+<Preview>
+  <WithDecimalsExample />
+</Preview>
+
 ```tsx
 <RHFNumberInput name="price" maxFractionDigits={2} maxWholeDigitPlaces={10} />
 ```
 
 ### Positive numbers only
+
+<Preview>
+  <PositiveOnlyExample />
+</Preview>
 
 ```tsx
 <RHFNumberInput name="age" positiveOnly maxFractionDigits={0} />
@@ -67,6 +85,10 @@ const schema = z.object({
 
 Useful for values that are not really quantities, such as room or account numbers:
 
+<Preview>
+  <NonStrictExample />
+</Preview>
+
 ```tsx
 <RHFNumberInput
   name="roomNumber"
@@ -75,6 +97,12 @@ Useful for values that are not really quantities, such as room or account number
   maxFractionDigits={0}
 />
 ```
+
+### With validation
+
+<Preview>
+  <WithValidationExample />
+</Preview>
 
 ## Behavior
 

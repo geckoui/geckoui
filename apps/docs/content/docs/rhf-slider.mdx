@@ -3,6 +3,8 @@ title: RHFSlider
 description: Slider and RangeSlider wired to React Hook Form
 ---
 
+import { BasicRHFSliderExample, RHFSliderOnChangeEndExample, RHFSliderUnsetExample } from '@/components/examples/rhf-slider-examples';
+
 # RHFSlider
 
 [Slider](/docs/slider) and [RangeSlider](/docs/slider) wired to React Hook Form.
@@ -14,6 +16,10 @@ import { RHFSlider, RHFRangeSlider } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFSliderExample />
+</Preview>
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -56,6 +62,10 @@ The same, with `defaultValue` as `[number, number]` defaulting to `[min, max]`, 
 
 `onChange` fires all the way through a drag, which is what updates the form field. Anything expensive belongs in `onChangeEnd`, which passes straight through:
 
+<Preview>
+  <RHFSliderOnChangeEndExample />
+</Preview>
+
 ```tsx
 <RHFRangeSlider name="price" onChangeEnd={() => refine()} />
 ```
@@ -63,6 +73,10 @@ The same, with `defaultValue` as `[number, number]` defaulting to `[min, max]`, 
 ## A field that has not been set
 
 A slider has nowhere to show "no value" — the thumb is always somewhere. So when the form has nothing for the field, `RHFSlider` starts at `min` and `RHFRangeSlider` at `[min, max]`, rather than putting the thumb off the track.
+
+<Preview>
+  <RHFSliderUnsetExample />
+</Preview>
 
 Give `defaultValue` to start somewhere else, or set the value in `useForm`'s `defaultValues` so the form and the slider agree from the start.
 

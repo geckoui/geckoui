@@ -3,6 +3,8 @@ title: RHFRating
 description: Rating wired to React Hook Form
 ---
 
+import { BasicRHFRatingExample, RHFRatingRequiredExample, RHFRatingHalfExample } from '@/components/examples/rhf-rating-examples';
+
 # RHFRating
 
 [Rating](/docs/rating) wired to React Hook Form.
@@ -14,6 +16,10 @@ import { RHFRating } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFRatingExample />
+</Preview>
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -51,10 +57,26 @@ The field holds a number.
 
 Nothing picked is `0`, not `undefined`, so `required` will not catch an untouched rating — `0` is a value. Use `min` instead:
 
+<Preview>
+  <RHFRatingRequiredExample />
+</Preview>
+
 ```tsx
 <RHFRating name="score" rules={{ min: { value: 1, message: 'Pick a rating' } }} />
 <RHFError name="score" />
 ```
+
+## Halves
+
+<Preview>
+  <RHFRatingHalfExample />
+</Preview>
+
+```tsx
+<RHFRating name="score" precision={0.5} />
+```
+
+`precision` is what a click lands on. The field still holds a number, `3.5` here.
 
 ## Related Components
 

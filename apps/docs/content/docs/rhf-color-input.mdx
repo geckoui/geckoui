@@ -3,6 +3,8 @@ title: RHFColorInput
 description: ColorInput wired to React Hook Form
 ---
 
+import { BasicRHFColorInputExample, RHFColorInputRequiredExample, RHFColorInputFormatsExample } from '@/components/examples/rhf-color-input-examples';
+
 # RHFColorInput
 
 [ColorInput](/docs/color-picker) wired to React Hook Form.
@@ -14,6 +16,10 @@ import { RHFColorInput } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFColorInputExample />
+</Preview>
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -51,6 +57,10 @@ The field holds the colour as a string, in whichever format is on show in the pi
 
 Untouched and with no default, the field is `undefined`, the way any React Hook Form field is, so `required` catches a colour nobody picked:
 
+<Preview>
+  <RHFColorInputRequiredExample />
+</Preview>
+
 ```tsx
 <RHFColorInput name="brand" rules={{ required: 'Pick a colour' }} />
 <RHFError name="brand" />
@@ -65,6 +75,10 @@ The form is updated on every pointer move, so a drag never leaves the value behi
 ```
 
 ## Formats
+
+<Preview>
+  <RHFColorInputFormatsExample />
+</Preview>
 
 ```tsx
 <RHFColorInput name="brand" formats={['hex']} />

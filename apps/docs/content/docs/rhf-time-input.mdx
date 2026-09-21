@@ -3,6 +3,8 @@ title: RHFTimeInput
 description: TimeInput wired to React Hook Form
 ---
 
+import { BasicRHFTimeInputExample, RHFTimeInputRangeExample, RHFTimeInputErrorExample, RHFTimeInputDisabledTimeExample } from '@/components/examples/rhf-time-input-examples';
+
 # RHFTimeInput
 
 [TimeInput](/docs/time-input) wired to React Hook Form.
@@ -14,6 +16,10 @@ import { RHFTimeInput } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFTimeInputExample />
+</Preview>
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -33,6 +39,10 @@ function BookingForm() {
 ```
 
 The field holds the 24 hour string, whatever `format` shows, so a resolver can compare two times without parsing them:
+
+<Preview>
+  <RHFTimeInputRangeExample />
+</Preview>
 
 ```tsx
 <RHFTimeInput name="startsAt" format="hh:mm A" />
@@ -61,6 +71,10 @@ The field holds the 24 hour string, whatever `format` shows, so a resolver can c
 
 The field is marked in error whenever React Hook Form has one for it. Pair it with [RHFError](/docs/rhf-error) to show the message:
 
+<Preview>
+  <RHFTimeInputErrorExample />
+</Preview>
+
 ```tsx
 <RHFTimeInput name="startsAt" rules={{ required: 'Pick a time' }} />
 <RHFError name="startsAt" />
@@ -69,6 +83,10 @@ The field is marked in error whenever React Hook Form has one for it. Pair it wi
 ## Ruling times out
 
 `disabledTime` works as it does on [TimeInput](/docs/time-input), and the field holds `null` while the rule turns the time down. Pair it with a rule so the form says why:
+
+<Preview>
+  <RHFTimeInputDisabledTimeExample />
+</Preview>
 
 ```tsx
 <RHFTimeInput

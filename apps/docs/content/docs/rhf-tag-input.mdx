@@ -3,6 +3,8 @@ title: RHFTagInput
 description: TagInput wired to React Hook Form
 ---
 
+import { BasicRHFTagInputExample, RHFTagInputRulesExample, RHFTagInputRequiredExample } from '@/components/examples/rhf-tag-input-examples';
+
 # RHFTagInput
 
 [TagInput](/docs/tag-input) wired to React Hook Form.
@@ -14,6 +16,10 @@ import { RHFTagInput } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFTagInputExample />
+</Preview>
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -56,6 +62,10 @@ They do different jobs and are worth keeping apart:
 - **`validate`** decides whether a single tag may be added at all. A tag it turns down never reaches the form.
 - **`rules`** is React Hook Form's, and judges the whole list on submit.
 
+<Preview>
+  <RHFTagInputRulesExample />
+</Preview>
+
 ```tsx
 <RHFTagInput
   name="emails"
@@ -65,6 +75,10 @@ They do different jobs and are worth keeping apart:
 ```
 
 Pair it with [RHFError](/docs/rhf-error) to show the message:
+
+<Preview>
+  <RHFTagInputRequiredExample />
+</Preview>
 
 ```tsx
 <RHFTagInput name="tags" rules={{ required: 'Add at least one tag' }} />
