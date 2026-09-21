@@ -72,6 +72,17 @@ export function SliderRangeExample() {
   );
 }
 
+const GripIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    className={className}
+    aria-hidden="true">
+    <path d="M9 5v14M15 5v14" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
 export function SliderThumbExample() {
   const [value, setValue] = useState(40);
 
@@ -86,6 +97,24 @@ export function SliderThumbExample() {
               dragging ? "bg-gray-900 dark:bg-white dark:text-gray-900" : "bg-blue-600"
             }`}>
             {at}
+          </span>
+        )}
+      />
+    </div>
+  );
+}
+
+export function SliderThumbIconExample() {
+  const [value, setValue] = useState(60);
+
+  return (
+    <div className="w-full max-w-md">
+      <Slider
+        value={value}
+        onChange={setValue}
+        renderThumb={() => (
+          <span className="flex size-6 items-center justify-center rounded-full bg-white shadow ring-1 ring-gray-300">
+            <GripIcon className="size-3.5 text-gray-500" />
           </span>
         )}
       />

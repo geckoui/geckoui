@@ -195,10 +195,20 @@ then happens without the animation, because there is nothing left to animate:
 
 ```tsx
 // lighter DOM, no closing animation
-<Accordion keepMounted={false}>…</Accordion>
+<Accordion defaultValue="shipping" keepMounted={false}>
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
 
-// or per panel
-<AccordionPanel keepMounted={false}>…</AccordionPanel>
+// or one panel at a time
+<Accordion defaultValue="shipping">
+  <AccordionItem value="shipping">
+    <AccordionHeader>Shipping</AccordionHeader>
+    <AccordionPanel keepMounted={false}>Ships in two to three working days.</AccordionPanel>
+  </AccordionItem>
+</Accordion>
 ```
 
 ### Controlled

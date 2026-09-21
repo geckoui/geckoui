@@ -76,7 +76,14 @@ The step you are on is not clickable either — you are already there.
 </Preview>
 
 ```tsx
-<Stepper value={step} onChange={setStep} orientation="vertical">…</Stepper>
+const [step, setStep] = useState('payment');
+
+<Stepper value={step} onChange={setStep} orientation="vertical">
+  <Step value="cart" description="3 items">Cart</Step>
+  <Step value="delivery" description="Where it goes">Delivery</Step>
+  <Step value="payment" description="Card or bank">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
 ```
 
 ### A step that went wrong
@@ -103,7 +110,14 @@ Where a step stands is worked out from where it sits against the current one, so
 </Preview>
 
 ```tsx
-<Stepper value={step} onChange={setStep} linear={false}>…</Stepper>
+const [step, setStep] = useState('cart');
+
+<Stepper value={step} onChange={setStep} linear={false}>
+  <Step value="cart">Cart</Step>
+  <Step value="delivery">Delivery</Step>
+  <Step value="payment">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
 ```
 
 ### To read, not to use
@@ -113,7 +127,12 @@ Where a step stands is worked out from where it sits against the current one, so
 </Preview>
 
 ```tsx
-<Stepper value="payment">…</Stepper>
+<Stepper value="payment">
+  <Step value="cart">Cart</Step>
+  <Step value="delivery">Delivery</Step>
+  <Step value="payment">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
 ```
 
 Without an `onChange` nothing is clickable and the keyboard walks straight past, rather than tabbing through a row of buttons that do nothing.
@@ -133,16 +152,46 @@ Without an `onChange` nothing is clickable and the keyboard walks straight past,
 When the design is not a marker beside a label, `render` hands the whole step over. Nothing of the step's own is drawn — no marker, no classes, no styles to work around:
 
 ```tsx
-<Stepper value={step} onChange={setStep} separator={<span>&rarr;</span>}>
-  <Step
-    value="dev"
-    render={({ index, status, select }) => (
-      <button onClick={select} className={status === 'current' ? 'pill pill--now' : 'pill'}>
-        <span className="pill__number">{index}</span> Dev
-      </button>
-    )}
-  />
-</Stepper>
+const PILLS = [
+  { value: 'dev', label: 'Dev', tint: 'bg-blue-500/25 text-blue-600' },
+  { value: 'review', label: 'Review', tint: 'bg-green-500/25 text-green-600' },
+  { value: 'ship', label: 'Ship', tint: 'bg-amber-500/25 text-amber-600' }
+];
+
+function Pipeline() {
+  const [step, setStep] = useState('dev');
+
+  return (
+    <Stepper
+      value={step}
+      onChange={setStep}
+      linear={false}
+      separator={<span className="px-3 text-lg text-gray-400">&rarr;</span>}>
+      {PILLS.map((pill) => (
+        <Step
+          key={pill.value}
+          value={pill.value}
+          render={({ index, status, select }) => (
+            <button
+              type="button"
+              onClick={select}
+              className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 ${
+                status === 'current' ? 'border-2 border-gray-900' : 'border border-gray-300'
+              }`}>
+              <span
+                className={`flex size-7 items-center justify-center rounded-full text-sm font-semibold ${pill.tint}`}>
+                {index}
+              </span>
+              <span className={status === 'current' ? 'font-semibold' : 'text-gray-500'}>
+                {pill.label}
+              </span>
+            </button>
+          )}
+        />
+      ))}
+    </Stepper>
+  );
+}
 ```
 
 The list item and the joint to the next step stay, so it is still a list and still joined up, and the reachability rules still hold — `select` does nothing on a step you cannot get to.

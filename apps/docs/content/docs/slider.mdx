@@ -3,7 +3,7 @@ title: Slider
 description: Pick a number, or a span, by dragging
 ---
 
-import { SliderBasicExample, SliderChangeEndExample, SliderMarksExample, SliderRangeExample, SliderThumbExample, SliderColorsExample, SliderSizesExample, SliderStepExample } from '@/components/examples/slider-examples';
+import { SliderBasicExample, SliderChangeEndExample, SliderMarksExample, SliderRangeExample, SliderThumbExample, SliderThumbIconExample, SliderColorsExample, SliderSizesExample, SliderStepExample } from '@/components/examples/slider-examples';
 
 # Slider
 
@@ -144,18 +144,59 @@ Pressing the track moves whichever thumb is nearer.
 </Preview>
 
 ```tsx
-<Slider
-  value={volume}
-  onChange={setVolume}
-  renderThumb={({ value, dragging }) => (
-    <span className={dragging ? 'handle handle--held' : 'handle'}>{value}</span>
-  )}
-/>
+function Volume() {
+  const [volume, setVolume] = useState(40);
+
+  return (
+    <Slider
+      value={volume}
+      onChange={setVolume}
+      renderThumb={({ value, dragging }) => (
+        <span
+          className={`flex h-7 min-w-9 items-center justify-center rounded-md px-1.5 text-xs font-semibold text-white shadow ${
+            dragging ? 'bg-gray-900' : 'bg-blue-600'
+          }`}>
+          {value}
+        </span>
+      )}
+    />
+  );
+}
+```
+
+Whatever it returns is the thumb, so an icon works as well as a label:
+
+<Preview>
+  <SliderThumbIconExample />
+</Preview>
+
+```tsx
+const GripIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={className} aria-hidden="true">
+    <path d="M9 5v14M15 5v14" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+function Grip() {
+  const [value, setValue] = useState(60);
+
+  return (
+    <Slider
+      value={value}
+      onChange={setValue}
+      renderThumb={() => (
+        <span className="flex size-6 items-center justify-center rounded-full bg-white shadow ring-1 ring-gray-300">
+          <GripIcon className="size-3.5 text-gray-500" />
+        </span>
+      )}
+    />
+  );
+}
 ```
 
 `renderThumb` draws **inside** the thumb rather than in place of it. The drag, the arrow keys and the `role="slider"` all stay on the element that is positioned, so handing over what it looks like does not hand over how it works.
 
-The component's own circle is dropped when you do, so there is nothing left behind whatever you draw.
+The component's own circle is dropped when you do, so there is nothing left behind whatever you draw — the colour, the shape and the size are all yours.
 
 ### Colours
 

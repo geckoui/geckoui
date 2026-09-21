@@ -66,8 +66,31 @@ The last crumb is the page you are on, so it is drawn as text rather than a link
 </Preview>
 
 ```tsx
-<Breadcrumb maxItems={3}>…</Breadcrumb>
-<Breadcrumb maxItems={4} itemsBeforeCollapse={2} itemsAfterCollapse={2}>…</Breadcrumb>
+const TRAIL = [
+  ['/', 'Home'],
+  ['/library', 'Library'],
+  ['/library/data', 'Data'],
+  ['/library/data/2026', '2026'],
+  ['/library/data/2026/q3', 'Q3'],
+  [undefined, 'September']
+];
+
+<Breadcrumb maxItems={3}>
+  {TRAIL.map(([href, label]) => (
+    <BreadcrumbItem key={label} href={href}>
+      {label}
+    </BreadcrumbItem>
+  ))}
+</Breadcrumb>
+
+// keep two at each end instead of one
+<Breadcrumb maxItems={4} itemsBeforeCollapse={2} itemsAfterCollapse={2}>
+  {TRAIL.map(([href, label]) => (
+    <BreadcrumbItem key={label} href={href}>
+      {label}
+    </BreadcrumbItem>
+  ))}
+</Breadcrumb>
 ```
 
 Past `maxItems` the middle is folded away behind an ellipsis, which opens it as a list. The ends are what is kept, because they are what tell you where you started and where you are.
@@ -81,8 +104,17 @@ The folded crumbs open as a **list rather than unfolding in place**. On a narrow
 </Preview>
 
 ```tsx
-<Breadcrumb separator="/">…</Breadcrumb>
-<Breadcrumb separator={<span>•</span>}>…</Breadcrumb>
+<Breadcrumb separator="/">
+  <BreadcrumbItem href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem href="/docs">Docs</BreadcrumbItem>
+  <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
+</Breadcrumb>
+
+<Breadcrumb separator={<span className="text-xs">•</span>}>
+  <BreadcrumbItem href="/">Home</BreadcrumbItem>
+  <BreadcrumbItem href="/docs">Docs</BreadcrumbItem>
+  <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
+</Breadcrumb>
 ```
 
 ### Icons
