@@ -103,6 +103,15 @@
 
     grid-area: 1 / 1 / 2 / 3;
 
+    /*
+     * Taken out of flow while the placeholder has the row, and pinned to the same inset as
+     * the field's own padding, so the caret starts where the text does. Left in flow it
+     * would sit after the placeholder, with the caret stranded to the right of it.
+     */
+    &[data-initial] {
+      @apply absolute inset-x-3 w-auto;
+    }
+
     &:disabled {
       @apply cursor-not-allowed;
     }

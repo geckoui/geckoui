@@ -118,6 +118,7 @@ const TagInput = ({
   const addTags = (incoming: string[]) => {
     const accepted: string[] = [];
     const rejected: string[] = [];
+    let noRoom = false;
 
     incoming
       .map((tag) => canonical(tag.trim()))
@@ -126,7 +127,13 @@ const TagInput = ({
         const already = [...value, ...accepted];
 
         if (!allowDuplicates && already.includes(tag)) return rejected.push(tag);
-        if (max !== undefined && already.length >= max) return rejected.push(tag);
+
+        if (max !== undefined && already.length >= max) {
+          noRoom = true;
+
+          return rejected.push(tag);
+        }
+
         if (validate && !validate(tag)) return rejected.push(tag);
 
         accepted.push(tag);
@@ -135,7 +142,7 @@ const TagInput = ({
     if (accepted.length) onChange([...value, ...accepted]);
     if (rejected.length) onReject?.(rejected);
 
-    return { accepted, rejected };
+    return { accepted, rejected, noRoom };
   };
 
   const removeAt = (index: number) => {
@@ -144,13 +151,18 @@ const TagInput = ({
     onChange(value.filter((_, at) => at !== index));
   };
 
-  /** Keeps the text when it was turned away, so it can be corrected rather than retyped. */
+  /**
+   * Keeps the text when it was turned away, so a typo can be corrected rather than retyped.
+   *
+   * Not when the field is full, though: no amount of correcting makes room, so leaving it
+   * there only strands it.
+   */
   const commitKeyword = () => {
     if (!keyword.trim()) return;
 
-    const { accepted } = addTags([keyword]);
+    const { accepted, noRoom } = addTags([keyword]);
 
-    if (accepted.length) {
+    if (accepted.length || noRoom) {
       setKeyword("");
       setFocused(null);
     }
@@ -242,6 +254,7 @@ const TagInput = ({
           data-state={state}
           data-error={hasError || undefined}
           data-empty={(!value.length && !keyword) || undefined}
+          data-full={full || undefined}
           onClick={() => !disabled && !readOnly && inputRef.current?.focus()}>
           {Boolean(prefix) && (
             <div className="GeckoUITagInput__prefix">
@@ -299,6 +312,10 @@ const TagInput = ({
                 type="text"
                 className="GeckoUITagInput__input"
                 value={keyword}
+                // Out of flow while the placeholder has the row, so the caret sits at the
+                // start of the text rather than after it. Back in flow once there is a tag
+                // to sit beside.
+                data-initial={!value.length || undefined}
                 disabled={disabled}
                 readOnly={readOnly}
                 role="combobox"

@@ -44,7 +44,10 @@ export interface TagInputProps extends PropsWithChildren {
    * */
   preferOption?: boolean;
 
-  /** How many tags there may be. */
+  /**
+   * How many tags there may be. Once it is reached the list stays away, anything further
+   * goes to `onReject`, and the field carries `data-full` for the styles to key off.
+   * */
   max?: number;
 
   /** Let the same tag be added twice.(Default: false) */

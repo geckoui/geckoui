@@ -163,6 +163,34 @@ describe("TagInput", () => {
       expect(onReject).toHaveBeenCalledWith(["three"]);
     });
 
+    it("clears the text when there is no room, since correcting it cannot help", async () => {
+      render(<Controlled start={["one", "two"]} max={2} />);
+
+      await userEvent.click(input());
+      await userEvent.keyboard("three{Enter}");
+
+      expect(input()).toHaveValue("");
+    });
+
+    it("marks itself full, so a limit can be shown", async () => {
+      render(<Controlled start={["one"]} max={2} />);
+
+      expect(field()).not.toHaveAttribute("data-full");
+
+      await userEvent.click(input());
+      await userEvent.keyboard("two{Enter}");
+
+      expect(field()).toHaveAttribute("data-full", "true");
+    });
+
+    it("keeps the list away once it is full", async () => {
+      render(<Controlled start={["React"]} max={1} withOptions />);
+
+      await userEvent.click(input());
+
+      expect(screen.queryAllByRole("option")).toHaveLength(0);
+    });
+
     it("keeps what validate turned down in the field, so it can be corrected", async () => {
       const onReject = vi.fn();
 
