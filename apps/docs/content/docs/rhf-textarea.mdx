@@ -60,6 +60,7 @@ Extends all props from [Textarea](/docs/textarea) component plus:
 | `autoResize` | `boolean` | `false` | Enable automatic height adjustment |
 | `rows` | `number` | `2` | Minimum number of rows |
 | `maxRows` | `number` | - | Maximum number of rows (only with `autoResize`) |
+| `transform` | `{ input?: (v: string) => string; output?: (v: string) => string }` | - | Format the value for display and for storage |
 | `onChange` | `(value: string) => void` | - | Change callback (receives value, not event) |
 | `onBlur` | `(value: string) => void` | - | Blur callback |
 | ...rest | `TextareaProps` | - | All Textarea component props |

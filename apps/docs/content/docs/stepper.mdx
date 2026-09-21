@@ -58,8 +58,8 @@ It shows progress and takes you back through it. **What each step holds is yours
 | `status` | `'complete' \| 'current' \| 'upcoming' \| 'error'` | from position | Where this step stands |
 | `icon` | `ReactNode` | number, or a tick | What goes in the marker |
 | `disabled` | `boolean` | `false` | Cannot be picked, whatever else is true |
-| `render` | `({ value, index, status, reachable, disabled, select, children, description }) => ReactNode` | - | Draw the step yourself |
-| ...rest | `HTMLAttributes<HTMLButtonElement>` | - | All standard button attributes |
+| `render` | `({ value, index, status, reachable, disabled, select, children, description }) => ReactNode` | - | Draw the step yourself. `index` counts from one |
+| ...rest | `HTMLAttributes<HTMLButtonElement>` | - | Standard HTML attributes. Not `ButtonHTMLAttributes`, so `type` is not among them |
 
 ## Examples
 

@@ -50,7 +50,7 @@ import '@geckoui/geckoui/styles.css';
 
 ### 3. Add GeckoUIProvider
 
-Wrap your app with `GeckoUIProvider` (required for Dialog, Drawer, ConfirmDialog, and Toast components):
+Wrap your app with `GeckoUIProvider`. It is required for Toast, ConfirmDialog and the imperative `Dialog.show()` / `Drawer.show()`; the declarative `<Dialog open>` and `<Drawer open>` work without it:
 
 ```tsx
 import { GeckoUIProvider } from '@geckoui/geckoui';

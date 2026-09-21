@@ -42,7 +42,7 @@ Picking the rating it already has sets it back to `0`, which is the only way to 
 | `disabled` | `boolean` | `false` | |
 | `icon` | `ReactNode` | a star | The icon |
 | `emptyIcon` | `ReactNode` | `icon` | A different icon for the empty part |
-| `getLabel` | `(value: number) => string` | `'3 of 5'` | What each one is called, for a screen reader |
+| `getLabel` | `(value: number) => string` | `` `${value} of ${max}` `` | What each one is called, for a screen reader |
 | `name` | `string` | generated | Ties the radios together |
 | `aria-label` | `string` | - | What the whole thing is called |
 | `color` | `keyof RatingColorMap` | `'gold'` | `gold`, or any of the six semantic colours |
@@ -144,7 +144,7 @@ Each icon is two copies of the same glyph stacked, the filled one clipped to a w
 
 A rating is a one-of-many choice, so it is built as a radio group: visually hidden radios carry the semantics and the arrow keys, and post in a plain form. The icons are only what is seen.
 
-Name the group with `aria-label`, and each value with `getLabel` when `'3 of 5'` is not what you would say:
+Each value is named `"1 of 5"`, `"2 of 5"` and so on. Name the group with `aria-label`, and override the per-value name with `getLabel`:
 
 ```tsx
 <Rating value={score} onChange={setScore} aria-label="Rate this article" getLabel={(v) => `${v} stars`} />
