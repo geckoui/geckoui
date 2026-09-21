@@ -1,0 +1,363 @@
+---
+title: ColorPicker
+description: A colour picker panel, and a field that opens one
+---
+
+import { ColorPickerBasicExample, ColorPickerCompleteExample, ColorPickerFormatsExample, ColorPickerAlphaExample, ColorPickerSwatchesExample, ColorPickerRenderExample, ColorInputBasicExample, ColorInputStatesExample, ColorInputRenderExample } from '@/components/examples/color-picker-examples';
+
+# ColorPicker
+
+A saturation square, a hue slider and an opacity slider, handing back a colour as a string.
+
+`ColorPicker` is the panel on its own. `ColorInput` is a field that opens it in a popover, the way `DateInput` is to `Calendar`.
+
+## Installation
+
+```tsx
+import { ColorPicker, ColorInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <ColorPickerBasicExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import { ColorPicker } from '@geckoui/geckoui';
+
+export function BrandColour() {
+  const [color, setColor] = useState('#3b82f6');
+
+  return <ColorPicker value={color} onChange={setColor} />;
+}
+```
+
+Leave `value` out and the picker holds its own, starting from `defaultValue`.
+
+## Props API
+
+### ColorPicker
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | The colour. Leave it out to let the picker hold its own |
+| `defaultValue` | `string` | `'#000000'` | What it starts on when uncontrolled |
+| `onChange` | `(color: string) => void` | - | Called on every move while dragging |
+| `onChangeComplete` | `(color: string) => void` | - | Called once the drag ends, the text is committed or a swatch is picked |
+| `formats` | `ColorFormat[]` | `['hex', 'rgb', 'hsl']` | What the dropdown offers. The first is what it starts on. Pass one to pin it |
+| `onFormatChange` | `(format, color) => void` | - | Called when the format is switched |
+| `showInput` | `boolean` | `true` | Show the field you can type or paste into |
+| `swatches` | `string[]` | - | Colours to offer below the panel |
+| `swatchesLabel` | `string` | `'Preset colours'` | What the swatches are called, for a reader |
+| `eyeDropper` | `boolean` | `false` | Offer the eyedropper where the browser has it |
+| `disabled` | `boolean` | `false` | Nothing can be moved, typed or picked |
+| `renderSaturation` | `(state) => ReactNode` | - | Draw your own handle on the square |
+| `renderHueThumb` | `(state) => ReactNode` | - | Draw your own hue handle |
+| `renderAlphaThumb` | `(state) => ReactNode` | - | Draw your own opacity handle |
+| `footer` | `ReactNode` | - | Goes under the panel, above the swatches |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the container |
+
+### ColorInput
+
+Everything `ColorPicker` takes, minus `footer`, plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `ReactNode` | `'Pick a colour'` | Shown when there is no colour |
+| `render` | `(state) => ReactNode` | - | Draw the field yourself, inside the trigger |
+| `readOnly` | `boolean` | `false` | Shows the value, but does not open |
+| `hasError` | `boolean` | `false` | Draws the field in its error colours |
+| `onOpenChange` | `(open: boolean) => void` | - | Called when the panel opens or closes |
+| `pickerPlacement` | `Placement` | `'bottom-start'` | Where the panel opens |
+| `floatingStrategy` | `Strategy` | `'absolute'` | Floating strategy for the panel |
+| `wrapperClassName` | `string` | - | CSS class for the wrapper |
+| `pickerClassName` | `string` | - | CSS class for the panel |
+
+## Examples
+
+### While dragging, and after
+
+<Preview>
+  <ColorPickerCompleteExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import { ColorPicker } from '@geckoui/geckoui';
+
+export function Theme() {
+  const [color, setColor] = useState('#8b5cf6');
+
+  return (
+    <ColorPicker
+      value={color}
+      onChange={setColor}
+      onChangeComplete={(final) => saveToServer(final)}
+    />
+  );
+}
+```
+
+`onChange` fires on every pointer move, which is what a live preview wants. `onChangeComplete` fires once the drag ends, which is where a save or an expensive redraw belongs. It also fires on a keyboard move, a committed text edit and a picked swatch, none of which have a release to wait for.
+
+### Formats
+
+<Preview>
+  <ColorPickerFormatsExample />
+</Preview>
+
+```tsx
+<ColorPicker value={color} onChange={setColor} formats={['rgb', 'hex', 'hsl']} />
+```
+
+`formats` is the whole format story: what the dropdown offers, in what order, and what it starts on. The first entry is the starting one.
+
+```tsx
+<ColorPicker formats={['hex']} />              {/* hex only, no dropdown */}
+<ColorPicker formats={['hsl', 'hex']} />       {/* starts on HSL */}
+```
+
+Switching the format changes both what the field shows and what `onChange` hands back, so the string you get is always in the format on screen.
+
+### Opacity
+
+<Preview>
+  <ColorPickerAlphaExample />
+</Preview>
+
+```tsx
+const [overlay, setOverlay] = useState('rgba(59, 130, 246, 0.5)');
+
+<ColorPicker value={overlay} onChange={setOverlay} formats={['rgb', 'hex']} />
+```
+
+The opacity slider is always there. Alpha reaches the value only when it is below 1, so a solid colour stays `#3b82f6` rather than `#3b82f6ff`, and a translucent one comes back as `#3b82f680` or `rgba(59, 130, 246, 0.5)`.
+
+### Swatches and the eyedropper
+
+<Preview>
+  <ColorPickerSwatchesExample />
+</Preview>
+
+```tsx
+<ColorPicker
+  value={color}
+  onChange={setColor}
+  eyeDropper
+  swatches={['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6']}
+/>
+```
+
+There is no default palette, because the right one belongs to your app.
+
+The eyedropper button renders only where the browser has the `EyeDropper` API, so it is absent rather than dead in browsers without it.
+
+### Drawing the handles yourself
+
+<Preview>
+  <ColorPickerRenderExample />
+</Preview>
+
+```tsx
+<ColorPicker
+  value={color}
+  onChange={setColor}
+  renderSaturation={({ color: current, dragging }) => (
+    <span
+      className="block rounded-full border-2 border-white shadow"
+      style={{
+        background: current,
+        width: dragging ? 28 : 20,
+        height: dragging ? 28 : 20
+      }}
+    />
+  )}
+  renderHueThumb={({ hsva }) => (
+    <span
+      className="block h-5 w-3 rounded-sm border-2 border-white shadow"
+      style={{ background: `hsl(${hsva.h}, 100%, 50%)` }}
+    />
+  )}
+/>
+```
+
+What you draw goes **inside** the handle that moves, so the dragging, the keyboard and the `aria` stay with the component. You are handing over what it looks like, not how it works.
+
+Each render prop is given `{ color, hsva, dragging }`: the colour as a string in the format on show, the same colour in parts for drawing with, and whether a pointer is down on that control.
+
+### The field
+
+<Preview>
+  <ColorInputBasicExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import { ColorInput } from '@geckoui/geckoui';
+
+export function BrandField() {
+  const [color, setColor] = useState('#3b82f6');
+
+  return (
+    <ColorInput
+      value={color}
+      onChange={setColor}
+      swatches={['#ef4444', '#10b981', '#3b82f6']}
+    />
+  );
+}
+```
+
+Click it to open, <kbd>Escape</kbd> or a click outside to close.
+
+### States
+
+<Preview>
+  <ColorInputStatesExample />
+</Preview>
+
+```tsx
+<ColorInput defaultValue="#3b82f6" />
+<ColorInput value="" placeholder="Pick a colour" />
+<ColorInput defaultValue="#ef4444" hasError />
+<ColorInput defaultValue="#64748b" disabled />
+<ColorInput defaultValue="#10b981" readOnly />
+<ColorInput defaultValue="rgba(15, 23, 42, 0.6)" formats={['rgb', 'hex']} />
+```
+
+`readOnly` shows the value but does not open. `disabled` does the same and takes the field out of the tab order.
+
+### Drawing the field yourself
+
+<Preview>
+  <ColorInputRenderExample />
+</Preview>
+
+```tsx
+<ColorInput
+  value={color}
+  onChange={setColor}
+  render={({ color: current }) => (
+    <span
+      className="block size-8 rounded-full"
+      style={{ background: current, boxShadow: 'inset 0 0 0 1px rgb(0 0 0 / 0.15)' }}
+    />
+  )}
+/>
+
+<ColorInput
+  value={color}
+  onChange={setColor}
+  render={({ color: current, open }) => (
+    <span className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm">
+      <span className="size-4 rounded-full" style={{ background: current }} />
+      {open ? 'Picking…' : 'Theme colour'}
+    </span>
+  )}
+/>
+```
+
+`render` draws inside the trigger, so opening, closing, focus and the `aria` stay with the component. The field gives up its box and is only as wide as what you drew.
+
+It is given `{ color, open }`, where `color` is an empty string when there is no colour to show.
+
+### With React Hook Form
+
+```tsx
+import { RHFColorInput } from '@geckoui/geckoui';
+
+<RHFColorInput name="brand" rules={{ required: 'Pick a colour' }} />
+<RHFColorInput name="overlay" formats={['rgb', 'hex']} swatches={PALETTE} />
+```
+
+The form is updated on every move, so a drag never leaves the value behind. Pass `onChangeComplete` yourself where a save should wait for the release.
+
+## Reading and writing colours
+
+`parseColor` and `formatColor` are exported, so the same reading and writing the picker does is available on its own:
+
+```tsx
+import { parseColor, formatColor } from '@geckoui/geckoui';
+
+parseColor('#3b82f6');              // { h: 217.22, s: 76.02, v: 96.47, a: 1 }
+parseColor('rgba(0, 0, 0, 0.5)');   // { h: 0, s: 0, v: 0, a: 0.5 }
+parseColor('not a colour');         // null
+
+formatColor(parseColor('#3b82f6')!, 'rgb', false);  // 'rgb(59, 130, 246)'
+```
+
+`parseColor` reads 3, 4, 6 and 8 digit hex with or without the `#`, `rgb()`, `rgba()`, `hsl()` and `hsla()`. It returns `null` for anything it cannot read rather than guessing, which is how the text field knows to put back what was there.
+
+A colour survives a round trip to the exact channel: `#3b82f6` in is `#3b82f6` out.
+
+## Keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>←</kbd> <kbd>→</kbd> | Saturation on the square, or along the slider in focus |
+| <kbd>↑</kbd> <kbd>↓</kbd> | Brightness on the square, or along the slider in focus |
+| <kbd>Shift</kbd> + arrow | Ten steps at a time |
+| <kbd>Home</kbd> <kbd>End</kbd> | To either end |
+| <kbd>Enter</kbd> | Commit what was typed in the value field |
+| <kbd>Escape</kbd> | Abandon what was typed, or close the panel |
+
+The square, the hue and the opacity are each in the tab order.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-color-picker-width` | `16rem` | The panel |
+| `--gecko-color-picker-saturation-height` | `10rem` | The square |
+| `--gecko-color-picker-radius` | `0.5rem` | The square's corners |
+| `--gecko-color-picker-gap` | `0.75rem` | Between the rows |
+| `--gecko-color-picker-slider-height` | `0.75rem` | The hue and opacity tracks |
+| `--gecko-color-picker-thumb-size` | `0.875rem` | Every handle |
+| `--gecko-color-picker-thumb-ring` | `#fff` | The ring around a handle |
+| `--gecko-color-picker-preview-size` | `2rem` | The circle beside the sliders |
+| `--gecko-color-picker-swatch-size` | `1.25rem` | One swatch |
+| `--gecko-color-picker-checker-size` | `8px` | One square of the grid behind a translucent colour |
+| `--gecko-color-picker-checker` | `#cbd5e1` | The grey of that grid |
+| `--gecko-color-input-height` | `2.5rem` | The field |
+| `--gecko-color-input-swatch-size` | `1.25rem` | The swatch in the field |
+| `--gecko-color-input-radius` | `0.375rem` | The field's corners |
+
+```css
+.GeckoUIColorPicker {
+  --gecko-color-picker-width: 20rem;
+  --gecko-color-picker-saturation-height: 13rem;
+}
+```
+
+The panel opens at `z-index: 10`, in the inline dropdown band. See [Stacking Order](/docs/theming#stacking-order).
+
+### Class names and data attributes
+
+- `GeckoUIColorPicker` - The panel, with `data-disabled`
+- `GeckoUIColorPicker__saturation` - The square, with `data-dragging`, and `__thumb` for its handle
+- `GeckoUIColorPicker__slider` - A track, with `data-kind="hue|alpha"` and `data-dragging`, and `__track` and `__thumb` inside
+- `GeckoUIColorPicker__preview` - The circle showing the colour
+- `GeckoUIColorPicker__dropper` - The eyedropper button
+- `GeckoUIColorPicker__field` - The value row, holding `__format` and `__input`
+- `GeckoUIColorPicker__format` - The format dropdown, with `__trigger`, `__list` and `__option`
+- `GeckoUIColorPicker__swatches` - The swatch row, with `__swatch` for each
+- `GeckoUIColorInput` - The field, with `data-state`, `data-error` and `data-open`
+- `GeckoUIColorInput__panel` - The popover holding the picker
+
+A handle you drew yourself carries `data-custom`, and gives up the circle it would otherwise have been.
+
+## Accessibility
+
+The square and both sliders are `role="slider"` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The square reports its saturation as the value and spells out both parts in `aria-valuetext`, because one number cannot describe two axes.
+
+The value field is labelled "Colour value", the format dropdown is a `listbox` labelled "Colour format", and each swatch is labelled with its own colour and carries `aria-pressed`.
+
+`ColorInput` says what it opens with `aria-haspopup="dialog"` and `aria-expanded`, and the panel is a `dialog` labelled "Colour picker". Neither is announced while the field is read only, because it does not open.
+
+## Related Components
+
+- [Slider](/docs/slider) - The same drag and keyboard, for a plain number
+- [Popover](/docs/popover) - What the field opens the panel in
+- [Select](/docs/select) - When the choice is from a list rather than a spectrum

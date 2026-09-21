@@ -1,0 +1,114 @@
+@import "../../mixins.scss";
+
+.GeckoUIColorInputWrapper {
+  --gecko-color-input-z: 10;
+
+  @apply relative w-full;
+
+  /* A field drawn by the caller is only as wide as what they drew */
+  &[data-custom] {
+    @apply w-fit;
+  }
+}
+
+.GeckoUIColorInput {
+  @include base-reset;
+
+  --gecko-color-input-height: 2.5rem;
+  --gecko-color-input-swatch-size: 1.25rem;
+  --gecko-color-input-radius: 0.375rem;
+  --gecko-color-input-checker-size: 6px;
+  --gecko-color-input-checker: #cbd5e1;
+
+  @apply border-border-secondary text-text-primary flex w-full items-center gap-2 border px-3 text-sm;
+
+  height: var(--gecko-color-input-height);
+  border-radius: var(--gecko-color-input-radius);
+
+  /*
+   * A field drawn by the caller keeps the button and its focus ring, and gives up the box
+   * around it. Anything else would be a frame they did not ask for.
+   */
+  &[data-custom] {
+    @apply h-auto w-auto border-0 bg-transparent p-0;
+  }
+
+  &[data-state="enabled"] {
+    @apply cursor-pointer;
+
+    &:hover,
+    &[data-open] {
+      @apply border-primary-400;
+    }
+  }
+
+  &[data-state="readonly"] {
+    @apply cursor-default;
+  }
+
+  &[data-state="disabled"] {
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+  }
+
+  /*
+   * Stated for the open state too, or a field in error goes back to blue the moment it is
+   * used, which is when the error matters most.
+   */
+  &[data-error],
+  &[data-error][data-open] {
+    @apply border-red-500;
+  }
+
+  &:focus-visible {
+    @apply outline-primary-500 outline-2 outline-offset-2;
+  }
+
+  &__swatch {
+    @apply block size-[var(--gecko-color-input-swatch-size)] shrink-0 rounded;
+
+    --gecko-color-layer: transparent;
+    --gecko-color-input-checker-tile: calc(var(--gecko-color-input-checker-size) * 2);
+
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+
+    background-color: #fff;
+    background-image:
+      linear-gradient(var(--gecko-color-layer), var(--gecko-color-layer)),
+      linear-gradient(45deg, var(--gecko-color-input-checker) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--gecko-color-input-checker) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--gecko-color-input-checker) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--gecko-color-input-checker) 75%);
+    background-size:
+      auto,
+      var(--gecko-color-input-checker-tile) var(--gecko-color-input-checker-tile),
+      var(--gecko-color-input-checker-tile) var(--gecko-color-input-checker-tile),
+      var(--gecko-color-input-checker-tile) var(--gecko-color-input-checker-tile),
+      var(--gecko-color-input-checker-tile) var(--gecko-color-input-checker-tile);
+    background-position:
+      0 0,
+      0 0,
+      0 var(--gecko-color-input-checker-size),
+      var(--gecko-color-input-checker-size) calc(var(--gecko-color-input-checker-size) * -1),
+      calc(var(--gecko-color-input-checker-size) * -1) 0;
+  }
+
+  &__value {
+    @apply flex-1 truncate text-left font-mono uppercase;
+  }
+
+  &__placeholder {
+    @apply text-text-placeholder flex-1 truncate text-left;
+  }
+
+  &__caret {
+    @apply border-t-text-tertiary size-0 shrink-0 border-4 border-transparent;
+
+    margin-top: 0.25rem;
+  }
+
+  &__panel {
+    @apply border-border-primary bg-surface-primary rounded-lg border p-3 shadow-lg;
+
+    z-index: var(--gecko-color-input-z, 10);
+  }
+}
