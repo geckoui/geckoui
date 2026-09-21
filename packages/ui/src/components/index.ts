@@ -26,6 +26,7 @@ export * from "./Slider";
 export * from "./TagInput";
 export * from "./Rating";
 export * from "./Breadcrumb";
+export * from "./Stepper";
 export * from "./Textarea";
 export * from "./OTPInput";
 export * from "./Pagination";
