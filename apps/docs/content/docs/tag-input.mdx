@@ -131,6 +131,18 @@ A paste only becomes several tags when it holds more than one. Pasting a single 
 
 The list stays away once `max` is reached, and anything further goes to `onReject`.
 
+The field also carries `data-full`, so a limit can be shown however suits — a count, a dimmed field, a message. Nothing is drawn by default.
+
+```css
+.GeckoUITagInput[data-full] {
+  opacity: 0.7;
+}
+```
+
+Text turned away because there was no room is **cleared**, unlike text `validate` turned down, which is kept so it can be corrected. No amount of correcting makes room.
+
+The field stays editable at the limit, so Backspace still takes the last tag back out.
+
 ### Drawing the tags yourself
 
 <Preview>
@@ -177,17 +189,17 @@ Neither a disabled nor a read-only field opens the list or shows the crosses.
 ### Class names and data attributes
 
 - `GeckoUITagInputWrapper` - Holds the field and the list
-- `GeckoUITagInput` - The field, with `data-state`, `data-error` and `data-empty`
+- `GeckoUITagInput` - The field, with `data-state`, `data-error`, `data-empty` and `data-full`
 - `GeckoUITagInput__tag` - One tag, with `__remove` for its cross
 - `GeckoUITagInput__field` - Wraps the text box and measures it
-- `GeckoUITagInput__input` - The text box
+- `GeckoUITagInput__input` - The text box, with `data-initial` while it has no tags beside it
 - `GeckoUITagInput__placeholder` - The placeholder text, with `data-hidden` once you type
 - `GeckoUITagInput__menu` - The list
 - `GeckoUITagInput__option` - One option, with `data-focused`
 
 The styles are their own, copied from [Select](/docs/select) rather than shared. The two look alike on purpose, but one can be changed without moving the other.
 
-The placeholder is drawn as text rather than the input's own `placeholder`, because the text box is only ever as wide as what is in it — a native placeholder would be clipped to a couple of pixels.
+The placeholder is drawn as text rather than the input's own `placeholder`, because the text box is only ever as wide as what is in it — a native placeholder would be clipped to a couple of pixels. While the placeholder has the row, the text box is taken out of flow and pinned to the field's inset, so the caret sits where the text begins rather than after the placeholder.
 
 ## Related Components
 
