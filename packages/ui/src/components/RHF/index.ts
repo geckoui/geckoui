@@ -12,6 +12,7 @@ export * from "./RHFDateInput";
 export * from "./RHFTimeInput";
 export * from "./RHFSlider";
 export * from "./RHFTagInput";
+export * from "./RHFRating";
 export * from "./RHFRangeSlider";
 export * from "./RHFDateRangeInput";
 export * from "./RHFFileInput";

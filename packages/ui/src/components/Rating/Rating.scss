@@ -1,0 +1,122 @@
+@import "../../mixins.scss";
+
+.GeckoUIRating {
+  --gecko-rating-accent: var(--color-warning);
+  --gecko-rating-empty: var(--color-surface-active);
+  --gecko-rating-size: 1.5rem;
+  --gecko-rating-gap: 0.125rem;
+
+  @include base-reset;
+
+  @apply relative inline-flex items-center;
+
+  gap: var(--gecko-rating-gap);
+
+  &[data-color="default"] {
+    --gecko-rating-accent: var(--color-text-secondary);
+  }
+
+  &[data-color="primary"] {
+    --gecko-rating-accent: var(--color-primary-600);
+  }
+
+  &[data-color="success"] {
+    --gecko-rating-accent: var(--color-success);
+  }
+
+  &[data-color="error"] {
+    --gecko-rating-accent: var(--color-error);
+  }
+
+  &[data-color="warning"] {
+    --gecko-rating-accent: var(--color-warning);
+  }
+
+  &[data-color="info"] {
+    --gecko-rating-accent: var(--color-info);
+  }
+
+  &[data-size="sm"] {
+    --gecko-rating-size: 1.125rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-rating-size: 2rem;
+  }
+
+  &[data-disabled] {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  &__icon {
+    @apply relative inline-flex cursor-pointer;
+
+    width: var(--gecko-rating-size);
+    height: var(--gecko-rating-size);
+
+    svg {
+      @apply h-full w-full;
+    }
+  }
+
+  &[data-readonly] &__icon,
+  &[data-disabled] &__icon {
+    @apply cursor-default;
+  }
+
+  &__icon__empty {
+    @apply inline-flex h-full w-full;
+
+    color: var(--gecko-rating-empty);
+  }
+
+  /*
+   * Laid over the empty one and clipped to however much was earned, so a 4.3 shows as 4.3.
+   * Overflow hidden on a fixed height keeps the icon its own size while the box narrows.
+   */
+  &__icon__fill {
+    @apply pointer-events-none absolute inset-y-0 left-0 inline-flex overflow-hidden;
+
+    color: var(--gecko-rating-accent);
+
+    /*
+     * `shrink-0` is what makes a half a half. As a flex item the icon would otherwise be
+     * squeezed down to whatever the box is, drawing a small whole star rather than the left
+     * side of a full sized one.
+     */
+    svg {
+      @apply shrink-0;
+
+      width: var(--gecko-rating-size);
+      height: var(--gecko-rating-size);
+      max-width: none;
+    }
+  }
+
+  /*
+   * Out of sight, not out of the document: the radios are what a screen reader reads and
+   * what the arrow keys move between, and what posts in a plain form.
+   */
+  &__inputs {
+    @apply absolute h-px w-px overflow-hidden;
+
+    clip-path: inset(50%);
+
+  }
+
+  /*
+   * The radios are out of sight, so the ring goes round the group. Without it a keyboard
+   * user moving through the values has nothing telling them where they are.
+   */
+  &:focus-within {
+    @apply rounded;
+
+    outline: 2px solid var(--color-primary-300);
+    outline-offset: 3px;
+  }
+
+  &[data-readonly]:focus-within,
+  &[data-disabled]:focus-within {
+    outline: none;
+  }
+}

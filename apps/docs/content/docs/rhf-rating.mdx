@@ -1,0 +1,63 @@
+---
+title: RHFRating
+description: Rating wired to React Hook Form
+---
+
+# RHFRating
+
+[Rating](/docs/rating) wired to React Hook Form.
+
+## Installation
+
+```tsx
+import { RHFRating } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFRating } from '@geckoui/geckoui';
+
+function ReviewForm() {
+  const methods = useForm({ defaultValues: { score: 0 } });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(save)}>
+        <RHFRating name="score" rules={{ min: { value: 1, message: 'Pick a rating' } }} />
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+The field holds a number.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | required | The field path |
+| `control` | `Control` | - | Taken from `FormProvider` when left out |
+| `rules` | `RegisterOptions` | - | Validation rules |
+| `defaultValue` | `number` | `0` | Where it starts when the form has nothing |
+| `onChange` | `(value: number) => void` | - | Called alongside the form update |
+| ...rest | `RatingProps` | - | Everything [Rating](/docs/rating) takes, except `value`, `onChange` and `name` |
+
+`name` is handed to the rating so its radios are tied to the field.
+
+## Requiring one
+
+Nothing picked is `0`, not `undefined`, so `required` will not catch an untouched rating — `0` is a value. Use `min` instead:
+
+```tsx
+<RHFRating name="score" rules={{ min: { value: 1, message: 'Pick a rating' } }} />
+<RHFError name="score" />
+```
+
+## Related Components
+
+- [Rating](/docs/rating) - The rating on its own
+- [RHFRadio](/docs/rhf-radio) - For a one of many choice that is not a rating
+- [RHFError](/docs/rhf-error) - Shows the message
