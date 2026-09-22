@@ -75,6 +75,23 @@ describe("RHFFileInput", () => {
     expect(URL.revokeObjectURL).not.toHaveBeenCalled();
   });
 
+  it("revokes what it is still holding when it unmounts", async () => {
+    const { container, unmount } = render(
+      <Form defaultValues={{ doc: null }}>
+        <RHFFileInput name="doc" />
+      </Form>
+    );
+
+    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
+
+    await userEvent.upload(input, makeFile("a.txt"));
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+
+    unmount();
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledExactlyOnceWith("blob:preview-1");
+  });
+
   it("stores an array when multiple is set", async () => {
     const onSubmit = vi.fn();
     const { container } = render(

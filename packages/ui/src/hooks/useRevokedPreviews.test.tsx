@@ -59,12 +59,35 @@ describe("useRevokedPreviews", () => {
     expect(revoke).not.toHaveBeenCalled();
   });
 
-  it("does not revoke on unmount, so a StrictMode remount keeps its previews", () => {
-    const { unmount } = render(<Holder previews={["blob:a"]} />);
+  it("revokes what is left on unmount", () => {
+    const { rerender, unmount } = render(<Holder previews={[]} />);
+
+    rerender(<Holder previews={["blob:a", "blob:b"]} />);
+    expect(revoke).not.toHaveBeenCalled();
+
+    unmount();
+
+    expect(revoke).toHaveBeenCalledTimes(2);
+    expect(revoke).toHaveBeenCalledWith("blob:a");
+    expect(revoke).toHaveBeenCalledWith("blob:b");
+  });
+
+  it("leaves previews it inherited alone, so a StrictMode remount keeps them", () => {
+    // Already on screen at the first commit, so made by someone else
+    const { unmount } = render(<Holder previews={["blob:theirs"]} />);
 
     unmount();
 
     expect(revoke).not.toHaveBeenCalled();
+  });
+
+  it("revokes its own on unmount but not the ones it inherited", () => {
+    const { rerender, unmount } = render(<Holder previews={["blob:theirs"]} />);
+
+    rerender(<Holder previews={["blob:theirs", "blob:ours"]} />);
+    unmount();
+
+    expect(revoke).toHaveBeenCalledExactlyOnceWith("blob:ours");
   });
 
   it("ignores files that have no preview", () => {
