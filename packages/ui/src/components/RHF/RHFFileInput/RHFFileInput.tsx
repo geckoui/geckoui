@@ -1,5 +1,5 @@
 import { FileInput } from "../../FileInput";
-import type { PickedFile } from "../../FileInput";
+import type { FileInputProps, PickedFile } from "../../FileInput";
 import { RHFController } from "../RHFController";
 import type { RHFFileInputProps } from "./RHFFileInput.types";
 
@@ -15,13 +15,7 @@ import type { RHFFileInputProps } from "./RHFFileInput.types";
  * <RHFFileInput name="photos" multiple append unique preview max={5} />
  * ```
  */
-const RHFFileInput = <T extends PickedFile = PickedFile>({
-  name,
-  control,
-  rules,
-  onChange,
-  ...rest
-}: RHFFileInputProps<T>) => {
+const RHFFileInput = ({ name, control, rules, onChange, ...rest }: RHFFileInputProps) => {
   return (
     <RHFController
       control={control}
@@ -29,13 +23,15 @@ const RHFFileInput = <T extends PickedFile = PickedFile>({
       rules={rules}
       render={({ field, fieldState }) => (
         <FileInput
-          {...(rest as RHFFileInputProps<T>)}
+          {...(rest as FileInputProps)}
           hasError={Boolean(fieldState.error)}
           value={field.value}
-          onChange={(value: T | T[] | null) => {
-            field.onChange(value);
-            (onChange as ((v: unknown) => void) | undefined)?.(value);
-          }}
+          onChange={
+            ((value: PickedFile | PickedFile[] | null) => {
+              field.onChange(value);
+              (onChange as ((v: unknown) => void) | undefined)?.(value);
+            }) as never
+          }
         />
       )}
     />

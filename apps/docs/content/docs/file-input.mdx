@@ -146,7 +146,12 @@ Without `onReject` a turned-away file simply does not appear, which is the one t
 
 `preview` is off by default. An object URL pins the file's bytes until it is revoked, so you only pay for it when you ask. The URLs are revoked for you as files leave the field and when the field unmounts.
 
-`file.preview` is typed only when `preview` is set, so reading it otherwise is a compile error rather than `undefined` at runtime.
+The prop also decides the type: with `preview` the value is a `PreviewFile` and `file.preview` is a `string`; without it the value is a `PickedFile` and reading `preview` does not compile.
+
+```tsx
+<FileInput render={({ file }) => file.preview} />          {/* ✗ */}
+<FileInput preview render={({ file }) => file.preview} />  {/* ✓ */}
+```
 
 ### States
 
@@ -190,7 +195,15 @@ Without `onReject` a turned-away file simply does not appear, which is the one t
 
 `render` draws **inside** the field, so clicking to browse, dropping, the drag state and the keyboard all stay with the component. You are handing over what it looks like, not how it works.
 
-It is given `{ files, dragging, loading, disabled, readOnly, browse, clear, remove }`.
+What it is given follows the props, so nothing needs a cast:
+
+| | |
+|---|---|
+| single | `{ file, dragging, loading, disabled, readOnly, browse, clear }` |
+| `multiple` | `{ files, remove, ... }` — the same, with the list and a way to drop one |
+
+`file` and `files` are `PreviewFile` when `preview` is set and `PickedFile` otherwise, so
+`file.preview` only compiles when you asked for it.
 
 ### An avatar picker
 
@@ -209,17 +222,15 @@ const [avatar, setAvatar] = useState<PickedFile | null>(null);
   preview
   value={avatar}
   onChange={setAvatar}
-  render={({ files, dragging }) => {
-    const picked = files[0];
-
+  render={({ file, dragging }) => {
     return (
       <span
         className="group relative block size-24 cursor-pointer overflow-hidden rounded-full"
         style={{
           boxShadow: `0 0 0 2px ${dragging ? '#3b82f6' : '#e2e8f0'}`
         }}>
-        {picked ? (
-          <img src={picked.preview} alt={picked.name} className="h-full w-full object-cover" />
+        {file ? (
+          <img src={file.preview} alt={file.name} className="h-full w-full object-cover" />
         ) : (
           <span className="flex h-full w-full items-center justify-center text-xs">
             No photo
@@ -235,9 +246,9 @@ const [avatar, setAvatar] = useState<PickedFile | null>(null);
 />
 ```
 
-No `multiple`, so `files` holds at most one and dropping a second image replaces the first
-rather than adding to it. `preview` gives it the object URL to draw, revoked for you when
-the photo is replaced.
+No `multiple`, so `render` is handed `file` rather than a list, and dropping a second image
+replaces the first. `preview` is what types `file.preview` — without it, reading that is a
+compile error rather than `undefined` at runtime.
 
 ## Keyboard
 

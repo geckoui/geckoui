@@ -1,6 +1,6 @@
 "use client";
 
-import { FileInput, Label, type PickedFile } from "@geckoui/geckoui";
+import { FileInput, Label, type PickedFile, type PreviewFile } from "@geckoui/geckoui";
 import { useState } from "react";
 
 function Held({ files }: { files: PickedFile | PickedFile[] | null }) {
@@ -99,7 +99,7 @@ export function FileInputStatesExample() {
 }
 
 export function FileInputRenderExample() {
-  const [files, setFiles] = useState<PickedFile[]>([]);
+  const [files, setFiles] = useState<PreviewFile[]>([]);
 
   return (
     <FileInput
@@ -125,7 +125,7 @@ export function FileInputRenderExample() {
                   <img
                     alt={file.name}
                     className="h-full w-full rounded border object-cover"
-                    src={(file as { preview?: string }).preview}
+                    src={file.preview}
                   />
                   <button
                     className="absolute top-1 right-1 rounded px-1 text-xs text-white"
@@ -148,7 +148,7 @@ export function FileInputRenderExample() {
 }
 
 export function FileInputAvatarExample() {
-  const [avatar, setAvatar] = useState<PickedFile | null>(null);
+  const [avatar, setAvatar] = useState<PreviewFile | null>(null);
 
   return (
     <div className="flex flex-wrap items-center gap-6">
@@ -157,9 +157,7 @@ export function FileInputAvatarExample() {
         preview
         value={avatar}
         onChange={setAvatar}
-        render={({ files, dragging }) => {
-          const picked = files[0] as (PickedFile & { preview?: string }) | undefined;
-
+        render={({ file, dragging }) => {
           return (
             <span
               className="group relative block size-24 cursor-pointer overflow-hidden rounded-full transition-shadow"
@@ -168,12 +166,8 @@ export function FileInputAvatarExample() {
                   dragging ? "var(--color-primary-500)" : "var(--color-border-secondary)"
                 }`
               }}>
-              {picked?.preview ? (
-                <img
-                  alt={picked.name}
-                  className="h-full w-full object-cover"
-                  src={picked.preview}
-                />
+              {file ? (
+                <img alt={file.name} className="h-full w-full object-cover" src={file.preview} />
               ) : (
                 <span
                   className="flex h-full w-full items-center justify-center text-xs"

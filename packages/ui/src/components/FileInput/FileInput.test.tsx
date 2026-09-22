@@ -4,12 +4,15 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import FileInput from "./FileInput";
-import type { PickedFile } from "./FileInput.types";
+import type { PickedFile, PreviewFile } from "./FileInput.types";
 
 const field = () => document.querySelector<HTMLElement>(".GeckoUIFileInput")!;
 
 const picked = (name: string) =>
   Object.assign(new File(["x"], name, { type: "image/png" }), { path: "" }) as PickedFile;
+
+const previewed = (name: string) =>
+  Object.assign(picked(name), { preview: `blob:${name}` }) as PreviewFile;
 
 describe("FileInput", () => {
   describe("what it shows", () => {
@@ -269,7 +272,7 @@ describe("FileInput", () => {
           unique
           preview
           max={2}
-          value={[picked("a.png")]}
+          value={[previewed("a.png")]}
           data-testid="field"
         />
       );

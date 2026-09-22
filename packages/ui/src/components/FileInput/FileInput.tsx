@@ -1,4 +1,4 @@
-import type { DragEvent } from "react";
+import type { DragEvent, ReactNode } from "react";
 import { useRef, useState } from "react";
 
 import useRevokedPreviews from "../../hooks/useRevokedPreviews";
@@ -8,7 +8,7 @@ import type { FilePickerFile } from "../../types";
 import { classNames } from "../../utils/classNames";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
 import { Spinner } from "../Spinner";
-import type { FileInputProps, FileRejection, PickedFile } from "./FileInput.types";
+import type { FileInputProps, FileRejection, PickedFile, PreviewFile } from "./FileInput.types";
 import { countLabel } from "./FileInput.utils";
 
 /**
@@ -42,7 +42,7 @@ import { countLabel } from "./FileInput.utils";
  * />
  * ```
  */
-const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) => {
+const FileInput = (props: FileInputProps) => {
   /*
    * The multiple-only three are pulled out here as well, or they would ride `rest` onto the
    * div and React would complain about `append` not being a DOM attribute.
@@ -66,7 +66,10 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
     unique = false,
     max,
     ...rest
-  } = props as FileInputProps<T> & {
+  } = props as FileInputProps & {
+    value?: PickedFile | PickedFile[] | null;
+    onChange?: (value: never) => void;
+    render?: (state: never) => ReactNode;
     append?: boolean;
     unique?: boolean;
     max?: number;
@@ -76,15 +79,20 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const held: T[] = multiple ? ((value as T[]) ?? []) : value ? [value as T] : [];
+  const held: PickedFile[] = multiple
+    ? ((value as PickedFile[]) ?? [])
+    : value
+      ? [value as PickedFile]
+      : [];
 
-  useRevokedPreviews(held.map((file) => (file as PickedFile & { preview?: string }).preview));
+  useRevokedPreviews(held.map((file) => (file as Partial<PreviewFile>).preview));
 
   const usable = !disabled && !readOnly;
 
-  const emit = (files: T[]) => {
-    if (multiple) (onChange as ((f: T[]) => void) | undefined)?.(files);
-    else (onChange as ((f: T | null) => void) | undefined)?.(files[0] ?? null);
+  const emit = (files: PickedFile[]) => {
+    const report = onChange as ((value: PickedFile[] | PickedFile | null) => void) | undefined;
+
+    report?.(multiple ? files : (files[0] ?? null));
   };
 
   /** Room left on this run: everything when replacing, what is spare when appending. */
@@ -96,7 +104,7 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
   };
 
   const take = (incoming: FilePickerFile[], rejected: FileRejection[]) => {
-    const picked = incoming as unknown as T[];
+    const picked = incoming as unknown as PickedFile[];
     const kept = (append && multiple ? [...held, ...picked] : picked).slice(
       0,
       multiple ? undefined : 1
@@ -112,7 +120,7 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
       multiple: Boolean(multiple),
       preview,
       room: roomFor(),
-      oldFiles: append && multiple ? (held as unknown as FilePickerFile[]) : []
+      oldFiles: append && multiple ? (held as FilePickerFile[]) : []
     });
 
   const browse = async () => {
@@ -160,7 +168,7 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
   const remove = (file: PickedFile) => {
     if (!usable) return;
 
-    emit(held.filter((held) => held !== file));
+    emit(held.filter((current) => current !== file));
   };
 
   const state = disabled ? "disabled" : readOnly ? "readonly" : "enabled";
@@ -195,16 +203,15 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}>
         {render ? (
-          render({
-            files: held,
-            dragging,
-            loading,
-            disabled,
-            readOnly,
-            browse,
-            clear,
-            remove
-          })
+          /*
+           * One file gets `file`, a list gets `files` and `remove`. The props say which it
+           * is, so nothing here needs narrowing at the call site.
+           */
+          (render as (state: unknown) => ReactNode)(
+            multiple
+              ? { files: held, remove, dragging, loading, disabled, readOnly, browse, clear }
+              : { file: held[0] ?? null, dragging, loading, disabled, readOnly, browse, clear }
+          )
         ) : (
           <>
             {/* No handler of its own: the click bubbles to the row, which is the drop target */}
