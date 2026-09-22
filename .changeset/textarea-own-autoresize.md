@@ -13,5 +13,9 @@ written to its `style`, CSS works and so does the drag handle. With `autoResize`
 between `rows` and `maxRows`, in controlled and uncontrolled fields alike, and shrinks back
 when text is removed.
 
+It reads the element's own computed box each time it fits, so it follows whatever font,
+size, line height and padding you give it, and refits when a web font lands — with
+`font-display: swap` the first fit would otherwise measure the fallback.
+
 `TextareaProps` extends `TextareaHTMLAttributes` rather than `TextareaAutosizeProps`. The
 props themselves are unchanged.

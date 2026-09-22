@@ -81,7 +81,19 @@ const useAutoResize = (
 
     observer.observe(el);
 
-    return () => observer.disconnect();
+    /*
+     * A web font that lands after the first paint changes the line height underneath us,
+     * and that is a height change, which the observer above deliberately ignores. `swap`
+     * makes this the normal case rather than a rare one.
+     */
+    const fonts = document.fonts as FontFaceSet | undefined;
+
+    fonts?.addEventListener("loadingdone", fit);
+
+    return () => {
+      observer.disconnect();
+      fonts?.removeEventListener("loadingdone", fit);
+    };
   }, [ref, enabled, fit, value]);
 
   return fit;

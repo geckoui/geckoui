@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -173,7 +173,14 @@ describe("Textarea autoResize", () => {
     stubLayout(46);
 
     const { rerender } = render(
-      <Textarea autoResize rows={2} maxRows={10} value="one" onChange={() => {}} placeholder="Notes" />
+      <Textarea
+        autoResize
+        rows={2}
+        maxRows={10}
+        value="one"
+        onChange={() => {}}
+        placeholder="Notes"
+      />
     );
 
     expect(field().style.height).toBe("48px");
@@ -216,6 +223,30 @@ describe("Textarea autoResize", () => {
 
     expect(field().style.height).toBe("");
     expect(field().style.overflowY).toBe("");
+  });
+
+  it("refits once a web font has landed", () => {
+    const listeners: Record<string, () => void> = {};
+
+    Object.defineProperty(document, "fonts", {
+      configurable: true,
+      value: {
+        addEventListener: (event: string, fn: () => void) => (listeners[event] = fn),
+        removeEventListener: () => undefined
+      }
+    });
+
+    stubLayout(46);
+
+    render(<Textarea autoResize rows={2} maxRows={10} placeholder="Notes" />);
+
+    expect(field().style.height).toBe("48px");
+
+    // The font swaps in, the line height changes underneath, nothing re-renders
+    stubLayout(146);
+    act(() => listeners.loadingdone?.());
+
+    expect(field().style.height).toBe("148px");
   });
 
   it("falls back to the font size when lineHeight is the keyword normal", () => {
