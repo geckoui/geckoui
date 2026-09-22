@@ -15,3 +15,15 @@ if (!window.matchMedia) {
     dispatchEvent: () => false
   })) as unknown as typeof window.matchMedia;
 }
+
+/*
+ * jsdom has no ResizeObserver. The components that use one only ask it to watch for a width
+ * change, which never happens without layout, so a stub that observes nothing is enough.
+ */
+if (!window.ResizeObserver) {
+  window.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof window.ResizeObserver;
+}

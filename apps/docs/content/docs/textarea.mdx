@@ -7,7 +7,7 @@ import { Textarea } from '@geckoui/geckoui';
 
 # Textarea
 
-A textarea component built on react-textarea-autosize that can automatically adjust its height based on content. Control the minimum and maximum number of rows displayed.
+A textarea that can grow to fit what is typed. `rows` sets where it starts, `maxRows` where it stops.
 
 ## Installation
 
@@ -135,10 +135,14 @@ When `autoResize` is enabled:
 - Maximum height is determined by the `maxRows` prop
 - Shrinks back down when content is removed
 
-When `autoResize` is disabled:
-- The textarea has a fixed height
-- Users can resize manually (unless CSS prevents it)
-- The `maxRows` prop is ignored
+When `autoResize` is disabled it is a plain `<textarea>`: `rows` sets the height, nothing is
+written to its `style`, so CSS can size it and the user can drag it. `maxRows` is ignored.
+
+```css
+.GeckoUITextarea {
+  height: 200px;
+}
+```
 
 ## Accessibility
 
@@ -156,10 +160,6 @@ The component uses the class name `GeckoUITextarea`. Override styles using the `
   /* Your custom styles */
 }
 ```
-
-## Dependencies
-
-This component uses `react-textarea-autosize` for the auto-resize functionality.
 
 ## Related Components
 
