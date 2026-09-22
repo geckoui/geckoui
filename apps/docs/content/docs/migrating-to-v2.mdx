@@ -129,6 +129,8 @@ These are the ones to check by hand.
 
 **Range calendars show the days either side of the month.** v1 rendered blank cells for them, so a range running from one month into the next appeared to stop at the boundary. They are now greyed out, highlighted as part of the range, and selectable, exactly as in single mode.
 
+**`Textarea` no longer writes an inline height.** It used to render `react-textarea-autosize` even without `autoResize`, which stamped `height: …px !important` on every textarea — so CSS could not size one. A plain `<Textarea>` is now a plain `<textarea>`, and `.GeckoUITextarea { height: 200px }` works. With `autoResize` the drag handle is off, since the component owns the height and a manual resize was undone by the next keystroke.
+
 **Tooltips open after 200ms rather than 700ms.** 700 was long enough that a tooltip read as broken — you rest on a control, nothing happens, and you have moved on before it arrives. Pass `delayDuration={700}` to keep the old timing.
 
 ```diff

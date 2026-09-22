@@ -130,10 +130,18 @@ import { Textarea } from '@geckoui/geckoui';
 ## Auto-Resize Behavior
 
 When `autoResize` is enabled:
-- The textarea grows automatically as content increases
-- Minimum height is determined by the `rows` prop
-- Maximum height is determined by the `maxRows` prop
-- Shrinks back down when content is removed
+- It grows as you type and shrinks again when text is removed
+- `rows` is the shortest it gets, `maxRows` the tallest, after which it scrolls
+- It follows whatever font, size, line height and padding you give it, and refits when a web font finishes loading
+- **The drag handle is off**, since the height is the component's — a manual resize would be undone by the next keystroke
+
+Put the handle back if you would rather have it, and it will fight the next keystroke:
+
+```css
+.GeckoUITextarea[data-auto-resize] {
+  resize: vertical;
+}
+```
 
 When `autoResize` is disabled it is a plain `<textarea>`: `rows` sets the height, nothing is
 written to its `style`, so CSS can size it and the user can drag it. `maxRows` is ignored.
