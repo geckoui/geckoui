@@ -146,3 +146,58 @@ export function FileInputRenderExample() {
     />
   );
 }
+
+export function FileInputAvatarExample() {
+  const [avatar, setAvatar] = useState<PickedFile | null>(null);
+
+  return (
+    <div className="flex flex-wrap items-center gap-6">
+      <FileInput
+        accept="image/*"
+        preview
+        value={avatar}
+        onChange={setAvatar}
+        render={({ files, dragging }) => {
+          const picked = files[0] as (PickedFile & { preview?: string }) | undefined;
+
+          return (
+            <span
+              className="group relative block size-24 cursor-pointer overflow-hidden rounded-full transition-shadow"
+              style={{
+                boxShadow: `0 0 0 2px ${
+                  dragging ? "var(--color-primary-500)" : "var(--color-border-secondary)"
+                }`
+              }}>
+              {picked?.preview ? (
+                <img
+                  alt={picked.name}
+                  className="h-full w-full object-cover"
+                  src={picked.preview}
+                />
+              ) : (
+                <span
+                  className="flex h-full w-full items-center justify-center text-xs"
+                  style={{
+                    background: "var(--color-surface-secondary)",
+                    color: "var(--color-text-placeholder)"
+                  }}>
+                  No photo
+                </span>
+              )}
+
+              <span
+                className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100"
+                style={{ background: "rgb(0 0 0 / 0.5)" }}>
+                {dragging ? "Drop" : "Change"}
+              </span>
+            </span>
+          );
+        }}
+      />
+
+      <p className="text-sm" style={{ color: "var(--color-text-tertiary)" }}>
+        {avatar ? avatar.name : "Click the circle, or drop an image on it."}
+      </p>
+    </div>
+  );
+}

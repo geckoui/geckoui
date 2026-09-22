@@ -3,7 +3,7 @@ title: FileInput
 description: A file field you can click or drop onto
 ---
 
-import { FileInputBasicExample, FileInputMultipleExample, FileInputAppendExample, FileInputRejectExample, FileInputStatesExample, FileInputRenderExample } from '@/components/examples/file-input-examples';
+import { FileInputBasicExample, FileInputMultipleExample, FileInputAppendExample, FileInputRejectExample, FileInputStatesExample, FileInputRenderExample, FileInputAvatarExample } from '@/components/examples/file-input-examples';
 
 # FileInput
 
@@ -191,6 +191,53 @@ Without `onReject` a turned-away file simply does not appear, which is the one t
 `render` draws **inside** the field, so clicking to browse, dropping, the drag state and the keyboard all stay with the component. You are handing over what it looks like, not how it works.
 
 It is given `{ files, dragging, loading, disabled, readOnly, browse, clear, remove }`.
+
+### An avatar picker
+
+The field is whatever you draw, so a round photo picker is the same component with a
+different `render`.
+
+<Preview>
+  <FileInputAvatarExample />
+</Preview>
+
+```tsx
+const [avatar, setAvatar] = useState<PickedFile | null>(null);
+
+<FileInput
+  accept="image/*"
+  preview
+  value={avatar}
+  onChange={setAvatar}
+  render={({ files, dragging }) => {
+    const picked = files[0];
+
+    return (
+      <span
+        className="group relative block size-24 cursor-pointer overflow-hidden rounded-full"
+        style={{
+          boxShadow: `0 0 0 2px ${dragging ? '#3b82f6' : '#e2e8f0'}`
+        }}>
+        {picked ? (
+          <img src={picked.preview} alt={picked.name} className="h-full w-full object-cover" />
+        ) : (
+          <span className="flex h-full w-full items-center justify-center text-xs">
+            No photo
+          </span>
+        )}
+
+        <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-xs text-white opacity-0 group-hover:opacity-100">
+          {dragging ? 'Drop' : 'Change'}
+        </span>
+      </span>
+    );
+  }}
+/>
+```
+
+No `multiple`, so `files` holds at most one and dropping a second image replaces the first
+rather than adding to it. `preview` gives it the object URL to draw, revoked for you when
+the photo is replaced.
 
 ## Keyboard
 
