@@ -18,6 +18,5 @@ export * from "./RHFRangeSlider";
 export * from "./RHFDateRangeInput";
 export * from "./RHFFileInput";
 export * from "./RHFOTPInput";
-export * from "./RHFFilePicker";
 export * from "./RHFController";
 export * from "./RHFSelect";

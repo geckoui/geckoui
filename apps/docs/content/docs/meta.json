@@ -22,6 +22,7 @@
     "date-range-input",
     "dialog",
     "drawer",
+    "file-input",
     "input",
     "input-error",
     "label",
@@ -64,7 +65,6 @@
     "rhf-currency-input",
     "rhf-otp-input",
     "rhf-file-input",
-    "rhf-file-picker",
     "rhf-input-group",
     "rhf-error",
     "rhf-controller"

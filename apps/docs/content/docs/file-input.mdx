@@ -1,0 +1,222 @@
+---
+title: FileInput
+description: A file field you can click or drop onto
+---
+
+import { FileInputBasicExample, FileInputMultipleExample, FileInputAppendExample, FileInputRejectExample, FileInputStatesExample, FileInputRenderExample } from '@/components/examples/file-input-examples';
+
+# FileInput
+
+A file field. Click it to browse, or drop files onto it.
+
+It follows the native `<input type="file">` where it can: one file unless you ask for more, and a new pick replaces what was there.
+
+## Installation
+
+```tsx
+import { FileInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <FileInputBasicExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import { FileInput, type PickedFile } from '@geckoui/geckoui';
+
+export function Attachment() {
+  const [file, setFile] = useState<PickedFile | null>(null);
+
+  return <FileInput value={file} onChange={setFile} />;
+}
+```
+
+The value is one `PickedFile`, or `null`. The whole field is the drop target.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `PickedFile \| null` / `PickedFile[]` | - | What is held. The shape follows `multiple` |
+| `onChange` | `(value) => void` | - | Called with what is held now |
+| `multiple` | `boolean` | `false` | Hold a list rather than one file |
+| `append` | `boolean` | `false` | Add to what is held instead of replacing it. `multiple` only |
+| `unique` | `boolean` | `false` | Turn away a file already held. `multiple` only |
+| `max` | `number` | - | How many may be held. `multiple` only |
+| `preview` | `boolean` | `false` | Give each file an object URL on `preview` |
+| `accept` | `string` | `"*"` | What may be picked, enforced on a drop too |
+| `onReject` | `(rejected: FileRejection[]) => void` | - | Called with everything turned away, and why |
+| `placeholder` | `ReactNode` | `'Choose a file'` / `'Choose files'` | Shown while empty |
+| `hideClearIcon` | `boolean` | `false` | Drop the × that empties the field |
+| `disabled` | `boolean` | `false` | Nothing can be picked or dropped |
+| `readOnly` | `boolean` | `false` | Shows what is held, but nothing can change |
+| `hasError` | `boolean` | `false` | Draws the field in its error colours |
+| `render` | `(state) => ReactNode` | - | Draw the field yourself |
+| `className` / `wrapperClassName` | `string` | - | |
+
+`append`, `unique` and `max` are only accepted alongside `multiple` — TypeScript rejects them on a single field, since none of them mean anything for one file.
+
+## The file
+
+```ts
+type PickedFile = File & { path: string };
+type PreviewFile = PickedFile & { preview: string };
+```
+
+A real `File`, so it goes straight into a `FormData`. `path` says where it sat in a folder that was dropped, and is `""` for a file picked on its own.
+
+`preview` only exists when you asked for it — see below.
+
+## Examples
+
+### Several files
+
+<Preview>
+  <FileInputMultipleExample />
+</Preview>
+
+```tsx
+const [files, setFiles] = useState<PickedFile[]>([]);
+
+<FileInput multiple value={files} onChange={setFiles} />
+```
+
+The field shows a count, the way a native input does. `value` is now a `PickedFile[]`, and TypeScript knows it from `multiple` alone.
+
+### Adding rather than replacing
+
+<Preview>
+  <FileInputAppendExample />
+</Preview>
+
+```tsx
+<FileInput multiple append unique value={files} onChange={setFiles} />
+```
+
+Without `append`, picking again replaces everything — that is what the native element does. With it, each pick adds to what is there.
+
+`unique` then turns away a file that is already held. It compares by size first, then samples the start, middle and end, so a large file is never read end to end. It earns its keep once files can accumulate: dropping a folder and a subfolder that both contain the same file.
+
+### What was turned away
+
+<Preview>
+  <FileInputRejectExample />
+</Preview>
+
+```tsx
+<FileInput
+  multiple
+  append
+  unique
+  max={3}
+  accept="image/*"
+  value={files}
+  onChange={setFiles}
+  onReject={(rejected) =>
+    toast.error(rejected.map((r) => `${r.file.name} — ${r.reason}`).join('\n'))
+  }
+/>
+```
+
+```ts
+type FileRejection = {
+  file: File;
+  reason: 'type' | 'duplicate' | 'max';
+};
+```
+
+- `type` — it did not match `accept`
+- `duplicate` — it is already held, and `unique` is set
+- `max` — there was no room: past `max`, or a second file dropped on a single field
+
+Without `onReject` a turned-away file simply does not appear, which is the one thing a file field should never do quietly.
+
+### Previews
+
+```tsx
+<FileInput multiple preview value={files} onChange={setFiles} />
+
+{files.map((file) => (
+  <img key={file.name} src={file.preview} alt={file.name} />
+))}
+```
+
+`preview` is off by default. An object URL pins the file's bytes until it is revoked, so you only pay for it when you ask. The URLs are revoked for you as files leave the field and when the field unmounts.
+
+`file.preview` is typed only when `preview` is set, so reading it otherwise is a compile error rather than `undefined` at runtime.
+
+### States
+
+<Preview>
+  <FileInputStatesExample />
+</Preview>
+
+```tsx
+<FileInput placeholder="Attach your CV" />
+<FileInput hasError />
+<FileInput disabled />
+<FileInput hideClearIcon />
+```
+
+`readOnly` shows what is held but takes away browsing, dropping and clearing. `disabled` does the same and takes the field out of the tab order.
+
+### Drawing it yourself
+
+<Preview>
+  <FileInputRenderExample />
+</Preview>
+
+```tsx
+<FileInput
+  multiple
+  preview
+  accept="image/*"
+  value={files}
+  onChange={setFiles}
+  render={({ files, dragging, loading, browse, clear, remove }) => (
+    <div className={dragging ? 'ring-2' : ''}>
+      <p>{files.length} picked</p>
+
+      {files.map((file) => (
+        <img key={file.name} src={file.preview} alt={file.name} />
+      ))}
+    </div>
+  )}
+/>
+```
+
+`render` draws **inside** the field, so clicking to browse, dropping, the drag state and the keyboard all stay with the component. You are handing over what it looks like, not how it works.
+
+It is given `{ files, dragging, loading, disabled, readOnly, browse, clear, remove }`.
+
+## Keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>Tab</kbd> | Reaches the field |
+| <kbd>Enter</kbd> <kbd>Space</kbd> | Opens the file dialog |
+
+## Styling with CSS
+
+```
+.GeckoUIFileInput              [data-state] [data-error] [data-dragging] [data-empty]
+.GeckoUIFileInput__value
+.GeckoUIFileInput__placeholder
+.GeckoUIFileInput__icons
+.GeckoUIFileInput__clear
+.GeckoUIFileInput__icon
+```
+
+It takes the same border, radius and state colours as the other fields, so it sits beside a `DateInput` or an `Input` without looking foreign. `data-dragging` is on while a file is over it. A field drawn with `render` carries `data-custom` and gives up the box around it.
+
+## Accessibility
+
+The field is a `button`, so it reaches the tab order and opens on <kbd>Enter</kbd> or <kbd>Space</kbd>. It carries `aria-disabled` and `aria-readonly` rather than being removed from the page, and the clear button is labelled.
+
+## Related Components
+
+- [RHFFileInput](/docs/rhf-file-input) - The same field, wired to React Hook Form
+- [Input](/docs/input) - For text

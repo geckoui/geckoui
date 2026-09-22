@@ -28,6 +28,7 @@ export * from "./Rating";
 export * from "./Breadcrumb";
 export * from "./ColorPicker";
 export * from "./ColorInput";
+export * from "./FileInput";
 export * from "./Stepper";
 export * from "./Textarea";
 export * from "./OTPInput";

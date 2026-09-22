@@ -1,156 +1,89 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { RHFFileInput } from "..";
+import { RHFFileInput } from ".";
+import type { PickedFile } from "../../FileInput";
 import { Form, submit } from "../testUtils";
 
+const field = () => document.querySelector<HTMLElement>(".GeckoUIFileInput")!;
+
+const picked = (name: string) =>
+  Object.assign(new File(["x"], name, { type: "image/png" }), { path: "" }) as PickedFile;
+
 describe("RHFFileInput", () => {
-  const makeFile = (name: string) => new File(["content"], name, { type: "text/plain" });
-
-  beforeEach(() => {
-    let issued = 0;
-
-    globalThis.URL.createObjectURL = vi.fn(() => `blob:preview-${++issued}`);
-    globalThis.URL.revokeObjectURL = vi.fn();
-  });
-
-  it("renders a file input", () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" />
+  it("shows what the form starts with", () => {
+    render(
+      <Form defaultValues={{ cv: picked("cv.pdf") }}>
+        <RHFFileInput name="cv" />
       </Form>
     );
 
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-    expect(input).toHaveAttribute("type", "file");
+    expect(screen.getByText("cv.pdf")).toBeInTheDocument();
   });
 
-  it("stores a single file", async () => {
-    const onSubmit = vi.fn();
-    const { container } = render(
-      <Form defaultValues={{ doc: null }} onSubmit={onSubmit}>
-        <RHFFileInput name="doc" />
-      </Form>
-    );
-
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-    await userEvent.upload(input, makeFile("a.txt"));
-    await submit();
-
-    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
-    expect((onSubmit.mock.calls[0][0] as { doc: File }).doc.name).toBe("a.txt");
-  });
-
-  it("revokes the preview of a file that has been replaced", async () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" />
-      </Form>
-    );
-
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-
-    await userEvent.upload(input, makeFile("a.txt"));
-    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
-
-    // Picking again drops the first file, whose blob would otherwise be pinned for good
-    await userEvent.upload(input, makeFile("b.txt"));
-
-    await waitFor(() => expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:preview-1"));
-    expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
-  });
-
-  it("keeps the preview of the file it is still holding", async () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" />
-      </Form>
-    );
-
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-
-    await userEvent.upload(input, makeFile("a.txt"));
-
-    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
-  });
-
-  it("revokes what it is still holding when it unmounts", async () => {
-    const { container, unmount } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" />
-      </Form>
-    );
-
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-
-    await userEvent.upload(input, makeFile("a.txt"));
-    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
-
-    unmount();
-
-    expect(URL.revokeObjectURL).toHaveBeenCalledExactlyOnceWith("blob:preview-1");
-  });
-
-  it("stores an array when multiple is set", async () => {
-    const onSubmit = vi.fn();
-    const { container } = render(
-      <Form defaultValues={{ docs: null }} onSubmit={onSubmit}>
+  it("counts them when the form holds a list", () => {
+    render(
+      <Form defaultValues={{ docs: [picked("a.png"), picked("b.png")] }}>
         <RHFFileInput name="docs" multiple />
       </Form>
     );
 
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-    await userEvent.upload(input, [makeFile("a.txt"), makeFile("b.txt")]);
+    expect(screen.getByText("2 files")).toBeInTheDocument();
+  });
+
+  it("puts null back into the form when it is cleared", async () => {
+    const onSubmit = vi.fn();
+
+    render(
+      <Form defaultValues={{ cv: picked("cv.pdf") }} onSubmit={onSubmit}>
+        <RHFFileInput name="cv" />
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Clear" }));
     await submit();
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
-    const { docs } = onSubmit.mock.calls[0][0] as { docs: File[] };
-    expect(docs.map((f) => f.name)).toEqual(["a.txt", "b.txt"]);
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ cv: null }));
   });
 
-  it("attaches a preview url to each file", async () => {
+  it("draws itself in error when the rules turn it away", async () => {
+    render(
+      <Form>
+        <RHFFileInput name="cv" rules={{ required: "Pick a file" }} />
+      </Form>
+    );
+
+    await submit();
+
+    expect(field()).toHaveAttribute("data-error");
+  });
+
+  it("stops the form when it is required and empty", async () => {
+    const onSubmit = vi.fn();
+
+    render(
+      <Form onSubmit={onSubmit}>
+        <RHFFileInput name="cv" rules={{ required: "Pick a file" }} />
+      </Form>
+    );
+
+    await submit();
+
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it("calls your own onChange alongside the form", async () => {
     const onChange = vi.fn();
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" onChange={onChange} />
+
+    render(
+      <Form defaultValues={{ cv: picked("cv.pdf") }}>
+        <RHFFileInput name="cv" onChange={onChange} />
       </Form>
     );
 
-    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
-    await userEvent.upload(input, makeFile("a.txt"));
+    await userEvent.click(screen.getByRole("button", { name: "Clear" }));
 
-    expect(onChange.mock.calls[0][0]).toMatchObject({ preview: "blob:preview-1" });
-  });
-
-  it("renders custom content and marks the input", () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" render={() => <span data-testid="drop-zone" />} />
-      </Form>
-    );
-
-    expect(screen.getByTestId("drop-zone")).toBeInTheDocument();
-    expect(container.querySelector(".GeckoUIRHFFileInput__input")).toHaveAttribute("data-custom");
-  });
-
-  it("disables the input", () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" disabled />
-      </Form>
-    );
-
-    expect(container.querySelector(".GeckoUIRHFFileInput__input")).toBeDisabled();
-  });
-
-  it("applies the base class and a custom class", () => {
-    const { container } = render(
-      <Form defaultValues={{ doc: null }}>
-        <RHFFileInput name="doc" className="custom" />
-      </Form>
-    );
-
-    expect(container.querySelector(".GeckoUIRHFFileInput")).toHaveClass("custom");
+    expect(onChange).toHaveBeenCalledWith(null);
   });
 });
