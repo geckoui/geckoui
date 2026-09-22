@@ -365,12 +365,12 @@ const methods = useForm({
 ## Error States
 
 RHFSelect automatically displays error states with:
-- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- `aria-invalid` on the control when `fieldState.error` exists, which both a screen reader and the red border read
 - No automatic error message display (use RHFInputGroup or RHFError component)
 
 ```css
-.GeckoUIRHFSelectButton[data-error] {
-  border-color: red;
+.GeckoUISelectButton[aria-invalid="true"] {
+  border-color: var(--color-border-invalid);
 }
 ```
 

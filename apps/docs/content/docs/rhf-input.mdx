@@ -254,12 +254,12 @@ function RegistrationForm() {
 ## Error States
 
 RHFInput automatically displays error states with:
-- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- `aria-invalid` on the control when `fieldState.error` exists, which both a screen reader and the red border read
 - No automatic error icon (you must add via suffix prop if desired)
 
 ```css
-.GeckoUIRHFInput[data-error] {
-  border-color: red;
+.GeckoUIInput:has([aria-invalid="true"]) {
+  border-color: var(--color-border-invalid);
 }
 ```
 
