@@ -1,6 +1,5 @@
-import isEqual from "lodash.isequal";
-
 import { classNames } from "../../../utils/classNames";
+import isEqual from "../../../utils/isEqual";
 import isTextIncludes from "../../../utils/isTextIncludes";
 import { Input, type InputProps } from "../../Input";
 import { isHideSelectOption } from "../Select.utils";
