@@ -149,6 +149,13 @@ The `RHF*` wrappers set it for you from the field's own error, as they did with 
 
 **The date calendars sit with the other floating panels.** `DateInput` and `DateRangeInput` pinned their popup at `z-index: 9999` inline, which put it above dialogs and toasts and could not be retuned. They now open at `50`, alongside `Tooltip`, `Menu` and `Popover`. See [Stacking Order](/docs/theming#stacking-order), and use `--gecko-date-input-z` if you need something else.
 
+**`RHFCheckbox`, `RHFRadio` and `RHFSwitch` call `onBlur` with no arguments.** They were the last wrappers still forwarding the native `FocusEvent`, while every other one hands back the value or nothing. Read the value from the form instead.
+
+```diff
+-<RHFSwitch name="on" onBlur={(e) => log(e.target.checked)} />
++<RHFSwitch name="on" onBlur={() => log(getValues("on"))} />
+```
+
 **`Checkbox` `indeterminate` is independent of `checked`.** In v1 the dash only rendered when `checked` was also true, which forced the wrong state on a select-all box. Now it matches the native DOM property.
 
 ```diff

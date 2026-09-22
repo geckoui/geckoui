@@ -114,4 +114,18 @@ describe("RHFSwitch", () => {
 
     expect(screen.getByRole("switch")).not.toHaveAttribute("aria-invalid");
   });
+
+  it("calls onBlur with no arguments", async () => {
+    const onBlur = vi.fn();
+    render(
+      <Form defaultValues={{ on: false }}>
+        <RHFSwitch name="on" onBlur={onBlur} />
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("switch"));
+    await userEvent.tab();
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledWith());
+  });
 });

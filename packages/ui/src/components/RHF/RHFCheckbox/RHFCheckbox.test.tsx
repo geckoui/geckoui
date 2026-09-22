@@ -167,4 +167,18 @@ describe("RHFCheckbox", () => {
 
     expect(screen.getByRole("checkbox")).not.toHaveAttribute("aria-invalid");
   });
+
+  it("calls onBlur with no arguments", async () => {
+    const onBlur = vi.fn();
+    render(
+      <Form defaultValues={{ terms: false }}>
+        <RHFCheckbox name="terms" onBlur={onBlur} />
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("checkbox"));
+    await userEvent.tab();
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledWith());
+  });
 });

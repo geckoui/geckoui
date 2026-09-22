@@ -105,9 +105,9 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
               disabled={disabled}
               checked={isChecked()}
               id={id || _id}
-              onBlur={(e) => {
+              onBlur={() => {
                 field.onBlur();
-                onBlur?.(e);
+                onBlur?.();
               }}
               onChange={() => {
                 let v: unknown;

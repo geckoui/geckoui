@@ -73,9 +73,9 @@ const RHFSwitch: FC<RHFSwitchProps> = ({
             disabled={disabled}
             checked={isChecked}
             className={classNames("GeckoUIRHFSwitch", className)}
-            onBlur={(e) => {
+            onBlur={() => {
               field.onBlur();
-              onBlur?.(e);
+              onBlur?.();
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

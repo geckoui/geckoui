@@ -101,4 +101,18 @@ describe("RHFRadio", () => {
 
     expect(screen.getByRole("radio")).not.toHaveAttribute("aria-invalid");
   });
+
+  it("calls onBlur with no arguments", async () => {
+    const onBlur = vi.fn();
+    render(
+      <Form defaultValues={{ plan: "" }}>
+        <RHFRadio name="plan" value="pro" onBlur={onBlur} />
+      </Form>
+    );
+
+    await userEvent.click(screen.getByRole("radio"));
+    await userEvent.tab();
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledWith());
+  });
 });

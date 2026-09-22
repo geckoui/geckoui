@@ -80,9 +80,9 @@ const RHFRadio: FC<RHFRadioProps> = ({
               checked={isEqual(field.value, value)}
               disabled={disabled}
               id={uniqueId}
-              onBlur={(e) => {
+              onBlur={() => {
                 field.onBlur();
-                onBlur?.(e);
+                onBlur?.();
               }}
               onChange={() => {
                 field.onChange(value);

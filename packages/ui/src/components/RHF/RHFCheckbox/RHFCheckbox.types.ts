@@ -5,7 +5,7 @@ import type { RHFBaseProps, RHFRenderArgs } from "../RHF.types";
 
 export interface RHFCheckboxProps
   extends RHFBaseProps,
-    Omit<CheckboxProps, "name" | "value" | "onChange" | "indeterminate"> {
+    Omit<CheckboxProps, "name" | "value" | "onChange" | "onBlur" | "indeterminate"> {
   /**
    * Label that will be displayed next to the checkbox
    * */
@@ -68,4 +68,10 @@ export interface RHFCheckboxProps
    * ```
    * */
   indeterminate?: boolean | ((args: RHFRenderArgs<Record<string, unknown>>) => boolean);
+
+  /**
+   * Callback fired when the field is blurred
+   * Called alongside React Hook Form's onBlur
+   * */
+  onBlur?: () => void;
 }
