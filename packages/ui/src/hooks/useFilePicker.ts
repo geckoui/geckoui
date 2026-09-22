@@ -71,7 +71,7 @@ function useFilePicker<T extends HTMLElement>(
 ): UseFilePickerReturn<T> {
   const {
     accept = "*",
-    removeDuplicates: _removeDuplicated = false,
+    removeDuplicates = false,
     onChange,
     keepOldFiles,
     onStart,
@@ -79,10 +79,9 @@ function useFilePicker<T extends HTMLElement>(
     transform,
     files = [],
     setFiles,
-    disabled = false
+    disabled = false,
+    multiple = true
   } = options || {};
-
-  const removeDuplicates = _removeDuplicated && keepOldFiles;
 
   const dropzoneRef = useRef<T>(null);
   const [loading, setLoading] = useState(false);
@@ -108,6 +107,7 @@ function useFilePicker<T extends HTMLElement>(
 
     try {
       const handler = new FilePicker(accept, removeDuplicates, {
+        multiple,
         oldFiles: files
       });
       const res = await handler.open({
@@ -160,6 +160,7 @@ function useFilePicker<T extends HTMLElement>(
         onStart?.();
 
         const handler = new FilePicker(accept, removeDuplicates, {
+          multiple,
           oldFiles: files
         });
 
@@ -183,7 +184,17 @@ function useFilePicker<T extends HTMLElement>(
       el.removeEventListener("dragleave", handleDragLeave);
       el.removeEventListener("drop", handleDrop);
     };
-  }, [accept, disabled, files, handleOnChange, loading, onError, onStart, removeDuplicates]);
+  }, [
+    accept,
+    disabled,
+    files,
+    handleOnChange,
+    loading,
+    multiple,
+    onError,
+    onStart,
+    removeDuplicates
+  ]);
 
   return {
     dropzoneRef,

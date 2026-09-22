@@ -4,11 +4,17 @@ import { isTwoFileEqualByFileContent } from "../../../utils";
 class BaseFilePickerHandler {
   accept: string;
   removeDuplicates: boolean;
+  multiple: boolean;
   oldFiles: FilePickerFile[];
 
-  constructor(accept = "*", removeDuplicates = false, opts?: { oldFiles?: FilePickerFile[] }) {
+  constructor(
+    accept = "*",
+    removeDuplicates = false,
+    opts?: { oldFiles?: FilePickerFile[]; multiple?: boolean }
+  ) {
     this.accept = accept;
     this.removeDuplicates = removeDuplicates;
+    this.multiple = opts?.multiple ?? true;
     this.oldFiles = opts?.oldFiles || [];
 
     this.open = this.open.bind(this);
@@ -19,7 +25,7 @@ class BaseFilePickerHandler {
   }
 
   async open(options?: OpenFilePickerOptions): Promise<FilePickerFile[]> {
-    const { multiple = true, directory = false, onChangeStart } = options || {};
+    const { multiple = this.multiple, directory = false, onChangeStart } = options || {};
 
     return new Promise((resolve) => {
       const input = document.createElement("input");
@@ -57,6 +63,12 @@ class BaseFilePickerHandler {
     file: FilePickerFile,
     data: FilePickerFile[] = []
   ): Promise<FilePickerFile[]> {
+    /*
+     * Every path in, browsed or dropped, comes through here, so one file means one file
+     * whichever way it arrived. The browse dialog also enforces it, but a drop cannot.
+     */
+    if (!this.multiple && data.length >= 1) return data;
+
     let newFile = file;
     const key = newFile.size;
 

@@ -16,7 +16,11 @@ import {
 
 # RHFFilePicker
 
-An advanced file picker component with drag-and-drop support, directory selection, and duplicate detection integrated with React Hook Form. Perfect for uploading multiple files or entire directories.
+A file picker wired to React Hook Form, with drag and drop, directory selection and duplicate detection. The field holds a `FilePickerFile[]`.
+
+**This one or [RHFFileInput](/docs/rhf-file-input)?** Use `RHFFilePicker` when you want drag and drop, directory selection, or duplicate detection. Use `RHFFileInput` for a plain click-to-browse field, or when the value should be one file rather than a list.
+
+Pass `multiple={false}` to keep a single file while still accepting a drop.
 
 ## Installation
 
@@ -57,12 +61,14 @@ function Example() {
 | `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
 | `rules` | `RegisterOptions` | - | Inline validation rules |
 | `accept` | `string` | `*` | File types to accept (e.g., "image/*", ".pdf") |
+| `multiple` | `boolean` | `true` | Whether more than one file may be held. `false` keeps one, browsed or dropped |
+| `disabled` | `boolean` | `false` | Nothing can be picked or dropped |
 | `keepOldFiles` | `boolean` | `false` | Keep previously selected files when adding new ones |
-| `removeDuplicates` | `boolean` | `false` | Automatically remove duplicate files(Only works if `keepOldFiles` is true) |
+| `removeDuplicates` | `boolean` | `false` | Drop a file already held, or one that arrived twice in the same batch |
 | `transform` | `(files) => files` | - | Transform files before setting them |
 | `onChange` | `(files, newFiles) => void` | - | Callback when files change |
 | `onError` | `(error) => void` | - | Callback when an error occurs |
-| `render` | `Function` | - | Custom render function with access to picker state |
+| `render` | `(props) => ReactNode` | - | Draw it yourself. Given `{ dropzoneRef, dragging, loading, openFilePicker, files, disabled }` plus the RHF render args |
 
 ## Examples
 
@@ -129,8 +135,12 @@ Accumulate files across multiple selections:
 
 ### Remove Duplicates
 
-If you set `keepOldFiles`, you can also enable `removeDuplicates` to avoid duplicate files:
-So, if a user selects the same file multiple times, only one instance will be kept.
+`removeDuplicates` drops a file that is already held, and one that arrives twice in the same
+batch — dropping a folder and a subfolder that both contain it, say. It works with or without
+`keepOldFiles`.
+
+Files are compared by size first, then by sampling the start, middle and end, so a large file
+is never read end to end.
 
 <Preview>
   <RemoveDuplicatesExample />

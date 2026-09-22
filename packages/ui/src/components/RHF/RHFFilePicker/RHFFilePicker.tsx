@@ -130,6 +130,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
   keepOldFiles,
   transform,
   disabled = false,
+  multiple = true,
   field,
   fieldState,
   formState
@@ -142,6 +143,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
     keepOldFiles,
     transform,
     disabled,
+    multiple,
     onChange: async (files, newFiles) => {
       field.onChange(files);
 

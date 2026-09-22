@@ -259,3 +259,37 @@ describe("RHFFilePicker disabled", () => {
     expect(screen.getByText("off")).toBeInTheDocument();
   });
 });
+
+describe("RHFFilePicker multiple", () => {
+  it("keeps only one file when multiple is off", () => {
+    render(
+      <Form defaultValues={{ files: [pickedFile("a.png", 10)] }}>
+        <RHFFilePicker name="files" multiple={false} />
+      </Form>
+    );
+
+    expect(rows()).toHaveLength(1);
+  });
+
+  it("hands multiple down to the picker rather than dropping it", () => {
+    // The component used not to destructure it, so it never reached the hook at all
+    const seen: boolean[] = [];
+
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker
+          name="files"
+          multiple={false}
+          render={({ openFilePicker }) => {
+            seen.push(typeof openFilePicker === "function");
+
+            return <p>drawn</p>;
+          }}
+        />
+      </Form>
+    );
+
+    expect(screen.getByText("drawn")).toBeInTheDocument();
+    expect(seen[0]).toBe(true);
+  });
+});
