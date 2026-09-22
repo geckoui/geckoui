@@ -129,6 +129,15 @@ These are the ones to check by hand.
 
 **Range calendars show the days either side of the month.** v1 rendered blank cells for them, so a range running from one month into the next appeared to stop at the boundary. They are now greyed out, highlighted as part of the range, and selectable, exactly as in single mode.
 
+**Tooltips open after 200ms rather than 700ms.** 700 was long enough that a tooltip read as broken — you rest on a control, nothing happens, and you have moved on before it arrives. Pass `delayDuration={700}` to keep the old timing.
+
+```diff
+-<Tooltip content="Help">
++<Tooltip content="Help" delayDuration={700}>
+```
+
+**The date calendars sit with the other floating panels.** `DateInput` and `DateRangeInput` pinned their popup at `z-index: 9999` inline, which put it above dialogs and toasts and could not be retuned. They now open at `50`, alongside `Tooltip`, `Menu` and `Popover`. See [Stacking Order](/docs/theming#stacking-order), and use `--gecko-date-input-z` if you need something else.
+
 **`Checkbox` `indeterminate` is independent of `checked`.** In v1 the dash only rendered when `checked` was also true, which forced the wrong state on a select-all box. Now it matches the native DOM property.
 
 ```diff
@@ -140,11 +149,69 @@ These are the ones to check by hand.
  />
 ```
 
-## 5. Removed exports
+## 5. The file components are now one
+
+`RHFFileInput` and `RHFFilePicker` are gone, replaced by **[FileInput](/docs/file-input)** and a thin **[RHFFileInput](/docs/rhf-file-input)** around it — the same base-plus-wrapper pairing every other component in the library uses. File upload was the only capability that had no base component and could not be used without React Hook Form.
+
+One component now does both jobs. It is a field you click, and the whole field is a drop target.
+
+```diff
+-<RHFFileInput name="avatar" accept="image/*" />
++<RHFFileInput name="avatar" accept="image/*" />
+```
+
+```diff
+-<RHFFilePicker name="photos" accept="image/*" keepOldFiles removeDuplicates />
++<RHFFileInput name="photos" accept="image/*" multiple append unique />
+```
+
+| v1 | v2 |
+|---|---|
+| `RHFFilePicker` | `RHFFileInput multiple` |
+| `keepOldFiles` | `append` |
+| `removeDuplicates` | `unique` |
+| `FileWithPreview`, `FilePickerFile` | `PickedFile`, or `PreviewFile` with `preview` |
+| `onError` (for rejections) | `onReject` |
+
+Three behaviour changes worth reading before you upgrade:
+
+**One file by default.** `RHFFilePicker` always held an array; the new field holds one file unless you pass `multiple`, matching the native element. `multiple` also decides the type of `value` and `onChange`, so TypeScript will tell you if you missed one.
+
+**`preview` is off by default.** Every picked file used to get an object URL, which pins the file's bytes until it is revoked — and nothing ever revoked them. Pass `preview` where you need it:
+
+```diff
+-<RHFFilePicker name="photos" accept="image/*" />
++<RHFFileInput name="photos" accept="image/*" multiple preview />
+```
+
+`file.preview` is typed only when `preview` is set, so reading it without asking is a compile error rather than `undefined` at runtime. The state holding the value follows it:
+
+```tsx
+const [file, setFile] = useState<PickedFile | null>(null);   // no preview
+const [file, setFile] = useState<PreviewFile | null>(null);  // preview
+```
+
+**Rejected files now say so.** A file turned away by `accept`, `unique` or `max` used to disappear silently. It now reaches `onReject` with a reason:
+
+```tsx
+<RHFFileInput
+  name="photos"
+  multiple
+  accept="image/*"
+  max={5}
+  onReject={(rejected) =>
+    toast.error(rejected.map((r) => `${r.file.name} — ${r.reason}`).join('\n'))
+  }
+/>
+```
+
+`append`, `unique` and `max` are only accepted alongside `multiple`; TypeScript rejects them on a single field, since none of them mean anything for one file.
+
+## 6. Removed exports
 
 `BaseDateRangeInput` and `BaseDateRangeInputProps` are no longer exported. They were public by accident — the sibling `BaseDateInput` never was, and neither appeared in any documentation. Use [DateRangeInput](/docs/date-range-input), which wraps it and adds the calendar popup. The `DateRange` type is unaffected.
 
-## 6. Worth adopting while you are here
+## 7. Worth adopting while you are here
 
 - **[Dialog](/docs/dialog) works declaratively** — `<Dialog open onClose>` alongside `Dialog.show()`
 - **Overlays stack** — `show()` returns an id, and `dismiss(id)` targets it
