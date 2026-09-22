@@ -14,7 +14,6 @@ const external = [
   "@floating-ui/react",
   "lodash.isequal",
   "mime",
-  "react-textarea-autosize",
   "tailwind-merge"
 ];
 
