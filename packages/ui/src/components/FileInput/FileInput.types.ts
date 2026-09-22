@@ -155,7 +155,13 @@ interface Previewed {
  * `render` is given ever needs a cast.
  * */
 export type FileInputProps =
-  | (CommonFileInputProps & SingleShape<PickedFile> & Previewless)
-  | (CommonFileInputProps & SingleShape<PreviewFile> & Previewed)
+  /*
+   * Ordered with the plainest last on purpose. When nothing matches, TypeScript reports the
+   * union's final branch, so this is the one whose message names the real mismatch —
+   * a `PreviewFile` value on a field with no `preview`, say — rather than complaining that
+   * `multiple` is missing.
+   */
+  | (CommonFileInputProps & MultiShape<PreviewFile> & Previewed)
   | (CommonFileInputProps & MultiShape<PickedFile> & Previewless)
-  | (CommonFileInputProps & MultiShape<PreviewFile> & Previewed);
+  | (CommonFileInputProps & SingleShape<PreviewFile> & Previewed)
+  | (CommonFileInputProps & SingleShape<PickedFile> & Previewless);

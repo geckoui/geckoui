@@ -153,6 +153,17 @@ The prop also decides the type: with `preview` the value is a `PreviewFile` and 
 <FileInput preview render={({ file }) => file.preview} />  {/* ✓ */}
 ```
 
+Which means the state holding the value follows `preview` too:
+
+```tsx
+const [file, setFile] = useState<PickedFile | null>(null);   // no preview
+const [file, setFile] = useState<PreviewFile | null>(null);  // preview
+```
+
+Adding or removing `preview` without changing the state is a type error, which is the point
+— the field would otherwise hand you a file with no `preview` while the state says there is
+one.
+
 ### States
 
 <Preview>
