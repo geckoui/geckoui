@@ -43,6 +43,10 @@ import { countLabel } from "./FileInput.utils";
  * ```
  */
 const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) => {
+  /*
+   * The multiple-only three are pulled out here as well, or they would ride `rest` onto the
+   * div and React would complain about `append` not being a DOM attribute.
+   */
   const {
     accept = "*",
     preview = false,
@@ -58,18 +62,15 @@ const FileInput = <T extends PickedFile = PickedFile>(props: FileInputProps<T>) 
     multiple,
     value,
     onChange,
+    append = false,
+    unique = false,
+    max,
     ...rest
   } = props as FileInputProps<T> & {
     append?: boolean;
     unique?: boolean;
     max?: number;
   };
-
-  const {
-    append = false,
-    unique = false,
-    max
-  } = props as { append?: boolean; unique?: boolean; max?: number };
 
   const fieldRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);

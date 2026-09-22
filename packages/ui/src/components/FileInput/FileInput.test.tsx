@@ -244,6 +244,48 @@ describe("FileInput", () => {
     });
   });
 
+  describe("what reaches the DOM", () => {
+    it("keeps its own props off the element", () => {
+      render(<FileInput multiple append unique max={3} preview accept="image/*" />);
+
+      const attributes = Array.from(field().attributes).map((a) => a.name);
+
+      // These are the component's, not the div's. React warns loudly if they get through.
+      expect(attributes).not.toContain("append");
+      expect(attributes).not.toContain("unique");
+      expect(attributes).not.toContain("max");
+      expect(attributes).not.toContain("multiple");
+      expect(attributes).not.toContain("preview");
+      expect(attributes).not.toContain("accept");
+    });
+
+    it("warns about nothing it renders", () => {
+      const warn = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+      render(
+        <FileInput
+          multiple
+          append
+          unique
+          preview
+          max={2}
+          value={[picked("a.png")]}
+          data-testid="field"
+        />
+      );
+
+      expect(warn).not.toHaveBeenCalled();
+
+      warn.mockRestore();
+    });
+
+    it("still passes a data attribute through", () => {
+      render(<FileInput data-testid="field" />);
+
+      expect(screen.getByTestId("field")).toBe(field());
+    });
+  });
+
   it("opens the dialog from the keyboard", async () => {
     render(<FileInput />);
 
