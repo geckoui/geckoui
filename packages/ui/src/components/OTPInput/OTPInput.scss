@@ -3,6 +3,13 @@
 .GeckoUIOTPInput {
   @apply flex w-full max-w-full flex-row justify-center gap-2;
 
+  /*
+   * Its own stacking context. The overlay below only has to sit above these cells, but
+   * without this its z-index competes with everything on the page — and it ties with the
+   * dropdown tier at 10, so a Select opening over an OTP field lost the click to it.
+   */
+  isolation: isolate;
+
   &__input {
     @include form-reset;
 
@@ -20,7 +27,8 @@
   &__overlay-button {
     @include button-reset;
 
-    @apply absolute inset-0 z-10 cursor-text bg-transparent;
+    /* 1 is enough: it only has to clear the cells beside it, not the page */
+    @apply absolute inset-0 z-[1] cursor-text bg-transparent;
   }
 
   &[data-state="disabled"] &__overlay-button {
