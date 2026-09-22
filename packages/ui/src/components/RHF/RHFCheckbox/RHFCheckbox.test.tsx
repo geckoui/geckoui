@@ -143,4 +143,28 @@ describe("RHFCheckbox", () => {
 
     expect(screen.getByRole("checkbox")).toBeDisabled();
   });
+
+  it("marks the checkbox errored when the field fails validation", async () => {
+    render(
+      <Form defaultValues={{ terms: false }}>
+        <RHFCheckbox name="terms" rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() =>
+      expect(screen.getByRole("checkbox")).toHaveAttribute("aria-invalid", "true")
+    );
+  });
+
+  it("is not marked errored while valid", () => {
+    render(
+      <Form defaultValues={{ terms: true }}>
+        <RHFCheckbox name="terms" />
+      </Form>
+    );
+
+    expect(screen.getByRole("checkbox")).not.toHaveAttribute("aria-invalid");
+  });
 });

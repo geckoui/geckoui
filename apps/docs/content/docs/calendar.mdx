@@ -196,6 +196,7 @@ function Example() {
 ```tsx
 interface CalendarRef {
   moveTo: (month: number, year: number) => void;
+  clearSelection: () => void;
 }
 ```
 
@@ -343,11 +344,8 @@ The component uses base class names with `data-*` attributes for states:
 
 **Main Container:**
 - `GeckoUICalendar` - Main container
-- `GeckoUICalendar[data-calendars="2"]` - Dual calendar mode
 - `GeckoUICalendar[data-mode]` - Current view mode (`day`, `month`, `year`)
 - `GeckoUICalendar[data-selection]` - Selection mode (`single`, `range`)
-- `GeckoUICalendar__dual` - Dual calendar wrapper
-- `GeckoUICalendar__dual[data-position="first"]` / `GeckoUICalendar__dual[data-position="second"]` - First/second calendar
 
 **Header:**
 - `GeckoUICalendar__header` - Header container

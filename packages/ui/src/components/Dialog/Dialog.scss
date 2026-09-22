@@ -1,5 +1,7 @@
 .GeckoUIDialog {
-  @apply fixed inset-0 z-[2000] w-screen overflow-y-auto;
+  @apply fixed inset-0 w-screen overflow-y-auto;
+
+  z-index: var(--gecko-dialog-z, 2000);
 
   &__backdrop {
     @apply bg-surface-overlay/50 flex min-h-full items-center justify-center px-3 text-center;

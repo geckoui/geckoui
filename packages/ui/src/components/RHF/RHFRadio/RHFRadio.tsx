@@ -70,10 +70,11 @@ const RHFRadio: FC<RHFRadioProps> = ({
       control={control}
       name={name}
       rules={rules}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         return (
           <label className="GeckoUIRHFRadio group" htmlFor={uniqueId}>
             <Radio
+              aria-invalid={Boolean(fieldState.error) || undefined}
               {...field}
               {...rest}
               checked={isEqual(field.value, value)}

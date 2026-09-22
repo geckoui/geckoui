@@ -48,7 +48,7 @@ const RHFSwitch: FC<RHFSwitchProps> = ({
       control={control}
       name={name}
       rules={rules}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         const isChecked =
           value === undefined ? (field.value as boolean) : isEqual(field.value, value);
 
@@ -67,6 +67,7 @@ const RHFSwitch: FC<RHFSwitchProps> = ({
 
         return (
           <Switch
+            aria-invalid={Boolean(fieldState.error) || undefined}
             {...field}
             {...rest}
             disabled={disabled}

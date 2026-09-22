@@ -4,7 +4,7 @@ import type { RHFBaseProps } from "../RHF.types";
 
 export interface RHFDateRangeInputProps
   extends RHFBaseProps,
-    Omit<DateRangeInputProps, "hasError" | "value" | "onChange"> {
+    Omit<DateRangeInputProps, "value" | "onChange"> {
   disabled?: boolean;
   onChange?: (value: DateRange | null) => void;
 }

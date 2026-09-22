@@ -79,4 +79,26 @@ describe("RHFRadio", () => {
 
     expect(screen.getByLabelText("Small")).toBeDisabled();
   });
+
+  it("marks the radio errored when the field fails validation", async () => {
+    render(
+      <Form defaultValues={{ plan: "" }}>
+        <RHFRadio name="plan" value="pro" rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() => expect(screen.getByRole("radio")).toHaveAttribute("aria-invalid", "true"));
+  });
+
+  it("is not marked errored while valid", () => {
+    render(
+      <Form defaultValues={{ plan: "pro" }}>
+        <RHFRadio name="plan" value="pro" />
+      </Form>
+    );
+
+    expect(screen.getByRole("radio")).not.toHaveAttribute("aria-invalid");
+  });
 });

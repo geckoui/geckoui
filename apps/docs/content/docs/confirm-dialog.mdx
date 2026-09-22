@@ -111,9 +111,8 @@ ConfirmDialog.show({
     </div>
   ),
   confirmButtonLabel: "Transfer Now",
-  onConfirm: ({ dismiss }) => {
+  onConfirm: () => {
     performTransfer();
-    dismiss();
   }
 });
 ```

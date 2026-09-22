@@ -92,4 +92,26 @@ describe("RHFSwitch", () => {
 
     expect(screen.getByRole("switch")).toBeDisabled();
   });
+
+  it("marks the switch errored when the field fails validation", async () => {
+    render(
+      <Form defaultValues={{ on: false }}>
+        <RHFSwitch name="on" rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() => expect(screen.getByRole("switch")).toHaveAttribute("aria-invalid", "true"));
+  });
+
+  it("is not marked errored while valid", () => {
+    render(
+      <Form defaultValues={{ on: true }}>
+        <RHFSwitch name="on" />
+      </Form>
+    );
+
+    expect(screen.getByRole("switch")).not.toHaveAttribute("aria-invalid");
+  });
 });

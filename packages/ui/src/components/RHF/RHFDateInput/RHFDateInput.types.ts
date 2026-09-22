@@ -1,7 +1,7 @@
 import { DateInputProps } from "../../DateInput";
 import type { RHFBaseProps } from "../RHF.types";
 
-export interface RHFDateInputProps extends RHFBaseProps, Omit<DateInputProps, "hasError"> {
+export interface RHFDateInputProps extends RHFBaseProps, DateInputProps {
   /**
    * Whether the input is disabled
    */

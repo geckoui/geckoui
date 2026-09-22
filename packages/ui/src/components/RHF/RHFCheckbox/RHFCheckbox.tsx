@@ -85,7 +85,7 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
       name={name}
       rules={rules}
       render={(renderProps) => {
-        const { field } = renderProps;
+        const { field, fieldState } = renderProps;
         const isChecked = () => {
           if (value === undefined) return field.value === true;
 
@@ -99,6 +99,7 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
         return (
           <label className="GeckoUIRHFCheckbox group" htmlFor={id || _id}>
             <Checkbox
+              aria-invalid={Boolean(fieldState.error) || undefined}
               {...field}
               {...rest}
               disabled={disabled}

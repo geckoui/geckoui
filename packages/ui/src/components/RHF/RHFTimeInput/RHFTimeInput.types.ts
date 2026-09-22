@@ -1,7 +1,7 @@
 import type { TimeInputProps } from "../../TimeInput";
 import type { RHFBaseProps } from "../RHF.types";
 
-export interface RHFTimeInputProps extends RHFBaseProps, Omit<TimeInputProps, "hasError"> {
+export interface RHFTimeInputProps extends RHFBaseProps, TimeInputProps {
   /**
    * Whether the input is disabled
    */

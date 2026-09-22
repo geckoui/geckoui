@@ -8,4 +8,4 @@ import type { RHFBaseProps } from "../RHF.types";
  * */
 type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
-export type RHFFileInputProps = RHFBaseProps & OmitEach<FileInputProps, "value" | "hasError">;
+export type RHFFileInputProps = RHFBaseProps & OmitEach<FileInputProps, "value">;
