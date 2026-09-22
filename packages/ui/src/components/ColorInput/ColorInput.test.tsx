@@ -177,9 +177,9 @@ describe("ColorInput", () => {
     });
 
     it("marks an error", () => {
-      const { container } = render(<ColorInput defaultValue="#3b82f6" hasError />);
+      const { container } = render(<ColorInput defaultValue="#3b82f6" aria-invalid />);
 
-      expect(container.querySelector(".GeckoUIColorInput")).toHaveAttribute("data-error");
+      expect(container.querySelector(".GeckoUIColorInput")).toHaveAttribute("aria-invalid", "true");
     });
   });
 

@@ -93,6 +93,6 @@ describe("RHFTagInput", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(document.querySelector(".GeckoUITagInput")).toHaveAttribute("data-error", "true");
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-invalid", "true");
   });
 });

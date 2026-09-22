@@ -43,7 +43,7 @@ const [time, setTime] = useState<string | null>("14:30");
 | `disabledTime` | `({ hour, minute, second }) => boolean` | - | Which times cannot be chosen |
 | `disabled` | `boolean` | `false` | |
 | `readOnly` | `boolean` | `false` | |
-| `hasError` | `boolean` | `false` | |
+| `aria-invalid` | `boolean` | `false` | |
 | `prefix` | `FC \| ReactNode` | - | |
 | `suffix` | `FC \| ReactNode` | - | |
 | `placeholder` | `string` | the format | |
@@ -138,7 +138,7 @@ Picking `01` while `PM` is still set leaves a pair the rule turns down. `onChang
 ```tsx
 <TimeInput value="09:00" disabled />
 <TimeInput value="09:00" readOnly />
-<TimeInput value="09:00" hasError />
+<TimeInput value="09:00" aria-invalid />
 ```
 
 Neither a disabled nor a read-only field opens the picker.

@@ -54,8 +54,10 @@
    * Stated for the open state too, or a field in error goes back to blue the moment it is
    * used, which is when the error matters most.
    */
-  &[data-error],
-  &[data-error][data-open] {
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:hover,
+  &[aria-invalid="true"][data-open],
+  &[data-state="enabled"][aria-invalid="true"]:hover {
     @apply border-red-500;
   }
 

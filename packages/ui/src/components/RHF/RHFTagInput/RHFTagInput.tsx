@@ -29,7 +29,7 @@ const RHFTagInput: FC<RHFTagInputProps> = ({ name, control, rules, onChange, ...
             field.onChange(value);
             onChange?.(value);
           }}
-          hasError={Boolean(fieldState.error)}
+          aria-invalid={Boolean(fieldState.error) || undefined}
           {...rest}
         />
       )}

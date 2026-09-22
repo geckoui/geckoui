@@ -88,7 +88,10 @@ describe("RHFDateRangeInput", () => {
     await submit();
 
     await waitFor(() =>
-      expect(document.querySelector(".GeckoUIDateRangeInput")).toHaveAttribute("data-error", "true")
+      expect(document.querySelector(".GeckoUIDateRangeInput")).toHaveAttribute(
+        "aria-invalid",
+        "true"
+      )
     );
   });
 });

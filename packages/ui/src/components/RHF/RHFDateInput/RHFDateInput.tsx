@@ -52,7 +52,7 @@ const RHFDateInput: FC<RHFDateInputProps> = ({ name, control, rules, onChange, .
               onChange?.(date);
             }}
             {...rest}
-            hasError={hasError}
+            aria-invalid={hasError || undefined}
           />
         );
       }}

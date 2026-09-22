@@ -31,9 +31,6 @@ export interface ColorInputProps
   /** Shows the value, but the picker does not open. @default false */
   readOnly?: boolean;
 
-  /** Draws the field in its error colours. @default false */
-  hasError?: boolean;
-
   /** @default "bottom-start" */
   pickerPlacement?: Placement;
 

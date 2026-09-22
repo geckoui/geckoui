@@ -16,7 +16,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   readOnly = false,
   prefix,
   suffix,
-  hasError = false,
+  "aria-invalid": invalid,
   className,
   format = "DD/MM/YYYY",
   separator = "/",
@@ -121,7 +121,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
         readOnly={readOnly}
         prefix={prefix}
         suffix={suffix}
-        hasError={hasError}
+        aria-invalid={invalid}
         className={className}
         format={format}
         separator={separator}

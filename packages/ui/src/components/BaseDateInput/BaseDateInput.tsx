@@ -22,7 +22,6 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
   readOnly = false,
   prefix,
   suffix,
-  hasError = false,
   className,
   format = "DD/MM/YYYY",
   separator = "/",
@@ -33,7 +32,8 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
   renderCalendarIcon,
   onStateUpdate,
   onSubmit,
-  hasFocus
+  hasFocus,
+  "aria-invalid": invalid
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -278,7 +278,8 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
   const inputs = segmentOrder.map((segment) => allInputs[segment]);
 
   const isEmpty = !month && !day && !year && !hasFocus;
-  const isError = (!isEmpty && !isValidDate(year, month, day)) || hasError;
+  const isError =
+    (!isEmpty && !isValidDate(year, month, day)) || invalid === true || invalid === "true";
 
   const state = disabled ? "disabled" : readOnly ? "readonly" : "enabled";
 
@@ -287,7 +288,7 @@ const BaseDateInput: FC<BaseDateInputProps> = ({
       ref={containerRef}
       className={classNames("GeckoUIDateInput", className)}
       data-state={state}
-      data-error={isError || undefined}
+      aria-invalid={isError || undefined}
       data-empty={isEmpty || undefined}
       data-focus={hasFocus || undefined}
       onClick={() => handleDisplayClick()}>

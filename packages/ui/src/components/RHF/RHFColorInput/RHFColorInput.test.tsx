@@ -106,7 +106,7 @@ describe("RHFColorInput", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(field()).toHaveAttribute("data-error");
+    expect(field()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("stops the form when it is required and empty", async () => {

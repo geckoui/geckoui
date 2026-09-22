@@ -52,7 +52,13 @@ export interface TimeInputProps {
 
   disabled?: boolean;
   readOnly?: boolean;
-  hasError?: boolean;
+  /**
+   * Marks the field invalid, to a screen reader and in its colours.
+   *
+   * The standard attribute rather than a prop of the library's own, so it works the same
+   * here as on a native input.
+   * */
+  "aria-invalid"?: boolean | "true" | "false";
   prefix?: FC | ReactNode;
   suffix?: FC | ReactNode;
   placeholder?: string;

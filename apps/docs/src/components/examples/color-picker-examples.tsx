@@ -134,7 +134,7 @@ export function ColorInputStatesExample() {
     <div className="grid max-w-2xl gap-4 sm:grid-cols-2">
       <ColorInput defaultValue="#3b82f6" />
       <ColorInput value="" placeholder="Pick a colour" />
-      <ColorInput defaultValue="#ef4444" hasError />
+      <ColorInput defaultValue="#ef4444" aria-invalid />
       <ColorInput defaultValue="#64748b" disabled />
       <ColorInput defaultValue="#10b981" readOnly />
       <ColorInput defaultValue="rgba(15, 23, 42, 0.6)" formats={["rgb", "hex"]} />

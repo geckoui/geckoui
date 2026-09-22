@@ -1,5 +1,12 @@
 export interface OTPInputProps {
   /**
+   * Marks the field invalid, to a screen reader and in its colours.
+   *
+   * The standard attribute rather than a prop of the library's own.
+   * */
+  "aria-invalid"?: boolean | "true" | "false";
+
+  /**
    * Value of the OTP input
    * */
   value: string;

@@ -80,7 +80,7 @@ export function TimeInputStatesExample() {
     <div className="grid w-full gap-3 sm:grid-cols-3">
       <TimeInput value="09:00" disabled />
       <TimeInput value="09:00" readOnly />
-      <TimeInput value="09:00" hasError />
+      <TimeInput value="09:00" aria-invalid />
     </div>
   );
 }

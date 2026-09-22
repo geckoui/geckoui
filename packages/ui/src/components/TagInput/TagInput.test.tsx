@@ -365,9 +365,9 @@ describe("TagInput", () => {
     });
 
     it("marks itself in error", () => {
-      render(<Controlled hasError />);
+      render(<Controlled aria-invalid />);
 
-      expect(field()).toHaveAttribute("data-error", "true");
+      expect(screen.getByRole("combobox")).toHaveAttribute("aria-invalid", "true");
     });
   });
 

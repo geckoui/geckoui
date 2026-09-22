@@ -35,12 +35,12 @@
    * bare `[data-error]`, so without this the border goes back to blue the moment the field
    * is used, which is exactly when the error matters most.
    */
-  &[data-error],
-  &[data-error]:focus-within {
+  &:has(&__input[aria-invalid="true"]),
+  &:has(&__input[aria-invalid="true"]):focus-within {
     @apply border-red-500;
   }
 
-  &[data-error]:hover {
+  &:has(&__input[aria-invalid="true"]):hover {
     @apply border-red-600;
   }
 

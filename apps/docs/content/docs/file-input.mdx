@@ -53,7 +53,7 @@ The value is one `PickedFile`, or `null`. The whole field is the drop target.
 | `hideClearIcon` | `boolean` | `false` | Drop the × that empties the field |
 | `disabled` | `boolean` | `false` | Nothing can be picked or dropped |
 | `readOnly` | `boolean` | `false` | Shows what is held, but nothing can change |
-| `hasError` | `boolean` | `false` | Draws the field in its error colours |
+| `aria-invalid` | `boolean` | `false` | Draws the field in its error colours |
 | `render` | `(state) => ReactNode` | - | Draw the field yourself |
 | `className` / `wrapperClassName` | `string` | - | |
 
@@ -172,7 +172,7 @@ one.
 
 ```tsx
 <FileInput placeholder="Attach your CV" />
-<FileInput hasError />
+<FileInput aria-invalid />
 <FileInput disabled />
 <FileInput hideClearIcon />
 ```

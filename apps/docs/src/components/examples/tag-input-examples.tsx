@@ -95,7 +95,7 @@ export function TagInputStatesExample() {
     <div className="w-full max-w-md space-y-3">
       <TagInput value={["Locked"]} onChange={() => {}} disabled />
       <TagInput value={["Read only"]} onChange={() => {}} readOnly />
-      <TagInput value={["Wrong"]} onChange={() => {}} hasError />
+      <TagInput value={["Wrong"]} onChange={() => {}} aria-invalid />
     </div>
   );
 }

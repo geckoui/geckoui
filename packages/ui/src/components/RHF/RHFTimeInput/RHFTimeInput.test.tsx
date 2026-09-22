@@ -82,6 +82,6 @@ describe("RHFTimeInput", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(field()).toHaveAttribute("data-error", "true");
+    expect(field()).toHaveAttribute("aria-invalid", "true");
   });
 });

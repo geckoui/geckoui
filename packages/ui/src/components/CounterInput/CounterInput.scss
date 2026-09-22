@@ -38,6 +38,14 @@
     }
   }
 
+  /* The whole control reads as invalid, not just the text field in the middle of it */
+  &:has(&__input[aria-invalid="true"]) &__button,
+  &:has(&__input[aria-invalid="true"]) &__input,
+  &:has(&__input[aria-invalid="true"]):hover &__button,
+  &:has(&__input[aria-invalid="true"]):hover &__input {
+    @apply border-red-500;
+  }
+
   &__input {
     @include form-reset;
 

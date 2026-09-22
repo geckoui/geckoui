@@ -63,6 +63,9 @@ function SelectButton({ prefix, suffix, className, ...selectProps }: SelectButto
 
   return (
     <div
+      aria-invalid={
+        (selectProps as { "aria-invalid"?: boolean | "true" | "false" })["aria-invalid"]
+      }
       className={classNames("GeckoUISelectButton", className)}
       {...getDataAttributes(selectProps)}
       data-state={disabled ? "disabled" : "enabled"}

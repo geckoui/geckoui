@@ -295,9 +295,9 @@ describe("TimeInput", () => {
     });
 
     it("marks itself in error", () => {
-      const { container } = render(<TimeInput hasError />);
+      const { container } = render(<TimeInput aria-invalid />);
 
-      expect(field(container)).toHaveAttribute("data-error", "true");
+      expect(field(container)).toHaveAttribute("aria-invalid", "true");
     });
   });
 

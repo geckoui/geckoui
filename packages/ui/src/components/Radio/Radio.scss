@@ -40,4 +40,12 @@
     @apply scale-100;
     box-shadow: inset 1em 1em var(--color-primary-600);
   }
+  /*
+   * Last, and stated for hover and focus: the state rules above are just as specific, so
+   * anything earlier loses and the border goes back to blue the moment the field is used.
+   */
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:hover:enabled {
+    @apply border-red-500;
+  }
 }

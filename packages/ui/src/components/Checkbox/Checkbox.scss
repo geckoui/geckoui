@@ -29,6 +29,10 @@
       @apply border-primary-600 bg-primary-600;
     }
   }
+  &__input[aria-invalid="true"],
+  &__input[aria-invalid="true"]:hover:enabled {
+    @apply border-red-500;
+  }
 
   &:has(:checked:disabled),
   &:has(:indeterminate:disabled) {

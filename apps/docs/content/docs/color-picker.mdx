@@ -68,7 +68,7 @@ Everything `ColorPicker` takes, minus `footer`, plus:
 | `placeholder` | `ReactNode` | `'Pick a colour'` | Shown when there is no colour |
 | `render` | `(state) => ReactNode` | - | Draw the field yourself, inside the trigger |
 | `readOnly` | `boolean` | `false` | Shows the value, but does not open |
-| `hasError` | `boolean` | `false` | Draws the field in its error colours |
+| `aria-invalid` | `boolean` | `false` | Draws the field in its error colours |
 | `onOpenChange` | `(open: boolean) => void` | - | Called when the panel opens or closes |
 | `pickerPlacement` | `Placement` | `'bottom-start'` | Where the panel opens |
 | `floatingStrategy` | `Strategy` | `'absolute'` | Floating strategy for the panel |
@@ -221,7 +221,7 @@ Click it to open, <kbd>Escape</kbd> or a click outside to close.
 ```tsx
 <ColorInput defaultValue="#3b82f6" />
 <ColorInput value="" placeholder="Pick a colour" />
-<ColorInput defaultValue="#ef4444" hasError />
+<ColorInput defaultValue="#ef4444" aria-invalid />
 <ColorInput defaultValue="#64748b" disabled />
 <ColorInput defaultValue="#10b981" readOnly />
 <ColorInput defaultValue="rgba(15, 23, 42, 0.6)" formats={['rgb', 'hex']} />

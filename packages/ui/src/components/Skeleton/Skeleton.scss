@@ -61,12 +61,7 @@
 
     content: "";
     transform: translateX(-100%);
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--gecko-skeleton-highlight),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, var(--gecko-skeleton-highlight), transparent);
     animation: gecko-skeleton-wave var(--gecko-skeleton-duration) linear infinite;
   }
 

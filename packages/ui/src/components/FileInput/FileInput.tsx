@@ -55,7 +55,6 @@ const FileInput = (props: FileInputProps) => {
     hideClearIcon = false,
     disabled = false,
     readOnly = false,
-    hasError = false,
     render,
     className,
     wrapperClassName,
@@ -189,7 +188,6 @@ const FileInput = (props: FileInputProps) => {
         aria-readonly={readOnly || undefined}
         className={classNames("GeckoUIFileInput", className)}
         data-state={state}
-        data-error={hasError || undefined}
         data-dragging={dragging || undefined}
         data-empty={!held.length || undefined}
         data-custom={render ? "" : undefined}
@@ -218,6 +216,7 @@ const FileInput = (props: FileInputProps) => {
             <button
               type="button"
               className="GeckoUIFileInput__trigger"
+              aria-invalid={(rest as { "aria-invalid"?: boolean })["aria-invalid"]}
               disabled={disabled}
               aria-describedby={undefined}>
               {text ? (

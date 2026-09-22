@@ -13,7 +13,7 @@ describe("FileInput types", () => {
       render={(state) => {
         expectTypeOf(state.file).toEqualTypeOf<PickedFile | null>();
 
-            // @ts-expect-error -- a single field has no list
+        // @ts-expect-error -- a single field has no list
         expectTypeOf(state.files).toBeUnknown();
 
         return null;

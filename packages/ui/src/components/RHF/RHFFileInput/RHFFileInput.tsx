@@ -24,7 +24,7 @@ const RHFFileInput = ({ name, control, rules, onChange, ...rest }: RHFFileInputP
       render={({ field, fieldState }) => (
         <FileInput
           {...(rest as FileInputProps)}
-          hasError={Boolean(fieldState.error)}
+          aria-invalid={Boolean(fieldState.error) || undefined}
           value={field.value}
           onChange={
             ((value: PickedFile | PickedFile[] | null) => {

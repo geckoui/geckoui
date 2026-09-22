@@ -192,16 +192,16 @@ describe("BaseDateRangeInput", () => {
     inputs().forEach((input) => expect(input).toHaveAttribute("readonly"));
   });
 
-  it("honours an explicit hasError", () => {
+  it("honours an explicit aria-invalid", () => {
     render(
       <BaseDateRangeInput
         value={{ from: "2024-01-05", to: "2024-02-10" }}
         onChange={() => {}}
-        hasError
+        aria-invalid
       />
     );
 
-    expect(root()).toHaveAttribute("data-error", "true");
+    expect(root()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("renders a prefix and a suffix", () => {

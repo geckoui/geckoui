@@ -62,7 +62,10 @@ describe("RHFSelect", () => {
     await submit();
 
     await waitFor(() =>
-      expect(container.querySelector(".GeckoUIRHFSelectButton")).toHaveAttribute("data-error")
+      expect(container.querySelector(".GeckoUIRHFSelectButton")).toHaveAttribute(
+        "aria-invalid",
+        "true"
+      )
     );
   });
 });

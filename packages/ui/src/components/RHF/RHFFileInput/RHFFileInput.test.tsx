@@ -6,8 +6,6 @@ import { RHFFileInput } from ".";
 import type { PickedFile } from "../../FileInput";
 import { Form, submit } from "../testUtils";
 
-const field = () => document.querySelector<HTMLElement>(".GeckoUIFileInput")!;
-
 const picked = (name: string) =>
   Object.assign(new File(["x"], name, { type: "image/png" }), { path: "" }) as PickedFile;
 
@@ -56,7 +54,10 @@ describe("RHFFileInput", () => {
 
     await submit();
 
-    expect(field()).toHaveAttribute("data-error");
+    expect(screen.getByRole("button", { name: "Choose a file" })).toHaveAttribute(
+      "aria-invalid",
+      "true"
+    );
   });
 
   it("stops the form when it is required and empty", async () => {

@@ -84,7 +84,7 @@ export function FileInputStatesExample() {
       </div>
       <div className="space-y-1">
         <Label>In error</Label>
-        <FileInput hasError />
+        <FileInput aria-invalid />
       </div>
       <div className="space-y-1">
         <Label>Disabled</Label>

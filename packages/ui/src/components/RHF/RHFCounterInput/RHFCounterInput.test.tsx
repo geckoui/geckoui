@@ -45,7 +45,7 @@ describe("RHFCounterInput", () => {
   });
 
   it("marks the styled container as errored", async () => {
-    const { container } = render(
+    render(
       <Form defaultValues={{ qty: "" }}>
         <RHFCounterInput name="qty" rules={{ required: "Required" }} />
       </Form>
@@ -54,18 +54,18 @@ describe("RHFCounterInput", () => {
     await submit();
 
     await waitFor(() =>
-      expect(container.querySelector(".GeckoUIRHFCounterInput")).toHaveAttribute("data-error")
+      expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true")
     );
   });
 
   it("is not marked errored while valid", () => {
-    const { container } = render(
+    render(
       <Form defaultValues={{ qty: "1" }}>
         <RHFCounterInput name="qty" />
       </Form>
     );
 
-    expect(container.querySelector(".GeckoUIRHFCounterInput")).not.toHaveAttribute("data-error");
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-invalid");
   });
 
   it("calls onChange with the new value", async () => {

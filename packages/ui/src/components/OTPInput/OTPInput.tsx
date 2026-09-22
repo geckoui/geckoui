@@ -67,6 +67,7 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
       aspectRatio,
       onOTPComplete,
       disabled,
+      "aria-invalid": invalid,
       ...props
     },
     ref
@@ -112,6 +113,7 @@ const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
 
     return (
       <div
+        aria-invalid={invalid}
         className={classNames("GeckoUIOTPInput", className)}
         {...dataAttributes}
         data-state={disabled ? "disabled" : "enabled"}

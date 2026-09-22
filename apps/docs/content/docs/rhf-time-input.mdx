@@ -63,9 +63,9 @@ The field holds the 24 hour string, whatever `format` shows, so a resolver can c
 | `control` | `Control` | - | Taken from `FormProvider` when left out |
 | `rules` | `RegisterOptions` | - | Validation rules |
 | `onChange` | `(time: string \| null) => void` | - | Called alongside the form update |
-| ...rest | `TimeInputProps` | - | Everything [TimeInput](/docs/time-input) takes, except `hasError` |
+| ...rest | `TimeInputProps` | - | Everything [TimeInput](/docs/time-input) takes, except `aria-invalid` |
 
-`hasError` is driven by the field's own error state, so it is not yours to set.
+`aria-invalid` is driven by the field's own error state, so it is not yours to set.
 
 ## Errors
 

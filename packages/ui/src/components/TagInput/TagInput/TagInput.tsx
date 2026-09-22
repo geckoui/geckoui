@@ -53,7 +53,6 @@ const TagInput = ({
   placeholderClassName,
   disabled = false,
   readOnly = false,
-  hasError = false,
   prefix,
   suffix,
   className,
@@ -61,7 +60,8 @@ const TagInput = ({
   menuClassName,
   menuPlacement = "bottom-start",
   floatingStrategy = "absolute",
-  children
+  children,
+  "aria-invalid": invalid
 }: TagInputProps) => {
   const fieldRef = useRef<HTMLElement | null>(null);
   const menuRef = useRef<HTMLElement | null>(null);
@@ -252,7 +252,6 @@ const TagInput = ({
           }}
           className={classNames("GeckoUITagInput", className)}
           data-state={state}
-          data-error={hasError || undefined}
           data-empty={(!value.length && !keyword) || undefined}
           data-full={full || undefined}
           onClick={() => !disabled && !readOnly && inputRef.current?.focus()}>
@@ -318,6 +317,7 @@ const TagInput = ({
                 data-initial={!value.length || undefined}
                 disabled={disabled}
                 readOnly={readOnly}
+                aria-invalid={invalid}
                 role="combobox"
                 aria-expanded={open}
                 aria-autocomplete="list"

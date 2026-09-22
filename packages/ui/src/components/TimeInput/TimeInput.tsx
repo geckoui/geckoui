@@ -75,7 +75,6 @@ const TimeInput: FC<TimeInputProps> = ({
   step = 1,
   disabled = false,
   readOnly = false,
-  hasError = false,
   prefix,
   suffix,
   placeholder,
@@ -86,7 +85,8 @@ const TimeInput: FC<TimeInputProps> = ({
   wrapperClassName,
   listClassName,
   listPlacement = "bottom-start",
-  floatingStrategy = "absolute"
+  floatingStrategy = "absolute",
+  "aria-invalid": invalid
 }) => {
   const twelve = isTwelveHour(format);
   const withSeconds = hasSeconds(format);
@@ -292,7 +292,7 @@ const TimeInput: FC<TimeInputProps> = ({
         }}
         className={classNames("GeckoUITimeInput", className)}
         data-state={state}
-        data-error={hasError || undefined}
+        aria-invalid={invalid}
         data-empty={isEmpty || undefined}
         data-focus={focused || open || undefined}
         // Anywhere in the field opens the list, the way clicking a DateInput opens its

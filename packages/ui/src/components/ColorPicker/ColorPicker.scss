@@ -286,8 +286,7 @@ $gecko-checker-layers:
     @include checkerboard;
 
     background-image:
-      linear-gradient(var(--gecko-color-layer), var(--gecko-color-layer)),
-      $gecko-checker-layers;
+      linear-gradient(var(--gecko-color-layer), var(--gecko-color-layer)), $gecko-checker-layers;
   }
 
   &__slider[data-kind="alpha"] &__slider__track {

@@ -107,9 +107,9 @@ describe("FileInput", () => {
     });
 
     it("marks an error", () => {
-      render(<FileInput hasError />);
+      render(<FileInput aria-invalid />);
 
-      expect(field()).toHaveAttribute("data-error");
+      expect(field()).toHaveAttribute("aria-invalid", "true");
     });
 
     it("cannot be reached or used while disabled", () => {

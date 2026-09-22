@@ -51,9 +51,9 @@ The field holds a `string[]`. A field the form has nothing for reads as an empty
 | `control` | `Control` | - | Taken from `FormProvider` when left out |
 | `rules` | `RegisterOptions` | - | Validation rules |
 | `onChange` | `(value: string[]) => void` | - | Called alongside the form update |
-| ...rest | `TagInputProps` | - | Everything [TagInput](/docs/tag-input) takes, except `value`, `onChange` and `hasError` |
+| ...rest | `TagInputProps` | - | Everything [TagInput](/docs/tag-input) takes, except `value`, `onChange` and `aria-invalid` |
 
-`hasError` is driven by the field's own error state, so it is not yours to set.
+`aria-invalid` is driven by the field's own error state, so it is not yours to set.
 
 ## Two kinds of rule
 

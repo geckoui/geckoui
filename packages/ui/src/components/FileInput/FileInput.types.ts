@@ -57,9 +57,6 @@ interface CommonFileInputProps extends Omit<HTMLAttributes<HTMLDivElement>, "onC
   /** Shows what is picked, but nothing can be picked or dropped. @default false */
   readOnly?: boolean;
 
-  /** Draws the field in its error colours. @default false */
-  hasError?: boolean;
-
   className?: string;
   wrapperClassName?: string;
 }

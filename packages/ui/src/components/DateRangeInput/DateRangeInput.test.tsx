@@ -178,16 +178,16 @@ describe("DateRangeInput", () => {
     expect(segments().map((s) => s.textContent)).toEqual(["YYYY", "MM", "DD", "YYYY", "MM", "DD"]);
   });
 
-  it("passes hasError through", () => {
+  it("passes aria-invalid through", () => {
     render(
       <DateRangeInput
         value={{ from: "2024-01-05", to: "2024-01-10" }}
         onChange={() => {}}
-        hasError
+        aria-invalid
       />
     );
 
-    expect(input()).toHaveAttribute("data-error", "true");
+    expect(input()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("applies wrapperClassName and className separately", () => {

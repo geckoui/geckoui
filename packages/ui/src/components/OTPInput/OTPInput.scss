@@ -26,4 +26,12 @@
   &[data-state="disabled"] &__overlay-button {
     @apply cursor-not-allowed;
   }
+  /*
+   * Last, and stated for hover and focus: the state rules above are just as specific, so
+   * anything earlier loses and the border goes back to blue the moment the field is used.
+   */
+  &[aria-invalid="true"] &__input,
+  &[aria-invalid="true"]:hover &__input:enabled {
+    @apply border-red-500;
+  }
 }

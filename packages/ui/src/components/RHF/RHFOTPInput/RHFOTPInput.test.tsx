@@ -26,7 +26,7 @@ describe("RHFOTPInput", () => {
     await submit();
 
     await waitFor(() =>
-      expect(container.querySelector(".GeckoUIRHFOTPInput")).toHaveAttribute("data-error")
+      expect(container.querySelector(".GeckoUIRHFOTPInput")).toHaveAttribute("aria-invalid", "true")
     );
   });
 
@@ -37,7 +37,10 @@ describe("RHFOTPInput", () => {
       </Form>
     );
 
-    expect(container.querySelector(".GeckoUIRHFOTPInput")).not.toHaveAttribute("data-error");
+    expect(container.querySelector(".GeckoUIRHFOTPInput")).not.toHaveAttribute(
+      "aria-invalid",
+      "true"
+    );
   });
 
   it("stores the typed code", async () => {

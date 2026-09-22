@@ -41,20 +41,6 @@ describe("RHFInput", () => {
   });
 
   it("marks the styled container as errored", async () => {
-    const { container } = render(
-      <Form defaultValues={{ email: "" }}>
-        <RHFInput name="email" rules={{ required: "Required" }} />
-      </Form>
-    );
-
-    await submit();
-
-    await waitFor(() =>
-      expect(container.querySelector(".GeckoUIRHFInput")).toHaveAttribute("data-error", "true")
-    );
-  });
-
-  it("keeps data-error off the inner input", async () => {
     render(
       <Form defaultValues={{ email: "" }}>
         <RHFInput name="email" rules={{ required: "Required" }} />
@@ -64,19 +50,33 @@ describe("RHFInput", () => {
     await submit();
 
     await waitFor(() =>
-      expect(document.querySelector(".GeckoUIRHFInput")).toHaveAttribute("data-error")
+      expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true")
     );
-    expect(screen.getByRole("textbox")).not.toHaveAttribute("data-error");
+  });
+
+  it("marks the control, not the wrapper around it", async () => {
+    render(
+      <Form defaultValues={{ email: "" }}>
+        <RHFInput name="email" rules={{ required: "Required" }} />
+      </Form>
+    );
+
+    await submit();
+
+    await waitFor(() =>
+      expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true")
+    );
+    expect(document.querySelector(".GeckoUIRHFInput")).not.toHaveAttribute("aria-invalid");
   });
 
   it("is not marked errored while valid", () => {
-    const { container } = render(
+    render(
       <Form defaultValues={{ email: "a@b.com" }}>
         <RHFInput name="email" />
       </Form>
     );
 
-    expect(container.querySelector(".GeckoUIRHFInput")).not.toHaveAttribute("data-error");
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-invalid");
   });
 
   it("formats the displayed value with transform.input", () => {

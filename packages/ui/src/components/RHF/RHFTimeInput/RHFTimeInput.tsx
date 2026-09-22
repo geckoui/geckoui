@@ -34,7 +34,7 @@ const RHFTimeInput: FC<RHFTimeInputProps> = ({ name, control, rules, onChange, .
               onChange?.(time);
             }}
             {...rest}
-            hasError={hasError}
+            aria-invalid={hasError || undefined}
           />
         );
       }}

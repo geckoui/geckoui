@@ -39,7 +39,9 @@ describe("RHFTextarea", () => {
 
     await submit();
 
-    await waitFor(() => expect(screen.getByRole("textbox")).toHaveAttribute("data-error"));
+    await waitFor(() =>
+      expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true")
+    );
   });
 
   it("does not mark a disabled textarea as errored", async () => {
@@ -51,7 +53,7 @@ describe("RHFTextarea", () => {
 
     await submit();
 
-    expect(screen.getByRole("textbox")).not.toHaveAttribute("data-error");
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-invalid", "true");
   });
 
   it("applies the base class and a custom class", () => {

@@ -51,7 +51,7 @@ function Example() {
 | `floatingStrategy` | `'absolute' \| 'fixed'` | `'absolute'` | Floating UI positioning strategy |
 | `disabled` | `boolean` | `false` | Disable the input |
 | `readOnly` | `boolean` | `false` | Make the input read-only |
-| `hasError` | `boolean` | `false` | Show error styling |
+| `aria-invalid` | `boolean` | `false` | Show error styling |
 | `hideCalendar` | `boolean` | `false` | Hide the calendar popup |
 | `fixedWeeks` | `boolean` | `false` | Always render six weeks in the calendar, so the popup keeps the same height across months |
 | `hideCalendarIcon` | `boolean` | `false` | Hide the calendar icon |
@@ -126,7 +126,7 @@ Choose between different date display formats:
 </Preview>
 
 ```tsx
-<DateRangeInput value={value} onChange={setValue} hasError />
+<DateRangeInput value={value} onChange={setValue} aria-invalid />
 ```
 
 ## Styling

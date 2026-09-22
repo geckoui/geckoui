@@ -83,7 +83,7 @@ describe("RHFDateInput", () => {
 
     await submit();
 
-    await waitFor(() => expect(dateInput()).toHaveAttribute("data-error", "true"));
+    await waitFor(() => expect(dateInput()).toHaveAttribute("aria-invalid", "true"));
   });
 
   it("passes the format through", () => {

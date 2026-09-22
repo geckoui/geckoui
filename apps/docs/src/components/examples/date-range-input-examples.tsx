@@ -113,7 +113,7 @@ export function ErrorStateExample() {
 
   return (
     <div className="space-y-4">
-      <DateRangeInput value={value} onChange={(v) => setValue(v ?? undefined)} hasError />
+      <DateRangeInput value={value} onChange={(v) => setValue(v ?? undefined)} aria-invalid />
       <p className="text-sm text-red-600">Please select a valid date range</p>
     </div>
   );

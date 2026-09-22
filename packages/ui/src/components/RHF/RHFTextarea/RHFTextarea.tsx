@@ -71,7 +71,7 @@ const RHFTextarea: FC<RHFTextareaProps> = ({
         return (
           <Textarea
             className={classNames("GeckoUIRHFTextarea", className)}
-            data-error={!disabled && fieldState.error ? "" : undefined}
+            aria-invalid={(!disabled && Boolean(fieldState.error)) || undefined}
             {...field}
             {...rest}
             disabled={disabled}

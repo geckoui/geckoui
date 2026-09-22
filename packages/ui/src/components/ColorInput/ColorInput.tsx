@@ -43,7 +43,6 @@ const ColorInput = ({
   render,
   disabled = false,
   readOnly = false,
-  hasError = false,
   pickerPlacement = "bottom-start",
   floatingStrategy = "absolute",
   className,
@@ -65,6 +64,9 @@ const ColorInput = ({
     open,
     onOpenChange: setOpen
   });
+
+  // Read off the props rather than a prop of our own: it is what a screen reader listens to
+  const invalid = (picker as { "aria-invalid"?: boolean | "true" | "false" })["aria-invalid"];
 
   const toggle = (next: boolean) => {
     if (next === open) return;
@@ -110,10 +112,10 @@ const ColorInput = ({
           fieldRef.current = node;
           floating.refs.setReference(node);
         }}
+        aria-invalid={invalid}
         className={classNames("GeckoUIColorInput", className)}
         data-custom={render ? "" : undefined}
         data-state={state}
-        data-error={hasError || undefined}
         data-open={open || undefined}
         disabled={disabled}
         aria-haspopup={readOnly ? undefined : "dialog"}

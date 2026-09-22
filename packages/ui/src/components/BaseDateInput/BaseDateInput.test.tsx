@@ -151,7 +151,7 @@ describe("BaseDateInput", () => {
     await userEvent.click(segments()[0]);
     await userEvent.keyboard("05");
 
-    expect(root()).toHaveAttribute("data-error", "true");
+    expect(root()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("clears the error once the date is complete", async () => {
@@ -162,13 +162,13 @@ describe("BaseDateInput", () => {
     await userEvent.keyboard("1{ArrowRight}");
     await userEvent.keyboard("5");
 
-    expect(root()).not.toHaveAttribute("data-error");
+    expect(root()).not.toHaveAttribute("aria-invalid", "true");
   });
 
-  it("honours an explicit hasError", () => {
-    render(<BaseDateInput value="2024-01-05" onChange={() => {}} hasError />);
+  it("honours an explicit aria-invalid", () => {
+    render(<BaseDateInput value="2024-01-05" onChange={() => {}} aria-invalid />);
 
-    expect(root()).toHaveAttribute("data-error", "true");
+    expect(root()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("focuses the first segment when the container is clicked", async () => {

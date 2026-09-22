@@ -36,7 +36,7 @@ const RHFColorInput: FC<RHFColorInputProps> = ({
       render={({ field, fieldState }) => (
         <ColorInput
           value={typeof field.value === "string" ? field.value : defaultValue}
-          hasError={Boolean(fieldState.error)}
+          aria-invalid={Boolean(fieldState.error) || undefined}
           onChange={(color) => {
             field.onChange(color);
             onChange?.(color);

@@ -183,10 +183,10 @@ describe("DateInput", () => {
     expect(screen.getByText("YYYY-MM-DD")).toBeInTheDocument();
   });
 
-  it("passes hasError through", () => {
-    render(<DateInput value="2024-01-05" onChange={() => {}} hasError />);
+  it("passes aria-invalid through", () => {
+    render(<DateInput value="2024-01-05" onChange={() => {}} aria-invalid />);
 
-    expect(input()).toHaveAttribute("data-error", "true");
+    expect(input()).toHaveAttribute("aria-invalid", "true");
   });
 
   it("applies wrapperClassName and className separately", () => {

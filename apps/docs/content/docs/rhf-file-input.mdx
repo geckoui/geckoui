@@ -48,9 +48,9 @@ The field holds a `PickedFile` when single and a `PickedFile[]` when `multiple`.
 | `control` | `Control` | - | Taken from `FormProvider` when left out |
 | `rules` | `RegisterOptions` | - | Validation rules |
 | `onChange` | `(value) => void` | - | Called alongside the form update |
-| ...rest | `FileInputProps` | - | Everything [FileInput](/docs/file-input) takes, except `value` and `hasError` |
+| ...rest | `FileInputProps` | - | Everything [FileInput](/docs/file-input) takes, except `value` and `aria-invalid` |
 
-`hasError` is set for you from the field's own error, so it is not yours to pass.
+`aria-invalid` is set for you from the field's own error, so it is not yours to pass.
 
 ## Requiring one
 

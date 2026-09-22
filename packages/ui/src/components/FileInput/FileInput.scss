@@ -39,8 +39,10 @@
    * Stated for the dragging state too, or a field in error goes back to blue the moment a
    * file is dragged over it, which is when the error matters most.
    */
-  &[data-error],
-  &[data-error][data-dragging] {
+  &:has(&__trigger[aria-invalid="true"]),
+  &:has(&__trigger[aria-invalid="true"])[data-dragging],
+  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):hover,
+  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):focus-visible {
     @apply border-red-500;
   }
 
