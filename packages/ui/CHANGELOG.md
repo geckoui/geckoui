@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.1
+
+### Patch Changes
+
+- 64770ce: Bring the package README up to v2. It showed `Button variant="contained"`, which is not a
+  variant, and `Alert variant="success"`, which is `color` now, and Quick Start never mounted
+  `GeckoUIProvider`.
+
 ## 2.0.0
 
 ### Major Changes
