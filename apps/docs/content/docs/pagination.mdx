@@ -50,6 +50,8 @@ function Example() {
 | `onChange` | `(page: number) => void` | - | Callback when page changes (required) |
 | `className` | `string` | - | Additional CSS classes |
 
+Renders nothing when `totalPages` is `1` or less, so there is no need to guard it yourself.
+
 ## Examples
 
 ### Large Page Count

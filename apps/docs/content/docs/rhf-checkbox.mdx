@@ -100,7 +100,7 @@ Extends all props from [Checkbox](/docs/checkbox) component plus:
 | `value` | `unknown` | - | Value to set when checked |
 | `single` | `boolean` | `false` | Act as single selection (stores value, not array) |
 | `uncheckedValue` | `unknown` | `null` | Value when unchecked (only with `single`) |
-| `partial` | `boolean \| Function` | `false` | Show indeterminate state |
+| `indeterminate` | `boolean \| Function` | `false` | Show indeterminate state |
 | `onChange` | `(value: unknown) => void` | - | Change callback |
 | ...rest | `CheckboxProps` | - | All Checkbox component props |
 
@@ -171,7 +171,7 @@ function Example() {
   <RHFCheckbox
     name="languages"
     value="js"
-    partial={({ field }) => {
+    indeterminate={({ field }) => {
       const selected = field.value || [];
       return selected.length > 0 && selected.length < 2;
     }}
@@ -180,7 +180,7 @@ function Example() {
   <RHFCheckbox
     name="languages"
     value="ts"
-    partial={({ field }) => {
+    indeterminate={({ field }) => {
       const selected = field.value || [];
       return selected.length > 0 && selected.length < 2;
     }}
@@ -349,22 +349,22 @@ Unlike native HTML checkboxes, RHFCheckbox preserves the original value type:
 
 ## Indeterminate State
 
-Use the `partial` prop to show an indeterminate state (useful for "select all" scenarios):
+Use the `indeterminate` prop to show an indeterminate state (useful for "select all" scenarios):
 
 ```tsx
-// Boolean partial
+// Boolean indeterminate
 <RHFCheckbox
   name="selectAll"
   value="all"
-  partial={someSelected && !allSelected}
+  indeterminate={someSelected && !allSelected}
   single
 />
 
-// Dynamic partial based on field state
+// Dynamic indeterminate based on field state
 <RHFCheckbox
   name="items"
   value="item1"
-  partial={({ field }) => field.value.length > 0 && field.value.length < total}
+  indeterminate={({ field }) => field.value.length > 0 && field.value.length < total}
 />
 ```
 

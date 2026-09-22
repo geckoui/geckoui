@@ -1,0 +1,353 @@
+---
+title: Theming
+description: Customize Gecko UI colors and design tokens using CSS variables
+---
+
+# Theming
+
+Gecko UI uses CSS custom properties (variables) for theming with [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch) color values. You can override theme colors using any valid CSS color format — `oklch()`, `hex`, `rgb()`, `hsl()`, or any other format you prefer.
+
+## CSS Variables
+
+Theme colors are defined as `--color-*` CSS custom properties. These are standard [Tailwind CSS v4 theme variables](https://tailwindcss.com/docs/theme) and work seamlessly with Tailwind's opacity modifier syntax (e.g., `bg-primary-600/50`).
+
+### Primary Colors
+
+Primary color scale from 50 (lightest) to 950 (darkest):
+
+```css
+:root {
+  --color-primary-50: oklch(0.9705 0.0142 254.6);
+  --color-primary-100: oklch(0.9319 0.0316 255.59);
+  --color-primary-200: oklch(0.8823 0.0571 254.13);
+  --color-primary-300: oklch(0.8091 0.0956 251.81);
+  --color-primary-400: oklch(0.7137 0.1434 254.62);
+  --color-primary-500: oklch(0.6231 0.188 259.81);
+  --color-primary-600: oklch(0.5461 0.2152 262.88);
+  --color-primary-700: oklch(0.4882 0.2172 264.38);
+  --color-primary-800: oklch(0.4244 0.1809 265.64);
+  --color-primary-900: oklch(0.3791 0.1378 265.52);
+  --color-primary-950: oklch(0.2823 0.0874 267.94);
+}
+```
+
+### Surface Colors
+
+Background colors for various UI surfaces:
+
+```css
+:root {
+  --color-surface-primary: oklch(1 0 none);           /* Main background */
+  --color-surface-secondary: oklch(0.9851 0 none);    /* Secondary background */
+  --color-surface-tertiary: oklch(0.9702 0 none);     /* Tertiary background */
+  --color-surface-hover: oklch(0.9702 0 none);        /* Hover state */
+  --color-surface-hover-strong: oklch(0.9401 0 none); /* Strong hover state */
+  --color-surface-active: oklch(0.8699 0 none);       /* Active/pressed state */
+  --color-surface-disabled: oklch(0.9401 0 none);     /* Disabled state */
+  --color-surface-overlay: oklch(0 0 none);            /* Backdrop overlay */
+  --color-surface-autofill: oklch(0.9702 0 none);     /* Browser autofill */
+  --color-surface-emphasis: oklch(0.4461 0.0263 256.8);
+}
+```
+
+### Text Colors
+
+Text colors for different hierarchy levels:
+
+```css
+:root {
+  --color-text-primary: oklch(0.2046 0 none);      /* Primary text */
+  --color-text-secondary: oklch(0.3715 0 none);    /* Secondary text */
+  --color-text-tertiary: oklch(0.5555 0 none);     /* Tertiary text */
+  --color-text-disabled: oklch(0.7155 0 none);     /* Disabled text */
+  --color-text-placeholder: oklch(0.7155 0 none);  /* Placeholder text */
+  --color-text-inverse: oklch(0.9851 0 none);      /* Inverse text (on dark) */
+  --color-text-muted: oklch(0.5555 0 none);        /* Muted text */
+  --color-text-on-primary: oklch(1 0 none);        /* Text on primary color */
+}
+```
+
+### Border Colors
+
+Border colors for various states:
+
+```css
+:root {
+  --color-border-primary: oklch(0.9401 0 none);   /* Default border */
+  --color-border-secondary: oklch(0.8699 0 none); /* Secondary border */
+  --color-border-focus: oklch(0.7155 0 none);     /* Focus state */
+  --color-border-hover: oklch(0.8699 0 none);     /* Hover state */
+  --color-border-disabled: oklch(0.9401 0 none);  /* Disabled state */
+}
+```
+
+### Scrollbar Colors
+
+Custom scrollbar styling (these use the `--gecko-ui-` prefix as they are not Tailwind utilities):
+
+```css
+:root {
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.8717 0.0093 258.34);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.7137 0.0192 261.32);
+}
+```
+
+## Dark Mode
+
+Gecko UI includes built-in dark mode support. Apply the `.dark` class to enable dark theme:
+
+```css
+.dark {
+  --color-surface-primary: oklch(0.2046 0 none);
+  --color-surface-secondary: oklch(0.2435 0 none);
+  --color-surface-tertiary: oklch(0.2972 0 none);
+  --color-surface-hover: oklch(0.2972 0 none);
+  --color-surface-hover-strong: oklch(0.3715 0 none);
+  --color-surface-active: oklch(0.5555 0 none);
+  --color-surface-disabled: oklch(0.2972 0 none);
+  --color-surface-overlay: oklch(0 0 none);
+  --color-surface-autofill: oklch(0.2435 0 none);
+  --color-surface-emphasis: oklch(0.7748 0.0054 247.89);
+
+  --color-text-primary: oklch(0.9851 0 none);
+  --color-text-secondary: oklch(0.8699 0 none);
+  --color-text-tertiary: oklch(0.7155 0 none);
+  --color-text-disabled: oklch(0.5555 0 none);
+  --color-text-placeholder: oklch(0.5555 0 none);
+  --color-text-inverse: oklch(0.2046 0 none);
+  --color-text-muted: oklch(0.7155 0 none);
+
+  --color-border-primary: oklch(0.4676 0 none);
+  --color-border-secondary: oklch(0.4676 0 none);
+  --color-border-focus: oklch(0.5555 0 none);
+  --color-border-hover: oklch(0.7155 0 none);
+  --color-border-disabled: oklch(0.2972 0 none);
+
+  --gecko-ui-scrollbar-track: oklch(0 0 none);
+  --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
+  --gecko-ui-scrollbar-thumb-hover: oklch(0.551 0.0234 264.36);
+}
+```
+
+### Implementing Dark Mode
+
+Add the `dark` class to your root element:
+
+```tsx
+import { useState } from 'react';
+
+function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  return (
+    <div className={isDark ? 'dark' : ''}>
+      <button onClick={() => setIsDark(!isDark)}>
+        Toggle Dark Mode
+      </button>
+      {/* Your app content */}
+    </div>
+  );
+}
+```
+
+Or apply it to the `<html>` element:
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  return <>{children}</>;
+}
+```
+
+## Customizing Colors
+
+### Changing Primary Color
+
+Override the primary color scale to match your brand. You can use **any CSS color format**:
+
+```css
+:root {
+  /* Using oklch */
+  --color-primary-50: oklch(0.98 0.02 330);
+  --color-primary-100: oklch(0.95 0.04 330);
+  --color-primary-200: oklch(0.90 0.08 330);
+  --color-primary-300: oklch(0.82 0.14 330);
+  --color-primary-400: oklch(0.72 0.19 330);
+  --color-primary-500: oklch(0.65 0.24 330);
+  --color-primary-600: oklch(0.55 0.22 330);
+  --color-primary-700: oklch(0.48 0.19 330);
+  --color-primary-800: oklch(0.40 0.16 330);
+  --color-primary-900: oklch(0.35 0.12 330);
+  --color-primary-950: oklch(0.25 0.08 330);
+}
+```
+
+```css
+:root {
+  /* Using hex — works too! */
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+}
+```
+
+### Customizing Specific Colors
+
+Override individual tokens:
+
+```css
+:root {
+  /* Make borders more prominent */
+  --color-border-primary: oklch(0.8 0 none);
+
+  /* Adjust text hierarchy */
+  --color-text-secondary: oklch(0.4 0 none);
+
+  /* Custom hover states */
+  --color-surface-hover: oklch(0.95 0 none);
+}
+```
+
+## Using Color Variables in Custom CSS
+
+Since variables contain full color values, use them directly with `var()`:
+
+```css
+/* Direct usage */
+color: var(--color-text-primary);
+background: var(--color-surface-primary);
+
+/* With opacity using color-mix() */
+color: color-mix(in oklch, var(--color-text-primary) 50%, transparent);
+background: color-mix(in oklch, var(--color-surface-primary) 80%, transparent);
+
+/* In Tailwind arbitrary values */
+className="text-[var(--color-text-primary)]"
+className="bg-[var(--color-surface-hover)]"
+```
+
+## Component-Specific Styling
+
+Components use their own class names for targeted styling:
+
+```css
+/* Style all inputs */
+.GeckoUIInput {
+  --color-border-primary: oklch(0.75 0 none);
+}
+
+/* Style all buttons */
+.GeckoUIButton {
+  border-radius: 0.5rem;
+}
+
+/* Style specific button variant */
+.GeckoUIButton[data-variant="filled"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+```
+
+## Customizing Icons
+
+Gecko UI uses CSS `mask-image` with inline SVGs for icons. This approach allows icons to inherit color from parent elements and be styled with CSS.
+
+To find an icon's class name, use your browser's DevTools to inspect the element. All icon classes follow a consistent naming pattern (e.g., `.GeckoUI-icon__check`, `.GeckoUIAlert__icon[data-variant="error"]`).
+
+### Overriding an Icon
+
+To replace an icon, override the `mask-image` property with your custom SVG:
+
+```css
+.GeckoUI-icon__check {
+  mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>');
+  -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>');
+}
+```
+
+### Overriding Alert Icons
+
+Alert icons are variant-specific. Override them by targeting the variant modifier:
+
+```css
+.GeckoUIAlert__icon[data-variant="error"] {
+  @apply bg-red-600;
+  mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-4V7h2v6h-2z"/></svg>');
+  -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-4V7h2v6h-2z"/></svg>');
+}
+```
+
+### Icon Styling Properties
+
+Icons use these CSS properties which you can also customize:
+
+```css
+.GeckoUI-icon__check {
+  mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+}
+```
+
+### Using External Icon Libraries
+
+You can also use icons from external libraries by converting them to data URLs:
+
+```css
+/* Using a Lucide icon */
+.GeckoUI-icon__arrow-down {
+  mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+  -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+}
+```
+
+## Best Practices
+
+1. **Use Any Color Format**: Override with `oklch()`, `hex`, `rgb()`, `hsl()` — whatever you prefer
+2. **Maintain Consistency**: Keep color scales consistent with 50-950 range
+3. **Test Contrast**: Ensure text colors meet WCAG contrast requirements
+4. **Dark Mode Parity**: When customizing light mode, also update dark mode tokens
+5. **Component Overrides**: Use component-specific classes (`.GeckoUIButton`) rather than global tokens when possible
+
+## Example: Complete Custom Theme
+
+```css
+/* custom-theme.css */
+:root {
+  /* Brand primary color (Purple) */
+  --color-primary-50: oklch(0.98 0.02 300);
+  --color-primary-100: oklch(0.95 0.05 300);
+  --color-primary-200: oklch(0.90 0.09 300);
+  --color-primary-300: oklch(0.84 0.14 300);
+  --color-primary-400: oklch(0.74 0.19 300);
+  --color-primary-500: oklch(0.65 0.24 300);
+  --color-primary-600: oklch(0.56 0.23 300);
+  --color-primary-700: oklch(0.49 0.20 300);
+  --color-primary-800: oklch(0.42 0.17 300);
+  --color-primary-900: oklch(0.36 0.13 300);
+  --color-primary-950: oklch(0.26 0.08 300);
+}
+```
+
+Import after the base styles:
+
+```tsx
+import '@geckoui/geckoui/styles.css';
+import './custom-theme.css';
+```
+
+## Next Steps
+
+- [Installation](/v1/docs/installation) - Setup guide

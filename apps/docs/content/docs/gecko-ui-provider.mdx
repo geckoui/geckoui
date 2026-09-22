@@ -1,0 +1,173 @@
+---
+title: GeckoUIProvider
+description: Context-aware provider that hosts the overlay stack and toast system
+---
+
+import { GeckoUIProvider, Button } from '@geckoui/geckoui';
+
+# GeckoUIProvider
+
+`GeckoUIProvider` wraps your application tree and is required for `Dialog.show()`, `Drawer.show()`, `ConfirmDialog.show()`, and `toast`. It owns a shared overlay **stack** rendered via `ReactDOM.createPortal`, which means:
+
+- Overlay content opened with the imperative API can read any React context provided above `GeckoUIProvider`.
+- Multiple dialogs and drawers can be open simultaneously and stack correctly.
+- Dismissing the topmost overlay reveals the one beneath.
+
+## Setup
+
+```tsx
+// app/layout.tsx
+import { GeckoUIProvider } from "@geckoui/geckoui";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <GeckoUIProvider>
+          {children}
+        </GeckoUIProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+> **Context ordering:** Place `GeckoUIProvider` **below** your own context providers so overlays can read those contexts.
+
+```tsx
+<AuthProvider>
+  <ThemeProvider>
+    <GeckoUIProvider>   {/* ← overlays can now read AuthContext and ThemeContext */}
+      <App />
+    </GeckoUIProvider>
+  </ThemeProvider>
+</AuthProvider>
+```
+
+## Nesting providers
+
+Mount one provider at the root. If you nest another one deeper — for example on a page that has
+its own context you want overlays to read — the **innermost** provider owns the overlay stack and
+the `<Toaster>`, and the outer ones just render their children. A warning is logged so accidental
+duplicates are easy to spot.
+
+```tsx
+<GeckoUIProvider>            {/* root: renders nothing while the inner one is mounted */}
+  <PageUserContext.Provider value={user}>
+    <GeckoUIProvider>        {/* ← owns the stack, so overlays can read PageUserContext */}
+      <Page />
+    </GeckoUIProvider>
+  </PageUserContext.Provider>
+</GeckoUIProvider>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | Your application tree |
+| `toastOptions` | `ToasterProps` | `{}` | Options forwarded to sonner's `<Toaster>` |
+
+## Toast customisation
+
+```tsx
+<GeckoUIProvider toastOptions={{ duration: 3000, position: "top-center" }}>
+  <App />
+</GeckoUIProvider>
+```
+
+## Stacking overlays
+
+Each `Dialog.show()` / `Drawer.show()` call pushes a new entry and returns an `id`:
+
+```tsx
+const firstId = Dialog.show({
+  content: ({ dismiss }) => (
+    <div>
+      <p>First dialog</p>
+      <Button onClick={() =>
+        Dialog.show({ content: () => <p>Second dialog (on top)</p> })
+      }>
+        Stack another
+      </Button>
+      <Button onClick={dismiss}>Close this</Button>
+    </div>
+  )
+});
+
+// Close a specific dialog:
+Dialog.dismiss(firstId);
+
+// Close the topmost dialog:
+Dialog.dismiss();
+```
+
+`Dialog.dismiss()` and `Drawer.dismiss()` only close overlays of their own type. Calling `Dialog.dismiss()` never closes a drawer, and the other way round.
+
+### Stacking order
+
+- Drawers render at `z-index: 1000 + position` in the stack.
+- Dialogs render at `z-index: 2000 + position`.
+
+So a dialog always sits above a drawer, whichever one opened last, and the dialog is the one that captures Esc and click-outside. An overlay gives up topmost as soon as it starts closing, so the one underneath takes over right away instead of waiting for the 300ms exit animation.
+
+## Missing provider
+
+`Dialog.show()`, `Drawer.show()`, and `ConfirmDialog.show()` need a mounted provider. If none is mounted, nothing renders and an error is logged:
+
+```
+[GeckoUI] No <GeckoUIProvider> is mounted, so the overlay cannot be rendered.
+Wrap your app with <GeckoUIProvider> to use Dialog.show() and Drawer.show().
+```
+
+The declarative `<Dialog>` and `<Drawer>` components render in place and work without the provider.
+
+## Context consumption
+
+```tsx
+// AuthContext is provided above GeckoUIProvider
+const { user } = useContext(AuthContext);
+
+Dialog.show({
+  content: () => {
+    // This component can call useContext(AuthContext) and get the real value
+    const { user } = useContext(AuthContext);
+    return <p>Hello, {user.name}</p>;
+  }
+});
+```
+
+## Limitations
+
+Overlays lock page scroll while open, sharing one reference counted lock, and compensate for the scrollbar so the page does not shift. The `useScrollLock(enabled)` hook is exported if you need it for your own overlays.
+
+Still missing: overlays have no focus trap and do not restore focus to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
+
+## Migration from GeckoUIPortal
+
+Replace the self-closing `<GeckoUIPortal />` with the `<GeckoUIProvider>` wrapper:
+
+```diff
+- import { GeckoUIPortal } from "@geckoui/geckoui";
++ import { GeckoUIProvider } from "@geckoui/geckoui";
+
+  export default function RootLayout({ children }) {
+    return (
+      <html>
+        <body>
+-         {children}
+-         <GeckoUIPortal toastOptions={{ duration: 3000 }} />
++         <GeckoUIProvider toastOptions={{ duration: 3000 }}>
++           {children}
++         </GeckoUIProvider>
+        </body>
+      </html>
+    );
+  }
+```
+
+## Related
+
+- [Dialog](/docs/dialog) — Imperative modal dialogs
+- [Drawer](/docs/drawer) — Imperative slide-out panels
+- [ConfirmDialog](/docs/confirm-dialog) — Pre-styled confirmation dialogs

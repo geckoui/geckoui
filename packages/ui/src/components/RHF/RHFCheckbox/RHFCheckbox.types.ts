@@ -5,7 +5,7 @@ import type { RHFBaseProps, RHFRenderArgs } from "../RHF.types";
 
 export interface RHFCheckboxProps
   extends RHFBaseProps,
-    Omit<CheckboxProps, "name" | "value" | "onChange" | "partial"> {
+    Omit<CheckboxProps, "name" | "value" | "onChange" | "onBlur" | "indeterminate"> {
   /**
    * Label that will be displayed next to the checkbox
    * */
@@ -55,17 +55,23 @@ export interface RHFCheckboxProps
    *    <RHFCheckbox
    *      name="checkbox"
    *      value="js"
-   *      partial={({ field }) => field.value.length !== 2}
+   *      indeterminate={({ field }) => field.value.length !== 2}
    *      label="JavaScript"
    *    />
    *    <RHFCheckbox
    *      name="checkbox"
    *      value="ts"
-   *      partial={({ field }) => field.value.length !== 2}
+   *      indeterminate={({ field }) => field.value.length !== 2}
    *      label="TypeScript"
    *    />
    *  </>
    * ```
    * */
-  partial?: boolean | ((args: RHFRenderArgs<Record<string, unknown>>) => boolean);
+  indeterminate?: boolean | ((args: RHFRenderArgs<Record<string, unknown>>) => boolean);
+
+  /**
+   * Callback fired when the field is blurred
+   * Called alongside React Hook Form's onBlur
+   * */
+  onBlur?: () => void;
 }

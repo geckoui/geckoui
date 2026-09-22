@@ -13,7 +13,9 @@
     @include base-reset;
     @include scrollbar;
 
-    @apply border-border-secondary bg-surface-primary z-50 flex max-h-[240px] w-fit flex-col justify-start overflow-y-auto rounded-md border p-1 shadow-xl outline-none;
+    @apply border-border-secondary bg-surface-primary flex max-h-[240px] w-fit flex-col justify-start overflow-y-auto rounded-md border p-1 shadow-xl outline-none;
+
+    z-index: var(--gecko-menu-z, 50);
   }
 
   &__item {

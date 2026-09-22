@@ -7,7 +7,7 @@ import type { AlertProps } from "./Alert.types";
 /**
  * An alert component for displaying important messages with different severity levels.
  *
- * Supports multiple variants (error, success, warning, info), optional descriptions,
+ * Supports multiple colours (error, success, warning, info), optional descriptions,
  * custom icons, and dismissal functionality. The `condensed` prop reduces vertical padding
  * for a more compact appearance.
  *
@@ -16,17 +16,17 @@ import type { AlertProps } from "./Alert.types";
  * // Basic alert
  * <Alert title="This is an alert message" />
  *
- * // Different variants
- * <Alert variant="success" title="Success!" />
- * <Alert variant="warning" title="Warning!" />
- * <Alert variant="info" title="Information" />
+ * // Different colours
+ * <Alert color="success" title="Success!" />
+ * <Alert color="warning" title="Warning!" />
+ * <Alert color="info" title="Information" />
  *
  * // Condensed style
- * <Alert variant="success" condensed title="This is a success message" />
+ * <Alert color="success" condensed title="This is a success message" />
  *
  * // With description and remove button
  * <Alert
- *   variant="warning"
+ *   color="warning"
  *   title="Warning!"
  *   description="This is a detailed warning message with more context."
  *   onRemove={() => console.log('Alert dismissed')}
@@ -34,7 +34,7 @@ import type { AlertProps } from "./Alert.types";
  *
  * // With custom icon
  * <Alert
- *   variant="info"
+ *   color="info"
  *   title="Custom Icon"
  *   icon={<CustomIcon />}
  * />
@@ -42,7 +42,7 @@ import type { AlertProps } from "./Alert.types";
  */
 const Alert: FC<AlertProps> = (props) => {
   const {
-    variant = "default",
+    color = "default",
     condensed = false,
     onRemove,
     className,
@@ -55,13 +55,13 @@ const Alert: FC<AlertProps> = (props) => {
   return (
     <div
       className={classNames("GeckoUIAlert", className)}
-      data-variant={variant}
+      data-color={color}
       {...(condensed ? { "data-condensed": "" } : {})}>
       <div className="GeckoUIAlert__body">
         {icon ? (
           <DynamicComponentRenderer component={icon} />
         ) : (
-          <div className={classNames("GeckoUIAlert__icon", iconClassName)} data-variant={variant} />
+          <div className={classNames("GeckoUIAlert__icon", iconClassName)} data-color={color} />
         )}
         <DynamicComponentRenderer component={title} className="GeckoUIAlert__title" />
         {Boolean(onRemove) && (

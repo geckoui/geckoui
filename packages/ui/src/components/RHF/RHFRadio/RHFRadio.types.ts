@@ -5,7 +5,7 @@ import type { RHFBaseProps } from "../RHF.types";
 
 export interface RHFRadioProps
   extends RHFBaseProps,
-    Omit<RadioProps, "name" | "value" | "onChange"> {
+    Omit<RadioProps, "name" | "value" | "onChange" | "onBlur"> {
   /**
    * Label to display next to the radio button
    * */
@@ -27,4 +27,10 @@ export interface RHFRadioProps
    * Callback fired when the value changes
    * */
   onChange?: (value: unknown) => void;
+
+  /**
+   * Callback fired when the field is blurred
+   * Called alongside React Hook Form's onBlur
+   * */
+  onBlur?: () => void;
 }

@@ -1,5 +1,7 @@
 .GeckoUIDialog {
-  @apply fixed inset-0 z-[1000] w-screen overflow-y-auto;
+  @apply fixed inset-0 w-screen overflow-y-auto;
+
+  z-index: var(--gecko-dialog-z, 2000);
 
   &__backdrop {
     @apply bg-surface-overlay/50 flex min-h-full items-center justify-center px-3 text-center;
@@ -7,7 +9,12 @@
   }
 
   &__dialog {
-    @apply bg-surface-primary relative w-full max-w-[400px] overflow-hidden rounded-md p-6 text-left shadow-xl;
+    /*
+     * Deliberately not clipped: floating children such as a Select menu or Menu dropdown
+     * render inline and would be cut off at the dialog edge. The scroll container for a
+     * tall dialog is .GeckoUIDialog, so nothing here needs its own overflow.
+     */
+    @apply bg-surface-primary relative w-full max-w-[400px] overflow-visible rounded-md p-6 text-left shadow-xl;
     @apply transition-all duration-300 ease-out;
   }
 

@@ -16,7 +16,7 @@ export function DismissibleAlertExample() {
 
   return (
     <Alert
-      variant="warning"
+      color="warning"
       title="Storage almost full"
       description="You're using 95% of your storage. Upgrade your plan to avoid interruptions."
       onRemove={() => setShow(false)}

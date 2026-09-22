@@ -1,0 +1,343 @@
+---
+title: RHFFileInput
+description: File input component integrated with React Hook Form
+---
+
+import { RHFFileInput } from '@geckoui/geckoui';
+
+# RHFFileInput
+
+A file input component integrated with React Hook Form that automatically creates preview URLs for selected files. Supports single and multiple file selection with custom rendering capabilities.
+
+## Installation
+
+```tsx
+import { RHFFileInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFFileInput } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicFile: undefined
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFFileInput name="basicFile" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from standard HTML `<input type="file">` element plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `multiple` | `boolean` | `false` | Allow multiple file selection |
+| `accept` | `string` | - | File types to accept (e.g., "image/*", ".pdf") |
+| `onChange` | `(data) => void` | - | Change callback (receives file data, not event) |
+| `onBlur` | `(event) => void` | - | Blur callback |
+| `render` | `ReactNode \| Function` | - | Custom render function with access to controller props |
+| `className` | `string` | - | Class for wrapper element |
+| `inputClassName` | `string` | - | Class for input element itself |
+| `disabled` | `boolean` | `false` | Disable file input |
+| ...rest | `InputHTMLAttributes` | - | All other input attributes |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFFileInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  validationAvatar: z
+    .instanceof(File, { message: 'Please select a file' })
+    .refine((file) => file.size <= 5000000, 'File size must be less than 5MB')
+    .refine(
+      (file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type),
+      'Only JPEG, PNG, and WebP images are allowed'
+    )
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      validationAvatar: undefined
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Profile Picture" required>
+          <RHFFileInput name="validationAvatar" accept="image/*" />
+        </RHFInputGroup>
+        <Button type="submit">Upload</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+### Multiple Files
+
+
+```tsx
+<RHFFileInput name="multipleImages" multiple accept="image/*" />
+```
+
+### Restrict File Types
+
+
+```tsx
+<RHFFileInput name="pdfDocument" accept=".pdf" />
+```
+
+### Custom Render with Preview
+
+
+```tsx
+<RHFFileInput
+  name="customAvatar"
+  accept="image/*"
+  render={({ field: { value } }) => {
+    return (
+      <div className="flex rounded overflow-hidden items-center justify-center cursor-pointer border-2 p-4 w-full border-dotted border-gray-300 h-[200px]">
+        {value ? (
+          <img
+            className="inline-block object-contain w-full h-full"
+            src={value.preview}
+            alt="Preview"
+          />
+        ) : (
+          <span>Click to Upload Image</span>
+        )}
+      </div>
+    );
+  }}
+/>
+```
+
+### With onChange Callback
+
+
+```tsx
+const handleFileChange = (data: FileWithPreview | FileWithPreview[]) => {
+  console.log('File selected:', data);
+  if (data && !Array.isArray(data)) {
+    alert(`File selected: ${data.name} (${(data.size / 1024).toFixed(2)} KB)`);
+  }
+};
+
+<RHFFileInput name="callbackFile" onChange={handleFileChange} />
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFFileInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  resume: z
+    .instanceof(File, { message: 'Resume is required' })
+    .refine((file) => file.size <= 10000000, 'File size must be less than 10MB')
+    .refine(
+      (file) => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type),
+      'Only PDF and Word documents are allowed'
+    ),
+  portfolio: z
+    .array(z.instanceof(File))
+    .min(1, 'At least one portfolio item is required')
+    .max(5, 'Maximum 5 files allowed')
+    .refine(
+      (files) => files.every((file) => file.size <= 5000000),
+      'Each file must be less than 5MB'
+    )
+    .refine(
+      (files) => files.every((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)),
+      'Only JPEG, PNG, and WebP images are allowed'
+    )
+});
+
+function ApplicationForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      resume: undefined,
+      portfolio: undefined
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Resume" required>
+          <RHFFileInput name="resume" accept=".pdf,.doc,.docx" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Portfolio Images" required>
+          <RHFFileInput name="portfolio" multiple accept="image/*" />
+        </RHFInputGroup>
+
+        <Button type="submit">Submit Application</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFFileInput
+  name="avatar"
+  rules={{ required: 'Please upload a file' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## File Preview
+
+RHFFileInput automatically creates preview URLs for selected files:
+
+- Each file has a `preview` property containing an Object URL
+- For single files: `value.preview`
+- For multiple files: `value.map(file => file.preview)`
+- Perfect for displaying image previews before upload
+
+```tsx
+<RHFFileInput
+  name="image"
+  render={({ field: { value } }) => (
+    value && <img src={value.preview} alt="Preview" />
+  )}
+/>
+```
+
+## File Types
+
+The `accept` prop accepts standard HTML file input values:
+
+```tsx
+accept="image/*"
+accept=".pdf"
+accept=".jpg,.jpeg,.png"
+accept="video/*"
+accept=".doc,.docx,application/pdf"
+```
+
+Common MIME types:
+- Images: `image/*`, `image/jpeg`, `image/png`, `image/webp`
+- Documents: `application/pdf`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`
+- Videos: `video/*`, `video/mp4`
+
+## Validation with Zod
+
+For single file:
+
+```tsx
+z.instanceof(File, { message: 'File is required' })
+  .refine((file) => file.size <= 5000000, 'Max file size is 5MB')
+  .refine(
+    (file) => ['image/jpeg', 'image/png'].includes(file.type),
+    'Only JPEG and PNG allowed'
+  )
+```
+
+For multiple files:
+
+```tsx
+z.array(z.instanceof(File))
+  .min(1, 'At least one file required')
+  .max(5, 'Maximum 5 files')
+  .refine(
+    (files) => files.every((file) => file.size <= 5000000),
+    'Each file must be less than 5MB'
+  )
+```
+
+## Error States
+
+RHFFileInput automatically displays error states with:
+- Red border via `data-error` attribute on the root element when validation fails
+- Use with [RHFInputGroup](/v1/docs/rhf-input-group) for label + error message display
+
+```css
+.GeckoUIRHFFileInput[data-error] {
+  border-color: red;
+}
+```
+
+```tsx
+<RHFInputGroup label="Upload File" required>
+  <RHFFileInput name="file" />
+</RHFInputGroup>
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate after file selection:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Custom Rendering
+
+The `render` prop provides full control over the UI while maintaining form integration:
+
+```tsx
+<RHFFileInput
+  name="file"
+  render={({ field, fieldState, formState }) => (
+    <div>
+      {field.value && <p>{field.value.name}</p>}
+      {fieldState.error && <p>{fieldState.error.message}</p>}
+    </div>
+  )}
+/>
+```
+
+When using `render`, the default input is hidden but still functional.
+
+## Accessibility
+
+- Standard HTML file input accessibility
+- Keyboard navigable (Tab to focus, Enter/Space to open)
+- Screen reader compatible
+- Proper ARIA attributes for error states
+
+## Related Components
+
+- [RHFFilePicker](/v1/docs/rhf-file-picker) - Drag-and-drop file picker with directory support
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Label + input + error wrapper
+- [RHFError](/v1/docs/rhf-error) - Error message display

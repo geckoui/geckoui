@@ -1,0 +1,132 @@
+---
+title: Textarea
+description: Multi-line text input with optional auto-resizing functionality
+---
+
+import { Textarea } from '@geckoui/geckoui';
+
+# Textarea
+
+A textarea component built on react-textarea-autosize that can automatically adjust its height based on content. Control the minimum and maximum number of rows displayed.
+
+## Installation
+
+```tsx
+import { Textarea } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+<Textarea placeholder="Type something..." />
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `autoResize` | `boolean` | `false` | Enable automatic height adjustment based on content |
+| `rows` | `number` | `2` | Minimum number of rows to display |
+| `maxRows` | `number` | - | Maximum number of rows (only works with `autoResize`) |
+| `className` | `string` | - | CSS class for styling |
+| `disabled` | `boolean` | `false` | Disable the textarea |
+| `readOnly` | `boolean` | `false` | Make the textarea read-only |
+| ...rest | `TextareaHTMLAttributes` | - | All standard HTML textarea attributes |
+
+## Examples
+
+### Auto-Resizing Textarea
+
+
+```tsx
+<Textarea
+  autoResize
+  placeholder="This textarea grows as you type..."
+/>
+```
+
+### With Row Constraints
+
+
+```tsx
+<Textarea
+  rows={4}
+  placeholder="Fixed at 4 rows"
+/>
+```
+
+### Auto-Resize with Max Rows
+
+
+```tsx
+<Textarea
+  autoResize
+  rows={2}
+  maxRows={8}
+  placeholder="Grows from 2 to 8 rows, then scrolls..."
+/>
+```
+
+### Disabled State
+
+
+```tsx
+<Textarea
+  disabled
+  placeholder="This textarea is disabled"
+  value="Cannot edit this content"
+/>
+```
+
+### Read-Only State
+
+
+```tsx
+<Textarea
+  readOnly
+  value="This is read-only content that cannot be edited."
+  rows={3}
+/>
+```
+
+## Auto-Resize Behavior
+
+When `autoResize` is enabled:
+- The textarea grows automatically as content increases
+- Minimum height is determined by the `rows` prop
+- Maximum height is determined by the `maxRows` prop
+- Shrinks back down when content is removed
+
+When `autoResize` is disabled:
+- The textarea has a fixed height
+- Users can resize manually (unless CSS prevents it)
+- The `maxRows` prop is ignored
+
+## Accessibility
+
+- Fully keyboard navigable
+- Works with screen readers
+- Supports all ARIA textarea attributes
+- Disabled state is properly communicated
+
+## Styling
+
+The component uses the class name `GeckoUITextarea`. Override styles using the `className` prop:
+
+```css
+.GeckoUITextarea {
+  /* Your custom styles */
+}
+```
+
+## Dependencies
+
+This component uses `react-textarea-autosize` for the auto-resize functionality.
+
+## Related Components
+
+- [Input](/v1/docs/input) - Single-line text input
+- [Label](/v1/docs/label) - Form labels
+- [InputError](/v1/docs/input-error) - Error messages
+- [RHFTextarea](/v1/docs/rhf-textarea) - React Hook Form integration

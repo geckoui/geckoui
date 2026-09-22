@@ -4,20 +4,4 @@
   @include base-reset;
 
   @apply border-border-primary mt-px max-w-[320px] min-w-[320px] rounded-md border px-3 py-4 text-sm;
-
-  &[data-calendars="2"] {
-    @apply max-w-fit min-w-fit;
-  }
-
-  &__dual {
-    @apply flex gap-4;
-  }
-
-  &__dual__item {
-    @apply max-w-[296px] min-w-[296px];
-
-    &[data-position="second"] {
-      @apply hidden md:block;
-    }
-  }
 }

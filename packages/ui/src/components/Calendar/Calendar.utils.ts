@@ -6,14 +6,21 @@ function firstDayOfMonth(month: number, year: number): number {
   return new Date(year, month, 1).getDay();
 }
 
+const DAYS_IN_WEEK = 7;
+const MAX_WEEKS_IN_MONTH = 6;
+
 /**
  * Generate an array of objects representing the dates of a month
  * @param month - The month (0 = January, 1 = February, etc.)
  * @param year - The year
+ * @param options.fixedWeeks - Always emit six weeks, so the grid keeps the same height
+ * as you page between months. Off by default, which lets a month take the 4 to 6 weeks
+ * it actually needs.
  * */
 export function generateCalendarDates(
   month: number,
-  year: number
+  year: number,
+  { fixedWeeks = false }: { fixedWeeks?: boolean } = {}
 ): {
   day: number;
   month: number;
@@ -23,8 +30,9 @@ export function generateCalendarDates(
   const currentMonthDays = daysInMonth(month, year);
   const prevMonthDays = month === 0 ? daysInMonth(11, year - 1) : daysInMonth(month - 1, year);
 
-  let firstDay = firstDayOfMonth(month, year);
-  firstDay = firstDay === 0 ? 7 : firstDay;
+  // getDay() is already Sunday-first, matching the S M T W T F S header, so the 1st
+  // lands in the right column with no remapping.
+  const firstDay = firstDayOfMonth(month, year);
 
   // Add days from the previous month
   for (let i = firstDay - 1; i >= 0; i--) {
@@ -44,9 +52,14 @@ export function generateCalendarDates(
     });
   }
 
-  // Add days from the next month until the array has 42 items
+  // Add days from the next month until the last week is complete, or until the grid is
+  // six weeks tall when the caller asked for a fixed height.
+  const totalCells = fixedWeeks
+    ? DAYS_IN_WEEK * MAX_WEEKS_IN_MONTH
+    : DAYS_IN_WEEK * Math.ceil(dates.length / DAYS_IN_WEEK);
+
   let nextMonthDay = 1;
-  while (dates.length < 42) {
+  while (dates.length < totalCells) {
     dates.push({
       day: nextMonthDay,
       month: month === 11 ? 0 : month + 1,

@@ -1,0 +1,157 @@
+---
+title: DateRangeInput
+description: Input component for selecting a date range with calendar popup
+---
+
+import { DateRangeInput } from '@geckoui/geckoui';
+
+# DateRangeInput
+
+An input component for selecting date ranges. Features segmented date input fields, a floating calendar with dual-month display, and smart date validation.
+
+## Installation
+
+```tsx
+import { DateRangeInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { DateRangeInput } from '@geckoui/geckoui';
+import type { DateRange } from '@geckoui/geckoui';
+
+function Example() {
+  const [value, setValue] = useState<DateRange | undefined>();
+
+  return (
+    <DateRangeInput value={value} onChange={(v) => setValue(v ?? undefined)} />
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `DateRange` | - | Selected date range with `from` and `to` properties (ISO format: YYYY-MM-DD) |
+| `onChange` | `(value: DateRange \| null) => void` | - | Callback when date range changes |
+| `format` | `'DD/MM/YYYY' \| 'MM/DD/YYYY' \| 'YYYY/MM/DD'` | `'DD/MM/YYYY'` | Display format for date segments |
+| `separator` | `string` | `'/'` | Separator between date segments |
+| `rangeSeparator` | `string` | `' - '` | Separator between from and to dates |
+| `calendarPlacement` | `Placement` | `'bottom-start'` | Calendar popup position (from @floating-ui/react) |
+| `floatingStrategy` | `'absolute' \| 'fixed'` | `'absolute'` | Floating UI positioning strategy |
+| `disabled` | `boolean` | `false` | Disable the input |
+| `readOnly` | `boolean` | `false` | Make the input read-only |
+| `hasError` | `boolean` | `false` | Show error styling |
+| `hideCalendar` | `boolean` | `false` | Hide the calendar popup |
+| `hideCalendarIcon` | `boolean` | `false` | Hide the calendar icon |
+| `hideClearIcon` | `boolean` | `false` | Hide the clear button |
+| `placeholder` | `string` | - | Custom placeholder text |
+| `placeholderClassName` | `string` | - | CSS class for placeholder |
+| `prefix` | `FC \| ReactNode` | - | Element before the input |
+| `suffix` | `FC \| ReactNode` | - | Element after the input |
+| `className` | `string` | - | CSS class for input container |
+| `wrapperClassName` | `string` | - | CSS class for wrapper div |
+| `calendarClassName` | `string` | - | CSS class for calendar container |
+| `onSubmit` | `() => void` | - | Callback on Enter/Space key |
+| `onStateUpdate` | `(state) => void` | - | Callback when input segments change |
+
+## DateRange Type
+
+```tsx
+interface DateRange {
+  from: string | null;  // ISO format: 'YYYY-MM-DD'
+  to?: string | null;   // ISO format: 'YYYY-MM-DD'
+}
+```
+
+## Examples
+
+### With Default Value
+
+Pre-populate the input with a date range:
+
+
+```tsx
+const [value, setValue] = useState<DateRange | undefined>({
+  from: '2024-06-01',
+  to: '2024-06-15',
+});
+
+<DateRangeInput value={value} onChange={(v) => setValue(v ?? undefined)} />
+```
+
+### Date Formats
+
+Choose between different date display formats:
+
+
+```tsx
+<DateRangeInput format="DD/MM/YYYY" />  // 15/06/2024 - 30/06/2024
+<DateRangeInput format="MM/DD/YYYY" />  // 06/15/2024 - 06/30/2024
+<DateRangeInput format="YYYY-MM-DD" />  // 2024-06-15 - 2024-06-30
+```
+
+### Disabled and Read-only
+
+
+```tsx
+<DateRangeInput value={value} disabled />
+<DateRangeInput value={value} readOnly />
+```
+
+### Error State
+
+
+```tsx
+<DateRangeInput value={value} onChange={setValue} hasError />
+```
+
+## Styling
+
+**State attributes (on `GeckoUIDateInput`):**
+- `data-state="disabled"` - Disabled state
+- `data-state="readonly"` - Read-only state
+- `data-error` - Error state
+- `data-focus` - Focused state
+- `data-calendar-open` - Calendar is open
+
+**Structural class names:**
+- `GeckoUIDateRangeInputWrapper` - Wrapper container
+- `GeckoUIDateInput` - Main input container
+- `GeckoUIDateInput__segment` - Date segment input
+- `GeckoUIDateInput__separator` - Separator between segments (/)
+- `GeckoUIDateRangeInput__range-separator` - Separator between dates (-)
+- `GeckoUIDateRangeInput__calendar` - Calendar container
+- `GeckoUIDateInput__calendar-icon` - Calendar icon
+- `GeckoUIDateInput__clear-button` - Clear button
+- `GeckoUIDateInput__prefix` - Prefix container
+- `GeckoUIDateInput__suffix` - Suffix container
+
+```css
+.GeckoUIDateInput[data-state="disabled"] { opacity: 0.5; }
+.GeckoUIDateInput[data-state="readonly"] { pointer-events: none; }
+.GeckoUIDateInput[data-error] { border-color: red; }
+.GeckoUIDateInput[data-focus] { border-color: blue; }
+.GeckoUIDateInput[data-calendar-open] { border-color: blue; }
+```
+
+## Accessibility
+
+- Segmented inputs for fine-grained keyboard control
+- Tab navigation between date segments
+- Arrow keys to move between segments
+- Enter/Space to open calendar and submit
+- Click outside to close calendar
+- Clear button for resetting selection
+
+## Related Components
+
+- [Calendar](/v1/docs/calendar) - Standalone calendar component
+- [DateInput](/v1/docs/date-input) - Single date input with calendar
+- [RHFDateInput](/v1/docs/rhf-date-input) - React Hook Form date input

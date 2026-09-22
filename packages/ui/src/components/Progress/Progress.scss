@@ -1,0 +1,114 @@
+@import "../../mixins.scss";
+
+.GeckoUIProgress {
+  --gecko-progress-accent: var(--color-primary-600);
+  --gecko-progress-track: var(--color-surface-hover-strong);
+  --gecko-progress-height: 0.5rem;
+  --gecko-progress-radius: 9999px;
+  --gecko-progress-duration: 1.4s;
+  --gecko-progress-label-gap: 0.375rem;
+  --gecko-progress-percent: 0%;
+
+  @include base-reset;
+
+  @apply flex w-full flex-col;
+
+  gap: var(--gecko-progress-label-gap);
+
+  &[data-color="default"] {
+    --gecko-progress-accent: var(--color-text-secondary);
+  }
+
+  &[data-color="primary"] {
+    --gecko-progress-accent: var(--color-primary-600);
+  }
+
+  &[data-color="success"] {
+    --gecko-progress-accent: var(--color-success);
+  }
+
+  &[data-color="error"] {
+    --gecko-progress-accent: var(--color-error);
+  }
+
+  &[data-color="warning"] {
+    --gecko-progress-accent: var(--color-warning);
+  }
+
+  &[data-color="info"] {
+    --gecko-progress-accent: var(--color-info);
+  }
+
+  &[data-size="sm"] {
+    --gecko-progress-height: 0.25rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-progress-height: 0.75rem;
+  }
+
+  &__label {
+    @apply self-end text-xs;
+
+    color: var(--color-text-secondary);
+  }
+
+  &__track {
+    @apply w-full overflow-hidden;
+
+    height: var(--gecko-progress-height);
+    border-radius: var(--gecko-progress-radius);
+    background: var(--gecko-progress-track);
+  }
+
+  &__bar {
+    @apply h-full transition-[width] duration-300 ease-out;
+
+    width: var(--gecko-progress-percent);
+    border-radius: inherit;
+    background: var(--gecko-progress-accent);
+  }
+}
+
+/*
+ * A short bar running end to end. Written flat rather than nested, because `&__bar` inside
+ * an attribute block would glue the attribute onto the class name.
+ */
+.GeckoUIProgress[data-indeterminate] .GeckoUIProgress__bar {
+  @apply w-2/5;
+
+  transition: none;
+  animation: gecko-progress-slide var(--gecko-progress-duration) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .GeckoUIProgress__bar {
+    transition: none;
+  }
+
+  /*
+   * Movement is the whole message when the value is unknown, so it is traded for a pulse
+   * across the full width rather than dropped, which would look like a stalled bar.
+   */
+  .GeckoUIProgress[data-indeterminate] .GeckoUIProgress__bar {
+    @apply w-full;
+
+    animation: gecko-progress-pulse var(--gecko-progress-duration) ease-in-out infinite;
+  }
+}
+
+@keyframes gecko-progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes gecko-progress-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}

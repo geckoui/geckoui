@@ -1,0 +1,463 @@
+---
+title: RHFFilePicker
+description: Advanced file picker with drag-and-drop support integrated with React Hook Form
+---
+
+import { RHFFilePicker } from '@geckoui/geckoui';
+
+# RHFFilePicker
+
+An advanced file picker component with drag-and-drop support, directory selection, and duplicate detection integrated with React Hook Form. Perfect for uploading multiple files or entire directories.
+
+## Installation
+
+```tsx
+import { RHFFilePicker } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFFilePicker } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicFiles: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFFilePicker name="basicFiles" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `accept` | `string` | `*` | File types to accept (e.g., "image/*", ".pdf") |
+| `keepOldFiles` | `boolean` | `false` | Keep previously selected files when adding new ones |
+| `removeDuplicates` | `boolean` | `false` | Automatically remove duplicate files(Only works if `keepOldFiles` is true) |
+| `transform` | `(files) => files` | - | Transform files before setting them |
+| `onChange` | `(files, newFiles) => void` | - | Callback when files change |
+| `onError` | `(error) => void` | - | Callback when an error occurs |
+| `render` | `Function` | - | Custom render function with access to picker state |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFFilePicker, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  validationImages: z
+    .array(z.custom<File>())
+    .min(1, 'At least one image is required')
+    .max(10, 'Maximum 10 images allowed')
+    .refine(
+      (files) => files.every((file) => file.size <= 5000000),
+      'Each file must be less than 5MB'
+    )
+    .refine(
+      (files) => files.every((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)),
+      'Only JPEG, PNG, and WebP images are allowed'
+    )
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      validationImages: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Product Images" required>
+          <RHFFilePicker name="validationImages" accept="image/*" />
+        </RHFInputGroup>
+        <Button type="submit">Upload Images</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+### Keep Old Files
+
+Accumulate files across multiple selections:
+
+
+```tsx
+<RHFFilePicker name="accumulatedFiles" keepOldFiles />
+```
+
+### Remove Duplicates
+
+If you set `keepOldFiles`, you can also enable `removeDuplicates` to avoid duplicate files:
+So, if a user selects the same file multiple times, only one instance will be kept.
+
+
+```tsx
+<RHFFilePicker name="uniqueDocuments" keepOldFiles removeDuplicates />
+```
+
+### Custom Render with Image Grid
+
+
+```tsx
+<RHFFilePicker
+  name="customImages"
+  accept="image/*"
+  render={({
+    dropzoneRef,
+    dragging,
+    loading,
+    field: { value: files, onChange },
+    openFilePicker,
+  }) => {
+    const handleRemove = (preview: string) => {
+      onChange(files.filter((f) => f.preview !== preview));
+    };
+
+    return (
+      <div className="flex flex-col gap-3">
+        {/* Compact upload area */}
+        <div
+          ref={dropzoneRef}
+          onClick={() => openFilePicker()}
+          className={`relative flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-4 transition-colors ${
+            dragging ? 'border-primary-400 bg-primary-50' : 'border-gray-300 hover:border-primary-300'
+          }`}
+        >
+          <div className="flex items-center gap-3 text-sm text-gray-500">
+            <UploadIcon className="h-5 w-5" />
+            <span>{dragging ? 'Drop images here' : 'Click to upload or drag and drop'}</span>
+          </div>
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/50">
+              <Spinner className="h-5 w-5" />
+            </div>
+          )}
+        </div>
+
+        {/* Image grid */}
+        {!!files?.length && (
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 md:grid-cols-6">
+            {files.map((file) => (
+              <div key={file.preview} className="group relative aspect-square">
+                <img
+                  src={file.preview}
+                  alt={file.name}
+                  className="h-full w-full rounded-lg border object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemove(file.preview)}
+                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 shadow-sm hover:bg-red-600 group-hover:opacity-100"
+                >
+                  <XIcon className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }}
+/>
+```
+
+### With Callbacks
+
+
+```tsx
+const handleChange = (files: FilePickerFile[], newFiles: FilePickerFile[]) => {
+  console.log('All files:', files);
+  console.log('New files:', newFiles);
+};
+
+const handleError = (error: Error) => {
+  console.error('File picker error:', error);
+  alert(`Error: ${error.message}`);
+};
+
+<RHFFilePicker
+  name="callbackFiles"
+  onChange={handleChange}
+  onError={handleError}
+/>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFFilePicker, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  projectFiles: z
+    .array(z.custom<File>())
+    .min(1, 'At least one file is required')
+    .refine(
+      (files) => files.every((file) => file.size <= 10000000),
+      'Each file must be less than 10MB'
+    ),
+  screenshots: z
+    .array(z.custom<File>())
+    .min(3, 'At least 3 screenshots are required')
+    .max(10, 'Maximum 10 screenshots allowed')
+    .refine(
+      (files) => files.every((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)),
+      'Only JPEG, PNG, and WebP images are allowed'
+    )
+});
+
+function ProjectForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      projectFiles: [],
+      screenshots: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Project Files" required>
+          <RHFFilePicker name="projectFiles" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Screenshots" required>
+          <RHFFilePicker name="screenshots" accept="image/*" />
+        </RHFInputGroup>
+
+        <Button type="submit">Submit Project</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFFilePicker
+  name="files"
+  rules={{ required: 'Please upload at least one file' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## File Properties
+
+Each file in the picker has these properties:
+
+```typescript
+interface FilePickerFile extends File {
+  preview: string;
+  path: string;
+  editableName: string;
+}
+```
+
+- `preview`: Object URL for displaying file content
+- `path`: File system path (from directory picker or webkitRelativePath)
+- `editableName`: Editable name property (since File.name is read-only)
+
+## Drag and Drop
+
+RHFFilePicker automatically handles drag-and-drop:
+
+1. Drag files over the dropzone
+2. The `dragging` state becomes `true`
+3. Drop files to add them
+4. Files are processed and previews are created
+
+Access drag state in custom render:
+
+```tsx
+render={({ dragging, dropzoneRef }) => (
+  <div
+    ref={dropzoneRef}
+    className={dragging ? 'border-blue-400' : 'border-gray-300'}
+  >
+    Drop files here
+  </div>
+)}
+```
+
+## Directory Selection
+
+Select entire directories using the `openFilePicker` function:
+
+```tsx
+render={({ openFilePicker }) => (
+  <Button onClick={() => openFilePicker({ directory: true })}>
+    Select Directory
+  </Button>
+)}
+```
+
+This preserves the directory structure in the `path` property of each file.
+
+## Duplicate Detection
+
+When `removeDuplicates={true}`:
+
+- Files with identical names and sizes are considered duplicates
+- Only the first occurrence is kept
+- Duplicates are automatically filtered out
+
+Files also have a `duplicatedWith` property containing an array of files they duplicate.
+
+## File Transformation
+
+Transform files before they're set in the form:
+
+```tsx
+const transform = async (files: FilePickerFile[]) => {
+  return files.map(file => {
+    file.editableName = file.name.toLowerCase();
+    return file;
+  });
+};
+
+<RHFFilePicker name="files" transform={transform} />
+```
+
+## File Types
+
+The `accept` prop accepts standard file input values:
+
+```tsx
+accept="image/*"
+accept=".pdf"
+accept=".jpg,.jpeg,.png"
+accept="video/*"
+accept=".doc,.docx,application/pdf"
+```
+
+## Validation with Zod
+
+Validate file arrays with Zod:
+
+```tsx
+z.array(z.custom<File>())
+  .min(1, 'At least one file required')
+  .max(10, 'Maximum 10 files')
+  .refine(
+    (files) => files.every((file) => file.size <= 5000000),
+    'Each file must be less than 5MB'
+  )
+  .refine(
+    (files) => files.every((file) =>
+      ['image/jpeg', 'image/png'].includes(file.type)
+    ),
+    'Only JPEG and PNG allowed'
+  )
+```
+
+## Error States
+
+RHFFilePicker automatically displays error states:
+- Red border via `data-error` attribute on the root element when validation fails
+- Use with [RHFInputGroup](/v1/docs/rhf-input-group) for complete error display
+
+```tsx
+<RHFInputGroup label="Upload Files" required>
+  <RHFFilePicker name="files" />
+</RHFInputGroup>
+```
+
+**Tip**: Use `mode: 'onBlur'` to validate after file selection:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Loading States
+
+The picker automatically manages loading states:
+
+```tsx
+render={({ loading }) => (
+  loading ? <Spinner /> : <div>Ready to upload</div>
+)}
+```
+
+Loading occurs during:
+- File processing
+- Preview URL generation
+- Transform function execution
+
+## Custom Rendering
+
+The `render` prop provides access to picker state:
+
+```tsx
+render={({
+  dropzoneRef,
+  dragging,
+  loading,
+  openFilePicker,
+  files,
+  field,
+  fieldState,
+  formState
+}) => (
+  <div ref={dropzoneRef}>
+    {/* Custom UI */}
+  </div>
+)}
+```
+
+**Important**: Always attach `dropzoneRef` to your dropzone element for drag-and-drop to work.
+
+## Accessibility
+
+- Keyboard navigable buttons
+- Screen reader compatible
+- Proper ARIA attributes for loading and error states
+- Focus management for file picker dialogs
+
+## Performance Tips
+
+1. Use `removeDuplicates` to prevent duplicate uploads
+2. Set file size limits in validation
+3. Limit file count with Zod `.max()`
+4. Use `accept` to restrict file types before selection
+
+## Related Components
+
+- [RHFFileInput](/v1/docs/rhf-file-input) - Simple file input for single/multiple files
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Label + input + error wrapper
+- [RHFError](/v1/docs/rhf-error) - Error message display

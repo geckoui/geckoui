@@ -1,0 +1,261 @@
+---
+title: Filterable Select
+description: Add search and filtering capabilities to Select with inline or dropdown modes
+---
+
+import { Select, SelectOption, SelectDropdownSearch, SelectEmpty } from '@geckoui/geckoui';
+
+# Filterable Select
+
+Add search and filtering capabilities to Select components with two modes: inline filtering (typing in the button) and dropdown filtering (search input in the dropdown menu).
+
+## Inline Filtering
+
+Type directly in the select button to filter options. Best for moderate lists where you want quick filtering without an extra input field.
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+function Example() {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <Select
+      filterable="inline"
+      value={value}
+      onChange={setValue}
+      placeholder="Type to filter..."
+    >
+      <SelectOption value="afghanistan" label="Afghanistan" />
+      <SelectOption value="albania" label="Albania" />
+      <SelectOption value="algeria" label="Algeria" />
+      <SelectOption value="argentina" label="Argentina" />
+      <SelectOption value="australia" label="Australia" />
+      {/* ... more options */}
+    </Select>
+  );
+}
+```
+
+## Dropdown Filtering
+
+Adds a default search input inside the dropdown menu. Best for large lists where you want a dedicated search field.
+
+
+```tsx
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+const [value, setValue] = useState<string | null>(null);
+
+<Select
+  filterable="dropdown"
+  value={value}
+  onChange={setValue}
+  placeholder="Select a framework..."
+>
+  <SelectOption value="react" label="React" />
+  <SelectOption value="vue" label="Vue" />
+  <SelectOption value="angular" label="Angular" />
+  <SelectOption value="svelte" label="Svelte" />
+  <SelectOption value="solid" label="Solid" />
+</Select>
+```
+
+The `filterable="dropdown"` prop automatically adds a default search input at the top of the dropdown.
+
+## Filterable with Multiple Selection
+
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<Select
+  multiple
+  filterable="inline"
+  value={values}
+  onChange={setValues}
+  placeholder="Select skills..."
+  closeMenuOnSelect={false}
+>
+  <SelectOption value="typescript" label="TypeScript" />
+  <SelectOption value="javascript" label="JavaScript" />
+  <SelectOption value="python" label="Python" />
+  <SelectOption value="java" label="Java" />
+  {/* ... more options */}
+</Select>
+```
+
+## With Empty State
+
+Use `SelectEmpty` to show a message when no options match the filter:
+
+
+```tsx
+import { Select, SelectOption, SelectEmpty } from '@geckoui/geckoui';
+
+const [value, setValue] = useState<string | null>(null);
+
+<Select
+  filterable="dropdown"
+  value={value}
+  onChange={setValue}
+  placeholder="Search products..."
+>
+  <SelectOption value="laptop" label="Laptop" />
+  <SelectOption value="phone" label="Phone" />
+  <SelectOption value="tablet" label="Tablet" />
+  <SelectEmpty>
+    <div className="text-center py-4 text-gray-500">
+      <p>No products found</p>
+      <p className="text-sm mt-1">Try a different search term</p>
+    </div>
+  </SelectEmpty>
+</Select>
+```
+
+## Large Lists with Dropdown Filter
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+const colors = [
+  'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown',
+  'Black', 'White', 'Gray', 'Cyan', 'Magenta', 'Lime', 'Indigo', 'Violet',
+  // ... more colors
+];
+
+<Select
+  filterable="dropdown"
+  value={value}
+  onChange={setValue}
+  placeholder="Pick a color..."
+>
+  {colors.map((color) => (
+    <SelectOption
+      key={color}
+      value={color.toLowerCase()}
+      label={color}
+    />
+  ))}
+  <SelectEmpty>No colors match your search</SelectEmpty>
+</Select>
+```
+
+## Custom Content with Filtering
+
+The filter searches through the `label` prop. For complex content, include searchable text in the label:
+
+
+```tsx
+const users = [
+  { id: 'user1', name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+  { id: 'user2', name: 'Jane Smith', email: 'jane@example.com', role: 'Developer' },
+  // ... more users
+];
+
+<Select
+  filterable="dropdown"
+  value={value}
+  onChange={setValue}
+  placeholder="Select a user..."
+>
+  {users.map((user) => (
+    <SelectOption
+      key={user.id}
+      value={user.id}
+      label={`${user.name} ${user.email}`}
+    >
+      {({ selected, focused }) => (
+        <div className="flex items-center justify-between">
+          <div>
+            <div>{user.name}</div>
+            <div className="text-xs text-gray-500">{user.email}</div>
+          </div>
+          <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+            {user.role}
+          </span>
+        </div>
+      )}
+    </SelectOption>
+  ))}
+  <SelectEmpty>No users found</SelectEmpty>
+</Select>
+```
+
+## Props API
+
+### Select Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `filterable` | `boolean \| 'inline' \| 'dropdown'` | `false` | Enable filtering mode |
+
+## Custom Search Input with SelectDropdownSearch
+
+If you want to customize the search input appearance in dropdown mode, you can use the `SelectDropdownSearch` component:
+
+```tsx
+import { Select, SelectOption, SelectDropdownSearch } from '@geckoui/geckoui';
+
+<Select filterable="dropdown" value={value} onChange={setValue}>
+  <SelectDropdownSearch placeholder="Custom search..." className="border-2" />
+  <SelectOption value="opt1" label="Option 1" />
+  <SelectOption value="opt2" label="Option 2" />
+</Select>
+```
+
+### SelectDropdownSearch Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `string` | `"Search options..."` | Placeholder for search input |
+| `className` | `string` | - | CSS class for custom styling |
+
+**Note**: `SelectDropdownSearch` is optional. The `filterable="dropdown"` prop provides a default search input automatically.
+
+## Filtering Behavior
+
+### Inline Mode
+- Click select → start typing to filter
+- Selected value is displayed when menu is closed
+- Filter is cleared when menu closes
+- Best for: Moderate lists (10-50 items)
+
+### Dropdown Mode
+- Click select → menu opens with search input
+- Focus automatically moves to search input
+- Filter is cleared when menu closes
+- Best for: Large lists (50+ items)
+
+### Filter Matching
+- Case-insensitive substring matching
+- Searches the `label` prop of each SelectOption
+- Hidden options (via `show` prop) are excluded from filtering
+
+## Keyboard Navigation
+
+Works the same as non-filterable select:
+- **Arrow Up/Down**: Navigate filtered options
+- **Enter/Space**: Select focused option
+- **Escape**: Clear filter and close menu
+- **Tab**: Close menu
+- **Type**: Filter options (inline mode)
+
+## Accessibility
+
+- Search input has proper ARIA labels
+- Keyboard navigation through filtered results
+- Screen reader announces filtered count
+- Focus management between search and options
+
+## Related Pages
+
+- [SelectEmpty](/v1/docs/select/select-empty) - Custom empty state messages
+- [SelectOption](/v1/docs/select/select-option) - Custom option content
+- [Multiple Selection](/v1/docs/select/multiple) - Combine with multi-select
+- [SelectTrigger](/v1/docs/select/select-trigger) - Custom filter input

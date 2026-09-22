@@ -1,0 +1,50 @@
+@import "../../mixins.scss";
+
+.GeckoUIPopover {
+  --gecko-popover-bg: var(--color-surface-primary);
+  --gecko-popover-border: var(--color-border-secondary);
+  --gecko-popover-radius: 0.375rem;
+  --gecko-popover-padding: 0.75rem;
+  --gecko-popover-width: max-content;
+  --gecko-popover-max-width: 20rem;
+  --gecko-popover-z: 50;
+
+  @apply relative w-fit;
+
+  &__content {
+    @include base-reset;
+
+    @apply border shadow-xl outline-none;
+
+    z-index: var(--gecko-popover-z);
+    width: var(--gecko-popover-width);
+    max-width: var(--gecko-popover-max-width);
+    padding: var(--gecko-popover-padding);
+    border-radius: var(--gecko-popover-radius);
+    border-color: var(--gecko-popover-border);
+    background: var(--gecko-popover-bg);
+    color: var(--color-text-primary);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+  }
+
+  /*
+   * The arrow is two paths: an outline clipped to the two outer edges, then the body,
+   * whose own stroke covers the panel border it sits against. They are coloured here
+   * rather than through props, so the CSS variables drive them.
+   */
+  &__arrow {
+    path:nth-of-type(1) {
+      fill: none;
+      stroke: var(--gecko-popover-border);
+    }
+
+    path:nth-of-type(2) {
+      fill: var(--gecko-popover-bg);
+      stroke: var(--gecko-popover-bg);
+    }
+  }
+}

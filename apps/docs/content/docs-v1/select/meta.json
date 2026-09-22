@@ -1,0 +1,12 @@
+{
+  "title": "Select",
+  "pages": [
+    "index",
+    "multiple",
+    "filterable",
+    "select-option",
+    "select-trigger",
+    "select-empty",
+    "advanced"
+  ]
+}

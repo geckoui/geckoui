@@ -1,0 +1,238 @@
+---
+title: Migrating to v2
+description: Everything that changed between Gecko UI v1 and v2, and how to update
+---
+
+# Migrating to v2
+
+v2 rebuilds the overlay system, drops the third party toast, and renames several props for consistency.
+
+Most changes fail to compile, so TypeScript will walk you through them. The ones that do **not** fail are listed separately below — read that section, it is where the surprises are.
+
+The v1 docs stay available at [/v1/docs](/v1/docs) for as long as you need them.
+
+## 1. Replace GeckoUIPortal with GeckoUIProvider
+
+The one change every app must make. `GeckoUIPortal` was a self-closing element; `GeckoUIProvider` wraps your tree.
+
+```diff
+ export default function RootLayout({ children }) {
+   return (
+     <html>
+       <body>
+-        {children}
+-        <GeckoUIPortal />
++        <GeckoUIProvider>{children}</GeckoUIProvider>
+       </body>
+     </html>
+   );
+ }
+```
+
+Place it **below** your own context providers, so overlay content opened with `Dialog.show()` can read them:
+
+```tsx
+<AuthProvider>
+  <GeckoUIProvider>
+    <App />
+  </GeckoUIProvider>
+</AuthProvider>
+```
+
+Toast options move onto the provider:
+
+```diff
+-<GeckoUIPortal toastOptions={{ duration: 3000 }} />
++<GeckoUIProvider toastOptions={{ duration: 3000 }}>{children}</GeckoUIProvider>
+```
+
+`GeckoUIPortalProps` is removed; use `GeckoUIProviderProps`.
+
+## 2. Renamed props
+
+| Component | v1 | v2 |
+|---|---|---|
+| `Drawer`, `Drawer.show` options | `handleClose` | `onClose` |
+| `Dialog`, `ConfirmDialog` | `dismissOnEsc` | `dismissOnEscape` |
+| `Alert` | `variant` | `color` |
+| `Checkbox`, `RHFCheckbox` | `partial` | `indeterminate` |
+| `CounterInput` | `editable` | `allowTyping` |
+
+`Alert` also changes its styling hook, so update any CSS overrides:
+
+```diff
+-.GeckoUIAlert[data-variant="error"] { ... }
++.GeckoUIAlert[data-color="error"] { ... }
+```
+
+`AlertVariantMap` is now `AlertColorMap` for module augmentation.
+
+### Why `Alert` changed
+
+`variant` meant the visual treatment on `Button` and `Badge`, but the meaning on `Alert`. Now every component that carries both axes agrees: **`variant` is how it looks, `color` is what it means.**
+
+## 3. CounterInput holds a string
+
+`value` and `onChange` are strings, not numbers. Converting on every keystroke collapsed a half-typed `"2."` to `"2"`, deleting the decimal point as you typed, so `2.5` could not be reached by editing `2.8`.
+
+```diff
+-const [quantity, setQuantity] = useState(0);
++const [quantity, setQuantity] = useState("0");
+
+ <CounterInput value={quantity} onChange={setQuantity} />
+
++const total = Number(quantity || 0) * price;
+```
+
+With `RHFCounterInput` the form value is a string too, so coerce in your schema:
+
+```diff
+ const schema = z.object({
+-  quantity: z.number().min(1)
++  quantity: z.coerce.number().min(1)
+ });
+
+ useForm({
+-  defaultValues: { quantity: 1 }
++  defaultValues: { quantity: "1" }
+ });
+```
+
+## 4. Changes that will not fail to compile
+
+These are the ones to check by hand.
+
+**`Dialog.dismiss()` and `Drawer.dismiss()` only close their own type.** In v1, either one closed whatever was on top. If you relied on `Dialog.dismiss()` closing a drawer, call `Drawer.dismiss()`.
+
+**Clicking inside a dialog no longer dismisses it.** Only a click on the backdrop does, and the press and release must both land there. A `Select` or `Menu` popup inside a dialog no longer closes it.
+
+**A `Drawer` with `allowClickOutside: false` closes on backdrop click again.** This was dropped in v1 and is restored.
+
+**`Drawer.show(node, { onClose })` actually calls your callback.** v1 overwrote it internally and silently dropped it.
+
+**Dialog z-index moved from `1000` to `2000`** so dialogs always sit above drawers. Only matters if you overrode it in CSS.
+
+**Page scroll locks behind `Dialog` and `Drawer`.** The scrollbar width is paid back as padding, so nothing shifts. A drawer with `allowClickOutside` does not lock, since it leaves the page usable.
+
+**`ConfirmDialog` awaits `onCancel`.** In v1 it did not, so an async `onCancel` never showed its loading state and a `preventDefault()` inside it came too late.
+
+**Toast loses three options.** `richColors`, `theme` and `expand` are gone — the first two are meaningless now that variant colours are the default and toasts read your theme variables, and the stack no longer collapses. `toastOptions.className` and `.style` are now `toastClassName` and `toastStyle`, and `offset` is a number of pixels.
+
+**Calendars size themselves to the month.** In v1 the grid was always six weeks tall, so it never changed height. Now a month takes the four to six weeks it needs, matching MUI X and react-day-picker. Pass `fixedWeeks` to `Calendar`, `DateInput` or `DateRangeInput` to get the old behaviour back — worth doing if the calendar sits in a popup or beside content you do not want shifting.
+
+```diff
+-<DateInput value={date} onChange={setDate} />
++<DateInput fixedWeeks value={date} onChange={setDate} />
+```
+
+**A month starting on Sunday no longer wastes its first row.** v1 gave those months a full leading week of the previous month, pushing the 1st down to row two. The 1st now sits in the first row for every month. This is independent of `fixedWeeks`, which pads at the end of the grid.
+
+**Range calendars show the days either side of the month.** v1 rendered blank cells for them, so a range running from one month into the next appeared to stop at the boundary. They are now greyed out, highlighted as part of the range, and selectable, exactly as in single mode.
+
+**`hasError` is gone — pass `aria-invalid`.** It was a prop of the library's own doing a job the platform already has a standard attribute for, and because it was a prop, nothing was telling assistive technology anything: a field could be red to sighted users and silent to a screen reader. Every component that had it now reads `aria-invalid`, which is both the styling hook and what gets announced.
+
+```diff
+-<ColorInput hasError value={colour} onChange={setColour} />
++<ColorInput aria-invalid value={colour} onChange={setColour} />
+```
+
+The `RHF*` wrappers set it for you from the field's own error, as they did with `hasError`, so forms need no change. `Checkbox`, `Radio`, `Switch`, `Select`, `OTPInput` and `CounterInput` gained the error styling they never had.
+
+**`Textarea` no longer writes an inline height.** It used to render `react-textarea-autosize` even without `autoResize`, which stamped `height: …px !important` on every textarea — so CSS could not size one. A plain `<Textarea>` is now a plain `<textarea>`, and `.GeckoUITextarea { height: 200px }` works. With `autoResize` the drag handle is off, since the component owns the height and a manual resize was undone by the next keystroke.
+
+**Tooltips open after 200ms rather than 700ms.** 700 was long enough that a tooltip read as broken — you rest on a control, nothing happens, and you have moved on before it arrives. Pass `delayDuration={700}` to keep the old timing.
+
+```diff
+-<Tooltip content="Help">
++<Tooltip content="Help" delayDuration={700}>
+```
+
+**The date calendars sit with the other floating panels.** `DateInput` and `DateRangeInput` pinned their popup at `z-index: 9999` inline, which put it above dialogs and toasts and could not be retuned. They now open at `50`, alongside `Tooltip`, `Menu` and `Popover`. See [Stacking Order](/docs/theming#stacking-order), and use `--gecko-date-input-z` if you need something else.
+
+**`RHFCheckbox`, `RHFRadio` and `RHFSwitch` call `onBlur` with no arguments.** They were the last wrappers still forwarding the native `FocusEvent`, while every other one hands back the value or nothing. Read the value from the form instead.
+
+```diff
+-<RHFSwitch name="on" onBlur={(e) => log(e.target.checked)} />
++<RHFSwitch name="on" onBlur={() => log(getValues("on"))} />
+```
+
+**`Checkbox` `indeterminate` is independent of `checked`.** In v1 the dash only rendered when `checked` was also true, which forced the wrong state on a select-all box. Now it matches the native DOM property.
+
+```diff
+ <Checkbox
+-  checked={someSelected}
++  checked={allSelected}
+   indeterminate={someSelected && !allSelected}
+   onChange={handleSelectAll}
+ />
+```
+
+## 5. The file components are now one
+
+`RHFFileInput` and `RHFFilePicker` are gone, replaced by **[FileInput](/docs/file-input)** and a thin **[RHFFileInput](/docs/rhf-file-input)** around it — the same base-plus-wrapper pairing every other component in the library uses. File upload was the only capability that had no base component and could not be used without React Hook Form.
+
+One component now does both jobs. It is a field you click, and the whole field is a drop target.
+
+```diff
+-<RHFFileInput name="avatar" accept="image/*" />
++<RHFFileInput name="avatar" accept="image/*" />
+```
+
+```diff
+-<RHFFilePicker name="photos" accept="image/*" keepOldFiles removeDuplicates />
++<RHFFileInput name="photos" accept="image/*" multiple append unique />
+```
+
+| v1 | v2 |
+|---|---|
+| `RHFFilePicker` | `RHFFileInput multiple` |
+| `keepOldFiles` | `append` |
+| `removeDuplicates` | `unique` |
+| `FileWithPreview`, `FilePickerFile` | `PickedFile`, or `PreviewFile` with `preview` |
+| `onError` (for rejections) | `onReject` |
+
+Three behaviour changes worth reading before you upgrade:
+
+**One file by default.** `RHFFilePicker` always held an array; the new field holds one file unless you pass `multiple`, matching the native element. `multiple` also decides the type of `value` and `onChange`, so TypeScript will tell you if you missed one.
+
+**`preview` is off by default.** Every picked file used to get an object URL, which pins the file's bytes until it is revoked — and nothing ever revoked them. Pass `preview` where you need it:
+
+```diff
+-<RHFFilePicker name="photos" accept="image/*" />
++<RHFFileInput name="photos" accept="image/*" multiple preview />
+```
+
+`file.preview` is typed only when `preview` is set, so reading it without asking is a compile error rather than `undefined` at runtime. The state holding the value follows it:
+
+```tsx
+const [file, setFile] = useState<PickedFile | null>(null);   // no preview
+const [file, setFile] = useState<PreviewFile | null>(null);  // preview
+```
+
+**Rejected files now say so.** A file turned away by `accept`, `unique` or `max` used to disappear silently. It now reaches `onReject` with a reason:
+
+```tsx
+<RHFFileInput
+  name="photos"
+  multiple
+  accept="image/*"
+  max={5}
+  onReject={(rejected) =>
+    toast.error(rejected.map((r) => `${r.file.name} — ${r.reason}`).join('\n'))
+  }
+/>
+```
+
+`append`, `unique` and `max` are only accepted alongside `multiple`; TypeScript rejects them on a single field, since none of them mean anything for one file.
+
+## 6. Removed exports
+
+`BaseDateRangeInput` and `BaseDateRangeInputProps` are no longer exported. They were public by accident — the sibling `BaseDateInput` never was, and neither appeared in any documentation. Use [DateRangeInput](/docs/date-range-input), which wraps it and adds the calendar popup. The `DateRange` type is unaffected.
+
+## 7. Worth adopting while you are here
+
+- **[Dialog](/docs/dialog) works declaratively** — `<Dialog open onClose>` alongside `Dialog.show()`
+- **Overlays stack** — `show()` returns an id, and `dismiss(id)` targets it
+- **[Tabs](/docs/tabs), [Accordion](/docs/accordion), [Popover](/docs/popover) and [Badge](/docs/badge)** are new
+- **Semantic colour tokens** — `--color-success`, `--color-error`, `--color-warning`, `--color-info` drive Badge, Alert and Toast together
+- **[Toast](/docs/toast) is ours now**, so there is no `sonner` dependency and every value is a CSS variable

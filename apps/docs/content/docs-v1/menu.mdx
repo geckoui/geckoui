@@ -1,0 +1,192 @@
+---
+title: Menu
+description: Accessible dropdown menu for actions and navigation
+---
+
+import { Menu, MenuItem, MenuTrigger, Button } from '@geckoui/geckoui';
+
+# Menu
+
+An accessible, keyboard-navigable dropdown menu for actions and navigation. Built with Floating UI for positioning.
+
+## Installation
+
+```tsx
+import { Menu, MenuItem, MenuTrigger } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+<Menu label="Options">
+  <MenuItem onClick={() => console.log('Edit')}>Edit</MenuItem>
+  <MenuItem onClick={() => console.log('Duplicate')}>Duplicate</MenuItem>
+  <MenuItem onClick={() => console.log('Delete')}>Delete</MenuItem>
+</Menu>
+```
+
+## Components
+
+### Menu
+
+Root component that manages state, positioning, and renders the default button.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `"Menu"` | Text for the default button |
+| `disabled` | `boolean` | `false` | Disable the menu |
+| `placement` | `Placement` | `"bottom-start"` | Dropdown position |
+| `className` | `string` | - | Wrapper class |
+| `menuClassName` | `string` | - | Dropdown panel class |
+| `buttonClassName` | `string` | - | Default button class |
+
+### MenuItem
+
+Individual action item within the menu. Closes the menu on click.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onClick` | `() => void` | Click handler |
+| `disabled` | `boolean` | Disable the item |
+| `className` | `string` | Additional class |
+| `children` | `ReactNode \| Function` | Custom content or render function |
+
+Render function receives `{ focused: boolean }`.
+
+### MenuTrigger
+
+Custom trigger using render props. Replaces the default button.
+
+```tsx
+<Menu>
+  <MenuTrigger>
+    {({ open, toggleMenu, disabled }) => (
+      <button onClick={toggleMenu}>
+        Actions {open ? '▲' : '▼'}
+      </button>
+    )}
+  </MenuTrigger>
+  <MenuItem onClick={() => {}}>Edit</MenuItem>
+</Menu>
+```
+
+## Examples
+
+### With Icons
+
+
+```tsx
+import { Edit, Copy, Trash } from 'lucide-react';
+
+<Menu>
+  <MenuTrigger>
+    {({ toggleMenu }) => (
+      <Button onClick={toggleMenu}>
+        Actions <ChevronDown className="size-4" />
+      </Button>
+    )}
+  </MenuTrigger>
+  <MenuItem onClick={() => console.log('Edit')}>
+    <div className="flex items-center gap-3">
+      <Edit className="size-4" />
+      <span>Edit</span>
+    </div>
+  </MenuItem>
+  <MenuItem onClick={() => console.log('Delete')}>
+    <div className="flex items-center gap-3">
+      <Trash className="size-4 text-red-600" />
+      <span className="text-red-600">Delete</span>
+    </div>
+  </MenuItem>
+</Menu>
+```
+
+### Disabled Items
+
+
+```tsx
+<Menu label="Actions">
+  <MenuItem onClick={() => console.log('Available')}>Available Action</MenuItem>
+  <MenuItem disabled>Disabled Action</MenuItem>
+  <MenuItem onClick={() => console.log('Another')}>Another Action</MenuItem>
+</Menu>
+```
+
+### Custom Button
+
+
+```tsx
+<Menu>
+  <MenuTrigger>
+    {({ toggleMenu }) => (
+      <Button variant="filled" onClick={toggleMenu}>
+        User Menu
+      </Button>
+    )}
+  </MenuTrigger>
+  <MenuItem onClick={() => console.log('Profile')}>Profile</MenuItem>
+  <MenuItem onClick={() => console.log('Settings')}>Settings</MenuItem>
+  <MenuItem onClick={() => console.log('Logout')}>
+    <span className="text-red-600">Logout</span>
+  </MenuItem>
+</Menu>
+```
+
+### Placement
+
+
+```tsx
+<Menu label="Top Start" placement="top-start">
+  <MenuItem>Option 1</MenuItem>
+  <MenuItem>Option 2</MenuItem>
+</Menu>
+
+<Menu label="Bottom End" placement="bottom-end">
+  <MenuItem>Option 1</MenuItem>
+  <MenuItem>Option 2</MenuItem>
+</Menu>
+```
+
+### Render Function
+
+Use a render function in `children` to access focus state:
+
+```tsx
+<MenuItem onClick={handleEdit}>
+  {({ focused }) => (
+    <div className={focused ? 'font-bold' : ''}>
+      {focused ? '→ ' : ''}Edit
+    </div>
+  )}
+</MenuItem>
+```
+
+## Keyboard Navigation
+
+- **Enter/Space** on button: Toggle menu
+- **Arrow Down/Up**: Navigate items
+- **Enter/Space** on item: Trigger action
+- **Escape/Tab**: Close menu
+
+## Styling
+
+- `GeckoUIMenu` - Wrapper
+- `GeckoUIMenu__button` - Default button
+- `GeckoUIMenu__items` - Dropdown panel
+- `GeckoUIMenu__item` - Individual item
+  - `data-focused` - Present when focused
+  - `data-disabled` - Present when disabled
+
+## Accessibility
+
+- `role="menu"` on dropdown panel
+- `role="menuitem"` on items
+- `aria-haspopup` and `aria-expanded` on button
+- Full keyboard navigation
+- Focus management
+
+## Related Components
+
+- [Select](/v1/docs/select) - Form select input
+- [Button](/v1/docs/button) - Standalone button component

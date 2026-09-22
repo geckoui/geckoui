@@ -34,7 +34,7 @@ import { RHFCounterInput } from '@geckoui/geckoui';
 function Example() {
   const methods = useForm({
     defaultValues: {
-      quantity: 1
+      quantity: "1"
     }
   });
 
@@ -59,7 +59,7 @@ Extends all props from [CounterInput](/docs/counter-input) component plus:
 | `max` | `number` | `Infinity` | Maximum allowed value |
 | `step` | `number` | `1` | Increment/decrement step |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size variant |
-| `onChange` | `(value: number) => void` | - | Change callback |
+| `onChange` | `(value: string) => void` | - | Change callback |
 | ...rest | `CounterInputProps` | - | All CounterInput component props |
 
 ## Examples
@@ -75,7 +75,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = z.object({
-  quantity: z.number().min(1, "Quantity must be at least 1").max(10, "Maximum 10 items")
+  quantity: z.coerce.number().min(1, "Quantity must be at least 1").max(10, "Maximum 10 items")
 });
 
 const methods = useForm({
@@ -108,17 +108,17 @@ const methods = useForm({
 
 ```tsx
 const schema = z.object({
-  adults: z.number().min(1, "At least 1 adult required"),
-  children: z.number().min(0),
-  rooms: z.number().min(1, "At least 1 room required")
+  adults: z.coerce.number().min(1, "At least 1 adult required"),
+  children: z.coerce.number().min(0),
+  rooms: z.coerce.number().min(1, "At least 1 room required")
 });
 
 const methods = useForm({
   resolver: zodResolver(schema),
   defaultValues: {
-    adults: 1,
-    children: 0,
-    rooms: 1
+    adults: "1",
+    children: "0",
+    rooms: "1"
   }
 });
 

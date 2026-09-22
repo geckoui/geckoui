@@ -88,25 +88,28 @@ If you use `tailwindcss`, make sure to import the css inside `layer` directive t
 }
 ```
 
-## Container Setup
+## Provider Setup
 
-Add `GeckoUIPortal` to your layout. This is **required** for the following components:
+Wrap your app with `GeckoUIProvider`. This is **required** for the following components:
 
 - Dialog
 - Drawer
 - ConfirmDialog
 - Toast
 
+Place `GeckoUIProvider` **below** your own context providers so overlays can read those contexts.
+
 ```tsx title="app/layout.tsx"
-import { GeckoUIPortal } from '@geckoui/geckoui';
+import { GeckoUIProvider } from '@geckoui/geckoui';
 import '@geckoui/geckoui/styles.css';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
-        <GeckoUIPortal />
+        <GeckoUIProvider>
+          {children}
+        </GeckoUIProvider>
       </body>
     </html>
   );
@@ -114,14 +117,13 @@ export default function RootLayout({ children }) {
 ```
 
 ```tsx title="src/App.tsx"
-import { GeckoUIPortal } from '@geckoui/geckoui';
+import { GeckoUIProvider } from '@geckoui/geckoui';
 
 function App() {
   return (
-    <div>
+    <GeckoUIProvider>
       {/* Your app content */}
-      <GeckoUIPortal />
-    </div>
+    </GeckoUIProvider>
   );
 }
 

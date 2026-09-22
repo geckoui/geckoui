@@ -12,7 +12,7 @@ export function BasicDrawerExample() {
       <Button onClick={() => setOpen(true)}>Open Drawer</Button>
       <Drawer
         open={open}
-        handleClose={() => setOpen(false)}
+        onClose={() => setOpen(false)}
         placement="right"
         allowClickOutside
         className="w-80 p-6">
@@ -37,7 +37,7 @@ export function MobileMenuExample() {
       </Button>
       <Drawer
         open={menuOpen}
-        handleClose={() => setMenuOpen(false)}
+        onClose={() => setMenuOpen(false)}
         placement="left"
         allowClickOutside
         dismissOnEscape
@@ -81,7 +81,7 @@ export function FilterPanelExample() {
       <Button onClick={() => setFiltersOpen(true)}>Show Filters</Button>
       <Drawer
         open={filtersOpen}
-        handleClose={() => setFiltersOpen(false)}
+        onClose={() => setFiltersOpen(false)}
         placement="right"
         allowClickOutside
         backdropClassName="bg-black/60"
@@ -126,7 +126,7 @@ export function NotificationDrawerExample() {
       <Button onClick={() => setShowNotifications(true)}>Notifications</Button>
       <Drawer
         open={showNotifications}
-        handleClose={() => setShowNotifications(false)}
+        onClose={() => setShowNotifications(false)}
         placement="top"
         hideBackdrop={false}
         allowClickOutside
@@ -161,7 +161,7 @@ export function BottomSheetExample() {
       <Button onClick={() => setBottomSheetOpen(true)}>Show Actions</Button>
       <Drawer
         open={isBottomSheetOpen}
-        handleClose={() => setBottomSheetOpen(false)}
+        onClose={() => setBottomSheetOpen(false)}
         placement="bottom"
         allowClickOutside
         backdropClassName="bg-black/40"
@@ -193,7 +193,7 @@ export function NoBackdropDrawerExample() {
       <Button onClick={() => setSettingsVisible(true)}>Settings</Button>
       <Drawer
         open={settingsVisible}
-        handleClose={() => setSettingsVisible(false)}
+        onClose={() => setSettingsVisible(false)}
         placement="right"
         hideBackdrop
         allowClickOutside={false}

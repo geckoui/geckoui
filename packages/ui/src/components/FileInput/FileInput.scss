@@ -1,0 +1,97 @@
+@import "../../mixins.scss";
+
+.GeckoUIFileInputWrapper {
+  @apply w-full;
+}
+
+.GeckoUIFileInput {
+  @include base-reset;
+
+  /* The same shape as the other fields, so it sits beside one without looking foreign */
+  @apply border-border-secondary text-text-primary relative flex min-h-10 w-full items-center gap-3 rounded-md border px-3 text-sm;
+
+  &[data-state="enabled"] {
+    @apply cursor-pointer;
+
+    &:hover {
+      @apply border-primary-300;
+    }
+
+    &:focus-visible {
+      @apply border-primary-500 outline-none;
+    }
+  }
+
+  &[data-state="readonly"] {
+    @apply cursor-default;
+  }
+
+  &[data-state="disabled"] {
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+  }
+
+  /* While a file is over it. Stated before the error rule, so an error still shows. */
+  &[data-dragging] {
+    @apply border-primary-400 bg-surface-hover;
+  }
+
+  /*
+   * Stated for the dragging state too, or a field in error goes back to blue the moment a
+   * file is dragged over it, which is when the error matters most.
+   */
+  &:has(&__trigger[aria-invalid="true"]),
+  &:has(&__trigger[aria-invalid="true"])[data-dragging],
+  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):focus-visible {
+    border-color: var(--color-border-invalid);
+  }
+
+  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):hover {
+    border-color: var(--color-border-invalid-hover);
+  }
+
+  /* A field drawn by the caller keeps the drop target and gives up the box around it */
+  &[data-custom] {
+    @apply min-h-0 border-0 bg-transparent p-0;
+  }
+
+  /* Fills the row so the whole field is clickable, and carries the focus ring */
+  &__trigger {
+    @apply flex min-w-0 flex-1 cursor-pointer items-center bg-transparent p-0 text-left;
+
+    &:disabled {
+      @apply cursor-not-allowed;
+    }
+
+    &:focus-visible {
+      @apply outline-primary-500 rounded-sm outline-2 outline-offset-2;
+    }
+  }
+
+  &__value {
+    @apply flex-1 truncate;
+  }
+
+  &__placeholder {
+    @apply text-text-placeholder flex-1 truncate;
+  }
+
+  &__icons {
+    @apply flex shrink-0 items-center gap-1.5;
+  }
+
+  &__icon {
+    @apply text-text-tertiary size-4;
+  }
+
+  &__spinner {
+    @apply size-4;
+  }
+
+  &__clear {
+    @apply text-text-tertiary flex cursor-pointer items-center rounded p-0.5;
+
+    &:hover {
+      @apply text-text-primary bg-surface-hover;
+    }
+  }
+}

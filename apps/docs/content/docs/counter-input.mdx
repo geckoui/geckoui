@@ -34,7 +34,7 @@ import { CounterInput } from "@geckoui/geckoui";
 import { useState } from "react";
 
 function Example() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("0");
 
   return <CounterInput value={value} onChange={setValue} />;
 }
@@ -44,17 +44,21 @@ function Example() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `value` | `number` | - | Current numeric value (required) |
-| `onChange` | `(value: number) => void` | - | Callback when value changes (required) |
+| `value` | `string` | - | Current value as a string (required) |
+| `onChange` | `(value: string) => void` | - | Callback with the sanitised string (required) |
 | `min` | `number` | `-Infinity` | Minimum allowed value |
 | `max` | `number` | `Infinity` | Maximum allowed value |
 | `step` | `number` | `1` | Increment/decrement step |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size variant |
 | `disabled` | `boolean` | `false` | Disable the entire component |
 | `readOnly` | `boolean` | `false` | Read-only mode - buttons and input are non-interactive |
-| `editable` | `boolean` | `false` | Allow typing in input field |
+| `allowTyping` | `boolean` | `false` | Allow typing in input field |
 | `inputClassName` | `string` | - | CSS class for the input element |
 | `buttonClassName` | `string` | - | CSS class for the buttons |
+| `strict` | `boolean` | `true` | Drop leading zeros and normalise the whole part |
+| `positiveOnly` | `boolean` | `false` | Reject a leading minus sign |
+| `maxFractionDigits` | `number` | - | Digits kept after the decimal point. `0` makes it integer only |
+| `maxWholeDigitPlaces` | `number` | - | Digits kept before the decimal point |
 | `className` | `string` | - | CSS class for the container |
 
 ## Examples
@@ -95,14 +99,27 @@ Buttons are automatically disabled when reaching the min or max value.
 
 ### Editable Input
 
-When `editable` is true, users can type directly into the input field. Only numbers and minus sign are allowed.
+When `allowTyping` is true, users can type directly into the input field. Only digits, one decimal point and a leading minus sign are accepted.
+
+### Why the value is a string
+
+The value is held as a string so a half-typed number survives. If it were a number, typing `2.8` and then deleting the `8` would leave `"2."`, which `parseFloat` collapses to `2` — deleting the decimal point as you type, so you could never reach `2.5`.
+
+Convert when you need a number:
+
+```tsx
+const [amount, setAmount] = useState("0");
+const total = Number(amount || 0) * price;
+```
+
+The value is clamped to `min` and `max` on blur and by the buttons, not on every keystroke, so typing `1` on the way to `10` is not snapped to the minimum.
 
 <Preview>
   <CounterInputEditableExample />
 </Preview>
 
 ```tsx
-<CounterInput value={value} onChange={setValue} editable />
+<CounterInput value={value} onChange={setValue} allowTyping />
 ```
 
 ### Disabled State

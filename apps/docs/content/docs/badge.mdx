@@ -1,0 +1,177 @@
+---
+title: Badge
+description: Small inline label for status, counts and categories
+---
+
+import { Badge } from '@geckoui/geckoui';
+import { BadgeBasicExample, BadgeVariantsExample, BadgeSizesExample, BadgeShapesExample, BadgeDotExample, BadgeIconExample } from '@/components/examples/badge-examples';
+
+# Badge
+
+A small inline label for status, counts and categories.
+
+Two axes work independently: `variant` is how the badge is filled, `color` is what it means. So a success badge can be solid, tinted or outlined without changing what it says.
+
+## Installation
+
+```tsx
+import { Badge } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BadgeBasicExample />
+</Preview>
+
+```tsx
+<Badge>default</Badge>
+<Badge color="primary">primary</Badge>
+<Badge color="success">success</Badge>
+<Badge color="error">error</Badge>
+<Badge color="warning">warning</Badge>
+<Badge color="info">info</Badge>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'soft' \| 'outlined'` | `'soft'` | How the badge is filled |
+| `color` | `'default' \| 'primary' \| 'success' \| 'error' \| 'warning' \| 'info'` | `'default'` | What the badge means |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size |
+| `shape` | `'rounded' \| 'pill' \| 'square'` | `'rounded'` | Corner treatment |
+| `dot` | `boolean` | `false` | Leading status dot. Ignored when `icon` is set |
+| `icon` | `ReactNode \| FC` | - | Custom leading visual, rendered as given |
+| `className` | `string` | - | CSS class for the badge |
+| ...rest | `HTMLAttributes<HTMLSpanElement>` | - | All standard span attributes |
+
+## Examples
+
+### Variants
+
+<Preview>
+  <BadgeVariantsExample />
+</Preview>
+
+```tsx
+<Badge variant="filled" color="success">filled</Badge>
+<Badge variant="soft" color="success">soft</Badge>
+<Badge variant="outlined" color="success">outlined</Badge>
+```
+
+### Sizes
+
+<Preview>
+  <BadgeSizesExample />
+</Preview>
+
+```tsx
+<Badge size="sm">Small</Badge>
+<Badge size="md">Medium</Badge>
+<Badge size="lg">Large</Badge>
+```
+
+### Shapes
+
+<Preview>
+  <BadgeShapesExample />
+</Preview>
+
+```tsx
+<Badge shape="rounded">Rounded</Badge>
+<Badge shape="pill">Pill</Badge>
+<Badge shape="square">Square</Badge>
+```
+
+### Status dot
+
+<Preview>
+  <BadgeDotExample />
+</Preview>
+
+```tsx
+<Badge color="success" dot>Live</Badge>
+<Badge color="warning" dot>Degraded</Badge>
+<Badge color="error" dot variant="filled">Down</Badge>
+```
+
+The dot inherits the badge colour and scales with `size`, so it always matches.
+
+### Custom icon
+
+<Preview>
+  <BadgeIconExample />
+</Preview>
+
+Pass a finished element. Style it where you define it — the badge does not wrap it or apply classes to it:
+
+```tsx
+<Badge color="warning" icon={<StarIcon />}>Featured</Badge>
+```
+
+Anything else can go straight in the children, no prop needed:
+
+```tsx
+<Badge><Avatar size="xs" /> Alice</Badge>
+```
+
+## Styling with CSS
+
+Colours come from the shared semantic tokens, so overriding one updates Badge, Alert and Toast together:
+
+```css
+:root {
+  --color-success: oklch(0.65 0.18 150);
+}
+```
+
+The badge exposes its own variables too:
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-badge-accent` | per `color` | Text, border and fill |
+| `--gecko-badge-on-accent` | `--color-text-on-primary` | Text on a `filled` badge |
+| `--gecko-badge-radius` | per `shape` | Corner radius |
+| `--gecko-badge-soft-mix` | `12%` | How much accent tints a `soft` badge |
+| `--gecko-badge-outline-mix` | `40%` | Border strength on an `outlined` badge |
+
+Scope them to one colour or variant to restyle just that combination:
+
+```css
+.GeckoUIBadge[data-color="success"][data-variant="soft"] {
+  --gecko-badge-soft-mix: 25%;
+}
+```
+
+### Class names and data attributes
+
+- `GeckoUIBadge` - The badge, with `data-variant`, `data-color`, `data-size` and `data-shape`
+- `GeckoUIBadge__dot` - The status dot
+
+## Adding your own variants
+
+Every axis is an extensible map, so you can add keys through module augmentation and style them with CSS. No component change is needed:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface BadgeColorMap {
+    brand: unknown;
+  }
+}
+
+<Badge color="brand">Brand</Badge>
+```
+
+```css
+.GeckoUIBadge[data-color="brand"] {
+  --gecko-badge-accent: oklch(0.62 0.21 320);
+}
+```
+
+The same works for `BadgeVariantMap`, `BadgeSizeMap` and `BadgeShapeMap`.
+
+## Related Components
+
+- [Alert](/docs/alert) - Larger status messages with a title and description
+- [Toast](/docs/toast) - Transient notifications

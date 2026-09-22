@@ -1,0 +1,213 @@
+---
+title: Multiple Selection
+description: Multi-select mode for selecting multiple options at once
+---
+
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+# Multiple Selection
+
+Enable multiple selection mode by setting the `multiple` prop. The component will display selected items as chips and allow users to select/deselect multiple options.
+
+## Basic Multiple Selection
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+function Example() {
+  const [values, setValues] = useState<string[]>([]);
+
+  return (
+    <Select multiple value={values} onChange={setValues}>
+      <SelectOption value="typescript" label="TypeScript" />
+      <SelectOption value="javascript" label="JavaScript" />
+      <SelectOption value="python" label="Python" />
+      <SelectOption value="rust" label="Rust" />
+      <SelectOption value="go" label="Go" />
+    </Select>
+  );
+}
+```
+
+**Important**: For multiple selection mode, the value must be an array (`string[]`). Use an empty array `[]` for no selection.
+
+## With Placeholder
+
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<Select
+  multiple
+  value={values}
+  onChange={setValues}
+  placeholder="Select programming languages..."
+>
+  <SelectOption value="typescript" label="TypeScript" />
+  <SelectOption value="javascript" label="JavaScript" />
+  <SelectOption value="python" label="Python" />
+</Select>
+```
+
+## With Default Values
+
+
+```tsx
+const [values, setValues] = useState<string[]>(['typescript', 'python']);
+
+<Select multiple value={values} onChange={setValues}>
+  <SelectOption value="typescript" label="TypeScript" />
+  <SelectOption value="javascript" label="JavaScript" />
+  <SelectOption value="python" label="Python" />
+  <SelectOption value="rust" label="Rust" />
+  <SelectOption value="go" label="Go" />
+</Select>
+```
+
+## Close Menu on Select
+
+By default, the menu remains open after each selection in multiple mode. You can change this behavior by setting `closeMenuOnSelect` to `true`.
+
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<Select
+  multiple
+  value={values}
+  onChange={setValues}
+  closeMenuOnSelect
+  placeholder="Menu stays open..."
+>
+  <SelectOption value="reading" label="Reading" />
+  <SelectOption value="writing" label="Writing" />
+  <SelectOption value="coding" label="Coding" />
+  <SelectOption value="gaming" label="Gaming" />
+</Select>
+```
+
+## With Clear Button
+
+
+```tsx
+import { Button } from '@geckoui/geckoui';
+
+const [values, setValues] = useState<string[]>(['react', 'vue']);
+
+<div className="space-y-2">
+  <Select multiple value={values} onChange={setValues}>
+    <SelectOption value="react" label="React" />
+    <SelectOption value="vue" label="Vue" />
+    <SelectOption value="angular" label="Angular" />
+    <SelectOption value="svelte" label="Svelte" />
+  </Select>
+  <Button
+    variant="outlined"
+    size="sm"
+    onClick={() => setValues([])}
+    disabled={values.length === 0}
+  >
+    Clear Selection ({values.length})
+  </Button>
+</div>
+```
+
+## Custom Content with Multiple Select
+
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<Select multiple value={values} onChange={setValues}>
+  <SelectOption value="user1" label="John Doe">
+    {({ selected, focused }) => (
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm">
+          JD
+        </div>
+        <div className={focused ? 'font-semibold' : ''}>
+          <div>John Doe</div>
+          <div className="text-xs text-gray-500">john@example.com</div>
+        </div>
+      </div>
+    )}
+  </SelectOption>
+  <SelectOption value="user2" label="Jane Smith">
+    {({ selected, focused }) => (
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm">
+          JS
+        </div>
+        <div className={focused ? 'font-semibold' : ''}>
+          <div>Jane Smith</div>
+          <div className="text-xs text-gray-500">jane@example.com</div>
+        </div>
+      </div>
+    )}
+  </SelectOption>
+</Select>
+```
+
+## Multiple Selection Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `multiple` | `boolean` | `false` | Enable multiple selection mode |
+| `value` | `T[]` | - | Array of selected values (required) |
+| `onChange` | `(values: T[]) => void` | - | Callback when selection changes (required) |
+| `closeMenuOnSelect` | `boolean` | `false` | Close menu after each selection (defaults to false for multiple) |
+
+## Behavior
+
+### Selection Toggle
+
+Clicking an option in multiple mode toggles its selection:
+- If not selected → adds to array
+- If already selected → removes from array
+
+### Chip Display
+
+Selected values are displayed as removable chips in the select button. Click the × icon on a chip to remove that selection.
+
+### Keyboard Navigation
+
+All keyboard shortcuts from single select work in multiple mode:
+- **Space/Enter**: Toggle selection of focused option
+- **Arrow keys**: Navigate options
+- **Escape**: Close menu
+- **Tab**: Close menu and move focus
+
+## TypeScript Types
+
+```tsx
+interface MultipleSelectProps<T> {
+  multiple: true;
+  value: T[];
+  onChange: (values: T[]) => void;
+  // ... other props
+}
+
+// Example with string array
+const [values, setValues] = useState<string[]>([]);
+
+// Example with number array
+const [ids, setIds] = useState<number[]>([]);
+
+// Example with object array
+interface User {
+  id: number;
+  name: string;
+}
+const [users, setUsers] = useState<User[]>([]);
+```
+
+## Related Pages
+
+- [Filterable Select](/v1/docs/select/filterable) - Add search to multiple select
+- [SelectOption](/v1/docs/select/select-option) - Advanced option patterns
+- [SelectTrigger](/v1/docs/select/select-trigger) - Custom chips display
+- [Basic Usage](/v1/docs/select) - Single selection mode

@@ -1,0 +1,368 @@
+---
+title: RHFCheckbox
+description: Checkbox component integrated with React Hook Form that preserves value types
+---
+
+import { RHFCheckbox } from '@geckoui/geckoui';
+
+# RHFCheckbox
+
+A controlled checkbox component for React Hook Form that preserves value types. Unlike native checkboxes that convert values to strings, this component maintains the original data type. Supports both single-select (like a radio) and multi-select modes with optional indeterminate state.
+
+## Installation
+
+```tsx
+import { RHFCheckbox } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+### Single Checkbox Mode
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFCheckbox } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      agreement: null
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFCheckbox
+        name="agreement"
+        value="agreed"
+        label="I agree to the terms and conditions"
+        single
+      />
+    </FormProvider>
+  );
+}
+```
+
+### Multi-Select Mode
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFCheckbox } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      options: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <div className="flex flex-col gap-3">
+        <RHFCheckbox name="options" value="option1" label="Option 1" />
+        <RHFCheckbox name="options" value="option2" label="Option 2" />
+        <RHFCheckbox name="options" value="option3" label="Option 3" />
+      </div>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Checkbox](/v1/docs/checkbox) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `label` | `ReactNode \| Function` | - | Label displayed next to checkbox |
+| `labelClassName` | `string` | - | CSS class for the label |
+| `value` | `unknown` | - | Value to set when checked |
+| `single` | `boolean` | `false` | Act as single selection (stores value, not array) |
+| `uncheckedValue` | `unknown` | `null` | Value when unchecked (only with `single`) |
+| `partial` | `boolean \| Function` | `false` | Show indeterminate state |
+| `onChange` | `(value: unknown) => void` | - | Change callback |
+| ...rest | `CheckboxProps` | - | All Checkbox component props |
+
+## Examples
+
+### Single with Custom Unchecked Value
+
+
+```tsx
+<RHFCheckbox
+  name="enabled"
+  value="yes"
+  uncheckedValue="no"
+  label="Enable notifications"
+  single
+/>
+```
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFCheckbox, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  terms: z.literal('agreed', { message: 'You must agree to the terms' })
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { terms: null }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup required>
+        <RHFCheckbox
+          name="terms"
+          value="agreed"
+          label="I agree to the terms and conditions"
+          single
+        />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### With Partial/Indeterminate State
+
+
+```tsx
+<div className="flex flex-col gap-3">
+  <RHFCheckbox
+    name="languages"
+    value="js"
+    partial={({ field }) => {
+      const selected = field.value || [];
+      return selected.length > 0 && selected.length < 2;
+    }}
+    label="JavaScript"
+  />
+  <RHFCheckbox
+    name="languages"
+    value="ts"
+    partial={({ field }) => {
+      const selected = field.value || [];
+      return selected.length > 0 && selected.length < 2;
+    }}
+    label="TypeScript"
+  />
+</div>
+```
+
+### With Object Values
+
+
+```tsx
+<RHFCheckbox
+  name="settings"
+  value={{ feature: 'advanced', enabled: true }}
+  label="Enable advanced features"
+  single
+/>
+```
+
+### Disabled State
+
+
+```tsx
+<div className="flex gap-4">
+  <RHFCheckbox name="readonly" value="checked" label="Checked & Disabled" disabled />
+  <RHFCheckbox name="disabled" value="unchecked" label="Unchecked & Disabled" disabled />
+</div>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFCheckbox, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  terms: z.literal('agreed', { message: 'You must agree to the terms' }),
+  newsletter: z.string().nullable().optional(),
+  interests: z.array(z.string()).min(1, 'Select at least one interest')
+});
+
+function FormExample() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      terms: null,
+      newsletter: null,
+      interests: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup required>
+          <RHFCheckbox
+            name="terms"
+            value="agreed"
+            label="I agree to the terms and conditions"
+            single
+          />
+        </RHFInputGroup>
+
+        <RHFInputGroup>
+          <RHFCheckbox
+            name="newsletter"
+            value="subscribed"
+            label="Subscribe to newsletter"
+            single
+          />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Interests" required>
+          <div className="flex flex-col gap-2">
+            <RHFCheckbox name="interests" value="tech" label="Technology" />
+            <RHFCheckbox name="interests" value="design" label="Design" />
+            <RHFCheckbox name="interests" value="business" label="Business" />
+          </div>
+        </RHFInputGroup>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFCheckbox
+  name="terms"
+  value="agreed"
+  label="I agree to the terms"
+  single
+  rules={{ required: 'You must accept the terms' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Single vs Multi Mode
+
+### Single Mode (`single={true}`)
+- Acts like a radio button
+- Stores one value or `uncheckedValue`
+- When checked: stores the `value` prop
+- When unchecked: stores `uncheckedValue` (default: `null`)
+
+```tsx
+// Result: "agreed" or null
+<RHFCheckbox name="terms" value="agreed" single />
+
+// Result: "yes" or "no"
+<RHFCheckbox name="enabled" value="yes" uncheckedValue="no" single />
+```
+
+### Multi Mode (default)
+- Stores an array of selected values
+- Multiple checkboxes with same `name` create a group
+- Each checkbox adds/removes its value from the array
+
+```tsx
+// Result: ["option1", "option3"]
+<RHFCheckbox name="options" value="option1" label="Option 1" />
+<RHFCheckbox name="options" value="option2" label="Option 2" />
+<RHFCheckbox name="options" value="option3" label="Option 3" />
+```
+
+## Value Type Preservation
+
+Unlike native HTML checkboxes, RHFCheckbox preserves the original value type:
+
+```tsx
+// String values
+<RHFCheckbox name="plan" value="pro" single />
+
+// Boolean values
+<RHFCheckbox name="enabled" value={true} single />
+
+// Number values
+<RHFCheckbox name="age" value={18} single />
+
+// Object values
+<RHFCheckbox name="settings" value={{ feature: "advanced" }} single />
+
+// Array values
+<RHFCheckbox name="data" value={[1, 2, 3]} single />
+```
+
+## Indeterminate State
+
+Use the `partial` prop to show an indeterminate state (useful for "select all" scenarios):
+
+```tsx
+// Boolean partial
+<RHFCheckbox
+  name="selectAll"
+  value="all"
+  partial={someSelected && !allSelected}
+  single
+/>
+
+// Dynamic partial based on field state
+<RHFCheckbox
+  name="items"
+  value="item1"
+  partial={({ field }) => field.value.length > 0 && field.value.length < total}
+/>
+```
+
+## Error States
+
+RHFCheckbox doesn't apply error styling directly. Use [RHFInputGroup](/v1/docs/rhf-input-group) to display errors:
+
+```tsx
+<RHFInputGroup required>
+  <RHFCheckbox name="terms" value="agreed" label="I agree" single />
+</RHFInputGroup>
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Accessibility
+
+- Inherits all accessibility features from [Checkbox](/v1/docs/checkbox) component
+- Proper ARIA attributes
+- Keyboard navigable (Space/Enter to toggle)
+- Screen reader compatible
+- Disabled state properly communicated
+
+## Related Components
+
+- [Checkbox](/v1/docs/checkbox) - Base checkbox component
+- [RHFRadio](/v1/docs/rhf-radio) - Radio button group
+- [RHFSwitch](/v1/docs/rhf-switch) - Toggle switch

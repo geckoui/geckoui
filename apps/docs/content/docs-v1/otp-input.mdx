@@ -1,0 +1,231 @@
+---
+title: OTP Input
+description: Segmented input field for one-time passwords and verification codes
+---
+
+import { OTPInput } from '@geckoui/geckoui';
+
+# OTP Input
+
+A segmented input component for entering one-time passwords or verification codes. Each digit is displayed in a separate box with automatic focus management, keyboard navigation, and support for both numeric-only and alphanumeric input.
+
+## Installation
+
+```tsx
+import { OTPInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [code, setCode] = useState('');
+
+  return (
+    <div className="max-w-sm">
+      <OTPInput
+        value={code}
+        onChange={setCode}
+      />
+    </div>
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Value of the OTP input (required) |
+| `onChange` | `(value: string) => void` | - | Callback when value changes (required) |
+| `length` | `number` | `6` | Number of input boxes to display |
+| `numberOnly` | `boolean` | `true` | Only allow numeric input |
+| `onOTPComplete` | `(value: string) => void` | - | Callback when all digits are filled |
+| `aspectRatio` | `string \| number` | `0.94` | Aspect ratio of each input box |
+| `className` | `string` | - | CSS class for the wrapper |
+| `inputClassName` | `string` | - | CSS class for individual inputs |
+| `disabled` | `boolean` | `false` | Disable the input |
+| `onBlur` | `(e: FocusEvent) => void` | - | Callback when input loses focus |
+
+## Examples
+
+### Two-Factor Authentication
+
+
+```tsx
+function TwoFactorAuth() {
+  const [code, setCode] = useState('');
+
+  return (
+    <div>
+      <h3>Enter verification code</h3>
+      <OTPInput
+        value={code}
+        onChange={setCode}
+        length={6}
+        numberOnly
+        onOTPComplete={async (code) => {
+          await verifyTwoFactorCode(code);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### SMS Verification
+
+
+```tsx
+function SMSVerification() {
+  const [smsCode, setSmsCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  return (
+    <div>
+      <p>Enter the 4-digit code sent to your phone</p>
+      <OTPInput
+        value={smsCode}
+        onChange={setSmsCode}
+        length={4}
+        aspectRatio={1}
+        className="max-w-[180px]"
+        onOTPComplete={async (code) => {
+          setIsVerifying(true);
+          await submitVerification(code);
+          setIsVerifying(false);
+        }}
+        disabled={isVerifying}
+      />
+    </div>
+  );
+}
+```
+
+### Alphanumeric Code
+
+
+```tsx
+function ActivationCode() {
+  const [activationCode, setActivationCode] = useState('');
+
+  return (
+    <OTPInput
+      value={activationCode}
+      onChange={setActivationCode}
+      length={8}
+      numberOnly={false}
+      className="gap-2"
+      inputClassName="border-2 rounded-md"
+    />
+  );
+}
+```
+
+### Custom Length
+
+
+```tsx
+function CustomLength() {
+  const [pin, setPin] = useState('');
+  const [longCode, setLongCode] = useState('');
+
+  return (
+    <>
+      <OTPInput
+        value={pin}
+        onChange={setPin}
+        length={4}
+        className="max-w-[180px]"
+      />
+
+      <OTPInput
+        value={longCode}
+        onChange={setLongCode}
+        length={8}
+      />
+    </>
+  );
+}
+```
+
+### Disabled State
+
+
+```tsx
+<OTPInput
+  value="123456"
+  onChange={setCode}
+  disabled
+/>
+```
+
+## Behavior
+
+### Auto-Focus Management
+
+- Automatically focuses the next empty box when a digit is entered
+- Automatically focuses the previous box when backspace/delete is pressed
+- Clicking on the component focuses the first empty box
+
+### Keyboard Navigation
+
+- **Number keys**: Enter digits (when `numberOnly={true}`)
+- **Alphanumeric**: All characters allowed (when `numberOnly={false}`)
+- **Backspace/Delete**: Remove last digit and focus previous box
+- **Tab**: Move focus to next element
+- **Enter**: Prevent form submission on incomplete input
+
+### OTP Complete Callback
+
+The `onOTPComplete` callback fires when all boxes are filled:
+
+```tsx
+<OTPInput
+  value={code}
+  onChange={setCode}
+  length={6}
+  onOTPComplete={async (completeCode) => {
+    // Automatically triggered when all 6 digits are entered
+    console.log('Complete code:', completeCode);
+    await verifyCode(completeCode);
+  }}
+/>
+```
+
+## Accessibility
+
+- Each input box is individually focusable
+- Keyboard navigation fully supported
+- Works with screen readers
+- Disabled state properly communicated
+- Automatic focus management improves UX
+
+## Styling
+
+- `GeckoUIOTPInput` - Main container
+- `GeckoUIOTPInput[data-state="enabled"]` - Applied when not disabled
+- `GeckoUIOTPInput[data-state="disabled"]` - Applied when disabled
+- `GeckoUIOTPInput__input` - Individual input box
+- `GeckoUIOTPInput__overlay-button` - Invisible button for click handling
+
+## Custom Styling
+
+Override styles using `className` for the container or `inputClassName` for individual boxes:
+
+```tsx
+<OTPInput
+  value={code}
+  onChange={setCode}
+  className="gap-4"
+  inputClassName="rounded-lg border-2 border-blue-500"
+/>
+```
+
+## Related Components
+
+- [Input](/v1/docs/input) - Single-line text input
+- [RHFOTPInput](/v1/docs/rhf-otp-input) - React Hook Form integration

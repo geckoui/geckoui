@@ -1,3 +1,4 @@
+import { VersionSelect } from "@/components/version-select";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import type { Node, Root } from "fumadocs-core/page-tree";
@@ -16,7 +17,7 @@ export default function Layout({ children }: LayoutProps<"/docs">) {
   };
 
   return (
-    <DocsLayout tree={tree} {...baseOptions()}>
+    <DocsLayout tree={tree} sidebar={{ banner: <VersionSelect /> }} {...baseOptions()}>
       {children}
     </DocsLayout>
   );

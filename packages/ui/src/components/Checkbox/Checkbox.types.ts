@@ -2,7 +2,7 @@ import type { InputHTMLAttributes } from "react";
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   /**
-   * If true, the checkbox will be checked with a IndeterminateIcon.
+   * If true, the checkbox shows the IndeterminateIcon instead of the check icon.
    * */
-  partial?: boolean;
+  indeterminate?: boolean;
 }

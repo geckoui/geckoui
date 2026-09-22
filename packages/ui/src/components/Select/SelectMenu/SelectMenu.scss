@@ -1,9 +1,13 @@
 @import "../../../mixins.scss";
 
 .GeckoUISelectMenu {
+  --gecko-select-menu-z: 10;
+
   @include base-reset;
 
-  @apply bg-surface-primary ring-border-primary absolute left-0 z-[10] flex max-h-[240px] min-w-0 flex-col gap-[1px] rounded-md shadow-lg ring-1;
+  @apply bg-surface-primary ring-border-primary absolute left-0 flex max-h-[240px] min-w-0 flex-col gap-[1px] rounded-md shadow-lg ring-1;
+
+  z-index: var(--gecko-select-menu-z);
 
   &__items {
     @include base-reset;

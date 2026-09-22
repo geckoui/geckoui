@@ -1,0 +1,202 @@
+---
+title: TimeInput
+description: A time, typed segment by segment or picked from a column for each
+---
+
+import { TimeInputBasicExample, TimeInputFormatsExample, TimeInputStepExample, TimeInputDisabledTimeExample, TimeInputSplitExample, TimeInputStatesExample } from '@/components/examples/time-input-examples';
+
+# TimeInput
+
+A time, typed segment by segment or picked from a column for each.
+
+## Installation
+
+```tsx
+import { TimeInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <TimeInputBasicExample />
+</Preview>
+
+```tsx
+const [time, setTime] = useState<string | null>("14:30");
+
+<TimeInput value={time} onChange={setTime} />
+```
+
+`value` is always 24 hour `HH:mm`, or `HH:mm:ss` when the format asks for seconds. It sorts and compares as it is, so two times can be checked against each other without being parsed. `format` decides only what is on screen.
+
+`onChange` is called with `null` while the time is incomplete or the rule turns it down.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string \| null` | - | The time as 24 hour `HH:mm`, or `HH:mm:ss` with seconds |
+| `onChange` | `(value: string \| null) => void` | - | Called with the new time, or `null` while it is not one |
+| `onSubmit` | `() => void` | - | Called once the last segment is filled |
+| `format` | `'HH:mm' \| 'hh:mm A' \| 'HH:mm:ss' \| 'hh:mm:ss A'` | `'HH:mm'` | What is shown |
+| `step` | `number` | `1` | Minutes between the entries in the minute column |
+| `disabledTime` | `({ hour, minute, second }) => boolean` | - | Which times cannot be chosen |
+| `disabled` | `boolean` | `false` | |
+| `readOnly` | `boolean` | `false` | |
+| `aria-invalid` | `boolean` | `false` | |
+| `prefix` | `FC \| ReactNode` | - | |
+| `suffix` | `FC \| ReactNode` | - | |
+| `placeholder` | `string` | the format | |
+| `hideClearIcon` | `boolean` | `false` | |
+| `hideClockIcon` | `boolean` | `false` | |
+| `className` | `string` | - | CSS class for the field |
+| `wrapperClassName` | `string` | - | CSS class for the wrapper |
+| `listClassName` | `string` | - | CSS class for the picker |
+| `listPlacement` | `Placement` | `'bottom-start'` | Where the picker opens |
+| `floatingStrategy` | `Strategy` | `'absolute'` | |
+
+## Examples
+
+### Formats
+
+<Preview>
+  <TimeInputFormatsExample />
+</Preview>
+
+```tsx
+<TimeInput value={time} onChange={setTime} format="HH:mm" />
+<TimeInput value={time} onChange={setTime} format="hh:mm A" />
+<TimeInput value={time} onChange={setTime} format="HH:mm:ss" />
+<TimeInput value={time} onChange={setTime} format="hh:mm:ss A" />
+```
+
+All four share one `value`. A 12 hour field shows `04:05 PM` and still reports `"16:05"`.
+
+Each segment gets a column of its own, so a 12 hour field with seconds opens four.
+
+### Slots
+
+<Preview>
+  <TimeInputStepExample />
+</Preview>
+
+```tsx
+<TimeInput value={time} onChange={setTime} step={30} />
+```
+
+`step` is the minutes between entries in the minute column. It lists every minute by default, the way the platform's own picker does. Typing is unaffected: you can still type `09:07` with `step={30}`.
+
+### Ruling times out
+
+<Preview>
+  <TimeInputDisabledTimeExample />
+</Preview>
+
+```tsx
+<TimeInput
+  value={time}
+  onChange={setTime}
+  format="hh:mm A"
+  step={30}
+  disabledTime={({ hour }) => hour < 9 || hour >= 17 || hour === 13}
+/>
+```
+
+`disabledTime` is given 24 hour numbers whatever the format shows, so a rule is written once and holds for every format.
+
+A time it turns down sends `null` to `onChange`, whether it was picked or typed.
+
+Cells are greyed out when nothing they could become is allowed, reading the columns to their **left** as settled and leaving the ones to their right free. So an hour rule greys out hours straight away but leaves the minutes alone until an hour is chosen.
+
+### Allowing two separate windows
+
+<Preview>
+  <TimeInputSplitExample />
+</Preview>
+
+```tsx
+<TimeInput
+  value={time}
+  onChange={setTime}
+  format="hh:mm A"
+  disabledTime={({ hour }) => ![1, 2, 16, 17].includes(hour)}
+/>
+```
+
+Only 1 and 2 in the morning, 4 and 5 in the afternoon.
+
+This is why the columns only read leftwards. If every column answered to every other, choosing `PM` would grey out `01` and `02`, while an hour of `04` would grey out `AM`, and neither could be changed without emptying the field. The hour column is never greyed out on account of the meridiem, so there is always a way back.
+
+Picking `01` while `PM` is still set leaves a pair the rule turns down. `onChange` gets `null`, and the stale segment shows in the picker as chosen but unavailable.
+
+### States
+
+<Preview>
+  <TimeInputStatesExample />
+</Preview>
+
+```tsx
+<TimeInput value="09:00" disabled />
+<TimeInput value="09:00" readOnly />
+<TimeInput value="09:00" aria-invalid />
+```
+
+Neither a disabled nor a read-only field opens the picker.
+
+## Next to a date
+
+`DateInput` and `TimeInput` are separate fields, each holding a plain string:
+
+```tsx
+const [date, setDate] = useState<string | null>(null);   // "2026-09-19"
+const [time, setTime] = useState<string | null>(null);   // "16:30"
+
+<div className="flex gap-3">
+  <DateInput value={date} onChange={setDate} className="flex-1" />
+  <TimeInput value={time} onChange={setTime} className="w-44" />
+</div>
+
+const startsAt = date && time ? `${date}T${time}` : null;
+```
+
+## The keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>0</kbd>–<kbd>9</kbd> | Fill the segment, moving on once it cannot take another digit |
+| <kbd>↑</kbd> <kbd>↓</kbd> | Step the segment under the caret, wrapping at its ends |
+| <kbd>←</kbd> <kbd>→</kbd> | Move between segments |
+| <kbd>A</kbd> <kbd>P</kbd> | Set AM or PM |
+| <kbd>Backspace</kbd> | Empty the segment, or move back when it already is |
+| <kbd>Esc</kbd> | Close the picker |
+
+Typing `3` into a 24 hour field settles it at `03` and moves on, because no hour starts with 3.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-time-input-column-height` | `15rem` | How tall each column scrolls |
+| `--gecko-time-input-column-width` | `4rem` | How wide each column is |
+| `--gecko-time-input-z` | `10` | The picker's stacking order |
+
+```css
+.GeckoUITimeInputWrapper {
+  --gecko-time-input-column-height: 20rem;
+}
+```
+
+### Class names and data attributes
+
+- `GeckoUITimeInputWrapper` - Holds the field and the picker
+- `GeckoUITimeInput` - The field, with `data-state`, `aria-invalid`, `data-empty` and `data-focus`
+- `GeckoUITimeInput__segment` - One segment, with `data-segment` and `data-empty`
+- `GeckoUITimeInput__picker` - The dropdown
+- `GeckoUITimeInput__column` - One column, labelled by its segment
+- `GeckoUITimeInput__cell` - One option, with `data-state` of `selected` or `unselected`
+
+## Related Components
+
+- [RHFTimeInput](/docs/rhf-time-input) - The same field, wired to React Hook Form
+- [DateInput](/docs/date-input) - The date half
+- [Select](/docs/select) - For a list that is not a time

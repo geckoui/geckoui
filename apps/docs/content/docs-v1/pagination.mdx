@@ -1,0 +1,233 @@
+---
+title: Pagination
+description: Navigate through multiple pages of content with intelligent ellipsis display
+---
+
+import { Pagination } from '@geckoui/geckoui';
+
+# Pagination
+
+A pagination component for navigating through multiple pages of content. Features intelligent ellipsis display for large page counts, previous/next navigation, and automatically hides when there's only one page.
+
+## Installation
+
+```tsx
+import { Pagination } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Pagination } from '@geckoui/geckoui';
+
+function Example() {
+  const [page, setPage] = useState(1);
+
+  return (
+    <Pagination
+      currentPage={page}
+      totalPages={10}
+      onChange={setPage}
+    />
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `currentPage` | `number` | - | Current active page (required) |
+| `totalPages` | `number` | - | Total number of pages (required) |
+| `onChange` | `(page: number) => void` | - | Callback when page changes (required) |
+| `className` | `string` | - | Additional CSS classes |
+
+## Examples
+
+### Large Page Count
+
+The component automatically shows ellipsis for large page counts:
+
+
+```tsx
+const [page, setPage] = useState(1);
+
+<Pagination
+  currentPage={page}
+  totalPages={100}
+  onChange={setPage}
+/>
+```
+
+**Ellipsis Logic**:
+- Shows all pages if total ≤ 7
+- Shows ellipsis when current page is near start/middle/end
+- Always shows first and last page numbers
+
+### Centered Alignment
+
+
+```tsx
+<Pagination
+  currentPage={page}
+  totalPages={20}
+  onChange={setPage}
+  className="justify-center"
+/>
+```
+
+### Right Aligned
+
+
+```tsx
+<Pagination
+  currentPage={page}
+  totalPages={15}
+  onChange={setPage}
+  className="justify-end"
+/>
+```
+
+### With Data Fetching
+
+
+```tsx
+const [page, setPage] = useState(1);
+const [loading, setLoading] = useState(false);
+
+const items = [...]; // Your data array
+const itemsPerPage = 3;
+const totalPages = Math.ceil(items.length / itemsPerPage);
+
+const handlePageChange = (newPage: number) => {
+  setLoading(true);
+  setPage(newPage);
+  // Simulate API call
+  setTimeout(() => setLoading(false), 300);
+};
+
+// Calculate current page items
+const startIndex = (page - 1) * itemsPerPage;
+const currentItems = items.slice(startIndex, startIndex + itemsPerPage);
+
+<div>
+  <div className="border rounded-md p-4">
+    {loading ? (
+      <div>Loading...</div>
+    ) : (
+      <ul>
+        {currentItems.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+  <Pagination
+    currentPage={page}
+    totalPages={totalPages}
+    onChange={handlePageChange}
+  />
+</div>
+```
+
+### API Integration
+
+
+```tsx
+const [page, setPage] = useState(1);
+
+// From API response
+const totalItems = 250;
+const itemsPerPage = 25;
+const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+const handlePageChange = (newPage: number) => {
+  setPage(newPage);
+  fetchData(`/api/items?page=${newPage}&limit=${itemsPerPage}`);
+};
+
+<div>
+  <p>
+    Showing {(page - 1) * itemsPerPage + 1}-
+    {Math.min(page * itemsPerPage, totalItems)} of {totalItems} items
+  </p>
+  <Pagination
+    currentPage={page}
+    totalPages={totalPages}
+    onChange={handlePageChange}
+  />
+</div>
+```
+
+## Ellipsis Display Logic
+
+The pagination intelligently displays page numbers based on the current page:
+
+### Small Page Count (≤ 7 pages)
+Shows all pages: `[1] [2] [3] [4] [5] [6] [7]`
+
+### Current Page Near Start (pages 1-4)
+`[1] [2] [3] [4] [5] ... [100]`
+
+### Current Page Near End (last 4 pages)
+`[1] ... [96] [97] [98] [99] [100]`
+
+### Current Page in Middle
+`[1] ... [49] [50] [51] ... [100]`
+
+## Behavior
+
+### Auto-Hide on Single Page
+The component returns `null` when `totalPages <= 1`, automatically hiding itself.
+
+```tsx
+// This won't render anything
+<Pagination currentPage={1} totalPages={1} onChange={setPage} />
+```
+
+### Navigation Controls
+
+**Previous Button**:
+- Disabled on first page
+- Decrements current page by 1
+- Shows left arrow icon
+
+**Next Button**:
+- Disabled on last page
+- Increments current page by 1
+- Shows right arrow icon
+
+**Page Numbers**:
+- Click to jump directly to that page
+- Current page is highlighted
+- Ellipsis buttons are disabled
+
+### Page Counter
+Displays current page / total pages (e.g., "5 / 10") for quick reference.
+
+## Styling
+
+- `GeckoUIPagination` - Main container
+- `GeckoUIPagination__arrow` - Previous/Next buttons
+- `GeckoUIPagination__arrow__icon[data-direction="previous"]` - Previous arrow icon
+- `GeckoUIPagination__arrow__icon[data-direction="next"]` - Next arrow icon
+- `GeckoUIPagination__page-count` - Page counter display
+- `GeckoUIPagination__page-buttons` - Page number buttons container
+- `GeckoUIPagination__page-button` - Individual page button
+- `GeckoUIPagination__page-button[data-active]` - Active page
+- `GeckoUIPagination__page-button[data-ellipsis]` - Ellipsis button
+
+## Accessibility
+
+- Semantic button elements for navigation
+- Disabled state for unavailable actions
+- Keyboard navigable (Tab to focus, Enter/Space to activate)
+- Clear visual indication of current page
+
+## Related Components
+
+- [Spinner](/v1/docs/spinner) - Show loading state during pagination

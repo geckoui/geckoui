@@ -1,0 +1,122 @@
+@import "../../mixins.scss";
+
+.GeckoUIBreadcrumb {
+  --gecko-breadcrumb-gap: 0.5rem;
+  /*
+   * The links are the bright ones and the current page is the quiet one. You already know
+   * where you are; what the trail is for is the way back.
+   */
+  --gecko-breadcrumb-link: var(--color-text-primary);
+  --gecko-breadcrumb-current: var(--color-text-tertiary);
+  /* a step quieter again than the current page, so the order reads link, page, chevron */
+  --gecko-breadcrumb-separator: var(--color-text-placeholder);
+  --gecko-breadcrumb-separator-size: 0.875rem;
+
+  @include base-reset;
+
+  &[data-size="sm"] {
+    --gecko-breadcrumb-gap: 0.375rem;
+    --gecko-breadcrumb-separator-size: 0.75rem;
+
+    @apply text-xs;
+  }
+
+  &[data-size="md"] {
+    @apply text-sm;
+  }
+
+  &[data-size="lg"] {
+    --gecko-breadcrumb-gap: 0.625rem;
+    --gecko-breadcrumb-separator-size: 1rem;
+
+    @apply text-base;
+  }
+
+  &__list {
+    @include base-reset;
+
+    /* wraps rather than overflowing: a trail that runs off the edge tells you nothing */
+    @apply flex list-none flex-wrap items-center p-0;
+
+    gap: var(--gecko-breadcrumb-gap);
+  }
+
+  &__crumb {
+    @apply inline-flex min-w-0 items-center;
+  }
+
+  &__separator {
+    @apply inline-flex shrink-0 items-center select-none;
+
+    color: var(--gecko-breadcrumb-separator);
+
+    svg {
+      width: var(--gecko-breadcrumb-separator-size);
+      height: var(--gecko-breadcrumb-separator-size);
+    }
+  }
+
+  &__link {
+    @apply inline-flex items-center gap-1.5 truncate rounded;
+
+    color: var(--gecko-breadcrumb-link);
+
+    &:is(a) {
+      @apply cursor-pointer;
+
+      /* already the bright one, so hovering underlines rather than brightening further */
+      &:hover {
+        @apply underline;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+
+    /* where you are, so it is not a link and does not pretend to be one */
+    &[data-current] {
+      color: var(--gecko-breadcrumb-current);
+    }
+  }
+
+  &__menu {
+    @include base-reset;
+
+    @apply border-border-secondary bg-surface-primary flex list-none flex-col rounded-md border p-1 shadow-lg;
+
+    z-index: var(--gecko-breadcrumb-z, 10);
+
+    min-width: 10rem;
+  }
+
+  &__menu__item {
+    @apply flex;
+
+    .GeckoUIBreadcrumb__link {
+      @apply w-full rounded px-2 py-1.5;
+
+      &:hover {
+        @apply bg-surface-hover no-underline;
+      }
+    }
+  }
+
+  &__expand {
+    @include button-reset;
+
+    @apply inline-flex cursor-pointer items-center rounded px-1 leading-none;
+
+    color: var(--gecko-breadcrumb-link);
+
+    &:hover {
+      @apply bg-surface-hover;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+  }
+}

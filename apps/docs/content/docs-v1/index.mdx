@@ -1,0 +1,122 @@
+---
+title: Getting Started
+description: Build beautiful, accessible React applications with Gecko UI
+---
+
+# Welcome to Gecko UI
+
+Gecko UI is a comprehensive, production-ready React component library built with TypeScript, Tailwind CSS, and modern web standards. It provides carefully crafted components designed for building complex, accessible user interfaces.
+
+## Features
+
+- **🎨 Beautiful Design** - Modern, clean aesthetics with thoughtful spacing and typography
+- **♿️ Accessible** - WCAG compliant components with keyboard navigation and ARIA support
+- **🔧 Highly Customizable** - Extensive theming system with CSS variables and Tailwind integration
+- **📦 TypeScript First** - Full type safety with comprehensive type definitions
+- **🎯 Developer Experience** - Intuitive APIs, great documentation, and excellent IntelliSense
+- **📱 Responsive** - Mobile-first design that works across all screen sizes
+- **🚀 Performance** - Optimized bundle size with tree-shaking support
+- **🔌 React Hook Form** - Built-in integration with dedicated wrapper components
+
+## Quick Start
+
+### 1. Install the package
+
+```bash
+npm install @geckoui/geckoui
+# or
+pnpm add @geckoui/geckoui
+# or
+yarn add @geckoui/geckoui
+```
+
+#### Install `react-hook-form` for form components
+
+```bash
+npm install react-hook-form
+# or
+pnpm add react-hook-form
+# or
+yarn add react-hook-form
+```
+
+### 2. Import styles
+
+Add the CSS imports to your root layout or main entry file:
+
+```tsx
+import '@geckoui/geckoui/styles.css';
+```
+
+### 3. Add GeckoUIPortal
+
+Add `GeckoUIPortal` to your layout (required for Dialog, Drawer, ConfirmDialog, and Toast components):
+
+```tsx
+import { GeckoUIPortal } from '@geckoui/geckoui';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <GeckoUIPortal />
+      </body>
+    </html>
+  );
+}
+```
+
+### 4. Start using components
+
+```tsx
+import { Button, Input, Label } from '@geckoui/geckoui';
+
+function LoginForm() {
+  return (
+    <form>
+      <div>
+        <Label>Email</Label>
+        <Input type="email" placeholder="you@example.com" />
+      </div>
+      <Button type="submit">Sign In</Button>
+    </form>
+  );
+}
+```
+
+## What's Next?
+
+Explore the documentation to learn more:
+
+- [Installation Guide](/v1/docs/installation) - Detailed setup instructions and configuration
+- [Theming](/v1/docs/theming) - Learn how to customize the design system
+- Browse components in the sidebar to see all available options
+
+## Requirements
+
+- **React**: 19.2.0 or higher
+- **React DOM**: 19.2.0 or higher
+- **Node.js**: 18.0.0 or higher (recommended)
+
+## Browser Support
+
+Gecko UI supports all modern browsers:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## AI Skills
+
+Install the GeckoUI skill to help AI assistants generate accurate component code and themes:
+
+```
+npx skills add GeckoUI/skills
+```
+
+## Community & Support
+
+- [GitHub Repository](https://github.com/geckoui/geckoui)
+- [Report Issues](https://github.com/geckoui/geckoui/issues)

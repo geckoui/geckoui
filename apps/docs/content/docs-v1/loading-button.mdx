@@ -1,0 +1,256 @@
+---
+title: LoadingButton
+description: Button component with built-in loading state and spinner
+---
+
+import { LoadingButton } from '@geckoui/geckoui';
+
+# LoadingButton
+
+LoadingButton extends the Button component with built-in loading state visualization. Automatically displays a spinner and optional loading text while preventing user interaction during asynchronous operations.
+
+## Installation
+
+```tsx
+import { LoadingButton } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    await someAsyncOperation();
+    setLoading(false);
+  };
+
+  return (
+    <LoadingButton loading={loading} onClick={handleClick}>
+      Submit
+    </LoadingButton>
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `loading` | `boolean` | `false` | Display loading state with spinner |
+| `loadingText` | `string` | - | Text to show when loading (replaces children) |
+| `spinnerPosition` | `'start' \| 'end'` | `'start'` | Position of the spinner |
+| `variant` | `'filled' \| 'outlined' \| 'ghost' \| 'icon'` | `'filled'` | Button visual style |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Button size |
+| `color` | `'primary'` | `'primary'` | Button color scheme |
+| `disabled` | `boolean` | `false` | Disable the button |
+| ...rest | `ButtonHTMLAttributes` | - | All standard Button props |
+
+## Examples
+
+### Form Submission
+
+
+```tsx
+function FormExample() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    await saveFormData();
+    setIsSubmitting(false);
+  };
+
+  return (
+    <LoadingButton
+      loading={isSubmitting}
+      loadingText="Saving..."
+      onClick={handleSubmit}
+    >
+      Save Changes
+    </LoadingButton>
+  );
+}
+```
+
+### Loading State Comparison
+
+
+```tsx
+<LoadingButton loading={false}>
+  Not Loading
+</LoadingButton>
+
+<LoadingButton loading={true}>
+  Loading State
+</LoadingButton>
+```
+
+### With Loading Text
+
+
+```tsx
+<LoadingButton
+  loading={isProcessing}
+  loadingText="Processing..."
+>
+  Process Payment
+</LoadingButton>
+
+<LoadingButton
+  loading={isUploading}
+  loadingText="Uploading..."
+>
+  Upload File
+</LoadingButton>
+```
+
+### Without Loading Text
+
+When `loadingText` is not provided, the button keeps its original label:
+
+
+```tsx
+<LoadingButton loading={isDeleting}>
+  Delete Account
+</LoadingButton>
+```
+
+### Spinner Position
+
+
+```tsx
+<LoadingButton
+  loading={isProcessing}
+  spinnerPosition="start"
+  loadingText="Processing..."
+>
+  Process
+</LoadingButton>
+
+<LoadingButton
+  loading={isProcessing}
+  spinnerPosition="end"
+  loadingText="Processing..."
+>
+  Process
+</LoadingButton>
+```
+
+### Different Variants
+
+
+```tsx
+<LoadingButton loading={isLoading} variant="filled">
+  Filled Loading
+</LoadingButton>
+
+<LoadingButton loading={isLoading} variant="outlined">
+  Outlined Loading
+</LoadingButton>
+
+<LoadingButton loading={isLoading} variant="ghost">
+  Ghost Loading
+</LoadingButton>
+```
+
+### Different Sizes
+
+
+```tsx
+<LoadingButton loading={isLoading} size="sm">Small</LoadingButton>
+<LoadingButton loading={isLoading} size="md">Medium</LoadingButton>
+<LoadingButton loading={isLoading} size="lg">Large</LoadingButton>
+```
+
+### Async Operation Example
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { LoadingButton } from '@geckoui/geckoui';
+
+function DownloadReport() {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      const data = await fetchReportData();
+      downloadFile(data);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  return (
+    <LoadingButton
+      loading={isDownloading}
+      loadingText="Downloading..."
+      onClick={handleDownload}
+      variant="outlined"
+      size="lg"
+    >
+      Download Report
+    </LoadingButton>
+  );
+}
+```
+
+## Behavior
+
+### Loading State
+
+When `loading={true}`:
+- Button becomes disabled automatically
+- Spinner is displayed (at start or end position)
+- Optional loading text replaces the original content
+- User interaction is prevented
+
+### Content Display
+
+The button content follows this priority:
+
+1. If `loading={true}` and `loadingText` is provided → shows `loadingText`
+2. If `loading={true}` and `loadingText` is not provided → keeps original `children`
+3. If `loading={false}` → shows original `children`
+
+## Accessibility
+
+- Inherits all accessibility features from Button component
+- Automatically disabled during loading state
+- Spinner provides visual feedback
+- Loading text provides clear status indication
+- Works with screen readers
+
+## Styling
+
+The component uses `data-*` attributes for styling:
+
+- `GeckoUILoadingButton` - Main container class
+- `data-loading` - Applied during loading state
+
+Variant, color, and size styling are handled by the underlying [Button](/v1/docs/button) component via its own `data-*` attributes.
+
+```css
+.GeckoUILoadingButton[data-loading] {
+  pointer-events: none;
+  opacity: 0.8;
+}
+```
+
+## Dependencies
+
+This component uses the internal `Spinner` component for the loading animation.
+
+## Related Components
+
+- [Button](/v1/docs/button) - Base button component
+- [Spinner](/v1/docs/spinner) - Loading spinner component

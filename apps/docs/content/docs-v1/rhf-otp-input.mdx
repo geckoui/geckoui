@@ -1,0 +1,297 @@
+---
+title: RHFOTPInput
+description: OTP (One-Time Password) input component integrated with React Hook Form
+---
+
+import { RHFOTPInput } from '@geckoui/geckoui';
+
+# RHFOTPInput
+
+An OTP (One-Time Password) input component integrated with React Hook Form that provides a segmented input field for entering verification codes. Each digit is displayed in a separate box with automatic focus management and keyboard navigation. Automatically displays error states with a red border when validation fails.
+
+## Installation
+
+```tsx
+import { RHFOTPInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFOTPInput } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicOtp: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFOTPInput name="basicOtp" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from base OTPInput component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `length` | `number` | 6 | Number of OTP input fields to display |
+| `numberOnly` | `boolean` | true | If true, only numeric input is allowed |
+| `onOTPComplete` | `(value: string) => void` | - | Callback when all OTP fields are filled |
+| `className` | `string` | - | Wrapper div classname |
+| `inputClassName` | `string` | - | Individual input field classname |
+| `aspectRatio` | `string \| number` | 0.94 | Aspect ratio for each input box |
+| `disabled` | `boolean` | false | Disable all input fields |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFOTPInput, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  validationCode: z.string().length(6, 'OTP must be exactly 6 digits').regex(/^\d+$/, 'OTP must contain only numbers')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { validationCode: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Verification Code" required>
+        <RHFOTPInput name="validationCode" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### Six Digit Code
+
+
+```tsx
+<RHFOTPInput name="sixDigitPin" length={6} />
+```
+
+### Four Digit PIN
+
+
+```tsx
+<RHFOTPInput name="fourDigitPin" length={4} />
+```
+
+### Alphanumeric Code
+
+
+```tsx
+const schema = z.object({
+  activationCode: z.string().length(8, 'Activation code must be exactly 8 characters')
+});
+
+<RHFInputGroup label="Activation Code" required>
+  <RHFOTPInput name="activationCode" length={8} numberOnly={false} />
+</RHFInputGroup>
+```
+
+### Disabled State
+
+
+```tsx
+<RHFOTPInput name="disabledOtp" disabled />
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFOTPInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  twoFactorCode: z.string().length(6, 'Code must be exactly 6 digits').regex(/^\d+$/, 'Code must contain only numbers')
+});
+
+function TwoFactorForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      twoFactorCode: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Two-Factor Authentication Code" required>
+          <RHFOTPInput
+            name="twoFactorCode"
+            onOTPComplete={(value) => {
+              console.log('OTP completed:', value);
+            }}
+          />
+        </RHFInputGroup>
+
+        <Button type="submit">Verify Code</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFOTPInput
+  name="otp"
+  rules={{
+    required: 'OTP is required',
+    minLength: { value: 6, message: 'OTP must be 6 digits' }
+  }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Length Configuration
+
+Configure the number of OTP input fields using the `length` prop:
+
+```tsx
+<RHFOTPInput name="pin" length={4} />
+<RHFOTPInput name="code" length={6} />
+<RHFOTPInput name="activationKey" length={8} />
+```
+
+By default, `length` is set to 6 digits.
+
+## Input Mode
+
+Control whether users can enter only numbers or alphanumeric characters:
+
+```tsx
+<RHFOTPInput name="numericCode" numberOnly={true} />
+<RHFOTPInput name="alphanumericCode" numberOnly={false} />
+```
+
+By default, `numberOnly` is `true`, restricting input to numeric characters only.
+
+## OTP Completion Callback
+
+Use `onOTPComplete` to perform actions when all OTP fields are filled:
+
+```tsx
+<RHFOTPInput
+  name="otp"
+  onOTPComplete={(value) => {
+    console.log('OTP entered:', value);
+    verifyCode(value);
+  }}
+/>
+```
+
+This callback is triggered automatically when the user completes entering all digits.
+
+## Error States
+
+RHFOTPInput automatically displays error states with:
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- Individual input fields inherit error styling
+
+```css
+.GeckoUIRHFOTPInput[data-error] {
+  border-color: red;
+}
+```
+
+Use [RHFInputGroup](/v1/docs/rhf-input-group) component for label + input + error layout:
+
+```tsx
+<RHFInputGroup label="Verification Code" required>
+  <RHFOTPInput name="code" />
+</RHFInputGroup>
+```
+
+Or combine with [RHFError](/v1/docs/rhf-error) component manually:
+
+```tsx
+<RHFOTPInput name="code" />
+<RHFError name="code" />
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur for better UX:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Validation Patterns
+
+Common Zod validation patterns for OTP inputs:
+
+```tsx
+const schema = z.object({
+  sixDigitCode: z.string()
+    .length(6, 'Code must be exactly 6 digits')
+    .regex(/^\d+$/, 'Code must contain only numbers'),
+
+  fourDigitPin: z.string()
+    .length(4, 'PIN must be exactly 4 digits')
+    .regex(/^\d+$/, 'PIN must contain only numbers'),
+
+  alphanumericCode: z.string()
+    .length(8, 'Code must be exactly 8 characters')
+    .regex(/^[A-Za-z0-9]+$/, 'Code must be alphanumeric')
+});
+```
+
+## Accessibility
+
+- Automatic focus management between input fields
+- Keyboard navigation support (arrow keys, backspace, delete)
+- Proper ARIA attributes for error states
+- Tab navigation support with smart focus handling
+- Input mode hints for mobile keyboards (numeric vs text)
+- Screen reader compatible
+
+## Keyboard Navigation
+
+- **Numbers/Letters**: Enter value and auto-advance to next field
+- **Backspace/Delete**: Remove current value and move to previous field
+- **Tab**: Navigate to next unfilled field
+- **Enter**: Submit form when last field is filled
+- **Paste**: Automatically distribute pasted content across fields
+
+## Related Components
+
+- [OTPInput](/v1/docs/otp-input) - Base OTP input component
+- [RHFInput](/v1/docs/rhf-input) - Text input with RHF
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Label + input + error layout
+- [RHFError](/v1/docs/rhf-error) - Error message display

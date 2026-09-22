@@ -78,6 +78,50 @@ Border colors for various states:
   --color-border-focus: oklch(0.7155 0 none);     /* Focus state */
   --color-border-hover: oklch(0.8699 0 none);     /* Hover state */
   --color-border-disabled: oklch(0.9401 0 none);  /* Disabled state */
+  --color-border-invalid: oklch(0.6368 0.2078 25.33);       /* A field in error */
+  --color-border-invalid-hover: oklch(0.5168 0.2178 25.33); /* ...under the pointer */
+}
+```
+
+Every field that can be invalid takes its red from `--color-border-invalid`, so one line
+retints all of them:
+
+```css
+:root {
+  --color-border-invalid: rebeccapurple;
+}
+```
+
+`--color-border-invalid-hover` is the step the border takes under the pointer: darker in
+light mode, lighter in dark, the way the other borders behave against each ground.
+
+### Semantic Colors
+
+One token per meaning, shared by every component that reports status. Overriding one
+updates [Badge](/docs/badge), [Alert](/docs/alert) and [Toast](/docs/toast) together.
+
+```css
+:root {
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
+}
+```
+
+| Variable | Used by |
+|----------|---------|
+| `--color-success` | Badge, Alert, Toast |
+| `--color-error` | Badge, Alert, Toast, `InputError`, the required marker on `Label` |
+| `--color-warning` | Badge, Alert, Toast |
+| `--color-info` | Badge, Alert, Toast |
+
+These are lifted in dark mode, since the light values sit too dark on a dark surface.
+Override them inside `.dark` if you change them:
+
+```css
+.dark {
+  --color-success: oklch(0.72 0.17 149.21);
 }
 ```
 
@@ -123,6 +167,8 @@ Gecko UI includes built-in dark mode support. Apply the `.dark` class to enable 
   --color-border-focus: oklch(0.5555 0 none);
   --color-border-hover: oklch(0.7155 0 none);
   --color-border-disabled: oklch(0.2972 0 none);
+  --color-border-invalid: oklch(0.71 0.19 25.33);
+  --color-border-invalid-hover: oklch(0.83 0.17 25.33);
 
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
@@ -256,6 +302,67 @@ Components use their own class names for targeted styling:
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 ```
+
+## Component Variables
+
+Some components expose their own variables for size, shape and spacing, so you can restyle
+them without overriding a class. They fall back to the tokens above, so theming still
+flows through.
+
+| Component | Prefix | Documented at |
+|-----------|--------|---------------|
+| Toast | `--gecko-toast-*` | [Toast](/docs/toast#styling-with-css) |
+| Badge | `--gecko-badge-*` | [Badge](/docs/badge#styling-with-css) |
+| Alert | `--gecko-alert-*` | [Alert](/docs/alert#styling-with-css) |
+
+For example, widening every toast and rounding it more:
+
+```css
+:root {
+  --gecko-toast-width: 28rem;
+  --gecko-toast-radius: 1.5rem;
+}
+```
+
+Scope a variable to one variant or colour to change just that case:
+
+```css
+.GeckoUIAlert[data-color="error"] {
+  --gecko-alert-bg: var(--color-error);
+  --gecko-alert-accent: white;
+}
+```
+
+While an overlay holds the scroll lock, `--gecko-scrollbar-width` is set on the root
+element, so anything you pin to the right edge can compensate:
+
+```css
+.my-fixed-panel {
+  right: calc(1rem + var(--gecko-scrollbar-width, 0px));
+}
+```
+
+## Stacking Order
+
+Overlays sit in three tiers:
+
+| Tier | Components | z-index |
+|------|------------|---------|
+| Inline dropdowns | Select menu, Breadcrumb list, TagInput list, TimeInput picker | `10` |
+| Floating panels | Tooltip, Menu, Popover, DateInput and DateRangeInput calendars | `50` |
+| Overlays | Drawer `1000`, Dialog `2000`, Toast `3000` | |
+
+Each is a variable, so a tier can be moved without overriding anything:
+
+```css
+:root {
+  --gecko-toast-z: 5000;
+}
+```
+
+`--gecko-select-menu-z`, `--gecko-breadcrumb-z`, `--gecko-tag-input-z`, `--gecko-time-input-z`, `--gecko-tooltip-z`, `--gecko-menu-z`, `--gecko-popover-z`, `--gecko-date-input-z`, `--gecko-date-range-input-z`, `--gecko-toast-z`.
+
+**Keep your own chrome below `1000`.** A sticky header at a higher z-index sits over drawers, dialogs and toasts — a toast you cannot reach is the usual way this shows up.
 
 ## Customizing Icons
 

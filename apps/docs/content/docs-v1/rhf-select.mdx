@@ -1,0 +1,379 @@
+---
+title: RHFSelect
+description: Select dropdown component integrated with React Hook Form
+---
+
+import { RHFSelect, SelectOption } from '@geckoui/geckoui';
+
+# RHFSelect
+
+A select dropdown component integrated with React Hook Form that automatically displays error states with a red border when validation fails. Supports both single and multiple selection modes with keyboard navigation and search capabilities.
+
+## Installation
+
+```tsx
+import { RHFSelect, SelectOption } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFSelect, SelectOption } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicCountry: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFSelect name="basicCountry" placeholder="Select a country">
+        <SelectOption value="us" label="United States" />
+        <SelectOption value="uk" label="United Kingdom" />
+        <SelectOption value="ca" label="Canada" />
+        <SelectOption value="au" label="Australia" />
+        <SelectOption value="de" label="Germany" />
+      </RHFSelect>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Select](/v1/docs/select) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `multiple` | `boolean` | `false` | Enable multiple selection mode |
+| `children` | `SelectOption[]` | - | SelectOption components to render as dropdown options |
+| `onChange` | `(value: T \| T[]) => void` | - | Change callback (receives value based on single/multiple mode) |
+| `className` | `string` | - | Additional CSS class for the select button |
+| `wrapperClassName` | `string` | - | Additional CSS class for the wrapper div |
+| `placeholder` | `string` | - | Placeholder text when no value is selected |
+| `disabled` | `boolean` | `false` | Disable the select input |
+| ...rest | `SelectProps` | - | All Select component props |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFSelect, SelectOption, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  validationSkills: z.string().min(1, 'Please select at least one skill')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      validationSkills: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Primary Skill" required>
+        <RHFSelect name="validationSkills" placeholder="Select your skill">
+          <SelectOption value="js" label="JavaScript" />
+          <SelectOption value="ts" label="TypeScript" />
+          <SelectOption value="react" label="React" />
+          <SelectOption value="vue" label="Vue" />
+          <SelectOption value="angular" label="Angular" />
+        </RHFSelect>
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### Multiple Selection
+
+Enable multiple selection mode to allow users to select multiple options:
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFSelect, SelectOption } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      multipleLanguages: []
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFSelect name="multipleLanguages" multiple placeholder="Select languages">
+        <SelectOption value="en" label="English" />
+        <SelectOption value="es" label="Spanish" />
+        <SelectOption value="fr" label="French" />
+        <SelectOption value="de" label="German" />
+        <SelectOption value="zh" label="Chinese" />
+        <SelectOption value="ja" label="Japanese" />
+      </RHFSelect>
+    </FormProvider>
+  );
+}
+```
+
+### With Option Groups
+
+Organize options into logical groups:
+
+
+```tsx
+<RHFSelect name="groupedCategory" placeholder="Select a category">
+  <SelectOption value="electronics" label="Electronics" />
+  <SelectOption value="computers" label="Computers" />
+  <SelectOption value="phones" label="Phones" />
+  <SelectOption value="clothing" label="Clothing" />
+  <SelectOption value="shoes" label="Shoes" />
+  <SelectOption value="accessories" label="Accessories" />
+</RHFSelect>
+```
+
+### Disabled State
+
+
+```tsx
+<RHFSelect name="disabledStatus" disabled placeholder="Status">
+  <SelectOption value="active" label="Active" />
+  <SelectOption value="inactive" label="Inactive" />
+  <SelectOption value="pending" label="Pending" />
+</RHFSelect>
+```
+
+### With onChange Callback
+
+Execute custom logic when the selection changes:
+
+
+```tsx
+<RHFSelect
+  name="callbackPriority"
+  placeholder="Select priority"
+  onChange={(value) => {
+    console.log('Selected priority:', value);
+  }}
+>
+  <SelectOption value="low" label="Low" />
+  <SelectOption value="medium" label="Medium" />
+  <SelectOption value="high" label="High" />
+  <SelectOption value="urgent" label="Urgent" />
+</RHFSelect>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFSelect, SelectOption, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  formCountry: z.string().min(1, 'Country is required'),
+  formLanguages: z.array(z.string()).min(1, 'Select at least one language'),
+  formPriority: z.string().min(1, 'Priority is required')
+});
+
+function RegistrationForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      formCountry: '',
+      formLanguages: [],
+      formPriority: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Country" required>
+          <RHFSelect name="formCountry" placeholder="Select your country">
+            <SelectOption value="us" label="United States" />
+            <SelectOption value="uk" label="United Kingdom" />
+            <SelectOption value="ca" label="Canada" />
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Languages" required>
+          <RHFSelect name="formLanguages" multiple placeholder="Select languages">
+            <SelectOption value="en" label="English" />
+            <SelectOption value="es" label="Spanish" />
+            <SelectOption value="fr" label="French" />
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Priority" required>
+          <RHFSelect name="formPriority" placeholder="Select priority">
+            <SelectOption value="low" label="Low" />
+            <SelectOption value="medium" label="Medium" />
+            <SelectOption value="high" label="High" />
+          </RHFSelect>
+        </RHFInputGroup>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFSelect
+  name="country"
+  placeholder="Select a country"
+  rules={{ required: 'Please select a country' }}
+>
+  <SelectOption value="us" label="United States" />
+  <SelectOption value="uk" label="United Kingdom" />
+</RHFSelect>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Single vs Multiple Mode
+
+RHFSelect supports two selection modes:
+
+### Single Select (Default)
+
+```tsx
+const methods = useForm({
+  defaultValues: {
+    country: ''
+  }
+});
+
+<RHFSelect name="country">
+  <SelectOption value="us" label="United States" />
+  <SelectOption value="uk" label="United Kingdom" />
+</RHFSelect>
+```
+
+In single select mode:
+- Value is a single item of type `T`
+- Clicking an option selects it and closes the menu
+- Only one option can be selected at a time
+
+### Multiple Select
+
+```tsx
+const methods = useForm({
+  defaultValues: {
+    languages: []
+  }
+});
+
+<RHFSelect name="languages" multiple>
+  <SelectOption value="en" label="English" />
+  <SelectOption value="es" label="Spanish" />
+</RHFSelect>
+```
+
+In multiple select mode:
+- Value is an array of type `T[]`
+- Clicking an option toggles its selection
+- Menu stays open after selection
+- Multiple options can be selected
+
+## Validation
+
+Use Zod schema validation for form validation:
+
+```tsx
+const schema = z.object({
+  singleSelect: z.string().min(1, 'This field is required'),
+  multipleSelect: z.array(z.string()).min(1, 'Select at least one option')
+});
+```
+
+For more complex validation:
+
+```tsx
+const schema = z.object({
+  skills: z
+    .array(z.string())
+    .min(2, 'Select at least 2 skills')
+    .max(5, 'Select no more than 5 skills')
+});
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate when the user leaves the field:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Error States
+
+RHFSelect automatically displays error states with:
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- No automatic error message display (use RHFInputGroup or RHFError component)
+
+```css
+.GeckoUIRHFSelectButton[data-error] {
+  border-color: red;
+}
+```
+
+Use [RHFInputGroup](/v1/docs/rhf-input-group) component for label + select + error layout:
+
+```tsx
+<RHFInputGroup label="Country" required>
+  <RHFSelect name="country">
+    <SelectOption value="us" label="United States" />
+  </RHFSelect>
+</RHFInputGroup>
+```
+
+Or combine with [RHFError](/v1/docs/rhf-error) component manually:
+
+```tsx
+<RHFSelect name="country">
+  <SelectOption value="us" label="United States" />
+</RHFSelect>
+<RHFError name="country" />
+```
+
+## Accessibility
+
+- Full keyboard navigation support (Arrow keys, Enter, Escape)
+- Built-in search/filter functionality
+- Proper ARIA attributes for error states
+- Screen reader compatible
+- Focus management with visual indicators
+
+## Related Components
+
+- [Select](/v1/docs/select) - Base select component
+- [SelectOption](/v1/docs/select/select-option) - Individual option component
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Label and error wrapper
+- [RHFError](/v1/docs/rhf-error) - Error message display

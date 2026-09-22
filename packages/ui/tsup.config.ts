@@ -4,19 +4,16 @@ import { resolve } from "path";
 import postcss from "postcss";
 import { defineConfig } from "tsup";
 
+// tsup already treats dependencies and peerDependencies as external, so this list is
+// belt and braces. Keep it in step with package.json rather than letting it collect
+// packages the library no longer uses.
 const external = [
   "react",
   "react-dom",
   "react-hook-form",
-  "tailwind-merge",
-  "mime",
-  "class-variance-authority",
-  "class-variance-authority/types",
   "@floating-ui/react",
-  "sonner",
-  "next-themes",
-  "react-textarea-autosize",
-  "prop-types",
+  "lodash.isequal",
+  "mime",
   "tailwind-merge"
 ];
 
@@ -32,6 +29,11 @@ export default defineConfig((options) => {
     },
     clean: !options.watch,
     platform: "browser",
+    // Keep `process.env.NODE_ENV` in the output. With platform "browser" esbuild would
+    // otherwise replace it while building the library, baking in "development" and
+    // leaving every consumer's production build with the dev warnings switched on.
+    // Defining it to itself opts out, so the consumer's bundler resolves it instead.
+    define: { "process.env.NODE_ENV": "process.env.NODE_ENV" },
     esbuildPlugins: [
       sassPlugin({
         sourceMap: false,

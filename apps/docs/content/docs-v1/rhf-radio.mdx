@@ -1,0 +1,325 @@
+---
+title: RHFRadio
+description: Radio button component integrated with React Hook Form that preserves value types
+---
+
+import { RHFRadio } from '@geckoui/geckoui';
+
+# RHFRadio
+
+A controlled radio button component for React Hook Form that preserves value types. Unlike native radio inputs that convert values to strings, this component maintains the original data type. Perfect for creating mutually exclusive selection groups.
+
+## Installation
+
+```tsx
+import { RHFRadio } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFRadio } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      plan: 'free'
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <div className="flex flex-col gap-3">
+        <RHFRadio name="plan" value="free" label="Free Plan" />
+        <RHFRadio name="plan" value="pro" label="Pro Plan" />
+        <RHFRadio name="plan" value="enterprise" label="Enterprise Plan" />
+      </div>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Radio](/v1/docs/radio) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `label` | `ReactNode \| Function` | - | Label displayed next to radio |
+| `labelClassName` | `string` | - | CSS class for the label |
+| `value` | `unknown` | - | Value to set when selected (required, cannot be `null` or `undefined`) |
+| `onChange` | `(value: unknown) => void` | - | Change callback |
+| ...rest | `RadioProps` | - | All Radio component props |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFRadio, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  plan: z.enum(['free', 'pro', 'enterprise']).refine((val) => val !== undefined, {
+    message: 'Please select a plan'
+  })
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { plan: undefined }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Choose a plan" required>
+        <div className="flex flex-col gap-2">
+          <RHFRadio name="plan" value="free" label="Free Plan" />
+          <RHFRadio name="plan" value="pro" label="Pro Plan" />
+          <RHFRadio name="plan" value="enterprise" label="Enterprise Plan" />
+        </div>
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### With String Values
+
+
+```tsx
+<div className="flex gap-4">
+  <RHFRadio name="size" value="XS" label="XS" />
+  <RHFRadio name="size" value="S" label="S" />
+  <RHFRadio name="size" value="M" label="M" />
+  <RHFRadio name="size" value="L" label="L" />
+  <RHFRadio name="size" value="XL" label="XL" />
+</div>
+```
+
+### With Boolean Values
+
+
+```tsx
+<div className="flex flex-col gap-3">
+  <RHFRadio name="enabled" value={true} label="Enabled" />
+  <RHFRadio name="enabled" value={false} label="Disabled" />
+</div>
+```
+
+### With Object Values
+
+
+```tsx
+<div className="flex flex-col gap-3">
+  <RHFRadio name="plan" value={{ name: 'free', price: 0 }} label="Free - $0/month" />
+  <RHFRadio name="plan" value={{ name: 'pro', price: 9 }} label="Pro - $9/month" />
+  <RHFRadio name="plan" value={{ name: 'enterprise', price: 29 }} label="Enterprise - $29/month" />
+</div>
+```
+
+### With Array Values
+
+
+```tsx
+<div className="flex flex-col gap-3">
+  <RHFRadio name="permissions" value={['read']} label="Read Only" />
+  <RHFRadio name="permissions" value={['read', 'write']} label="Read & Write" />
+  <RHFRadio name="permissions" value={['read', 'write', 'admin']} label="Full Access" />
+</div>
+```
+
+### Disabled State
+
+
+```tsx
+<div className="flex flex-col gap-3">
+  <RHFRadio name="status" value="active" label="Active" />
+  <RHFRadio name="status" value="inactive" label="Inactive (Disabled)" disabled />
+</div>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFRadio, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  plan: z.enum(['free', 'pro', 'enterprise']).refine((val) => val !== undefined, {
+    message: 'Please select a plan'
+  }),
+  paymentMethod: z.enum(['card', 'paypal', 'bank']).refine((val) => val !== undefined, {
+    message: 'Please select a payment method'
+  }),
+  billingCycle: z.enum(['monthly', 'yearly'])
+});
+
+function FormExample() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      plan: undefined,
+      paymentMethod: undefined,
+      billingCycle: 'monthly'
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Choose a plan" required>
+          <div className="flex flex-col gap-2">
+            <RHFRadio name="plan" value="free" label="Free Plan" />
+            <RHFRadio name="plan" value="pro" label="Pro Plan - $9/month" />
+            <RHFRadio name="plan" value="enterprise" label="Enterprise Plan - $29/month" />
+          </div>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Payment Method" required>
+          <div className="flex flex-col gap-2">
+            <RHFRadio name="paymentMethod" value="card" label="Credit Card" />
+            <RHFRadio name="paymentMethod" value="paypal" label="PayPal" />
+            <RHFRadio name="paymentMethod" value="bank" label="Bank Transfer" />
+          </div>
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Billing Cycle" required>
+          <div className="flex gap-4">
+            <RHFRadio name="billingCycle" value="monthly" label="Monthly" />
+            <RHFRadio name="billingCycle" value="yearly" label="Yearly (Save 20%)" />
+          </div>
+        </RHFInputGroup>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFRadio
+  name="plan"
+  value="free"
+  label="Free Plan"
+  rules={{ required: 'Please select a plan' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Value Type Preservation
+
+Unlike native HTML radio buttons that convert all values to strings, RHFRadio preserves the original value type:
+
+```tsx
+// String values
+<RHFRadio name="plan" value="pro" label="Pro Plan" />
+
+// Boolean values
+<RHFRadio name="enabled" value={true} label="Yes" />
+<RHFRadio name="enabled" value={false} label="No" />
+
+// Number values
+<RHFRadio name="quantity" value={10} label="10 items" />
+
+// Object values
+<RHFRadio name="config" value={{ theme: "dark", lang: "en" }} label="Dark Theme" />
+
+// Array values
+<RHFRadio name="permissions" value={['read', 'write']} label="Read & Write" />
+```
+
+The form data will contain the exact value you passed, maintaining its type:
+
+```tsx
+// Form submission result:
+{
+  plan: "pro",           // string
+  enabled: true,         // boolean
+  quantity: 10,          // number
+  config: { theme: "dark", lang: "en" },  // object
+  permissions: ['read', 'write']          // array
+}
+```
+
+## Radio Groups
+
+Radio buttons with the same `name` prop are automatically grouped. Only one radio button in a group can be selected at a time:
+
+```tsx
+// All these radios share the same name, creating a mutually exclusive group
+<RHFRadio name="plan" value="free" label="Free" />
+<RHFRadio name="plan" value="pro" label="Pro" />
+<RHFRadio name="plan" value="enterprise" label="Enterprise" />
+```
+
+## Value Requirement
+
+The `value` prop is required and cannot be `undefined` or `null`. If you try to use these values, RHFRadio will throw an error:
+
+```tsx
+// ❌ Error: value cannot be undefined or null
+<RHFRadio name="option" value={undefined} label="Invalid" />
+<RHFRadio name="option" value={null} label="Invalid" />
+
+// ✅ Correct: Use any other value type
+<RHFRadio name="option" value="" label="Empty string is OK" />
+<RHFRadio name="option" value={0} label="Zero is OK" />
+<RHFRadio name="option" value={false} label="False is OK" />
+```
+
+## Error States
+
+RHFRadio doesn't apply error styling directly. Use [RHFInputGroup](/v1/docs/rhf-input-group) to display errors for the group:
+
+```tsx
+<RHFInputGroup label="Choose a plan" required>
+  <div className="flex flex-col gap-2">
+    <RHFRadio name="plan" value="free" label="Free" />
+    <RHFRadio name="plan" value="pro" label="Pro" />
+  </div>
+</RHFInputGroup>
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Accessibility
+
+- Inherits all accessibility features from [Radio](/v1/docs/radio) component
+- Proper ARIA attributes
+- Keyboard navigable (Arrow keys navigate within group, Space selects)
+- Screen reader compatible
+- Disabled state properly communicated
+
+## Related Components
+
+- [Radio](/v1/docs/radio) - Base radio component
+- [RHFCheckbox](/v1/docs/rhf-checkbox) - Multi-select checkboxes
+- [RHFSwitch](/v1/docs/rhf-switch) - Toggle switch

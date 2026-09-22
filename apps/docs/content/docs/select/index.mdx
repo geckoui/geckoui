@@ -80,6 +80,43 @@ function Example() {
 | `suffix`               | `ReactNode`                         | -                | Content after select button                |
 | `clearable`            | `boolean`                           | `false`          | Show a clear button to reset the selection |
 
+### Values that are not in the list
+
+Normally the trigger shows the `label` of the option whose `value` matches. A matching
+option always wins, so an explicit option is the way to control what is shown:
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectOption value="" label="All Countries" />
+  <SelectOption value="mm" label="Myanmar" />
+</Select>
+```
+
+When no option matches, the text is worked out from the value itself. Nil entries are
+skipped, so an id that has not been filled in yet does not hide the name beside it:
+
+| `value`                          | Trigger shows                          |
+| -------------------------------- | -------------------------------------- |
+| `"Ann"` or `42`                  | `Ann` / `42`                           |
+| `{ id: 7, name: "Ann" }`         | `7` — the first property               |
+| `{ id: null, name: "Ann" }`      | `Ann` — nil properties are skipped     |
+| `{ id: null, label: "Ann" }`     | `Ann` — a `label` key always wins      |
+| `new Date(...)`                  | the date's own text                    |
+
+Anything that would leave the trigger empty shows the placeholder instead, so you never
+get a blank box:
+
+| `value`                                   | Trigger shows   |
+| ----------------------------------------- | --------------- |
+| `null`, `undefined`, `""`                 | the placeholder |
+| `{ id: null, name: null }`, `{}`, `[]`    | the placeholder |
+| `{ id: null, name: "" }`                  | the placeholder |
+
+Nothing is marked as selected in the menu in any of these cases, because nothing matches.
+
+Property order decides the text, so if the value is an object and you care which field is
+shown, give it a `label` key rather than relying on the order.
+
 ## Examples
 
 ### With Placeholder

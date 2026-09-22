@@ -1,0 +1,94 @@
+---
+title: RHFColorInput
+description: ColorInput wired to React Hook Form
+---
+
+import { BasicRHFColorInputExample, RHFColorInputRequiredExample, RHFColorInputFormatsExample } from '@/components/examples/rhf-color-input-examples';
+
+# RHFColorInput
+
+[ColorInput](/docs/color-picker) wired to React Hook Form.
+
+## Installation
+
+```tsx
+import { RHFColorInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BasicRHFColorInputExample />
+</Preview>
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFColorInput } from '@geckoui/geckoui';
+
+function ThemeForm() {
+  const methods = useForm({ defaultValues: { brand: '#3b82f6' } });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(save)}>
+        <RHFColorInput name="brand" rules={{ required: 'Pick a colour' }} />
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+The field holds the colour as a string, in whichever format is on show in the picker.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | required | The field path |
+| `control` | `Control` | - | Taken from `FormProvider` when left out |
+| `rules` | `RegisterOptions` | - | Validation rules |
+| `defaultValue` | `string` | `''` | What the field shows when the form has nothing |
+| `onChange` | `(color: string) => void` | - | Called alongside the form update |
+| ...rest | `ColorInputProps` | - | Everything [ColorInput](/docs/color-picker) takes, except `value` and `onChange` |
+
+`aria-invalid` is set for you from the field's own error, so the field draws itself in its error colours without being told.
+
+## Requiring one
+
+Untouched and with no default, the field is `undefined`, the way any React Hook Form field is, so `required` catches a colour nobody picked:
+
+<Preview>
+  <RHFColorInputRequiredExample />
+</Preview>
+
+```tsx
+<RHFColorInput name="brand" rules={{ required: 'Pick a colour' }} />
+<RHFError name="brand" />
+```
+
+## Saving on release
+
+The form is updated on every pointer move, so a drag never leaves the value behind in the form. That also means a drag is a great many updates, which is fine for form state and not for a network call. Pass `onChangeComplete` yourself where the expensive work belongs:
+
+```tsx
+<RHFColorInput name="brand" onChangeComplete={(color) => preview(color)} />
+```
+
+## Formats
+
+<Preview>
+  <RHFColorInputFormatsExample />
+</Preview>
+
+```tsx
+<RHFColorInput name="brand" formats={['hex']} />
+<RHFColorInput name="overlay" formats={['rgb', 'hex']} />
+```
+
+`formats` decides what the dropdown offers and what the field holds. Pin it with a single entry where the value has to be one shape — a hex a server expects, say.
+
+## Related Components
+
+- [ColorPicker](/docs/color-picker) - The picker and the field on their own
+- [RHFInput](/docs/rhf-input) - For a colour typed as plain text
+- [RHFError](/docs/rhf-error) - Shows the message

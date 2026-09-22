@@ -16,7 +16,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   readOnly = false,
   prefix,
   suffix,
-  hasError = false,
+  "aria-invalid": invalid,
   className,
   format = "DD/MM/YYYY",
   separator = "/",
@@ -26,6 +26,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   hideCalendarIcon = false,
   hideClearIcon = false,
   hideCalendar = false,
+  fixedWeeks,
   calendarClassName,
   calendarPlacement = "bottom-start",
   floatingStrategy = "absolute",
@@ -120,7 +121,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
         readOnly={readOnly}
         prefix={prefix}
         suffix={suffix}
-        hasError={hasError}
+        aria-invalid={invalid}
         className={className}
         format={format}
         separator={separator}
@@ -137,10 +138,14 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
       />
 
       {!hideCalendar && openCalendar && (
-        <div ref={(r) => refs.setFloating(r)} style={{ ...floatingStyles, zIndex: 9999 }}>
+        <div
+          ref={(r) => refs.setFloating(r)}
+          className="GeckoUIDateRangeInput__calendar-layer"
+          style={floatingStyles}>
           <Calendar
             mode="range"
             calendarRef={calendarRef}
+            fixedWeeks={fixedWeeks}
             className={classNames("GeckoUIDateRangeInput__calendar", calendarClassName)}
             onSelectRange={handleRangeSelect}
             selectedRange={value}

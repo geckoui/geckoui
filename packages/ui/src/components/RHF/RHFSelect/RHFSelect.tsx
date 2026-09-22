@@ -72,7 +72,7 @@ const RHFSelect: RHFSelectOverload = <T,>({
             wrapperClassName={classNames("GeckoUIRHFSelect", wrapperClassName)}
             {...rest}
             className={classNames("GeckoUIRHFSelectButton", className)}
-            data-error={!!error || undefined}
+            aria-invalid={!!error || undefined}
             value={value}
             onChange={(v: unknown) => {
               onChange(v);

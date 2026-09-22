@@ -1,0 +1,87 @@
+---
+title: RHFSlider
+description: Slider and RangeSlider wired to React Hook Form
+---
+
+import { BasicRHFSliderExample, RHFSliderOnChangeEndExample, RHFSliderUnsetExample } from '@/components/examples/rhf-slider-examples';
+
+# RHFSlider
+
+[Slider](/docs/slider) and [RangeSlider](/docs/slider) wired to React Hook Form.
+
+## Installation
+
+```tsx
+import { RHFSlider, RHFRangeSlider } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BasicRHFSliderExample />
+</Preview>
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFSlider, RHFRangeSlider } from '@geckoui/geckoui';
+
+function Filters() {
+  const methods = useForm({ defaultValues: { volume: 40, price: [100, 400] } });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(search)}>
+        <RHFSlider name="volume" label={({ value }) => `${value}%`} />
+        <RHFRangeSlider name="price" min={0} max={500} step={10} minGap={50} />
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+`RHFSlider` holds a number. `RHFRangeSlider` holds a `[low, high]` pair, always in order.
+
+## Props API
+
+### RHFSlider
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | required | The field path |
+| `control` | `Control` | - | Taken from `FormProvider` when left out |
+| `rules` | `RegisterOptions` | - | Validation rules |
+| `defaultValue` | `number` | `min` | Where the thumb starts when the form has nothing |
+| `onChange` | `(value: number) => void` | - | Called alongside the form update, on every move |
+| ...rest | `SliderProps` | - | Everything [Slider](/docs/slider) takes, except `value` and `onChange` |
+
+### RHFRangeSlider
+
+The same, with `defaultValue` as `[number, number]` defaulting to `[min, max]`, and `onChange` receiving the pair.
+
+## Where the work goes
+
+`onChange` fires all the way through a drag, which is what updates the form field. Anything expensive belongs in `onChangeEnd`, which passes straight through:
+
+<Preview>
+  <RHFSliderOnChangeEndExample />
+</Preview>
+
+```tsx
+<RHFRangeSlider name="price" onChangeEnd={() => refine()} />
+```
+
+## A field that has not been set
+
+A slider has nowhere to show "no value" — the thumb is always somewhere. So when the form has nothing for the field, `RHFSlider` starts at `min` and `RHFRangeSlider` at `[min, max]`, rather than putting the thumb off the track.
+
+<Preview>
+  <RHFSliderUnsetExample />
+</Preview>
+
+Give `defaultValue` to start somewhere else, or set the value in `useForm`'s `defaultValues` so the form and the slider agree from the start.
+
+## Related Components
+
+- [Slider](/docs/slider) - Both sliders on their own
+- [RHFCounterInput](/docs/rhf-counter-input) - For a number typed rather than dragged
+- [RHFError](/docs/rhf-error) - Shows the message

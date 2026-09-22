@@ -7,6 +7,7 @@ import type {
   UseFilePickerOptions,
   UseFilePickerReturn
 } from "../types";
+import useRevokedPreviews from "./useRevokedPreviews";
 
 /**
  * A hook for handling file selection with drag-and-drop, file picker, and directory selection support.
@@ -70,21 +71,23 @@ function useFilePicker<T extends HTMLElement>(
 ): UseFilePickerReturn<T> {
   const {
     accept = "*",
-    removeDuplicates: _removeDuplicated = false,
+    removeDuplicates = false,
     onChange,
     keepOldFiles,
     onStart,
     onError,
     transform,
     files = [],
-    setFiles
+    setFiles,
+    disabled = false,
+    multiple = true
   } = options || {};
-
-  const removeDuplicates = _removeDuplicated && keepOldFiles;
 
   const dropzoneRef = useRef<T>(null);
   const [loading, setLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
+
+  useRevokedPreviews(files.map((file) => file.preview));
 
   const handleOnChange = useCallback(
     async (res: FilePickerFile[]) => {
@@ -100,10 +103,11 @@ function useFilePicker<T extends HTMLElement>(
   );
 
   const openFilePicker: OpenFilePickerFn = async (options) => {
-    if (loading) return;
+    if (loading || disabled) return;
 
     try {
       const handler = new FilePicker(accept, removeDuplicates, {
+        multiple,
         oldFiles: files
       });
       const res = await handler.open({
@@ -127,7 +131,7 @@ function useFilePicker<T extends HTMLElement>(
   useEffect(() => {
     const el = dropzoneRef.current;
 
-    if (!el) return;
+    if (!el || disabled) return;
 
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
@@ -156,6 +160,7 @@ function useFilePicker<T extends HTMLElement>(
         onStart?.();
 
         const handler = new FilePicker(accept, removeDuplicates, {
+          multiple,
           oldFiles: files
         });
 
@@ -179,7 +184,17 @@ function useFilePicker<T extends HTMLElement>(
       el.removeEventListener("dragleave", handleDragLeave);
       el.removeEventListener("drop", handleDrop);
     };
-  }, [accept, files, handleOnChange, loading, onError, onStart, removeDuplicates]);
+  }, [
+    accept,
+    disabled,
+    files,
+    handleOnChange,
+    loading,
+    multiple,
+    onError,
+    onStart,
+    removeDuplicates
+  ]);
 
   return {
     dropzoneRef,

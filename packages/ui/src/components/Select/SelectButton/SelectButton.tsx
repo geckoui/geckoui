@@ -3,6 +3,7 @@ import { Children, useId, useMemo, useRef } from "react";
 import { usePreventDefault } from "../../../hooks";
 import { classNames } from "../../../utils/classNames";
 import createLabel from "../../../utils/createLabel";
+import { getDataAttributes } from "../../../utils/getDataAttributes";
 import isEqual from "../../../utils/isEqual";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
 import { isSelectTrigger } from "../Select.utils";
@@ -15,7 +16,7 @@ import { sortMultiSelectValue } from "./SelectButton.utils";
  * Internal default `SelectButton` component used to render the trigger button
  * if `SelectTrigger` is not provided.
  * */
-function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
+function SelectButton({ prefix, suffix, className, ...selectProps }: SelectButtonProps) {
   const {
     disabled,
     inputRef,
@@ -62,7 +63,11 @@ function SelectButton({ prefix, suffix, className }: SelectButtonProps) {
 
   return (
     <div
+      aria-invalid={
+        (selectProps as { "aria-invalid"?: boolean | "true" | "false" })["aria-invalid"]
+      }
       className={classNames("GeckoUISelectButton", className)}
+      {...getDataAttributes(selectProps)}
       data-state={disabled ? "disabled" : "enabled"}
       {...(!filterable && { "data-readonly": "" })}
       onPointerDown={() => {

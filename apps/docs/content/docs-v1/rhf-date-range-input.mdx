@@ -1,0 +1,182 @@
+---
+title: RHFDateRangeInput
+description: Date range input component integrated with React Hook Form
+---
+
+import { RHFDateRangeInput } from '@geckoui/geckoui';
+
+# RHFDateRangeInput
+
+A date range input component integrated with React Hook Form. Automatically displays error states when validation fails and supports all DateRangeInput features.
+
+## Installation
+
+```tsx
+import { RHFDateRangeInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFDateRangeInput } from '@geckoui/geckoui';
+import type { DateRange } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      dateRange: undefined as DateRange | undefined
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFDateRangeInput name="dateRange" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [DateRangeInput](/v1/docs/date-range-input) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `onChange` | `(value: DateRange \| null) => void` | - | Change callback (in addition to form update) |
+| `disabled` | `boolean` | `false` | Disable the input |
+| `format` | `'DD/MM/YYYY' \| 'MM/DD/YYYY' \| 'YYYY/MM/DD'` | `'DD/MM/YYYY'` | Date display format |
+| ...rest | `DateRangeInputProps` | - | All DateRangeInput props |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFDateRangeInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  dateRange: z
+    .object({
+      from: z.string().nullable(),
+      to: z.string().nullable().optional()
+    })
+    .refine((data) => data.from && data.to, {
+      message: 'Please select both start and end dates'
+    })
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      dateRange: { from: null, to: null }
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Date Range" required>
+        <RHFDateRangeInput name="dateRange" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### With Default Value
+
+
+```tsx
+const methods = useForm({
+  defaultValues: {
+    dateRange: {
+      from: '2024-06-01',
+      to: '2024-06-15'
+    }
+  }
+});
+
+<RHFDateRangeInput name="dateRange" />
+```
+
+### Single Month Display
+
+
+```tsx
+<RHFDateRangeInput name="dateRange" />
+```
+
+### Complete Form
+
+
+```tsx
+const schema = z.object({
+  eventName: z.string().min(1, 'Event name is required'),
+  dateRange: z
+    .object({
+      from: z.string().nullable(),
+      to: z.string().nullable().optional()
+    })
+    .refine((data) => data.from, {
+      message: 'Start date is required'
+    })
+});
+
+const methods = useForm({
+  resolver: zodResolver(schema),
+  defaultValues: {
+    eventName: '',
+    dateRange: { from: null, to: null }
+  }
+});
+
+<form onSubmit={methods.handleSubmit(onSubmit)}>
+  <RHFInputGroup label="Event Name" required>
+    <RHFInput name="eventName" placeholder="Enter event name" />
+  </RHFInputGroup>
+  <RHFInputGroup label="Event Dates" required>
+    <RHFDateRangeInput name="dateRange" />
+  </RHFInputGroup>
+  <Button type="submit">Create Event</Button>
+</form>
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFDateRangeInput
+  name="dateRange"
+  rules={{ required: 'Please select a date range' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Error States
+
+The component automatically shows a red border when validation fails:
+
+- **Required validation**: When the field is required but empty
+- **Custom validation**: When custom Zod refinements fail
+- **Range validation**: When validating that both dates are selected
+
+Error messages can be displayed using the [RHFError](/v1/docs/rhf-error) component or [RHFInputGroup](/v1/docs/rhf-input-group).
+
+## Related Components
+
+- [DateRangeInput](/v1/docs/date-range-input) - Base date range input component
+- [RHFDateInput](/v1/docs/rhf-date-input) - Single date input with RHF
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Form field wrapper with label and error
+- [RHFError](/v1/docs/rhf-error) - Error message display

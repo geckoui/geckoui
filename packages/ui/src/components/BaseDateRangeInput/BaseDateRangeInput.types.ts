@@ -24,7 +24,11 @@ export interface BaseDateRangeInputProps
   readOnly?: boolean;
   prefix?: FC | ReactNode;
   suffix?: FC | ReactNode;
-  hasError?: boolean;
+  /**
+   * Marks the field invalid, to a screen reader and in its colours. The field also marks
+   * itself when the date typed cannot exist, such as the 31st of February.
+   * */
+  "aria-invalid"?: boolean | "true" | "false";
   className?: string;
   format?: DateFormat;
   separator?: string;

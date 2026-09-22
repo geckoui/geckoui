@@ -1,0 +1,331 @@
+---
+title: Toast
+description: Display brief notification messages with support for variants, actions, and promises
+---
+
+import { toast } from '@geckoui/geckoui';
+
+# Toast
+
+Display brief, non-intrusive notification messages to provide feedback on user actions. Built on [Sonner](https://sonner.emilkowal.ski/), featuring automatic stacking, promise handling, and rich customization options.
+
+## Installation
+
+```tsx
+import { toast, GeckoUIPortal } from '@geckoui/geckoui';
+```
+
+## Setup
+
+Add `GeckoUIPortal` to your app root to enable toast notifications:
+
+```tsx
+// app/layout.tsx or _app.tsx
+import { GeckoUIPortal } from '@geckoui/geckoui';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <GeckoUIPortal />
+      </body>
+    </html>
+  );
+}
+```
+
+## Basic Usage
+
+
+```tsx
+'use client';
+
+import { toast, Button } from '@geckoui/geckoui';
+
+function Example() {
+  return (
+    <Button onClick={() => toast('This is a basic toast notification')}>
+      Show Toast
+    </Button>
+  );
+}
+```
+
+## Toast API
+
+### `toast(message, options?)`
+
+Display a default toast notification.
+
+```tsx
+toast('Hello World');
+toast('Hello World', { duration: 5000 });
+```
+
+### Variant Methods
+
+| Method | Description |
+|--------|-------------|
+| `toast.success(message, options?)` | Success notification (green) |
+| `toast.error(message, options?)` | Error notification (red) |
+| `toast.warning(message, options?)` | Warning notification (yellow) |
+| `toast.info(message, options?)` | Info notification (blue) |
+| `toast.loading(message, options?)` | Loading state with spinner |
+| `toast.promise(promise, messages)` | Automatic promise state handling |
+
+### Control Methods
+
+| Method | Description |
+|--------|-------------|
+| `toast.dismiss(id?)` | Dismiss a specific toast or all toasts |
+| `toast.custom(component, options?)` | Display a custom component |
+
+## Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `description` | `string \| ReactNode` | - | Additional description below the message |
+| `duration` | `number` | `4000` | Duration in ms (use `Infinity` for persistent) |
+| `position` | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'bottom-right'` | Toast position on screen |
+| `action` | `{ label: string; onClick: () => void }` | - | Action button |
+| `cancel` | `{ label: string; onClick: () => void }` | - | Cancel button |
+| `id` | `string \| number` | - | Custom toast ID |
+| `onDismiss` | `() => void` | - | Callback when dismissed |
+| `onAutoClose` | `() => void` | - | Callback when auto-closed |
+| `className` | `string` | - | Custom CSS class |
+| `style` | `CSSProperties` | - | Inline styles |
+| `closeButton` | `boolean` | `false` | Show close button |
+
+## Examples
+
+### Toast Variants
+
+
+```tsx
+<Button onClick={() => toast.success('Operation completed successfully!')}>
+  Success
+</Button>
+
+<Button onClick={() => toast.error('An error occurred!')}>
+  Error
+</Button>
+
+<Button onClick={() => toast.warning('This is a warning message')}>
+  Warning
+</Button>
+
+<Button onClick={() => toast.info('Here is some information')}>
+  Info
+</Button>
+```
+
+### With Description
+
+
+```tsx
+toast.success('Account created', {
+  description: 'Your account has been created successfully. You can now sign in.'
+});
+
+toast.error('Upload failed', {
+  description: 'The file size exceeds the 10MB limit. Please choose a smaller file.'
+});
+```
+
+### With Action Button
+
+
+```tsx
+toast('Email sent', {
+  description: 'Your email has been sent to john@example.com',
+  action: {
+    label: 'Undo',
+    onClick: () => toast.info('Email sending cancelled')
+  }
+});
+```
+
+### Promise Toast
+
+Automatically handles loading, success, and error states:
+
+
+```tsx
+'use client';
+
+import { toast, Button } from '@geckoui/geckoui';
+
+function Example() {
+  const downloadReport = async () => {
+    const response = await fetch('/api/report');
+    if (!response.ok) throw new Error('Download failed');
+    return response.json();
+  };
+
+  return (
+    <Button
+      onClick={() =>
+        toast.promise(downloadReport(), {
+          loading: 'Downloading report...',
+          success: (data) => `${data.name} downloaded successfully`,
+          error: 'Download failed. Please try again.'
+        })
+      }
+    >
+      Download Report
+    </Button>
+  );
+}
+```
+
+### Custom Duration
+
+
+```tsx
+// Quick message (1 second)
+toast('Quick message', { duration: 1000 });
+
+// Normal message (4 seconds - default)
+toast('Normal message', { duration: 4000 });
+
+// Persistent message (stays until dismissed)
+toast('Persistent message', { duration: Infinity });
+```
+
+### Loading Toast
+
+
+```tsx
+function Example() {
+  const handleProcess = () => {
+    const toastId = toast.loading('Processing your request...');
+
+    // Simulate async operation
+    setTimeout(() => {
+      toast.success('Process completed!', { id: toastId });
+    }, 3000);
+  };
+
+  return <Button onClick={handleProcess}>Start Process</Button>;
+}
+```
+
+### Dismiss Toasts
+
+
+```tsx
+// Dismiss a specific toast
+const id = toast('This toast can be dismissed manually');
+toast.dismiss(id);
+
+// Dismiss all toasts
+toast.dismiss();
+
+// Auto-dismiss after delay
+const toastId = toast('Auto-dismissing...', { duration: Infinity });
+setTimeout(() => toast.dismiss(toastId), 3000);
+```
+
+### Custom Styling
+
+
+```tsx
+toast('Custom styled toast', {
+  className: 'border-2 border-blue-500',
+  style: {
+    background: 'var(--color-surface-secondary)'
+  }
+});
+```
+
+### Rich Content
+
+
+```tsx
+toast(
+  <div>
+    <strong className="block text-sm font-semibold">New Feature Available</strong>
+    <p className="text-sm mt-1">
+      Check out our new dashboard analytics with real-time data visualization.
+    </p>
+  </div>,
+  { duration: 5000 }
+);
+```
+
+### Toast Positions
+
+
+```tsx
+toast('Top Left', { position: 'top-left' });
+toast('Top Center', { position: 'top-center' });
+toast('Top Right', { position: 'top-right' });
+toast('Bottom Left', { position: 'bottom-left' });
+toast('Bottom Center', { position: 'bottom-center' });
+toast('Bottom Right', { position: 'bottom-right' });
+```
+
+## Global Configuration
+
+Configure toast defaults in `GeckoUIPortal`:
+
+```tsx
+<GeckoUIPortal
+  toastOptions={{
+    position: 'top-right',
+    duration: 3000,
+    closeButton: true,
+    richColors: true,
+    className: 'my-toast',
+    style: {
+      background: 'white',
+      color: 'black'
+    }
+  }}
+/>
+```
+
+### Available Global Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `position` | `Position` | `'bottom-right'` | Default position |
+| `duration` | `number` | `4000` | Default duration |
+| `closeButton` | `boolean` | `false` | Show close button on all toasts |
+| `richColors` | `boolean` | `false` | Enhanced colors for variants |
+| `expand` | `boolean` | `false` | Expand toasts on hover |
+| `visibleToasts` | `number` | `3` | Max visible toasts |
+| `gap` | `number` | `14` | Gap between toasts |
+| `offset` | `string` | - | Offset from edge |
+| `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | Color theme |
+
+## Accessibility
+
+- Toasts are announced by screen readers
+- Automatically removed after duration expires
+- Action buttons are keyboard accessible
+- Supports `prefers-reduced-motion` for animations
+- ARIA live regions for dynamic content
+
+## Best Practices
+
+1. **Keep messages brief**: Toast messages should be short and scannable
+2. **Use appropriate variants**: Match the toast type to the message (success, error, etc.)
+3. **Provide actions when needed**: Allow users to undo or retry failed operations
+4. **Don't overuse**: Avoid showing too many toasts at once
+5. **Set appropriate durations**:
+   - Success: 2-4 seconds
+   - Error: 5-7 seconds (or with action)
+   - Loading: Until operation completes
+6. **Position wisely**: Bottom-right is least intrusive for most layouts
+7. **Avoid critical information**: Don't use toasts for important information that users must read
+
+## Related Components
+
+- [Alert](/v1/docs/alert) - Display prominent alerts in content
+- [Dialog](/v1/docs/dialog) - Modal dialogs for important messages
+
+## Resources
+
+- [Sonner Documentation](https://sonner.emilkowal.ski/)

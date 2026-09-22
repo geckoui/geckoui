@@ -48,7 +48,7 @@ import type { RHFCheckboxProps } from "./RHFCheckbox.types";
  * <RHFCheckbox
  *   name="languages"
  *   value="js"
- *   partial={({ field }) => field.value.length !== 2}
+ *   indeterminate={({ field }) => field.value.length !== 2}
  *   label="JavaScript"
  * />
  *
@@ -73,7 +73,7 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
   uncheckedValue,
   single,
   onChange,
-  partial,
+  indeterminate,
   onBlur,
   ...rest
 }) => {
@@ -85,7 +85,7 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
       name={name}
       rules={rules}
       render={(renderProps) => {
-        const { field } = renderProps;
+        const { field, fieldState } = renderProps;
         const isChecked = () => {
           if (value === undefined) return field.value === true;
 
@@ -99,14 +99,15 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
         return (
           <label className="GeckoUIRHFCheckbox group" htmlFor={id || _id}>
             <Checkbox
+              aria-invalid={Boolean(fieldState.error) || undefined}
               {...field}
               {...rest}
               disabled={disabled}
               checked={isChecked()}
               id={id || _id}
-              onBlur={(e) => {
+              onBlur={() => {
                 field.onBlur();
-                onBlur?.(e);
+                onBlur?.();
               }}
               onChange={() => {
                 let v: unknown;
@@ -129,7 +130,9 @@ const RHFCheckbox: FC<RHFCheckboxProps> = ({
                 field.onChange(v);
                 onChange?.(v);
               }}
-              partial={typeof partial === "function" ? partial(renderProps) : partial}
+              indeterminate={
+                typeof indeterminate === "function" ? indeterminate(renderProps) : indeterminate
+              }
               value={undefined}
             />
             <span className={classNames("GeckoUIRHFCheckbox__label", labelClassName)}>

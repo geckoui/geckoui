@@ -1,0 +1,198 @@
+@import "../../mixins.scss";
+
+/*
+ * One accent per `data-color`, used behind the fallback. Adding a colour through module
+ * augmentation only needs a new `--gecko-avatar-accent` rule.
+ */
+.GeckoUIAvatar {
+  @include base-reset;
+
+  --gecko-avatar-accent: var(--color-text-secondary);
+  --gecko-avatar-size: 2.5rem;
+  --gecko-avatar-radius: 0.375rem;
+  --gecko-avatar-font-size: 0.875rem;
+  --gecko-avatar-bg-mix: 14%;
+  /* what the accent is tinted into. Opaque, because avatars overlap in a group */
+  --gecko-avatar-bg-base: var(--color-surface-hover-strong);
+
+  @apply relative inline-flex shrink-0 items-center justify-center overflow-hidden font-medium select-none;
+
+  width: var(--gecko-avatar-size);
+  height: var(--gecko-avatar-size);
+  border-radius: var(--gecko-avatar-radius);
+  font-size: var(--gecko-avatar-font-size);
+  background: color-mix(
+    in oklab,
+    var(--gecko-avatar-accent) var(--gecko-avatar-bg-mix),
+    var(--gecko-avatar-bg-base)
+  );
+  color: var(--gecko-avatar-accent);
+
+  &[data-color="default"] {
+    --gecko-avatar-accent: var(--color-text-secondary);
+  }
+
+  &[data-color="primary"] {
+    --gecko-avatar-accent: var(--color-primary-600);
+  }
+
+  &[data-color="success"] {
+    --gecko-avatar-accent: var(--color-success);
+  }
+
+  &[data-color="error"] {
+    --gecko-avatar-accent: var(--color-error);
+  }
+
+  &[data-color="warning"] {
+    --gecko-avatar-accent: var(--color-warning);
+  }
+
+  &[data-color="info"] {
+    --gecko-avatar-accent: var(--color-info);
+  }
+
+  &[data-shape="circle"] {
+    --gecko-avatar-radius: 9999px;
+  }
+
+  &[data-shape="square"] {
+    --gecko-avatar-radius: 0;
+  }
+
+  &[data-size="xs"] {
+    --gecko-avatar-size: 1.5rem;
+    --gecko-avatar-font-size: 0.625rem;
+  }
+
+  &[data-size="sm"] {
+    --gecko-avatar-size: 2rem;
+    --gecko-avatar-font-size: 0.75rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-avatar-size: 3rem;
+    --gecko-avatar-font-size: 1rem;
+  }
+
+  &[data-size="xl"] {
+    --gecko-avatar-size: 4rem;
+    --gecko-avatar-font-size: 1.25rem;
+  }
+
+  &[data-clickable] {
+    @apply cursor-pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+  }
+
+  &__image {
+    @apply h-full w-full object-cover;
+  }
+
+  &__fallback {
+    @apply flex h-full w-full items-center justify-center leading-none;
+
+    /* the person icon has no intrinsic size, so it is scaled from the avatar instead */
+    > svg {
+      width: 60%;
+      height: 60%;
+    }
+  }
+}
+
+.GeckoUIAvatarGroup {
+  --gecko-avatar-group-overlap: 0.625rem;
+  --gecko-avatar-group-ring: var(--color-surface-primary);
+  --gecko-avatar-group-ring-width: 2px;
+  --gecko-avatar-group-lift: 0.375rem;
+
+  /*
+   * Laid out in reverse so the first avatar paints last and sits on top of the one after
+   * it. `row-reverse` puts it back on the left, and the children are handed over already
+   * reversed to match.
+   */
+  @apply flex w-fit flex-row-reverse items-center justify-end;
+
+  &[data-size="xs"] {
+    --gecko-avatar-group-overlap: 0.375rem;
+  }
+
+  &[data-size="sm"] {
+    --gecko-avatar-group-overlap: 0.5rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-avatar-group-overlap: 0.75rem;
+  }
+
+  &[data-size="xl"] {
+    --gecko-avatar-group-overlap: 1rem;
+  }
+
+  /*
+   * The ring is a box-shadow rather than a border, so it sits outside the avatar and does
+   * not eat into the image.
+   */
+  /*
+   * Every direct child, not just avatars: an avatar inside a group is wrapped in a slot,
+   * and the count may be wrapped again by the tooltip that opens it.
+   */
+  > * {
+    /*
+     * `position` without a `z-index` on purpose. These paint in DOM order as they are, and
+     * pinning them to 0 makes each one a stacking context.
+     */
+    @apply relative;
+
+    /* the last in the DOM is the leftmost on screen, and has nothing to tuck under */
+    &:not(:last-child) {
+      margin-left: calc(-1 * var(--gecko-avatar-group-overlap));
+    }
+  }
+
+  &__slot {
+    @apply inline-flex;
+  }
+
+  > * > .GeckoUIAvatar,
+  > .GeckoUIAvatar {
+    box-shadow: 0 0 0 var(--gecko-avatar-group-ring-width) var(--gecko-avatar-group-ring);
+
+    @apply transition-transform duration-150 ease-out;
+  }
+
+  /*
+   * The slot is what is hovered, and only the avatar inside it moves, so the pointer target
+   * never shifts.
+   */
+  &[data-interactive] > *:hover {
+    z-index: 1;
+
+    > .GeckoUIAvatar {
+      transform: translateY(calc(-1 * var(--gecko-avatar-group-lift)));
+    }
+  }
+
+  &__list {
+    @apply flex flex-col gap-1.5;
+
+    &__item {
+      @apply flex items-center gap-2 whitespace-nowrap;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    > * > .GeckoUIAvatar,
+    > .GeckoUIAvatar {
+      transition: none;
+    }
+
+    &[data-interactive] > *:hover > .GeckoUIAvatar {
+      transform: none;
+    }
+  }
+}

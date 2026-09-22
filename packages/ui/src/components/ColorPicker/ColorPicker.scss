@@ -1,0 +1,299 @@
+@import "../../mixins.scss";
+
+/*
+ * The four gradients that draw the grey grid. Each paints one square of the pair, so the
+ * tile is twice the square and they are offset against each other.
+ */
+$gecko-checker-layers:
+  linear-gradient(45deg, var(--gecko-color-picker-checker) 25%, transparent 25%),
+  linear-gradient(-45deg, var(--gecko-color-picker-checker) 25%, transparent 25%),
+  linear-gradient(45deg, transparent 75%, var(--gecko-color-picker-checker) 75%),
+  linear-gradient(-45deg, transparent 75%, var(--gecko-color-picker-checker) 75%);
+
+@mixin checkerboard {
+  --gecko-color-picker-checker-tile: calc(var(--gecko-color-picker-checker-size) * 2);
+
+  background-color: #fff;
+  background-size:
+    auto,
+    var(--gecko-color-picker-checker-tile) var(--gecko-color-picker-checker-tile),
+    var(--gecko-color-picker-checker-tile) var(--gecko-color-picker-checker-tile),
+    var(--gecko-color-picker-checker-tile) var(--gecko-color-picker-checker-tile),
+    var(--gecko-color-picker-checker-tile) var(--gecko-color-picker-checker-tile);
+  background-position:
+    0 0,
+    0 0,
+    0 var(--gecko-color-picker-checker-size),
+    var(--gecko-color-picker-checker-size) calc(var(--gecko-color-picker-checker-size) * -1),
+    calc(var(--gecko-color-picker-checker-size) * -1) 0;
+}
+
+/*
+ * Every measurement is a custom property, so the panel can be resized or retimed from your
+ * own stylesheet without touching a class.
+ */
+.GeckoUIColorPicker {
+  @include base-reset;
+
+  --gecko-color-picker-width: 16rem;
+  --gecko-color-picker-saturation-height: 10rem;
+  --gecko-color-picker-radius: 0.5rem;
+  --gecko-color-picker-gap: 0.75rem;
+  --gecko-color-picker-slider-height: 0.75rem;
+  --gecko-color-picker-thumb-size: 0.875rem;
+  --gecko-color-picker-thumb-ring: #fff;
+  --gecko-color-picker-preview-size: 2rem;
+  --gecko-color-picker-swatch-size: 1.25rem;
+
+  /*
+   * The grey grid behind anything translucent. Drawn as two offset checker gradients, so
+   * it needs no image and scales with the box it is in.
+   */
+  --gecko-color-picker-checker-size: 8px;
+  --gecko-color-picker-checker: #cbd5e1;
+
+  @apply flex w-[var(--gecko-color-picker-width)] flex-col;
+
+  gap: var(--gecko-color-picker-gap);
+
+  &[data-disabled] {
+    @apply pointer-events-none opacity-60;
+  }
+
+  &__saturation {
+    @apply relative w-full touch-none select-none;
+
+    height: var(--gecko-color-picker-saturation-height);
+    border-radius: var(--gecko-color-picker-radius);
+    cursor: crosshair;
+
+    /*
+     * White across and black down, over the pure hue. That is what makes the square an
+     * S by V plane: the left edge loses saturation, the bottom edge loses value.
+     */
+    background-image:
+      linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent);
+    background-blend-mode: normal;
+
+    &__thumb {
+      @apply absolute block size-[var(--gecko-color-picker-thumb-size)] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-transparent p-0;
+
+      border-color: var(--gecko-color-picker-thumb-ring);
+      box-shadow:
+        0 0 0 1px rgb(0 0 0 / 0.3),
+        inset 0 0 0 1px rgb(0 0 0 / 0.3);
+      cursor: grab;
+
+      &:focus-visible {
+        @apply outline-primary-500 outline-2 outline-offset-2;
+      }
+
+      &[data-custom] {
+        @apply size-auto border-0 bg-transparent shadow-none;
+      }
+    }
+
+    &[data-dragging] &__thumb {
+      cursor: grabbing;
+    }
+  }
+
+  &__controls {
+    @apply flex items-center;
+
+    gap: var(--gecko-color-picker-gap);
+  }
+
+  &__preview {
+    @apply size-[var(--gecko-color-picker-preview-size)] shrink-0 rounded-full;
+
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+  }
+
+  &__sliders {
+    @apply flex min-w-0 flex-1 flex-col gap-2;
+  }
+
+  &__slider {
+    @apply relative w-full touch-none select-none;
+
+    height: var(--gecko-color-picker-slider-height);
+
+    &__track {
+      @apply absolute inset-0 rounded-full;
+
+      box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+    }
+
+    &[data-kind="hue"] &__track {
+      background: linear-gradient(
+        to right,
+        #f00 0%,
+        #ff0 17%,
+        #0f0 33%,
+        #0ff 50%,
+        #00f 67%,
+        #f0f 83%,
+        #f00 100%
+      );
+    }
+
+    &__thumb {
+      @apply absolute top-1/2 block size-[var(--gecko-color-picker-thumb-size)] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-transparent p-0;
+
+      border-color: var(--gecko-color-picker-thumb-ring);
+      box-shadow:
+        0 0 0 1px rgb(0 0 0 / 0.3),
+        inset 0 0 0 1px rgb(0 0 0 / 0.3);
+      cursor: grab;
+
+      &:focus-visible {
+        @apply outline-primary-500 outline-2 outline-offset-2;
+      }
+
+      &[data-custom] {
+        @apply size-auto border-0 bg-transparent shadow-none;
+      }
+    }
+
+    &[data-dragging] &__thumb {
+      cursor: grabbing;
+    }
+  }
+
+  &__dropper {
+    @apply border-border-secondary text-text-secondary flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-colors;
+
+    &:hover:not(:disabled) {
+      @apply bg-surface-hover text-text-primary;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+
+    svg {
+      @apply size-4;
+    }
+  }
+
+  &__field {
+    @apply flex items-center gap-2;
+  }
+
+  &__format {
+    @apply relative shrink-0;
+
+    &__trigger {
+      @apply border-border-secondary text-text-secondary flex h-9 cursor-pointer items-center gap-1.5 rounded-md border bg-transparent px-2 text-xs font-medium;
+
+      &:hover:not(:disabled) {
+        @apply border-primary-400;
+      }
+
+      &[data-open] {
+        @apply border-primary-400;
+      }
+
+      &:focus-visible {
+        @apply outline-primary-500 outline-2 outline-offset-2;
+      }
+
+      &:disabled {
+        @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+      }
+    }
+
+    &__caret {
+      @apply border-t-text-tertiary size-0 shrink-0 border-4 border-transparent;
+
+      margin-top: 0.25rem;
+    }
+
+    &__list {
+      @apply border-border-primary bg-surface-primary absolute top-full left-0 z-10 m-0 mt-1 flex min-w-full list-none flex-col gap-0.5 rounded-md border p-1 shadow-lg;
+
+      &:focus {
+        @apply outline-none;
+      }
+    }
+
+    &__option {
+      @apply text-text-primary cursor-pointer rounded px-2 py-1.5 text-xs font-medium whitespace-nowrap;
+
+      &[data-active] {
+        @apply bg-surface-hover;
+      }
+
+      &[aria-selected="true"] {
+        @apply bg-primary-500 text-text-on-primary;
+      }
+    }
+  }
+
+  &__input {
+    @apply border-border-secondary text-text-primary h-9 w-full min-w-0 flex-1 rounded-md border px-2.5 font-mono text-sm uppercase;
+
+    &:focus {
+      @apply border-primary-400 outline-none;
+    }
+
+    &:disabled {
+      @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+    }
+  }
+
+  &__swatches {
+    @apply flex flex-wrap gap-1.5;
+  }
+
+  &__swatch {
+    @apply size-[var(--gecko-color-picker-swatch-size)] cursor-pointer rounded-md border-0 p-0;
+
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+
+    &:hover:not(:disabled) {
+      @apply scale-110;
+    }
+
+    &[aria-pressed="true"] {
+      @apply outline-primary-500 outline-2 outline-offset-2;
+    }
+
+    &:focus-visible {
+      @apply outline-primary-500 outline-2 outline-offset-2;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed;
+    }
+  }
+
+  /*
+   * The colour and the grid behind it, as layers on one element rather than two stacked
+   * ones. Stacked, the grid underneath shows through the anti-aliased edge of a rounded
+   * corner as a pale ring around every dark colour.
+   *
+   * `--gecko-color-layer` is a flat colour on the preview and the swatches, and a gradient
+   * on the opacity track, so the two are composed differently: a colour has to be wrapped
+   * in a gradient to be a background layer at all, and wrapping a gradient in one would be
+   * invalid and drop the whole declaration.
+   */
+  &__preview,
+  &__swatch {
+    --gecko-color-layer: transparent;
+
+    @include checkerboard;
+
+    background-image:
+      linear-gradient(var(--gecko-color-layer), var(--gecko-color-layer)), $gecko-checker-layers;
+  }
+
+  &__slider[data-kind="alpha"] &__slider__track {
+    --gecko-color-layer: linear-gradient(transparent, transparent);
+
+    @include checkerboard;
+
+    background-image: var(--gecko-color-layer), $gecko-checker-layers;
+  }
+}

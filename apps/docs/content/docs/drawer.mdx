@@ -10,7 +10,11 @@ import { BasicDrawerExample, MobileMenuExample, FilterPanelExample, Notification
 
 A slide-out panel component that displays auxiliary content from any edge of the viewport. Provides a less intrusive alternative to modals for navigation menus, settings panels, filters, and contextual information with smooth transitions and flexible dismissal behaviors.
 
-## Installation
+Supports both controlled JSX usage and an imperative `Drawer.show()` / `Drawer.dismiss()` API. Multiple imperative drawers can be stacked.
+
+## Setup
+
+The imperative API requires [`<GeckoUIProvider>`](/docs/gecko-ui-provider) to wrap your app.
 
 ```tsx
 import { Drawer } from '@geckoui/geckoui';
@@ -34,15 +38,13 @@ function Example() {
       <Button onClick={() => setOpen(true)}>Open Drawer</Button>
       <Drawer
         open={open}
-        handleClose={() => setOpen(false)}
+        onClose={() => setOpen(false)}
         placement="right"
         allowClickOutside
         className="w-80 p-6"
       >
         <h2 className="text-xl font-semibold mb-4">Drawer Content</h2>
-        <p className="text-gray-600 mb-4">
-          This is a basic drawer that slides in from the right side.
-        </p>
+        <p className="text-gray-600 mb-4">This drawer slides in from the right side.</p>
         <Button onClick={() => setOpen(false)}>Close</Button>
       </Drawer>
     </>
@@ -54,15 +56,21 @@ function Example() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `open` | `boolean` | `false` | Control drawer visibility (required) |
-| `handleClose` | `() => void` | - | Callback when drawer should close |
+| `open` | `boolean` | `false` | Control drawer visibility |
+| `onClose` | `() => void` | — | Callback when drawer should close |
 | `placement` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` | Edge from which drawer slides |
-| `allowClickOutside` | `boolean` | `false` | Allow clicking backdrop to close |
+| `allowClickOutside` | `boolean` | `false` | Make the backdrop click-through, so clicking anywhere outside the drawer closes it |
 | `dismissOnEscape` | `boolean` | `true` | Close drawer on Escape key press |
 | `hideBackdrop` | `boolean` | `false` | Hide backdrop overlay (visual only) |
-| `backdropClassName` | `string` | - | CSS class for backdrop |
-| `className` | `string` | - | CSS class for drawer panel |
-| `children` | `ReactNode` | - | Drawer content |
+| `backdropClassName` | `string` | — | CSS class for backdrop |
+| `className` | `string` | — | CSS class for drawer panel |
+| `children` | `ReactNode` | — | Drawer content |
+| `style` | `CSSProperties` | — | Inline styles for the drawer root. `GeckoUIProvider` uses it to stack drawers opened with `Drawer.show()` |
+
+### Backdrop click
+
+- `allowClickOutside: false` (default) — the backdrop blocks clicks, and clicking it calls `onClose`.
+- `allowClickOutside: true` — the backdrop becomes click-through, so clicking anywhere outside the panel calls `onClose` and the click also reaches the page underneath.
 
 ## Examples
 
@@ -75,24 +83,12 @@ function Example() {
 ```tsx
 const [menuOpen, setMenuOpen] = useState(false);
 
-<Button onClick={() => setMenuOpen(true)}>
-  <MenuIcon /> Menu
-</Button>
-
-<Drawer
-  open={menuOpen}
-  handleClose={() => setMenuOpen(false)}
-  placement="left"
-  allowClickOutside
-  dismissOnEscape
-  className="w-80"
->
+<Drawer open={menuOpen} onClose={() => setMenuOpen(false)} placement="left" allowClickOutside className="w-80">
   <nav className="p-6">
     <h2 className="text-lg font-semibold mb-4">Navigation</h2>
     <ul className="space-y-2">
       <li><a href="#" className="block py-2 px-3 rounded hover:bg-gray-100">Home</a></li>
       <li><a href="#" className="block py-2 px-3 rounded hover:bg-gray-100">Products</a></li>
-      <li><a href="#" className="block py-2 px-3 rounded hover:bg-gray-100">About</a></li>
     </ul>
   </nav>
 </Drawer>
@@ -105,69 +101,9 @@ const [menuOpen, setMenuOpen] = useState(false);
 </Preview>
 
 ```tsx
-import { Input, Label, Select, SelectOption } from '@geckoui/geckoui';
-
-const [filtersOpen, setFiltersOpen] = useState(false);
-const [category, setCategory] = useState('');
-
-<Drawer
-  open={filtersOpen}
-  handleClose={() => setFiltersOpen(false)}
-  placement="right"
-  allowClickOutside
-  backdropClassName="bg-black/60"
-  className="w-96 p-6"
->
+<Drawer open={filtersOpen} onClose={() => setFiltersOpen(false)} placement="right" allowClickOutside backdropClassName="bg-black/60" className="w-96 p-6">
   <h2 className="text-xl font-semibold mb-4">Filters</h2>
-  <div className="space-y-4">
-    <div className="space-y-1">
-      <Label>Price Range</Label>
-      <div className="flex gap-2">
-        <Input type="number" placeholder="Min" />
-        <Input type="number" placeholder="Max" />
-      </div>
-    </div>
-    <div className="space-y-1">
-      <Label>Category</Label>
-      <Select value={category} onChange={setCategory}>
-        <SelectOption value="" label="All Categories" />
-        <SelectOption value="electronics" label="Electronics" />
-        <SelectOption value="clothing" label="Clothing" />
-        <SelectOption value="books" label="Books" />
-      </Select>
-    </div>
-    <div className="flex gap-2 pt-4">
-      <Button variant="ghost" onClick={() => setFiltersOpen(false)}>Cancel</Button>
-      <Button onClick={() => setFiltersOpen(false)}>Apply Filters</Button>
-    </div>
-  </div>
-</Drawer>
-```
-
-### Notification Center (Top)
-
-<Preview>
-  <NotificationDrawerExample />
-</Preview>
-
-```tsx
-<Drawer
-  open={showNotifications}
-  handleClose={() => setShowNotifications(false)}
-  placement="top"
-  hideBackdrop={false}
-  allowClickOutside
-  className="h-96 border-b"
->
-  <div className="p-6">
-    <h2 className="text-xl font-semibold mb-4">Notifications</h2>
-    <div className="space-y-3">
-      <div className="p-3 border rounded-md">
-        <p className="font-medium">New message received</p>
-        <p className="text-sm text-gray-600">5 minutes ago</p>
-      </div>
-    </div>
-  </div>
+  {/* filter controls */}
 </Drawer>
 ```
 
@@ -178,24 +114,9 @@ const [category, setCategory] = useState('');
 </Preview>
 
 ```tsx
-<Drawer
-  open={isBottomSheetOpen}
-  handleClose={() => setBottomSheetOpen(false)}
-  placement="bottom"
-  allowClickOutside
-  backdropClassName="bg-black/40"
-  className="h-64 rounded-t-2xl"
->
+<Drawer open={isOpen} onClose={() => setOpen(false)} placement="bottom" allowClickOutside backdropClassName="bg-black/40" className="h-64 rounded-t-2xl">
   <div className="p-6">
     <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-    <div className="space-y-2">
-      <button className="w-full text-left py-3 px-4 rounded-md hover:bg-gray-100">
-        Share
-      </button>
-      <button className="w-full text-left py-3 px-4 rounded-md hover:bg-gray-100">
-        Edit
-      </button>
-    </div>
   </div>
 </Drawer>
 ```
@@ -207,124 +128,60 @@ const [category, setCategory] = useState('');
 </Preview>
 
 ```tsx
-import { Input, Label } from '@geckoui/geckoui';
-
-<Drawer
-  open={settingsVisible}
-  handleClose={() => setSettingsVisible(false)}
-  placement="right"
-  hideBackdrop
-  allowClickOutside={false}
-  className="w-[600px] border-l"
->
-  <div className="p-6">
-    <h2 className="text-xl font-semibold mb-4">Settings</h2>
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <Label htmlFor="profile">Profile</Label>
-        <Input id="profile" type="text" defaultValue="John Doe" />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="settings-email">Email</Label>
-        <Input id="settings-email" type="email" defaultValue="john@example.com" />
-      </div>
-      <Button onClick={() => setSettingsVisible(false)}>Save Settings</Button>
-    </div>
-  </div>
+<Drawer open={settingsVisible} onClose={() => setSettingsVisible(false)} placement="right" hideBackdrop allowClickOutside={false} className="w-[600px] border-l">
+  <div className="p-6">Settings panel</div>
 </Drawer>
 ```
 
 ## Imperative API
 
-Drawer also provides an imperative API for displaying drawers without managing React state:
+`Drawer.show()` pushes a new drawer onto the overlay stack and returns an `id`. Call `Drawer.dismiss(id)` to close a specific drawer, or `Drawer.dismiss()` for the topmost drawer. It never closes a dialog — use `Dialog.dismiss()` for those.
+
+A `onClose` passed in the options is still called when the drawer is dismissed, so you can use it for cleanup or tracking.
 
 ```tsx
-// Show drawer imperatively
-Drawer.show(
+const id = Drawer.show(
   <QuickActionsMenu
     actions={globalActions}
     onActionClick={(action) => {
       handleAction(action);
-      Drawer.dismiss();
+      Drawer.dismiss(id);
     }}
   />,
   {
     placement: "bottom",
-    handleClose: () => Drawer.dismiss(),
     className: "h-80 rounded-t-xl"
   }
 );
-
-// Dismiss drawer
-Drawer.dismiss();
 ```
 
-### Contextual Help Panel
+### Stacking
 
 ```tsx
-Drawer.show(
-  <HelpDocumentation topic={currentTopic} />,
-  {
-    placement: "right",
-    handleClose: () => {
-      logHelpUsage(currentTopic);
-      Drawer.dismiss();
-    },
-    allowClickOutside: true,
-    className: "w-[500px]"
-  }
-);
+Drawer.show(<FirstPanel />, { placement: "right" });
+// Later:
+Drawer.show(<SecondPanel />, { placement: "right" }); // stacks on top
+```
+
+The topmost drawer captures Esc and click-outside events; lower drawers ignore them until they become topmost. Dialogs always render above drawers, so an open dialog is topmost even if a drawer was opened after it.
+
+### Context consumption
+
+```tsx
+Drawer.show(<UserProfilePanel />, { placement: "right" });
+// UserProfilePanel can call useContext(AuthContext) and get the real value
 ```
 
 ## Placement Options
 
-The drawer can slide in from any edge of the viewport:
-
-- `"right"` - Slides in from the right (default)
-- `"left"` - Slides in from the left
-- `"top"` - Slides down from the top
-- `"bottom"` - Slides up from the bottom
-
-## Behavior
-
-### Click Outside
-
-When `allowClickOutside` is enabled, clicking the backdrop or any element outside the drawer will close it. Use with caution as clickable elements beneath the drawer will also trigger the close action.
-
-### Escape Key
-
-By default, pressing the Escape key will close the drawer. Disable this with `dismissOnEscape={false}` for critical workflows.
-
-### Backdrop
-
-The backdrop overlay can be:
-- **Visible** (default) - Shows a semi-transparent overlay
-- **Hidden** - Set `hideBackdrop={true}` to hide the backdrop visually
-- **Custom** - Use `backdropClassName` for custom styling
-
-## Portal Rendering
-
-Drawer requires `<GeckoUIPortal />` to be mounted when using the imperative API:
-
-```tsx
-// app/layout.tsx
-import { GeckoUIPortal } from '@geckoui/geckoui';
-
-export default function RootLayout({ children }) {
-  return (
-    <html>
-      <body>
-        {children}
-        <GeckoUIPortal />
-      </body>
-    </html>
-  );
-}
-```
+- `"right"` — Slides in from the right (default)
+- `"left"` — Slides in from the left
+- `"top"` — Slides down from the top
+- `"bottom"` — Slides up from the bottom
 
 ## Styling
 
-The component uses `data-*` attributes for state and variant styling:
+The drawer root (`GeckoUIDrawer`) sits at `z-index: 1000`. Drawers opened with `Drawer.show()` get an explicit `1000 + position`. Dialogs start at `2000`, so they always render above drawers.
 
 **Backdrop** (`GeckoUIDrawer__backdrop`):
 - `data-state="visible" | "hidden"` — Backdrop visibility
@@ -334,22 +191,18 @@ The component uses `data-*` attributes for state and variant styling:
 - `data-placement="right" | "left" | "top" | "bottom"` — Slide direction
 - `data-state="open" | "closed"` — Open/closed state
 
-```css
-/* Example: custom right-side drawer when open */
-.GeckoUIDrawer__drawer[data-placement="right"][data-state="open"] {
-  /* your styles */
-}
-```
-
 ## Accessibility
 
+- `role="dialog"` on the drawer panel, with `aria-modal` set when the backdrop is not click-through
 - Keyboard navigation with Escape key support
 - Click-outside detection
-- Focus management
-- ARIA `role="dialog"` applied
-- Backdrop prevents interaction with underlying content when visible
+
+Page scroll is locked while a drawer is open, unless `allowClickOutside` is set, since that drawer deliberately leaves the page usable. The scrollbar width is paid back as padding so nothing shifts sideways.
+
+Not handled yet: there is no focus trap, and focus is not restored to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
 
 ## Related Components
 
-- [Dialog](/docs/dialog) - Centered modal dialogs
-- [Menu](/docs/menu) - Dropdown menus and action lists
+- [GeckoUIProvider](/docs/gecko-ui-provider) — Required provider for the imperative API
+- [Dialog](/docs/dialog) — Centered modal dialogs
+- [Menu](/docs/menu) — Dropdown menus and action lists

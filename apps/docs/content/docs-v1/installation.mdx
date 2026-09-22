@@ -1,0 +1,162 @@
+---
+title: Installation
+description: Step-by-step guide to installing and configuring Gecko UI
+---
+
+# Installation
+
+This guide will help you install and configure Gecko UI in your project.
+
+## Prerequisites
+
+Before installing Gecko UI, ensure you have:
+
+- **Node.js** 18.0.0 or higher
+- **React** 19.2.0 or higher
+- **React DOM** 19.2.0 or higher
+
+## Package Installation
+
+Install Gecko UI using your preferred package manager:
+
+```bash
+npm install @geckoui/geckoui
+```
+
+```bash
+pnpm add @geckoui/geckoui
+```
+
+```bash
+yarn add @geckoui/geckoui
+```
+
+Install `react-hook-form`, which is required for form components:
+
+```bash
+npm install react-hook-form
+```
+
+```bash
+pnpm add react-hook-form
+```
+
+```bash
+yarn add react-hook-form
+```
+
+## Style Setup
+
+### 1. Import Base Styles
+
+Import the main stylesheet in your root layout or main entry file:
+
+```tsx title="app/layout.tsx"
+import '@geckoui/geckoui/styles.css';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+```tsx title="src/main.tsx"
+import '@geckoui/geckoui/styles.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+### 2. Import styles for tailwindcss
+
+If you use `tailwindcss`, make sure to import the css inside `layer` directive to correctly override the styles:
+
+```css title="src/global.css"
+@import "tailwindcss";
+
+@layer components {
+  @import "@geckoui/geckoui/styles.css";
+}
+```
+
+## Container Setup
+
+Add `GeckoUIPortal` to your layout. This is **required** for the following components:
+
+- Dialog
+- Drawer
+- ConfirmDialog
+- Toast
+
+```tsx title="app/layout.tsx"
+import { GeckoUIPortal } from '@geckoui/geckoui';
+import '@geckoui/geckoui/styles.css';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <GeckoUIPortal />
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx title="src/App.tsx"
+import { GeckoUIPortal } from '@geckoui/geckoui';
+
+function App() {
+  return (
+    <div>
+      {/* Your app content */}
+      <GeckoUIPortal />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## AI Agent Skill
+
+If you build with an AI coding agent, install the GeckoUI skill so it knows this
+library's components, props and theming without being told each time.
+
+```bash
+npx skills add https://github.com/geckoui/skills/tree/v1/skills/geckoui
+```
+
+The `tree/v1` part matters. It pins the install to the v1 branch, which is recorded in
+`skills-lock.json` in your project:
+
+```json title="skills-lock.json"
+{
+  "skills": {
+    "geckoui": {
+      "source": "geckoui/skills",
+      "ref": "v1",
+      "skillPath": "skills/geckoui/SKILL.md"
+    }
+  }
+}
+```
+
+So `npx skills update` keeps you on v1 and picks up corrections to the v1 skill, rather
+than moving you to documentation for a version you are not running.
+
+The installer works with Claude Code, Cursor, Codex, Copilot, Gemini CLI, Zed and others,
+and asks which to install to. Commit `skills-lock.json` so your team gets the same skill.
+
+Dropping the `tree/v1` path installs the latest skill instead, which documents v2 and does
+not match this version.

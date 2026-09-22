@@ -1,0 +1,296 @@
+---
+title: SelectOption
+description: Advanced option patterns including custom content, click handlers, and visibility control
+---
+
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+# SelectOption
+
+The SelectOption component represents an individual selectable item within a Select dropdown. It supports custom content rendering, click handlers with preventDefault, visibility control, and automatic keyboard/focus management.
+
+## Basic Usage
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Select, SelectOption } from '@geckoui/geckoui';
+
+function Example() {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <Select value={value} onChange={setValue}>
+      <SelectOption value="react" label="React" />
+      <SelectOption value="vue" label="Vue" />
+      <SelectOption value="angular" label="Angular" />
+    </Select>
+  );
+}
+```
+
+## Custom Content with Render Props
+
+Use a render function to customize the option display based on its state:
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+<Select value={value} onChange={setValue}>
+  <SelectOption value="user1" label="John Doe">
+    {({ selected, focused }) => (
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+          JD
+        </div>
+        <div className={focused ? 'font-semibold' : ''}>
+          <div className="font-medium">John Doe</div>
+          <div className="text-sm text-gray-500">john@example.com</div>
+        </div>
+        {selected && <span className="ml-auto text-blue-500">✓</span>}
+      </div>
+    )}
+  </SelectOption>
+  {/* ... more options */}
+</Select>
+```
+
+**Note**: The `label` prop is still required for filtering and accessibility, even when using custom content.
+
+## Hide Check Icon
+
+Remove the default check icon for selected items:
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectOption value="opt1" label="Option 1" hideCheckIcon />
+  <SelectOption value="opt2" label="Option 2" hideCheckIcon />
+  <SelectOption value="opt3" label="Option 3" hideCheckIcon />
+</Select>
+```
+
+## Disabled Options
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectOption value="free" label="Free Plan" />
+  <SelectOption value="pro" label="Pro Plan" disabled />
+  <SelectOption value="enterprise" label="Enterprise Plan" disabled />
+</Select>
+```
+
+## Custom Click Handler
+
+Add custom logic that runs when an option is clicked. The default selection behavior still occurs:
+
+
+```tsx
+const [clickCount, setClickCount] = useState(0);
+
+<SelectOption
+  value="custom"
+  label="Custom Action"
+  onClick={({ selectCurrentOption, closeMenu }) => {
+    setClickCount((prev) => prev + 1);
+    console.log('Custom action triggered!');
+    selectCurrentOption(); // Still selects the option
+    closeMenu(); // Closes the menu
+  }}
+/>
+```
+
+### onClick Parameters
+
+The onClick handler receives an object with:
+- `selectCurrentOption()` - Function to manually trigger selection
+- `closeMenu()` - Function to close the dropdown
+- `value` - The option's value
+- `preventDefault()` - Function to prevent default selection behavior
+
+## Using preventDefault
+
+Completely override the default selection behavior:
+
+
+```tsx
+<SelectOption
+  value="delete"
+  label="Delete Item"
+  onClick={({ preventDefault, selectCurrentOption, closeMenu }) => {
+    preventDefault(); // Prevents automatic selection
+
+    if (window.confirm('Are you sure?')) {
+      // Custom logic here
+      selectCurrentOption(); // Manually select only if confirmed
+      closeMenu();
+    }
+    // If canceled, nothing happens - option is NOT selected
+  }}
+/>
+```
+
+### Common preventDefault Use Cases
+
+```tsx
+// Conditional selection based on user permissions
+<SelectOption
+  value="premium"
+  label="Premium Feature"
+  onClick={({ preventDefault, selectCurrentOption }) => {
+    preventDefault();
+
+    if (userHasPremium) {
+      selectCurrentOption();
+    } else {
+      openUpgradeModal();
+    }
+  }}
+/>
+
+// Trigger external action without selection
+<SelectOption
+  value="export"
+  label="Export Data"
+  onClick={({ preventDefault, closeMenu }) => {
+    preventDefault();
+    handleExport();
+    closeMenu();
+  }}
+/>
+
+// Navigate instead of selecting
+<SelectOption
+  value="settings"
+  label="Go to Settings"
+  onClick={({ preventDefault, closeMenu }) => {
+    preventDefault();
+    router.push('/settings');
+    closeMenu();
+  }}
+/>
+```
+
+## Visibility Control
+
+Control when options appear using the `show` prop:
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectOption value="draft" label="Draft" visibility="default" />
+  <SelectOption value="published" label="Published" visibility="default" />
+  <SelectOption value="archived" label="Archived" visibility="default" />
+
+  {/* Always visible, even when filtering */}
+  <SelectOption value="admin-only" label="Admin Only Status" visibility="always" />
+</Select>
+```
+
+### Visibility Modes
+
+- `"default"` - Normal visibility, hidden when filtered out
+- `"always"` - Always visible, even during search/filter
+- `"empty"` - Only visible when no other options match filter
+- `"filtered-and-empty"` - Visible when filtered or empty
+
+## Complex Content Example
+
+
+```tsx
+const frameworks = [
+  {
+    id: 'react',
+    name: 'React',
+    description: 'A JavaScript library for building user interfaces',
+    popularity: 'Very High',
+    color: 'bg-blue-500'
+  },
+  // ... more frameworks
+];
+
+<Select value={value} onChange={setValue}>
+  {frameworks.map((framework) => (
+    <SelectOption key={framework.id} value={framework.id} label={framework.name}>
+      {({ selected, focused }) => (
+        <div className="py-1">
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${framework.color}`} />
+            <span className={focused ? 'font-semibold' : 'font-medium'}>
+              {framework.name}
+            </span>
+            <span className="ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded">
+              {framework.popularity}
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-1 ml-5">
+            {framework.description}
+          </p>
+        </div>
+      )}
+    </SelectOption>
+  ))}
+</Select>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `T` | - | Option value (required) |
+| `label` | `string` | - | Display label and search text (required) |
+| `children` | `ReactNode \| (args) => ReactNode` | - | Custom content or render function |
+| `disabled` | `boolean` | `false` | Disable the option |
+| `hideCheckIcon` | `boolean` | `false` | Hide check icon for selected state |
+| `visibility` | `'default' \| 'always' \| 'empty' \| 'filtered-and-empty'` | `'default'` | Visibility control |
+| `onClick` | `(args) => void` | - | Custom click handler |
+| `className` | `string` | - | CSS class for option |
+
+### Render Function Arguments
+
+When using a render function as children:
+
+```tsx
+{({ selected, focused }) => ReactNode}
+```
+
+- `selected` - Boolean indicating if this option is selected
+- `focused` - Boolean indicating if this option has keyboard/mouse focus
+
+### onClick Handler Arguments
+
+```tsx
+onClick={({ selectCurrentOption, closeMenu, value, preventDefault }) => void}
+```
+
+- `selectCurrentOption()` - Manually trigger selection
+- `closeMenu()` - Close the dropdown
+- `value` - The option's value
+- `preventDefault()` - Prevent default selection behavior
+
+## Styling
+
+The component uses base class names with `data-*` attributes for states:
+
+- `GeckoUISelectOption` - Base option element
+  - `data-state="selected"` / `data-state="unselected"` - Selection state
+  - `data-focused` - Applied when focused
+  - `data-disabled` - Applied when disabled
+
+## Best Practices
+
+1. **Always provide label**: Even with custom content, the `label` prop is required for filtering and accessibility
+2. **Use preventDefault wisely**: Only use when you need complete control over selection behavior
+3. **Keep custom content accessible**: Ensure custom content works with keyboard navigation
+4. **Consider performance**: For large lists with complex custom content, consider virtualization
+
+## Related Pages
+
+- [Basic Usage](/v1/docs/select) - Introduction to Select
+- [Filterable](/v1/docs/select/filterable) - How filtering works with custom content
+- [SelectTrigger](/v1/docs/select/select-trigger) - Custom trigger components
+- [Multiple Selection](/v1/docs/select/multiple) - Multi-select with custom options

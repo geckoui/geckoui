@@ -1,0 +1,248 @@
+---
+title: RHFTextarea
+description: Multi-line text input component integrated with React Hook Form
+---
+
+import { RHFTextarea } from '@geckoui/geckoui';
+
+# RHFTextarea
+
+A multi-line textarea component integrated with React Hook Form that automatically displays error states with a red border when validation fails. Supports auto-resizing functionality.
+
+## Installation
+
+```tsx
+import { RHFTextarea } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFTextarea } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      description: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFTextarea name="description" placeholder="Enter description" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Textarea](/v1/docs/textarea) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `autoResize` | `boolean` | `false` | Enable automatic height adjustment |
+| `rows` | `number` | `2` | Minimum number of rows |
+| `maxRows` | `number` | - | Maximum number of rows (only with `autoResize`) |
+| `onChange` | `(value: string) => void` | - | Change callback (receives value, not event) |
+| `onBlur` | `(value: string) => void` | - | Blur callback |
+| ...rest | `TextareaProps` | - | All Textarea component props |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFTextarea, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  bio: z.string().min(10, 'Bio must be at least 10 characters').max(500, 'Bio must not exceed 500 characters')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { bio: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Bio" required>
+        <RHFTextarea name="bio" placeholder="Tell us about yourself (min 10 chars)" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### Auto-Resizing Textarea
+
+
+```tsx
+<RHFTextarea
+  name="comments"
+  autoResize
+  rows={3}
+  maxRows={10}
+  placeholder="This textarea grows as you type (max 10 rows)"
+/>
+```
+
+### With Row Constraints
+
+
+```tsx
+<RHFTextarea
+  name="notes"
+  rows={5}
+  placeholder="Fixed at 5 rows"
+/>
+```
+
+### Disabled State
+
+
+```tsx
+<RHFTextarea name="readonly" disabled />
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFTextarea, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(20, 'Description must be at least 20 characters'),
+  notes: z.string().optional()
+});
+
+function FormExample() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      title: '',
+      description: '',
+      notes: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Title" required>
+          <RHFTextarea name="title" rows={1} placeholder="Enter title" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Description" required>
+          <RHFTextarea
+            name="description"
+            autoResize
+            rows={3}
+            maxRows={8}
+            placeholder="Enter description (min 20 chars)"
+          />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Additional Notes">
+          <RHFTextarea name="notes" rows={2} placeholder="Optional notes" />
+        </RHFInputGroup>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFTextarea
+  name="description"
+  rules={{
+    required: 'Description is required',
+    minLength: { value: 10, message: 'Must be at least 10 characters' }
+  }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Error States
+
+RHFTextarea automatically displays error states with:
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+
+```css
+.GeckoUIRHFTextarea[data-error] {
+  border-color: red;
+}
+```
+
+Use [RHFInputGroup](/v1/docs/rhf-input-group) component for label + textarea + error layout:
+
+```tsx
+<RHFInputGroup label="Description" required>
+  <RHFTextarea name="description" />
+</RHFInputGroup>
+```
+
+Or combine with [RHFError](/v1/docs/rhf-error) component manually:
+
+```tsx
+<RHFTextarea name="description" />
+<RHFError name="description" />
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur for better UX:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Auto-Resize Behavior
+
+When `autoResize` is enabled:
+- Textarea grows automatically as content increases
+- Minimum height is determined by the `rows` prop
+- Maximum height is determined by the `maxRows` prop
+- Shrinks back down when content is removed
+
+When `autoResize` is disabled:
+- Textarea has a fixed height based on `rows`
+- Users can resize manually (if CSS allows)
+- The `maxRows` prop is ignored
+
+## Accessibility
+
+- Inherits all accessibility features from [Textarea](/v1/docs/textarea) component
+- Proper ARIA attributes for error states
+- Keyboard navigable
+- Screen reader compatible
+
+## Related Components
+
+- [Textarea](/v1/docs/textarea) - Base textarea component
+- [RHFInput](/v1/docs/rhf-input) - Single-line text input
+- [RHFError](/v1/docs/rhf-error) - Error message display

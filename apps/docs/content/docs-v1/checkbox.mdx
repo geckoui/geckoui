@@ -1,0 +1,173 @@
+---
+title: Checkbox
+description: Customizable checkbox with support for indeterminate state
+---
+
+import { Checkbox } from '@geckoui/geckoui';
+
+# Checkbox
+
+A checkbox component with custom styling and support for indeterminate (partial) state, useful for "select all" scenarios where only some items are selected.
+
+## Installation
+
+```tsx
+import { Checkbox } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Checkbox
+      checked={checked}
+      onChange={(e) => setChecked(e.target.checked)}
+    />
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `checked` | `boolean` | - | Controlled checked state |
+| `partial` | `boolean` | `false` | Display indeterminate icon (for partial selection) |
+| `disabled` | `boolean` | `false` | Disable the checkbox |
+| `className` | `string` | - | CSS class for the checkbox box |
+| `onChange` | `ChangeEventHandler` | - | Callback when checked state changes |
+| ...rest | `InputHTMLAttributes` | - | All standard HTML input attributes |
+
+## Examples
+
+### With Label
+
+
+```tsx
+import { useState } from 'react';
+
+function CheckboxWithLabel() {
+  const [agreed, setAgreed] = useState(false);
+
+  return (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <Checkbox
+        checked={agreed}
+        onChange={(e) => setAgreed(e.target.checked)}
+      />
+      <span>I agree to the terms and conditions</span>
+    </label>
+  );
+}
+```
+
+### Indeterminate State
+
+
+```tsx
+import { useState } from 'react';
+
+function SelectAll() {
+  const [items, setItems] = useState([
+    { id: 1, checked: false },
+    { id: 2, checked: false },
+    { id: 3, checked: false },
+  ]);
+
+  const allChecked = items.every(item => item.checked);
+  const someChecked = items.some(item => item.checked);
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItems(items.map(item => ({ ...item, checked: e.target.checked })));
+  };
+
+  return (
+    <div>
+      <label className="flex items-center gap-2">
+        <Checkbox
+          checked={someChecked || allChecked}
+          partial={someChecked && !allChecked}
+          onChange={handleSelectAll}
+        />
+        <span>Select All</span>
+      </label>
+      {/* Individual items... */}
+    </div>
+  );
+}
+```
+
+### Disabled States
+
+
+```tsx
+<div className="space-y-2">
+  <Checkbox checked disabled />
+  <Checkbox disabled />
+</div>
+```
+
+### Multiple Checkboxes
+
+
+```tsx
+function NotificationSettings() {
+  const [settings, setSettings] = useState({
+    email: true,
+    sms: false,
+    push: true,
+  });
+
+  return (
+    <div className="space-y-3">
+      <label className="flex items-center gap-2">
+        <Checkbox
+          checked={settings.email}
+          onChange={(e) => setSettings({...settings, email: e.target.checked})}
+        />
+        <span>Email notifications</span>
+      </label>
+      {/* Other checkboxes... */}
+    </div>
+  );
+}
+```
+
+## Keyboard Navigation
+
+The checkbox supports full keyboard navigation:
+
+- **Space** or **Enter**: Toggle checkbox
+- **Tab**: Move focus to next element
+- **Shift + Tab**: Move focus to previous element
+
+## Accessibility
+
+- Uses proper ARIA attributes (`aria-checked`, `role="checkbox"`)
+- Keyboard accessible with Space and Enter keys
+- Focus management for keyboard users
+- Works with screen readers
+- Disabled state properly communicated
+
+## Styling
+
+- `GeckoUICheckbox` - Main container
+- `GeckoUICheckbox__input` - Native checkbox input, styled as the visual box
+- `GeckoUICheckbox__icon` - Check or indeterminate icon
+
+## Icons
+
+- **CheckIcon**: Displayed when `checked={true}` and `partial={false}`
+- **IndeterminateIcon**: Displayed when `partial={true}`
+
+## Related Components
+
+- [Radio](/v1/docs/radio) - For mutually exclusive selections
+- [Switch](/v1/docs/switch) - Toggle alternative
+- [RHFCheckbox](/v1/docs/rhf-checkbox) - React Hook Form integration

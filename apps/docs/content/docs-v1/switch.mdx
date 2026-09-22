@@ -1,0 +1,196 @@
+---
+title: Switch
+description: Toggle switch component with multiple sizes, built on a native checkbox
+---
+
+import { Switch } from '@geckoui/geckoui';
+
+# Switch
+
+A toggle component built on a native checkbox that provides an accessible on/off control. Supports multiple sizes, controlled and uncontrolled modes, and integrates seamlessly with forms.
+
+## Installation
+
+```tsx
+import { Switch } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [enabled, setEnabled] = useState(false);
+
+  return (
+    <Switch checked={enabled} onChange={setEnabled} />
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `checked` | `boolean` | - | Controlled checked state |
+| `onChange` | `(checked: boolean) => void` | - | Callback when state changes |
+| `size` | `'sm' \| 'md'` | `'md'` | Size of the switch |
+| `className` | `string` | - | CSS class for the switch container |
+| `thumbClassName` | `string` | - | CSS class for the switch thumb |
+| `disabled` | `boolean` | `false` | Disable the switch |
+| `defaultChecked` | `boolean` | - | Initial checked state (uncontrolled) |
+
+## Examples
+
+### Sizes
+
+
+```tsx
+<div className="flex flex-col gap-4">
+  <Switch size="sm" checked={enabled} onChange={setEnabled} />
+  <Switch size="md" checked={enabled} onChange={setEnabled} />
+</div>
+```
+
+### Settings Panel
+
+
+```tsx
+function SettingsPanel() {
+  const [settings, setSettings] = useState({
+    notifications: true,
+    darkMode: false,
+    analytics: true,
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="font-medium">Email Notifications</div>
+          <div className="text-sm text-gray-500">Receive email updates</div>
+        </div>
+        <Switch
+          checked={settings.notifications}
+          onChange={(checked) =>
+            setSettings({ ...settings, notifications: checked })
+          }
+        />
+      </div>
+      {/* More settings... */}
+    </div>
+  );
+}
+```
+
+### Disabled State
+
+
+```tsx
+<div className="flex gap-4">
+  <Switch checked disabled />
+  <Switch disabled />
+</div>
+```
+
+### Uncontrolled with Default Value
+
+
+```tsx
+<Switch defaultChecked={true} />
+```
+
+## Keyboard Navigation
+
+The switch supports keyboard interaction:
+
+- **Space** or **Enter**: Toggle the switch
+- **Tab**: Move focus to next element
+- **Shift + Tab**: Move focus to previous element
+
+Note: The Enter key is prevented from default form submission behavior.
+
+## Module Augmentation
+
+The Switch component supports TypeScript module augmentation, allowing you to add custom sizes with full type safety.
+
+### Live Example
+
+A custom `lg` size created using module augmentation:
+
+
+### Step 1: TypeScript Declaration
+
+Create a declaration file (e.g., `gecko.d.ts`) in your project:
+
+```typescript
+import "@geckoui/geckoui";
+
+declare module "@geckoui/geckoui" {
+  interface SwitchSizeMap {
+    lg: unknown;
+  }
+}
+```
+
+### Step 2: Add CSS Styles
+
+Add the corresponding styles to your global CSS/SCSS file. You need to define both the container size and the thumb element:
+
+```scss
+.GeckoUISwitch {
+  &[data-size="lg"] {
+    @apply h-8 w-14;
+  }
+
+  &__thumb[data-size="lg"] {
+    @apply w-6 translate-x-0.5;
+  }
+
+  // The checked position is a separate rule, because the state lives on the input
+  &:has(input:checked) &__thumb[data-size="lg"] {
+    @apply translate-x-7;
+  }
+}
+```
+
+### Step 3: Use Your Custom Size
+
+```tsx
+<Switch size="lg" checked={enabled} onChange={setEnabled} />
+```
+
+## Accessibility
+
+- Renders a native `<input type="checkbox">` with `role="switch"`, so the state is announced correctly
+- Proper ARIA attributes automatically applied
+- Fully keyboard navigable
+- Focus visible for keyboard users
+- Works with screen readers
+- Disabled state properly communicated
+
+## Styling
+
+The component uses class names with data attributes:
+
+- `GeckoUISwitch` - Main container
+- `GeckoUISwitch[data-size="sm|md"]` - Size modifiers
+- `GeckoUISwitch__thumb` - Toggle thumb element
+- `GeckoUISwitch__thumb[data-size="sm|md"]` - Thumb size modifiers
+
+Checked and disabled live on the hidden input rather than on a data attribute, so
+target them through the container:
+
+```scss
+.GeckoUISwitch:has(input:checked) { /* on */ }
+.GeckoUISwitch:has(input:disabled) { /* off limits */ }
+.GeckoUISwitch:has(input:focus-visible) { /* keyboard focus */ }
+```
+
+## Related Components
+
+- [Checkbox](/v1/docs/checkbox) - For multi-select options
+- [Radio](/v1/docs/radio) - For mutually exclusive selections
+- [RHFSwitch](/v1/docs/rhf-switch) - React Hook Form integration

@@ -1,6 +1,7 @@
 import { useEffect, useImperativeHandle, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
+import { devWarn } from "../../../utils/devWarn";
 import { getTodayDate, isValidISOFormat, shouldSwapDates } from "../Calendar.utils";
 import { CalendarDayPicker } from "../CalendarDayPicker";
 import { CalendarMonthPicker } from "../CalendarMonthPicker";
@@ -38,7 +39,15 @@ import { CalendarType } from "./Calendar.types";
  * ```
  * */
 const Calendar = (props: CalendarProps) => {
-  const { className, style, calendarRef, disableDate, renderDayCell, mode = "single" } = props;
+  const {
+    className,
+    style,
+    calendarRef,
+    disableDate,
+    renderDayCell,
+    fixedWeeks,
+    mode = "single"
+  } = props;
 
   const [view, setView] = useState<CalendarType>(CalendarType.Day);
   const [rangeSelectionStart, setRangeSelectionStart] = useState<string | null>(null);
@@ -108,18 +117,18 @@ const Calendar = (props: CalendarProps) => {
   useEffect(() => {
     if (mode === "single") {
       if (selectedDate && !isValidISOFormat(selectedDate)) {
-        console.error(
+        devWarn(
           `Invalid date format. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedDate}`
         );
       }
     } else {
       if (selectedRange?.from && !isValidISOFormat(selectedRange.from)) {
-        console.error(
+        devWarn(
           `Invalid date format for range.from. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedRange.from}`
         );
       }
       if (selectedRange?.to && !isValidISOFormat(selectedRange.to)) {
-        console.error(
+        devWarn(
           `Invalid date format for range.to. Please provide date in the format YYYY-MM-DD, \nProvided value: ${selectedRange.to}`
         );
       }
@@ -176,6 +185,7 @@ const Calendar = (props: CalendarProps) => {
             mode="range"
             disableDate={disableDate}
             renderDayCell={renderDayCell}
+            fixedWeeks={fixedWeeks}
             activeMonth={activeMonth}
             activeYear={activeYear}
             onClickHeader={() => setView(CalendarType.Month)}
@@ -194,6 +204,7 @@ const Calendar = (props: CalendarProps) => {
           mode="single"
           disableDate={disableDate}
           renderDayCell={renderDayCell}
+          fixedWeeks={fixedWeeks}
           activeMonth={activeMonth}
           activeYear={activeYear}
           onClickHeader={() => setView(CalendarType.Month)}

@@ -17,7 +17,8 @@ function ConfirmDialogContent({
   contentClassName,
   dismiss,
   onConfirm,
-  onCancel
+  onCancel,
+  isTop = true
 }: ConfirmDialogContentProps) {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -36,14 +37,14 @@ function ConfirmDialogContent({
     attachPreventDefault(dismiss);
   }, [attachPreventDefault, dismiss, onConfirm, preventDefault]);
 
-  const handleCancel = () => {
-    const isAsync = isAsyncFn(onCancel);
-
-    if (isAsync) {
+  const handleCancel = async () => {
+    if (isAsyncFn(onCancel)) {
       setCancelLoading(true);
     }
 
-    onCancel?.({ preventDefault, dismiss });
+    // awaited, so the spinner lasts as long as the work does and preventDefault()
+    // called inside an async onCancel still lands before the dialog closes
+    await onCancel?.({ preventDefault, dismiss });
 
     setCancelLoading(false);
 
@@ -51,11 +52,12 @@ function ConfirmDialogContent({
   };
 
   useEffect(() => {
+    if (!isTop) return;
+
     const onKeyDown = (e: KeyboardEvent) => {
       const el = document.activeElement;
 
       if (e.key === "Enter") {
-        // Prevent default if the active element is a tabbable a.k.a focusable element
         if (el && el instanceof HTMLElement && el.tabIndex > -1) {
           return;
         }
@@ -71,7 +73,7 @@ function ConfirmDialogContent({
     return () => {
       return document.removeEventListener("keydown", onKeyDown);
     };
-  }, [handleConfirm]);
+  }, [handleConfirm, isTop]);
 
   return (
     <>
@@ -104,13 +106,15 @@ function ConfirmDialogContent({
   );
 }
 
-export const show = (options: ConfirmDialogOptions) => {
-  Dialog.show({
-    dismissOnEsc: true,
+export const show = (options: ConfirmDialogOptions): string => {
+  return Dialog.show({
+    dismissOnEscape: true,
     dismissOnOutsideClick: true,
     ...options,
     className: classNames("GeckoUIConfirmDialog__dialog", options.className),
-    content: ({ dismiss }) => <ConfirmDialogContent {...options} dismiss={dismiss} />
+    content: ({ dismiss, isTop }) => (
+      <ConfirmDialogContent {...options} dismiss={dismiss} isTop={isTop} />
+    )
   });
 };
 

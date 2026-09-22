@@ -102,7 +102,7 @@ export function WithPartialStateExample() {
         <RHFCheckbox
           name="languages"
           value="js"
-          partial={({ field }) => {
+          indeterminate={({ field }) => {
             const selected = (field.value as string[]) || [];
             return selected.length > 0 && selected.length < 2;
           }}
@@ -111,7 +111,7 @@ export function WithPartialStateExample() {
         <RHFCheckbox
           name="languages"
           value="ts"
-          partial={({ field }) => {
+          indeterminate={({ field }) => {
             const selected = (field.value as string[]) || [];
             return selected.length > 0 && selected.length < 2;
           }}

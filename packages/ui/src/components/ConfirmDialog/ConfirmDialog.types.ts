@@ -8,6 +8,12 @@ export interface ConfirmDialogContentProps extends ConfirmDialogOptions {
    * In case you want to close the dialog programmatically.
    * */
   dismiss: () => void;
+
+  /**
+   * Whether this dialog is the topmost entry in the overlay stack.
+   * Injected automatically by `GeckoUIProvider`; consumer code does not need to set this.
+   * */
+  isTop?: boolean;
 }
 
 export interface ConfirmDialogActionsArgs extends ConfirmDialogContentProps {

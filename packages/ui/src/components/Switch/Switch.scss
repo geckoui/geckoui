@@ -36,6 +36,14 @@
     @apply ring-0;
   }
 
+  &:has(&__input[aria-invalid="true"]) {
+    border-color: var(--color-border-invalid);
+  }
+
+  &:has(&__input[aria-invalid="true"]:enabled):hover {
+    border-color: var(--color-border-invalid-hover);
+  }
+
   &__input {
     @apply sr-only;
   }

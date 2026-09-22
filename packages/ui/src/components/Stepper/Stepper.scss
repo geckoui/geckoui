@@ -1,0 +1,196 @@
+@import "../../mixins.scss";
+
+.GeckoUIStepper {
+  --gecko-stepper-marker-size: 2rem;
+  --gecko-stepper-gap: 0.75rem;
+  --gecko-stepper-line: var(--color-border-secondary);
+  --gecko-stepper-line-done: var(--color-primary-600);
+  --gecko-stepper-line-width: 2px;
+
+  /*
+   * The marker reads these rather than having its fill written into a rule, so another look
+   * is a handful of variables on a `data-status` instead of a more specific selector.
+   */
+  --gecko-stepper-marker-bg: transparent;
+  --gecko-stepper-marker-text: currentcolor;
+  --gecko-stepper-marker-border: currentcolor;
+
+  --gecko-stepper-upcoming: var(--color-text-tertiary);
+  --gecko-stepper-current: var(--color-primary-600);
+  --gecko-stepper-complete: var(--color-primary-600);
+  --gecko-stepper-error: var(--color-error);
+
+  @include base-reset;
+
+  &[data-size="sm"] {
+    --gecko-stepper-marker-size: 1.5rem;
+    --gecko-stepper-gap: 0.5rem;
+
+    @apply text-xs;
+  }
+
+  &[data-size="md"] {
+    @apply text-sm;
+  }
+
+  &[data-size="lg"] {
+    --gecko-stepper-marker-size: 2.5rem;
+
+    @apply text-base;
+  }
+
+  &__list {
+    @include base-reset;
+
+    @apply flex list-none p-0;
+  }
+
+  &__step {
+    @apply relative flex min-w-0;
+
+    /* the last step has nothing to join, so it keeps neither line nor separator */
+    &:last-child .GeckoUIStepper__line,
+    &:last-child .GeckoUIStepper__separator {
+      @apply hidden;
+    }
+  }
+
+  &__button {
+    @include button-reset;
+
+    @apply flex min-w-0 items-center text-left;
+
+    gap: var(--gecko-stepper-gap);
+    color: var(--gecko-stepper-upcoming);
+
+    /* a step you can go back to says so; one you are on or cannot reach does not */
+    &:enabled {
+      @apply cursor-pointer;
+
+      &:hover .GeckoUIStepper__label {
+        @apply underline;
+      }
+    }
+
+    &:focus-visible {
+      @apply rounded;
+
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+
+    &[data-status="current"],
+    &[data-status="complete"] {
+      color: var(--gecko-stepper-current);
+    }
+
+    &[data-status="error"] {
+      color: var(--gecko-stepper-error);
+    }
+  }
+
+  &__marker {
+    @apply flex shrink-0 items-center justify-center rounded-full border-2 font-medium;
+
+    width: var(--gecko-stepper-marker-size);
+    height: var(--gecko-stepper-marker-size);
+    border-color: var(--gecko-stepper-marker-border);
+    background: var(--gecko-stepper-marker-bg);
+    color: var(--gecko-stepper-marker-text);
+    font-size: 0.8em;
+
+    svg {
+      @apply h-[55%] w-[55%];
+    }
+  }
+
+  /* done and current are filled in; what is still ahead is an outline */
+  &__button[data-status="complete"],
+  &__button[data-status="current"] {
+    --gecko-stepper-marker-bg: var(--gecko-stepper-current);
+    --gecko-stepper-marker-border: var(--gecko-stepper-current);
+    --gecko-stepper-marker-text: var(--color-text-on-primary);
+  }
+
+  &__button[data-status="error"] {
+    --gecko-stepper-marker-bg: var(--gecko-stepper-error);
+    --gecko-stepper-marker-border: var(--gecko-stepper-error);
+    --gecko-stepper-marker-text: var(--color-text-on-primary);
+  }
+
+  &__body {
+    @apply flex min-w-0 flex-col;
+  }
+
+  &__label {
+    @apply truncate font-medium;
+  }
+
+  &__description {
+    @apply text-text-tertiary truncate text-[0.85em] font-normal;
+  }
+
+  &__line {
+    background: var(--gecko-stepper-line);
+  }
+
+  &__separator {
+    @apply flex shrink-0 items-center justify-center select-none;
+
+    color: var(--gecko-stepper-line);
+  }
+
+  /* the run behind you is filled, so progress reads at a glance */
+  &__step[data-status="complete"] &__line {
+    background: var(--gecko-stepper-line-done);
+  }
+
+  /* ---- horizontal ---- */
+
+  &[data-orientation="horizontal"] &__list {
+    @apply flex-row items-center;
+  }
+
+  &[data-orientation="horizontal"] &__step {
+    @apply flex-1 items-center;
+
+    gap: var(--gecko-stepper-gap);
+  }
+
+  &[data-orientation="horizontal"] &__line {
+    @apply h-0 min-w-4 flex-1;
+
+    height: var(--gecko-stepper-line-width);
+  }
+
+  /* a given separator keeps its own size rather than stretching the way the line does */
+  &[data-orientation="horizontal"] &__step:has(> .GeckoUIStepper__separator) {
+    @apply flex-none;
+  }
+
+  /* ---- vertical ---- */
+
+  &[data-orientation="vertical"] &__list {
+    @apply flex-col;
+  }
+
+  &[data-orientation="vertical"] &__step {
+    @apply flex-col items-stretch;
+
+    padding-bottom: var(--gecko-stepper-gap);
+
+    &:last-child {
+      @apply pb-0;
+    }
+  }
+
+  &[data-orientation="vertical"] &__line {
+    @apply absolute left-0 w-0;
+
+    width: var(--gecko-stepper-line-width);
+    /* runs from under one marker to the next, so the column reads as one thread */
+    top: var(--gecko-stepper-marker-size);
+    bottom: 0;
+    left: calc(var(--gecko-stepper-marker-size) / 2 - var(--gecko-stepper-line-width) / 2);
+  }
+}

@@ -2,6 +2,7 @@ import type { FC, ReactElement } from "react";
 import type { Control } from "react-hook-form";
 
 import { classNames } from "../../../utils/classNames";
+import { devWarn } from "../../../utils/devWarn";
 import { Label } from "../../Label";
 import { RHFError } from "../RHFError";
 import type { RHFInputGroupProps } from "./RHFInputGroup.types";
@@ -67,14 +68,14 @@ const RHFInputGroup: FC<RHFInputGroupProps> = ({
   ...restLabelProps
 }) => {
   if (!children) {
-    console.error("RHFInputGroup must have children");
+    devWarn("RHFInputGroup must have children");
     return null;
   }
 
   const input = findInput(children);
 
   if (!input) {
-    console.warn("RHFInputGroup not containing any `RHF` input component");
+    devWarn("RHFInputGroup does not contain any RHF input component");
   }
 
   const { id, name, control } = (input?.props || {}) as {

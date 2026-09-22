@@ -1,0 +1,307 @@
+---
+title: RHFDateInput
+description: Date input component integrated with React Hook Form
+---
+
+import { RHFDateInput } from '@geckoui/geckoui';
+
+# RHFDateInput
+
+A date input component integrated with React Hook Form that automatically displays error states with a red border when validation fails. Accepts and displays dates in MM/DD/YYYY format with automatic formatting as the user types.
+
+## Installation
+
+```tsx
+import { RHFDateInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFDateInput } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicBirthday: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFDateInput name="basicBirthday" placeholder="MM/DD/YYYY" format="MM/DD/YYYY" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [DateInput](/v1/docs/date-input) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `className` | `string` | - | Additional CSS class name for the input container |
+| `disabled` | `boolean` | - | Whether the input is disabled |
+| `prefix` | `ReactNode \| Function` | - | Element before input |
+| `suffix` | `ReactNode \| Function` | - | Element after input |
+| `onChange` | `(value: string) => void` | - | Change callback |
+| `onBlur` | `(value: string) => void` | - | Blur callback |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFDateInput, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  validationStartDate: z.string()
+    .min(1, 'Start date is required')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { validationStartDate: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Start Date" required>
+        <RHFDateInput name="validationStartDate" placeholder="MM/DD/YYYY" format="MM/DD/YYYY" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### With Prefix and Suffix
+
+
+```tsx
+<RHFDateInput
+  name="prefixEventDate"
+  placeholder="MM/DD/YYYY"
+  format="MM/DD/YYYY"
+  prefix={<span className="text-gray-400">📅</span>}
+  suffix={<span className="text-gray-400 text-xs">Event Date</span>}
+  hideCalendarIcon
+/>
+```
+
+### With Date Range Validation
+
+
+```tsx
+const today = new Date();
+const minDate = new Date(today);
+minDate.setFullYear(today.getFullYear() - 100);
+const maxDate = new Date(today);
+
+const formatDate = (date: Date) => {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
+
+const schema = z.object({
+  rangeValidationBirthDate: z.string()
+    .min(1, 'Birth date is required')
+    .refine((dateStr) => {
+      const [month, day, year] = dateStr.split('/').map(Number);
+      const date = new Date(year, month - 1, day);
+      return date >= minDate && date <= maxDate;
+    }, `Date must be between ${formatDate(minDate)} and ${formatDate(maxDate)}`)
+});
+
+<RHFInputGroup label="Birth Date" required>
+  <RHFDateInput name="rangeValidationBirthDate" placeholder="MM/DD/YYYY" format="MM/DD/YYYY" />
+</RHFInputGroup>
+```
+
+### Disabled State
+
+
+```tsx
+<RHFDateInput name="disabledFixedDate" disabled format="MM/DD/YYYY" />
+```
+
+### With Custom Callback
+
+
+```tsx
+const handleDateChange = (value: string) => {
+  console.log('Date changed:', value);
+};
+
+<RHFDateInput
+  name="callbackAppointmentDate"
+  placeholder="MM/DD/YYYY"
+  format="MM/DD/YYYY"
+  onChange={handleDateChange}
+/>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFDateInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  formCheckInDate: z.string()
+    .min(1, 'Check-in date is required')
+  formCheckOutDate: z.string()
+    .min(1, 'Check-out date is required')
+  formGuestName: z.string().min(2, 'Guest name is required')
+}).refine((data) => {
+  if (!data.formCheckInDate || !data.formCheckOutDate) return true;
+  const [inMonth, inDay, inYear] = data.formCheckInDate.split('/').map(Number);
+  const [outMonth, outDay, outYear] = data.formCheckOutDate.split('/').map(Number);
+  const checkIn = new Date(inYear, inMonth - 1, inDay);
+  const checkOut = new Date(outYear, outMonth - 1, outDay);
+  return checkOut > checkIn;
+}, {
+  message: 'Check-out date must be after check-in date',
+  path: ['formCheckOutDate']
+});
+
+function BookingForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      formCheckInDate: '',
+      formCheckOutDate: '',
+      formGuestName: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+        <RHFInputGroup label="Guest Name" required>
+          <RHFInput name="formGuestName" placeholder="Enter your name" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Check-in Date" required>
+          <RHFDateInput name="formCheckInDate" placeholder="MM/DD/YYYY" format="MM/DD/YYYY" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Check-out Date" required>
+          <RHFDateInput name="formCheckOutDate" placeholder="MM/DD/YYYY" format="MM/DD/YYYY" />
+        </RHFInputGroup>
+
+        <Button type="submit">Book Now</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFDateInput
+  name="birthDate"
+  rules={{ required: 'Birth date is required' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Date Format
+
+RHFDateInput stores and displays dates in **MM/DD/YYYY** format (US date format).
+
+### Formatting Behavior
+
+- Automatically formats input as user types
+- Adds slashes after month and day
+- Accepts various input formats and normalizes to MM/DD/YYYY
+- Stored value in form state is a string in MM/DD/YYYY format
+
+### Validation Pattern
+
+```tsx
+const schema = z.object({
+  date: z.string()
+    .min(1, 'Date is required')
+});
+```
+
+### Converting to/from Date Objects
+
+```tsx
+const dateStringToDate = (dateStr: string): Date => {
+  const [month, day, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const dateToDateString = (date: Date): string => {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
+```
+
+## Error States
+
+RHFDateInput automatically displays error states with:
+- Red border via `hasError` prop when `fieldState.error` exists
+- No automatic error icon (you must add via suffix prop if desired)
+
+Use [RHFInputGroup](/v1/docs/rhf-input-group) component for label + input + error layout:
+
+```tsx
+<RHFInputGroup label="Birth Date" required>
+  <RHFDateInput name="basicBirthday" format="MM/DD/YYYY" />
+</RHFInputGroup>
+```
+
+Or combine with [RHFError](/v1/docs/rhf-error) component manually:
+
+```tsx
+<RHFDateInput name="basicBirthday" format="MM/DD/YYYY" />
+<RHFError name="basicBirthday" />
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur for better UX:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Accessibility
+
+- Inherits all accessibility features from [DateInput](/v1/docs/date-input) component
+- Proper ARIA attributes for error states
+- Keyboard navigable
+- Screen reader compatible
+
+## Related Components
+
+- [DateInput](/v1/docs/date-input) - Base date input component
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Input group wrapper with label and error
+- [RHFError](/v1/docs/rhf-error) - Error message display

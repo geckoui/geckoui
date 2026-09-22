@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { useRef } from "react";
-import { type Root, createRoot } from "react-dom/client";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useClickOutside, useEscListener } from "../../hooks";
+import { useClickOutside, useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
+import { OVERLAY_ANIMATION_DURATION, overlayStore } from "../GeckoUIProvider/overlay-store";
 import type { DrawerProps } from "./Drawer.types";
-import { DRAWER_CONTAINER_ID } from "./DrawerContainer";
 
 /**
  * Drawer is a slide-out panel component that displays auxiliary content from any edge of the viewport.
@@ -16,18 +15,26 @@ import { DRAWER_CONTAINER_ID } from "./DrawerContainer";
  * optional backdrop overlay, and flexible dismissal behaviors including ESC key and click-outside handling.
  *
  * @example
+ * Controlled usage:
+ *
+ * ```tsx
+ * const [open, setOpen] = useState(false);
+ *
+ * <Button onClick={() => setOpen(true)}>Open</Button>
+ * <Drawer open={open} onClose={() => setOpen(false)} placement="right" allowClickOutside>
+ *   <div className="p-6">Content here</div>
+ * </Drawer>
+ * ```
+ *
+ * @example
  * Mobile navigation menu:
  *
  * ```tsx
  * const [menuOpen, setMenuOpen] = useState(false);
  *
- * <button onClick={() => setMenuOpen(true)}>
- *   <MenuIcon />
- * </button>
- *
  * <Drawer
  *   open={menuOpen}
- *   handleClose={() => setMenuOpen(false)}
+ *   onClose={() => setMenuOpen(false)}
  *   placement="left"
  *   allowClickOutside
  *   dismissOnEscape
@@ -38,202 +45,136 @@ import { DRAWER_CONTAINER_ID } from "./DrawerContainer";
  *   </nav>
  * </Drawer>
  * ```
- *
- * @example
- * Filter panel with backdrop:
- *
- * ```tsx
- * const [filtersOpen, setFiltersOpen] = useState(false);
- *
- * <Drawer
- *   open={filtersOpen}
- *   handleClose={() => setFiltersOpen(false)}
- *   placement="right"
- *   allowClickOutside={true}
- *   backdropClassName="bg-black/60"
- *   className="w-96 p-6"
- * >
- *   <FilterPanel
- *     onApply={(filters) => {
- *       applyFilters(filters);
- *       setFiltersOpen(false);
- *     }}
- *   />
- * </Drawer>
- * ```
- *
- * @example
- * Notification center from top:
- *
- * ```tsx
- * <Drawer
- *   open={showNotifications}
- *   handleClose={() => setShowNotifications(false)}
- *   placement="top"
- *   hideBackdrop={false}
- *   allowClickOutside
- *   className="h-96 border-b shadow-lg"
- * >
- *   <NotificationList
- *     notifications={notifications}
- *     onMarkAllRead={handleMarkAllRead}
- *   />
- * </Drawer>
- * ```
- *
- * @example
- * Bottom sheet for mobile actions:
- *
- * ```tsx
- * <Drawer
- *   open={isBottomSheetOpen}
- *   handleClose={() => setBottomSheetOpen(false)}
- *   placement="bottom"
- *   allowClickOutside
- *   dismissOnEscape={false}
- *   backdropClassName="bg-black/40"
- *   className="h-64 rounded-t-2xl"
- * >
- *   <ActionSheet
- *     actions={mobileActions}
- *     onSelect={handleActionSelect}
- *   />
- * </Drawer>
- * ```
- *
- * @example
- * Settings panel without backdrop:
- *
- * ```tsx
- * <Drawer
- *   open={settingsVisible}
- *   handleClose={() => setSettingsVisible(false)}
- *   placement="right"
- *   hideBackdrop
- *   allowClickOutside={false}
- *   className="w-[600px] border-l"
- * >
- *   <SettingsPanel
- *     sections={settingsSections}
- *     onSave={saveSettings}
- *   />
- * </Drawer>
- * ```
  */
 function Drawer({
   open = false,
   allowClickOutside,
-  handleClose,
+  onClose,
   hideBackdrop = false,
   placement = "right",
   backdropClassName,
   className,
   children,
-  dismissOnEscape = true
+  dismissOnEscape = true,
+  style
 }: DrawerProps) {
-  const drawerRootRef = useRef(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
-  const handleDismiss = () => {
-    if (open) handleClose?.();
-  };
+  // Two problems solved by the same frame of delay.
+  //
+  // A drawer mounted already open, as Drawer.show() does, has no closed frame for the CSS
+  // to animate away from, so it appears instantly.
+  //
+  // And changing placement carries the old transform to the new anchor: going from a closed
+  // left drawer to an open right one snaps the element to right-0 while it still holds
+  // -translate-x-full, so it slides in from the wrong side. Tracking which placement we are
+  // ready for makes `ready` false again the moment placement changes.
+  const [readyFor, setReadyFor] = useState<string | null>(null);
 
-  useClickOutside(() => {
-    if (!allowClickOutside) return;
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setReadyFor(placement));
+    return () => cancelAnimationFrame(frame);
+  }, [placement]);
 
+  const ready = readyFor === placement;
+  const visible = open && ready;
+
+  // Hold the scroll lock through the slide out. Releasing it the moment `open` flips
+  // makes the page jump sideways while the drawer is still moving.
+  const [closing, setClosing] = useState(false);
+  const wasOpen = useRef(open);
+
+  useEffect(() => {
+    if (wasOpen.current === open) return;
+    wasOpen.current = open;
+
+    if (open) return;
+
+    setClosing(true);
+    const timer = setTimeout(() => setClosing(false), OVERLAY_ANIMATION_DURATION);
+
+    return () => clearTimeout(timer);
+  }, [open]);
+
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const handleDismiss = useCallback(() => {
+    onCloseRef.current?.();
+  }, []);
+
+  const dismissOnClickOutside = useCallback(() => {
+    if (!allowClickOutside || !open) return;
     handleDismiss();
-  }, [drawerRootRef]);
+  }, [allowClickOutside, open, handleDismiss]);
 
-  useEscListener(dismissOnEscape ? handleDismiss : undefined);
+  useClickOutside(dismissOnClickOutside, [drawerRef]);
+
+  // a click-through drawer deliberately leaves the page usable, so it must not lock scroll
+  useScrollLock((open || closing) && !allowClickOutside);
+
+  useEscListener(open && dismissOnEscape ? handleDismiss : undefined);
 
   return (
-    <div className="GeckoUIDrawer" ref={drawerRootRef} role="dialog">
+    <div className="GeckoUIDrawer" style={style}>
       <div
-        data-state={open && !hideBackdrop ? "visible" : "hidden"}
+        data-state={visible && !hideBackdrop ? "visible" : "hidden"}
         data-clickthrough={allowClickOutside || undefined}
         className={classNames("GeckoUIDrawer__backdrop", backdropClassName)}
-        onClick={handleDismiss}
-        onKeyDown={handleDismiss}
+        onMouseDown={open ? handleDismiss : undefined}
         role="presentation"
       />
       <div
+        ref={drawerRef}
         data-placement={placement}
-        data-state={open ? "open" : "closed"}
-        className={classNames("GeckoUIDrawer__drawer", className)}>
+        data-state={visible ? "open" : "closed"}
+        data-instant={!ready || undefined}
+        className={classNames("GeckoUIDrawer__drawer", className)}
+        role="dialog"
+        aria-modal={!allowClickOutside}>
         {children}
       </div>
     </div>
   );
 }
 
-let root: Root | null = null;
-
 /**
  * Drawer.show provides an imperative API for displaying drawers without managing React state.
- * This is particularly useful for one-off drawers triggered by user actions or global events.
+ * Each call pushes a new drawer onto the overlay stack and returns an id.
+ * Call `Drawer.dismiss(id)` to close a specific drawer, or `Drawer.dismiss()` for the topmost
+ * drawer. It never closes a dialog — use `Dialog.dismiss()` for those.
+ *
+ * `onClose` passed in options is still called when the drawer is dismissed.
+ *
+ * Requires `<GeckoUIProvider>` to wrap your app.
  *
  * @example
  * Quick action drawer:
  *
  * ```tsx
- * const openQuickActions = () => {
- *   Drawer.show(
- *     <QuickActionsMenu
- *       actions={globalActions}
- *       onActionClick={(action) => {
- *         handleAction(action);
- *         Drawer.dismiss();
- *       }}
- *     />,
- *     {
- *       placement: "bottom",
- *       handleClose: () => Drawer.dismiss(),
- *       className: "h-80 rounded-t-xl"
- *     }
- *   );
- * };
+ * const id = Drawer.show(
+ *   <QuickActionsMenu onActionClick={() => Drawer.dismiss(id)} />,
+ *   { placement: "bottom", className: "h-80 rounded-t-xl" }
+ * );
  * ```
  *
  * @example
  * Contextual help panel:
  *
  * ```tsx
- * // Show help drawer from any component
  * Drawer.show(
  *   <HelpDocumentation topic={currentTopic} />,
- *   {
- *     placement: "right",
- *     handleClose: () => {
- *       logHelpUsage(currentTopic);
- *       Drawer.dismiss();
- *     },
- *     allowClickOutside: true,
- *     className: "w-[500px]"
- *   }
+ *   { placement: "right", allowClickOutside: true, className: "w-[500px]" }
  * );
  * ```
  */
-Drawer.show = (node: ReactNode, options: Omit<DrawerProps, "open" | "children"> = {}) => {
-  const el = document.getElementById(DRAWER_CONTAINER_ID);
-
-  if (!el) {
-    throw new Error("DrawerContainer not found");
-  }
-
-  root = createRoot(el);
-  root.render(
-    <Drawer {...options} open>
-      {node}
-    </Drawer>
-  );
+Drawer.show = (node: ReactNode, options: Omit<DrawerProps, "open" | "children"> = {}): string => {
+  (document.activeElement as HTMLElement)?.blur();
+  return overlayStore.pushDrawer(node, options);
 };
 
-Drawer.dismiss = () => {
-  if (!root) {
-    console.warn("Drawer is not mounted.");
-    return;
-  }
-
-  root.unmount();
+Drawer.dismiss = (id?: string): void => {
+  overlayStore.dismiss("drawer", id);
 };
 
 export default Drawer;

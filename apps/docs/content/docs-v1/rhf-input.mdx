@@ -1,0 +1,312 @@
+---
+title: RHFInput
+description: Text input component integrated with React Hook Form
+---
+
+import { RHFInput } from '@geckoui/geckoui';
+
+# RHFInput
+
+A text input component integrated with React Hook Form that automatically displays error states with a red border when validation fails. Supports value transformation for input/output formatting.
+
+## Installation
+
+```tsx
+import { RHFInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFInput } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      username: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInput name="username" placeholder="Enter username" />
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Input](/v1/docs/input) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules (see [Inline Rules Validation](#inline-rules-validation)) |
+| `transform` | `{ input, output }` | - | Value transformation functions |
+| `prefix` | `ReactNode \\| Function` | - | Element before input (can access field state) |
+| `suffix` | `ReactNode \\| Function` | - | Element after input (can access field state) |
+| `onChange` | `(value: string) => void` | - | Change callback (receives value, not event) |
+| `onBlur` | `(value: string) => void` | - | Blur callback |
+| ...rest | `InputProps` | - | All Input component props |
+
+## Examples
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  email: z.string().email('Invalid email address').min(1, 'Email is required')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur', // Validate on blur
+    defaultValues: { email: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Email Address" required>
+        <RHFInput name="email" type="email" placeholder="Enter email" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### Inline Rules Validation
+
+For simple forms, you can use the `rules` prop for inline validation instead of a schema resolver:
+
+```tsx
+<RHFInput
+  name="email"
+  rules={{
+    required: 'Email is required',
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: 'Invalid email address'
+    }
+  }}
+/>
+
+<RHFInput
+  name="username"
+  rules={{
+    required: 'Username is required',
+    minLength: { value: 3, message: 'Must be at least 3 characters' },
+    maxLength: { value: 20, message: 'Must be 20 characters or less' }
+  }}
+/>
+```
+
+**Note:** For complex forms with many fields, we recommend using a schema resolver (Zod, Yup) instead of inline rules for better maintainability and type safety.
+
+### With Prefix and Suffix
+
+
+```tsx
+<RHFInput
+  name="amount"
+  type="number"
+  prefix="$"
+  suffix="USD"
+  placeholder="0.00"
+/>
+```
+
+### With Value Transformation
+
+Transform values on input/output (e.g., phone number formatting):
+
+
+```tsx
+const formatPhone = (value: string) => {
+  const cleaned = value.replace(/\\D/g, '');
+  const match = cleaned.match(/^(\\d{3})(\\d{3})(\\d{4})$/);
+  if (match) {
+    return `(${match[1]}) ${match[2]}-${match[3]}`;
+  }
+  return value;
+};
+
+const sanitizePhone = (value: string) => {
+  return value.replace(/\\D/g, '');
+};
+
+<RHFInput
+  name="phone"
+  placeholder="Phone number"
+  transform={{
+    input: formatPhone,
+    output: sanitizePhone
+  }}
+/>
+```
+
+### Custom Suffix with Error Icon
+
+
+```tsx
+<RHFInput
+  name="password"
+  type="password"
+  suffix={({ fieldState }) => <>fieldState.error ? <ErrorIcon /> : null</>}
+/>
+```
+
+### Disabled State
+
+
+```tsx
+<RHFInput name="readonly" disabled />
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
+});
+
+function RegistrationForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur', // Validate on blur
+    defaultValues: {
+      username: '',
+      email: '',
+      password: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFInputGroup label="Username" required>
+          <RHFInput name="username" placeholder="Enter username" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Email Address" required>
+          <RHFInput name="email" type="email" placeholder="Enter email" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Password" required>
+          <RHFInput name="password" type="password" placeholder="Enter password" />
+        </RHFInputGroup>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Error States
+
+RHFInput automatically displays error states with:
+- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- No automatic error icon (you must add via suffix prop if desired)
+
+```css
+.GeckoUIRHFInput[data-error] {
+  border-color: red;
+}
+```
+
+**Recommended**: Use [RHFInputGroup](/v1/docs/rhf-input-group) for label + input + error layouts. It automatically detects the RHF input and displays validation errors:
+
+```tsx
+<RHFInputGroup label="Username" required>
+  <RHFInput name="username" />
+</RHFInputGroup>
+```
+
+Or combine with [RHFError](/v1/docs/rhf-error) component manually:
+
+```tsx
+<RHFInput name="username" />
+<RHFError name="username" />
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur for better UX:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur' // Validates when user leaves the field
+});
+```
+
+## Value Transformation
+
+The `transform` prop allows formatting values differently for display vs storage:
+
+```tsx
+// Currency formatting
+<RHFInput
+  name="price"
+  transform={{
+    input: (value) => value ? `$${value}` : '',
+    output: (value) => value.replace('$', '')
+  }}
+/>
+
+// Uppercase transformation
+<RHFInput
+  name="code"
+  transform={{
+    input: (value) => value?.toUpperCase() || '',
+    output: (value) => value
+  }}
+/>
+```
+
+## Dynamic Prefix/Suffix
+
+Both `prefix` and `suffix` can be functions that receive render props:
+
+```tsx
+<RHFInput
+  name="email"
+  prefix={({ field }) => (
+    field.value ? <CheckIcon /> : <MailIcon />
+  )}
+  suffix={({ fieldState }) => (
+    fieldState.error ? <ErrorIcon /> : null
+  )}
+/>
+```
+
+## Accessibility
+
+- Inherits all accessibility features from [Input](/v1/docs/input) component
+- Proper ARIA attributes for error states
+- Keyboard navigable
+- Screen reader compatible
+
+## Related Components
+
+- [Input](/v1/docs/input) - Base input component
+- [RHFTextarea](/v1/docs/rhf-textarea) - Multi-line text input
+- RHFNumberInput - Number-only input
+- [RHFError](/v1/docs/rhf-error) - Error message display

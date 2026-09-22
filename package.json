@@ -15,7 +15,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "bump": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "test": "turbo run test --filter='./packages/*'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

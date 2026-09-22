@@ -1,0 +1,312 @@
+---
+title: Select
+description: Customizable dropdown select component with single selection mode
+---
+
+import { Select, SelectOption } from "@geckoui/geckoui";
+
+# Select
+
+A customizable select dropdown component with support for single and multiple selections, keyboard navigation, search filtering, and custom positioning. Built with floating-ui for intelligent dropdown placement.
+
+## Installation
+
+```tsx
+import { Select, SelectOption } from "@geckoui/geckoui";
+```
+
+## Basic Usage
+
+
+```tsx
+"use client";
+
+import { Select, SelectOption } from "@geckoui/geckoui";
+import { useState } from "react";
+
+function Example() {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <Select value={value} onChange={setValue}>
+      <SelectOption value="react" label="React" />
+      <SelectOption value="vue" label="Vue" />
+      <SelectOption value="angular" label="Angular" />
+    </Select>
+  );
+}
+```
+
+**Important**: Use `null` or `undefined` for no selection. An empty string `""` is considered a valid value and will try to match against options.
+
+## Props API
+
+| Prop                   | Type                                | Default          | Description                                |
+| ---------------------- | ----------------------------------- | ---------------- | ------------------------------------------ |
+| `value`                | `T \| null`                         | -                | Selected value (required)                  |
+| `onChange`             | `(value: T \| null) => void`        | -                | Callback when selection changes (required) |
+| `placeholder`          | `string`                            | -                | Placeholder text when empty                |
+| `disabled`             | `boolean`                           | `false`          | Disable the select                         |
+| `closeMenuOnSelect`    | `boolean`                           | `true`           | Close menu after selection                 |
+| `placement`            | `Placement`                         | `'bottom-start'` | Menu placement position                    |
+| `floatingStrategy`     | `Strategy`                          | -                | Floating positioning strategy              |
+| `wrapperClassName`     | `string`                            | -                | CSS class for wrapper                      |
+| `menuClassName`        | `string`                            | -                | CSS class for menu                         |
+| `placeholderClassName` | `string`                            | -                | CSS class for placeholder                  |
+| `className`            | `string`                            | -                | CSS class for select button                |
+| `filterable`           | `boolean \| 'inline' \| 'dropdown'` | `false`          | Enable search filtering                    |
+| `multiple`             | `boolean`                           | `false`          | Enable multiple selection                  |
+| `hideDefaultEmptyUI`   | `boolean`                           | `false`          | Hide default empty state                   |
+| `inputRef`             | `RefObject`                         | -                | Ref for filter input                       |
+| `prefix`               | `ReactNode`                         | -                | Content before select button               |
+| `suffix`               | `ReactNode`                         | -                | Content after select button                |
+| `clearable`            | `boolean`                           | `false`          | Show a clear button to reset the selection |
+
+## Examples
+
+### With Placeholder
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+<Select value={value} onChange={setValue} placeholder="Choose a framework...">
+  <SelectOption value="next" label="Next.js" />
+  <SelectOption value="remix" label="Remix" />
+  <SelectOption value="gatsby" label="Gatsby" />
+</Select>;
+```
+
+### Disabled Options
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+<Select value={value} onChange={setValue}>
+  <SelectOption value="available" label="Available Option" />
+  <SelectOption value="disabled" label="Disabled Option" disabled />
+  <SelectOption value="another" label="Another Available" />
+</Select>;
+```
+
+### Disabled Select
+
+
+```tsx
+<Select value="selected" onChange={() => {}} disabled>
+  <SelectOption value="selected" label="Selected Option" />
+  <SelectOption value="other" label="Other Option" />
+</Select>
+```
+
+### Clearable
+
+Enable a clear button to reset the selection by setting `clearable` to `true`.
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+<Select value={value} onChange={setValue} clearable placeholder="Select a framework...">
+  <SelectOption value="react" label="React" />
+  <SelectOption value="vue" label="Vue" />
+  <SelectOption value="angular" label="Angular" />
+</Select>;
+```
+
+### Placement Options
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+// Opens upward
+<Select value={value} onChange={setValue} placement="top-start">
+  <SelectOption value="a" label="Choice A" />
+  <SelectOption value="b" label="Choice B" />
+</Select>
+
+// Aligns to right
+<Select value={value} onChange={setValue} placement="bottom-end">
+  <SelectOption value="a" label="Choice A" />
+  <SelectOption value="b" label="Choice B" />
+</Select>
+```
+
+## Grouped Options with Static Elements
+
+You can add any HTML elements inside Select to create headers, dividers, and footers. These static elements won't interfere with filtering or selection.
+
+### Basic Grouping
+
+
+```tsx
+const [value, setValue] = useState<string | null>(null);
+
+<Select value={value} onChange={setValue}>
+  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Frontend</div>
+  <SelectOption value="react" label="React" />
+  <SelectOption value="vue" label="Vue" />
+  <SelectOption value="angular" label="Angular" />
+
+  <hr className="my-1 border-gray-200" />
+
+  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Backend</div>
+  <SelectOption value="node" label="Node.js" />
+  <SelectOption value="django" label="Django" />
+  <SelectOption value="rails" label="Rails" />
+</Select>;
+```
+
+### Grouped with Filterable
+
+Static elements remain visible during filtering:
+
+
+```tsx
+<Select filterable="inline" value={value} onChange={setValue}>
+  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase bg-gray-50 dark:bg-neutral-800">
+    Frontend Frameworks
+  </div>
+  <SelectOption value="react" label="React" />
+  <SelectOption value="vue" label="Vue" />
+
+  <hr className="my-1 border-gray-200" />
+
+  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase bg-gray-50 dark:bg-neutral-800">
+    Backend Frameworks
+  </div>
+  <SelectOption value="express" label="Express" />
+  <SelectOption value="nest" label="NestJS" />
+</Select>
+```
+
+### With Header and Footer
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <div className="px-3 py-2 border-b bg-gray-50 dark:bg-neutral-800">
+    <p className="text-sm font-medium">Choose your favorite color</p>
+    <p className="text-xs text-gray-500">This will be used as your theme</p>
+  </div>
+
+  <SelectOption value="blue" label="Blue" />
+  <SelectOption value="green" label="Green" />
+  <SelectOption value="purple" label="Purple" />
+
+  <div className="px-3 py-2 border-t bg-gray-50 dark:bg-neutral-800">
+    <a href="#" className="text-xs text-blue-600 hover:underline">
+      Customize colors →
+    </a>
+  </div>
+</Select>
+```
+
+### Complex Grouping
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <div className="px-3 py-2 bg-blue-50">
+    <p className="text-xs font-semibold text-blue-700">⚡ Popular</p>
+  </div>
+  <SelectOption value="javascript" label="JavaScript" />
+  <SelectOption value="python" label="Python" />
+
+  <div className="px-3 py-2 bg-green-50 mt-1">
+    <p className="text-xs font-semibold text-green-700">🚀 Trending</p>
+  </div>
+  <SelectOption value="rust" label="Rust" />
+  <SelectOption value="go" label="Go" />
+
+  <hr className="my-1 border-gray-200" />
+
+  <div className="px-3 py-2">
+    <p className="text-xs font-semibold text-gray-500">Others</p>
+  </div>
+  <SelectOption value="java" label="Java" />
+  <SelectOption value="csharp" label="C#" />
+</Select>
+```
+
+### Static Notes
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectOption value="free" label="Free Plan" />
+  <SelectOption value="pro" label="Pro Plan - $29/mo" />
+  <SelectOption value="enterprise" label="Enterprise Plan - $99/mo" />
+
+  <div className="px-3 py-2 mt-2 bg-yellow-50 border border-yellow-200 rounded mx-2 mb-2">
+    <p className="text-xs text-yellow-800">
+      💡 <strong>Tip:</strong> Annual billing saves 20%
+    </p>
+  </div>
+</Select>
+```
+
+**Key Points**:
+
+- Static HTML elements (divs, hr, etc.) won't interfere with option selection
+- They remain visible during filtering
+- Useful for headers, dividers, footers, and informational content
+- Style them with any CSS classes
+
+## Keyboard Navigation
+
+- **Arrow Up/Down**: Navigate options
+- **Enter/Space**: Select focused option
+- **Escape**: Close menu
+- **Tab**: Close menu and move to next element
+- **Type to search**: Filter options (when filterable enabled)
+
+## Accessibility
+
+- Built with floating-ui for intelligent positioning
+- Fully keyboard navigable
+- Click-outside to close
+- Focus management
+- Works with screen readers
+- ARIA attributes automatically applied
+
+## Styling
+
+The component uses base class names with `data-*` attributes for states and modifiers:
+
+- `GeckoUISelect` - Main container
+- `GeckoUISelectButton` - Select button
+  - `data-state="enabled"` / `data-state="disabled"` - Enabled/disabled state
+  - `data-readonly` - Applied when not filterable
+- `GeckoUISelectButton__value` - Value display
+  - `data-placeholder` - Placeholder styling
+  - `data-hidden` - Hidden when filtering
+- `GeckoUISelectButton__search` - Search input wrapper
+  - `data-focusonly` - Focus-only mode
+  - `data-multi-selected` - When multi-select has values
+- `GeckoUISelectButton__search__input` - Search input
+  - `data-initial` - Initial positioning
+  - `data-readonly` - Read-only mode
+- `GeckoUISelectButton__multiselected-chip` - Multi-select chip
+  - `data-disabled` - Disabled chip styling
+- `GeckoUISelectButton__clear-button` - Clear button
+  - `data-disabled` - Disabled clear button
+- `GeckoUISelectMenu` - Menu container
+  - `data-with-search` - Applied when dropdown search is enabled
+- `GeckoUISelectOption` - Individual option
+  - `data-state="selected"` / `data-state="unselected"` - Selection state
+  - `data-focused` - Applied to focused option
+  - `data-disabled` - Applied to disabled option
+- `GeckoUISelectButton__value`
+  - `data-selected` - Applied when displaying a selected value
+
+## Related Pages
+
+- [Multiple Selection](/v1/docs/select/multiple) - Multi-select mode with chips
+- [Filterable](/v1/docs/select/filterable) - Search and filtering
+- [SelectOption](/v1/docs/select/select-option) - Advanced option patterns
+- [SelectTrigger](/v1/docs/select/select-trigger) - Custom triggers
+- [SelectEmpty](/v1/docs/select/select-empty) - Empty states
+- [Advanced](/v1/docs/select/advanced) - Programmatic control

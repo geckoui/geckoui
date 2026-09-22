@@ -7,15 +7,16 @@ import {
   shift,
   useFloating
 } from "@floating-ui/react";
-import { Children, type FC, cloneElement, isValidElement, useRef, useState } from "react";
+import { type CSSProperties, type FC, cloneElement, useRef, useState } from "react";
 
+import { asChildElement } from "../../utils/asChildElement";
 import { classNames } from "../../utils/classNames";
 import { DynamicComponentRenderer } from "../DynamicComponentRenderer";
 import type { TooltipProps } from "./Tooltip.types";
 
 const Tooltip: FC<TooltipProps> = ({
   children,
-  delayDuration = 700,
+  delayDuration = 200,
   content,
   className,
   triggerClassName,
@@ -63,14 +64,13 @@ const Tooltip: FC<TooltipProps> = ({
   };
 
   const renderTrigger = () => {
-    if (triggerAsChild) {
-      const child = Children.only(children);
-      if (isValidElement(child)) {
-        return cloneElement(child, {
-          ...triggerProps,
-          className: classNames((child.props as { className?: string }).className, triggerClassName)
-        } as React.HTMLAttributes<HTMLElement>);
-      }
+    const child = triggerAsChild ? asChildElement(children) : null;
+
+    if (child) {
+      return cloneElement(child, {
+        ...triggerProps,
+        className: classNames((child.props as { className?: string }).className, triggerClassName)
+      } as React.HTMLAttributes<HTMLElement>);
     }
 
     return (
@@ -87,7 +87,12 @@ const Tooltip: FC<TooltipProps> = ({
         <FloatingPortal>
           <div
             ref={refs.setFloating}
-            style={{ ...floatingStyles, backgroundColor }}
+            style={
+              {
+                ...floatingStyles,
+                ...(backgroundColor ? { "--gecko-tooltip-bg": backgroundColor } : {})
+              } as CSSProperties
+            }
             className={classNames("GeckoUITooltip", className)}
             role="tooltip">
             <DynamicComponentRenderer component={content} />
@@ -95,7 +100,6 @@ const Tooltip: FC<TooltipProps> = ({
               ref={arrowRef}
               context={context}
               className={classNames("GeckoUITooltip__arrow", arrowClassName)}
-              style={{ fill: backgroundColor }}
             />
           </div>
         </FloatingPortal>

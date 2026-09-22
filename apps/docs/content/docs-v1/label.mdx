@@ -1,0 +1,178 @@
+---
+title: Label
+description: Form field labels with required indicators and tooltips
+---
+
+import { Label, Input, Textarea } from '@geckoui/geckoui';
+
+# Label
+
+A label component for input fields with support for required indicators and tooltips. When `required` is true, displays a red asterisk (*) after the label text. When `tooltip` is provided, displays a tooltip icon with helpful information.
+
+## Installation
+
+```tsx
+import { Label } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+<Label htmlFor="username">Username</Label>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `htmlFor` | `string` | - | ID of the associated input element |
+| `required` | `boolean` | `false` | Show red asterisk indicator |
+| `tooltip` | `string` | - | Tooltip text to display |
+| `tooltipIcon` | `ReactNode \| FC` | - | Custom tooltip icon |
+| `tooltipBackgroundColor` | `string` | - | Tooltip background color |
+| `tooltipClassName` | `string` | - | CSS class for tooltip |
+| `className` | `string` | - | CSS class for label |
+| ...rest | `LabelHTMLAttributes` | - | All standard label attributes |
+
+## Examples
+
+### Required Field
+
+
+```tsx
+<Label htmlFor="email" required>
+  Email Address
+</Label>
+<Input id="email" type="email" />
+```
+
+### With Tooltip
+
+
+```tsx
+<Label
+  htmlFor="password"
+  tooltip="Password must be at least 8 characters long"
+>
+  Password
+</Label>
+<Input id="password" type="password" />
+```
+
+### Required with Tooltip
+
+
+```tsx
+<Label
+  htmlFor="apiKey"
+  required
+  tooltip="You can find your API key in the settings page"
+>
+  API Key
+</Label>
+<Input id="apiKey" type="text" />
+```
+
+### Custom Tooltip Styling
+
+
+```tsx
+<Label
+  htmlFor="info"
+  tooltip="This information helps us personalize your experience"
+  tooltipBackgroundColor="#3b82f6"
+  tooltipClassName="text-sm"
+>
+  Display Name
+</Label>
+<Input id="info" type="text" />
+```
+
+### Form with Multiple Labels
+
+
+```tsx
+<div className="space-y-1">
+  <Label htmlFor="username" required>Username</Label>
+  <Input id="username" />
+</div>
+
+<div className="space-y-1">
+  <Label htmlFor="email" required>Email</Label>
+  <Input id="email" type="email" />
+</div>
+
+<div className="space-y-1">
+  <Label htmlFor="bio" tooltip="Tell us about yourself">Bio</Label>
+  <Textarea id="bio" />
+</div>
+```
+
+### Custom Styling
+
+
+```tsx
+<Label htmlFor="field1" className="text-lg font-bold text-blue-600">
+  Large Bold Label
+</Label>
+
+<Label htmlFor="field2" className="text-sm text-gray-500">
+  Small Gray Label
+</Label>
+```
+
+## Features
+
+### Required Indicator
+
+When `required={true}`, a red asterisk (*) is appended to the label text:
+
+```tsx
+<Label required>Email Address</Label>
+// Displays: Email Address *
+```
+
+**Note**: This is just a visual indicator and does not enforce validation. You must still add validation logic to your form.
+
+### Tooltip
+
+When `tooltip` prop is provided, an icon appears next to the label. Hovering over it shows the tooltip:
+
+```tsx
+<Label tooltip="Additional help text">
+  Field Name
+</Label>
+```
+
+You can customize the tooltip with:
+- `tooltipBackgroundColor` - Change background color
+- `tooltipClassName` - Add custom CSS classes
+- `tooltipIcon` - Use a custom icon instead of default
+
+## Accessibility
+
+- Uses semantic `<label>` element
+- Associates with input via `htmlFor` attribute
+- Tooltip has proper ARIA attributes
+- Required indicator is visible
+- Works with screen readers
+- Keyboard accessible tooltip
+
+## Styling
+
+- `GeckoUILabel` - Main label element
+- `GeckoUILabel__required-indicator` - Red asterisk
+- `GeckoUILabel__tooltip` - Tooltip wrapper
+- `GeckoUILabel__tooltip-icon` - Default tooltip icon
+
+## Dependencies
+
+This component uses the internal `Tooltip` component for tooltip functionality.
+
+## Related Components
+
+- [Input](/v1/docs/input) - Text input fields
+- [Textarea](/v1/docs/textarea) - Multi-line text input
+- [Tooltip](/v1/docs/tooltip) - Standalone tooltips
+- [InputError](/v1/docs/input-error) - Error messages

@@ -1,0 +1,108 @@
+---
+title: RHFCurrencyInput
+description: Currency input for React Hook Form with symbol, code and thousands separators
+---
+
+import { BasicRHFCurrencyInputExample, WithSymbolOnlyExample, WithCodeOnlyExample, DifferentCurrenciesExample, WithValidationExample } from '@/components/examples/rhf-currency-input-examples';
+
+# RHFCurrencyInput
+
+A currency field built on [RHFNumberInput](/docs/rhf-number-input). It shows the currency symbol as a prefix and the code as a suffix, and formats the displayed value with thousands separators while keeping the stored value clean.
+
+## Installation
+
+```tsx
+import { RHFCurrencyInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BasicRHFCurrencyInputExample />
+</Preview>
+
+```tsx
+<FormProvider {...methods}>
+  <RHFCurrencyInput name="price" currency={{ symbol: '$', code: 'USD' }} />
+</FormProvider>
+```
+
+Typing `1234567.89` displays as `1,234,567.89`. The separators are display only — the value stored in the form has none.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `currency` | `{ symbol?: string; code?: string }` | - | `symbol` renders as a prefix, `code` as a suffix. Either can be omitted |
+| `maxFractionDigits` | `number` | - | Digits kept after the decimal point. Use `0` for currencies without minor units |
+| `maxWholeDigitPlaces` | `number` | - | Digits kept before the decimal point |
+| `positiveOnly` | `boolean` | `false` | Reject a leading minus sign |
+| `control` | `Control` | - | Form control, taken from context when omitted |
+| `rules` | `RegisterOptions` | - | React Hook Form validation rules |
+| ...rest | `RHFNumberInputProps` | - | Everything `RHFNumberInput` accepts, except `strict` |
+
+`strict` is always on, so leading zeros are dropped.
+
+## Examples
+
+### Symbol and code
+
+<Preview>
+  <WithCodeOnlyExample />
+</Preview>
+
+```tsx
+<RHFCurrencyInput name="price" currency={{ symbol: '$', code: 'USD' }} />
+```
+
+### Symbol only
+
+<Preview>
+  <WithSymbolOnlyExample />
+</Preview>
+
+```tsx
+<RHFCurrencyInput name="amount" currency={{ symbol: '€' }} />
+```
+
+### Currency without minor units
+
+<Preview>
+  <DifferentCurrenciesExample />
+</Preview>
+
+```tsx
+<RHFCurrencyInput
+  name="cost"
+  currency={{ symbol: '¥', code: 'JPY' }}
+  maxFractionDigits={0}
+/>
+```
+
+### With validation
+
+<Preview>
+  <WithValidationExample />
+</Preview>
+
+```tsx
+const schema = z.object({
+  price: z.coerce.number().min(1, 'Price is required')
+});
+
+<RHFInputGroup label="Price" required>
+  <RHFCurrencyInput name="price" currency={{ symbol: '$', code: 'USD' }} maxFractionDigits={2} />
+</RHFInputGroup>
+```
+
+## Styling
+
+- `GeckoUIRHFCurrencyInput` - The input
+- `GeckoUIRHFCurrencyInput__currency-symbol` - Prefix element
+- `GeckoUIRHFCurrencyInput__currency-code` - Suffix element
+
+## Related Components
+
+- [RHFNumberInput](/docs/rhf-number-input) - The underlying number input
+- [RHFInput](/docs/rhf-input) - Plain text input

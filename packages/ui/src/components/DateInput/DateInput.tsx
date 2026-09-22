@@ -37,7 +37,7 @@ import type { DateInputProps } from "./DateInput.types";
  * <DateInput
  *   value={birthDate}
  *   onChange={handleDateChange}
- *   hasError={error}
+ *   aria-invalid={error}
  *   placeholder="Enter your birth date"
  *   format="DD/MM/YYYY"
  *   separator="/"
@@ -80,7 +80,7 @@ import type { DateInputProps } from "./DateInput.types";
  *     value={endDate}
  *     onChange={setEndDate}
  *     placeholder="End date"
- *     hasError={endDate < startDate}
+ *     aria-invalid={endDate < startDate}
  *     hideCalendarIcon
  *   />
  * </div>
@@ -109,7 +109,7 @@ const DateInput: FC<DateInputProps> = ({
   readOnly = false,
   prefix,
   suffix,
-  hasError = false,
+  "aria-invalid": invalid,
   className,
   format = "DD/MM/YYYY",
   separator = "/",
@@ -118,6 +118,7 @@ const DateInput: FC<DateInputProps> = ({
   hideCalendarIcon = false,
   hideClearIcon = false,
   hideCalendar = false,
+  fixedWeeks,
   calendarClassName,
   calendarPlacement = "bottom-start",
   floatingStrategy = "absolute",
@@ -193,7 +194,7 @@ const DateInput: FC<DateInputProps> = ({
         readOnly={readOnly}
         prefix={prefix}
         suffix={suffix}
-        hasError={hasError}
+        aria-invalid={invalid}
         className={className}
         format={format}
         separator={separator}
@@ -209,9 +210,13 @@ const DateInput: FC<DateInputProps> = ({
       />
 
       {!hideCalendar && openCalendar && (
-        <div ref={(r) => refs.setFloating(r)} style={{ ...floatingStyles, zIndex: 9999 }}>
+        <div
+          ref={(r) => refs.setFloating(r)}
+          className="GeckoUIDateInput__calendar-layer"
+          style={floatingStyles}>
           <Calendar
             calendarRef={calendarRef}
+            fixedWeeks={fixedWeeks}
             className={classNames("GeckoUIDateInput__calendar", calendarClassName)}
             onSelectDate={(date) => {
               onChange?.(date);

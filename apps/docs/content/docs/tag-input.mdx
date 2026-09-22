@@ -1,0 +1,208 @@
+---
+title: TagInput
+description: Turns what you type into tags, with a list of the usual ones to hand
+---
+
+import { TagInputBasicExample, TagInputOptionsExample, TagInputValidateExample, TagInputMaxExample, TagInputRenderTagExample, TagInputStatesExample } from '@/components/examples/tag-input-examples';
+
+# TagInput
+
+Turns what you type into tags, with a list of the usual ones to hand.
+
+## Installation
+
+```tsx
+import { TagInput, TagInputOption } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <TagInputBasicExample />
+</Preview>
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+<TagInput value={tags} onChange={setTags} placeholder="Add a tag" />
+```
+
+Enter or a comma finishes a tag. Backspace in an empty field takes the last one back out, and each tag has its own cross.
+
+## Props API
+
+### TagInput
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string[]` | required | The tags, in the order they were added |
+| `onChange` | `(value: string[]) => void` | required | Called with the new list |
+| `onReject` | `(tags: string[]) => void` | - | Called with whatever was turned away |
+| `validate` | `(tag: string) => boolean` | - | Whether a tag is allowed |
+| `separators` | `string[]` | `['Enter', ',']` | Keys that finish a tag, and what a paste is split on |
+| `preferOption` | `boolean` | `true` | Take the spelling from the options when one matches |
+| `max` | `number` | - | How many tags there may be |
+| `allowDuplicates` | `boolean` | `false` | Let the same tag be added twice |
+| `addOnBlur` | `boolean` | `true` | Finish the tag being typed when the field is left |
+| `renderTag` | `({ value, index, remove }) => ReactNode` | - | Draw each tag yourself |
+| `placeholder` | `string` | - | |
+| `disabled` | `boolean` | `false` | |
+| `readOnly` | `boolean` | `false` | |
+| `aria-invalid` | `boolean` | `false` | |
+| `prefix` | `FC \| ReactNode` | - | |
+| `suffix` | `FC \| ReactNode` | - | |
+| `className` | `string` | - | CSS class for the field |
+| `wrapperClassName` | `string` | - | CSS class for the wrapper |
+| `menuClassName` | `string` | - | CSS class for the list |
+| `menuPlacement` | `Placement` | `'bottom-start'` | Where the list opens |
+
+### TagInputOption
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | What gets added when it is picked |
+| `label` | `string` | the children | What it is matched against while typing |
+| `disabled` | `boolean` | `false` | Cannot be picked |
+
+## Examples
+
+### With a list of options
+
+<Preview>
+  <TagInputOptionsExample />
+</Preview>
+
+```tsx
+<TagInput value={tags} onChange={setTags} placeholder="Add a framework">
+  <TagInputOption value="React">React</TagInputOption>
+  <TagInputOption value="Vue">Vue</TagInputOption>
+  <TagInputOption value="Svelte">Svelte</TagInputOption>
+</TagInput>
+```
+
+Options are declared as children, the way they are for [Select](/docs/select), and filter as you type. Arrow keys walk the list, Enter takes the one under the cursor.
+
+Anything that is not an option can still be typed in. That is what separates this from a multiple `Select`.
+
+An option that is already a tag **drops out of the list** rather than sitting there greyed out. The chip in the field is where it is now, and its own cross is how it comes back.
+
+### Taking the spelling from the options
+
+Type `vue` or `united  state` in the example above and press Enter.
+
+`preferOption` matches what you typed against the options, ignoring case and any extra spacing, and adds the option's own spelling. So `vue` becomes `Vue`, and `united  state` becomes `United State`.
+
+Only case and spacing are folded. A different word is a different tag, so `United States` will not collapse into `United State`.
+
+It also means a differently cased repeat is caught as a duplicate: with `Vue` already a tag, typing `VUE` matches the same option and is turned away. Set `preferOption={false}` to add exactly what was typed.
+
+Paste goes through the same matching.
+
+### Rules, and what gets turned away
+
+<Preview>
+  <TagInputValidateExample />
+</Preview>
+
+```tsx
+<TagInput
+  value={emails}
+  onChange={setEmails}
+  validate={(tag) => /.+@.+\..+/.test(tag)}
+  onReject={(tags) => toast.error(`${tags.length} were not addresses`)}
+/>
+```
+
+A tag `validate` turns down is not added, and **stays in the field** so it can be corrected rather than retyped. `value` only ever holds tags that passed.
+
+`onReject` is called with everything that did not make it, whether from a rule, a duplicate or `max`. That matters most on a paste: try pasting `ada@x.com, nope, grace@x.com` and two land while the third is reported rather than vanishing.
+
+A paste only becomes several tags when it holds more than one. Pasting a single word leaves it in the field, so it can still be edited before it is committed.
+
+### A limit
+
+<Preview>
+  <TagInputMaxExample />
+</Preview>
+
+```tsx
+<TagInput value={tags} onChange={setTags} max={3} />
+```
+
+The list stays away once `max` is reached, and anything further goes to `onReject`.
+
+The field also carries `data-full`, so a limit can be shown however suits — a count, a dimmed field, a message. Nothing is drawn by default.
+
+```css
+.GeckoUITagInput[data-full] {
+  opacity: 0.7;
+}
+```
+
+Text turned away because there was no room is **cleared**, unlike text `validate` turned down, which is kept so it can be corrected. No amount of correcting makes room.
+
+The field stays editable at the limit, so Backspace still takes the last tag back out.
+
+### Drawing the tags yourself
+
+<Preview>
+  <TagInputRenderTagExample />
+</Preview>
+
+```tsx
+<TagInput
+  value={tags}
+  onChange={setTags}
+  renderTag={({ value, remove }) => (
+    <Badge color="primary" onClick={remove}>
+      {value} ×
+    </Badge>
+  )}
+/>
+```
+
+### States
+
+<Preview>
+  <TagInputStatesExample />
+</Preview>
+
+Neither a disabled nor a read-only field opens the list or shows the crosses.
+
+## The keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>Enter</kbd> | Takes the option under the cursor, or finishes what is typed |
+| <kbd>,</kbd> | Finishes what is typed |
+| <kbd>↑</kbd> <kbd>↓</kbd> | Walk the list |
+| <kbd>Backspace</kbd> | Takes the last tag out, when the field is empty |
+| <kbd>Esc</kbd> | Closes the list |
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-tag-input-menu-max-height` | `15rem` | How tall the list scrolls |
+| `--gecko-tag-input-z` | `10` | The list's stacking order |
+
+### Class names and data attributes
+
+- `GeckoUITagInputWrapper` - Holds the field and the list
+- `GeckoUITagInput` - The field, with `data-state`, `data-empty` and `data-full`. Its input carries `aria-invalid`
+- `GeckoUITagInput__tag` - One tag, with `__remove` for its cross
+- `GeckoUITagInput__field` - Wraps the text box and measures it
+- `GeckoUITagInput__input` - The text box, with `data-initial` while it has no tags beside it
+- `GeckoUITagInput__placeholder` - The placeholder text, with `data-hidden` once you type
+- `GeckoUITagInput__menu` - The list
+- `GeckoUITagInput__option` - One option, with `data-focused`
+
+The styles are their own, copied from [Select](/docs/select) rather than shared. The two look alike on purpose, but one can be changed without moving the other.
+
+The placeholder is drawn as text rather than the input's own `placeholder`, because the text box is only ever as wide as what is in it — a native placeholder would be clipped to a couple of pixels. While the placeholder has the row, the text box is taken out of flow and pinned to the field's inset, so the caret sits where the text begins rather than after the placeholder.
+
+## Related Components
+
+- [RHFTagInput](/docs/rhf-tag-input) - The same field, wired to React Hook Form
+- [Select](/docs/select) - For picking from a fixed list, with nothing typed in
+- [Badge](/docs/badge) - What `renderTag` most often reaches for

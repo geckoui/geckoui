@@ -1,4 +1,5 @@
 "use client";
+import { type DocsVersion, LATEST, versionFromPathname } from "@/lib/versions";
 import { create } from "@orama/orama";
 import { useDocsSearch } from "fumadocs-core/search/client";
 import {
@@ -13,6 +14,7 @@ import {
   type SharedProps
 } from "fumadocs-ui/components/dialog/search";
 import { useI18n } from "fumadocs-ui/contexts/i18n";
+import { usePathname } from "next/navigation";
 
 function initOrama() {
   return create({
@@ -22,12 +24,17 @@ function initOrama() {
   });
 }
 
-export default function DefaultSearchDialog(props: SharedProps) {
+/** Each version has its own index, so searching from v1 docs returns v1 pages. */
+function searchEndpoint(version: DocsVersion) {
+  return version.id === LATEST.id ? "/api/search" : `/api/search-${version.id}`;
+}
+
+function VersionedSearchDialog({ version, ...props }: SharedProps & { version: DocsVersion }) {
   const { locale } = useI18n();
 
   const { search, setSearch, query } = useDocsSearch({
     type: "static",
-    from: "/api/search",
+    from: searchEndpoint(version),
     initOrama,
     locale
   });
@@ -39,10 +46,22 @@ export default function DefaultSearchDialog(props: SharedProps) {
         <SearchDialogHeader>
           <SearchDialogIcon />
           <SearchDialogInput />
+          {version.id !== LATEST.id && (
+            <span className="shrink-0 rounded border border-fd-border px-1.5 py-0.5 text-[11px] font-medium text-fd-muted-foreground">
+              {version.label}
+            </span>
+          )}
           <SearchDialogClose />
         </SearchDialogHeader>
         <SearchDialogList items={query.data !== "empty" ? query.data : null} />
       </SearchDialogContent>
     </SearchDialog>
   );
+}
+
+export default function DefaultSearchDialog(props: SharedProps) {
+  const version = versionFromPathname(usePathname());
+
+  // keyed so the Orama index is rebuilt from scratch when the version changes
+  return <VersionedSearchDialog key={version.id} version={version} {...props} />;
 }

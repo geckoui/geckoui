@@ -60,6 +60,7 @@ Extends all props from [Textarea](/docs/textarea) component plus:
 | `autoResize` | `boolean` | `false` | Enable automatic height adjustment |
 | `rows` | `number` | `2` | Minimum number of rows |
 | `maxRows` | `number` | - | Maximum number of rows (only with `autoResize`) |
+| `transform` | `{ input?: (v: string) => string; output?: (v: string) => string }` | - | Format the value for display and for storage |
 | `onChange` | `(value: string) => void` | - | Change callback (receives value, not event) |
 | `onBlur` | `(value: string) => void` | - | Blur callback |
 | ...rest | `TextareaProps` | - | All Textarea component props |
@@ -215,11 +216,11 @@ For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
 ## Error States
 
 RHFTextarea automatically displays error states with:
-- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- `aria-invalid` on the control when `fieldState.error` exists, which both a screen reader and the red border read
 
 ```css
-.GeckoUIRHFTextarea[data-error] {
-  border-color: red;
+.GeckoUITextarea[aria-invalid="true"] {
+  border-color: var(--color-border-invalid);
 }
 ```
 

@@ -1,0 +1,181 @@
+---
+title: Radio
+description: Radio button for mutually exclusive selections
+---
+
+import { Radio } from '@geckoui/geckoui';
+
+# Radio
+
+A styled radio button component for creating mutually exclusive selection groups.
+
+## Installation
+
+```tsx
+import { Radio } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [selected, setSelected] = useState('option1');
+
+  return (
+    <div>
+      <label>
+        <Radio
+          name="options"
+          value="option1"
+          checked={selected === 'option1'}
+          onChange={(e) => setSelected(e.target.value)}
+        />
+        Option 1
+      </label>
+      <label>
+        <Radio
+          name="options"
+          value="option2"
+          checked={selected === 'option2'}
+          onChange={(e) => setSelected(e.target.value)}
+        />
+        Option 2
+      </label>
+    </div>
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Radio group name (required for grouping) |
+| `value` | `string` | - | Value of this radio option |
+| `checked` | `boolean` | - | Whether this radio is selected |
+| `disabled` | `boolean` | `false` | Disable the radio button |
+| `onChange` | `ChangeEventHandler` | - | Callback when selection changes |
+| `className` | `string` | - | CSS class for styling |
+| ...rest | `InputHTMLAttributes` | - | All standard HTML input attributes |
+
+## Examples
+
+### Radio Group with Descriptions
+
+
+```tsx
+function PaymentMethod() {
+  const [selected, setSelected] = useState("free");
+
+  const options = [
+    { value: "free", title: "Free Plan", desc: "Perfect for trying out" },
+    { value: "pro", title: "Pro Plan", desc: "$9/month - Most popular" },
+    { value: "enterprise", title: "Enterprise", desc: "Contact us for pricing" }
+  ];
+
+  return (
+    <div className="flex flex-col gap-3">
+      {options.map((option) => (
+        <label
+          key={option.value}
+          className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+          <Radio
+            name="plan"
+            className="mt-2"
+            value={option.value}
+            checked={selected === option.value}
+            onChange={(e) => setSelected(e.target.value)}
+          />
+          <div>
+            <div className="flex items-center font-medium">
+              <span>{option.title}</span>
+            </div>
+            <div className="text-sm text-gray-500">{option.desc}</div>
+          </div>
+        </label>
+      ))}
+    </div>
+  );
+}
+```
+
+### Disabled State
+
+
+```tsx
+<div className="space-y-2">
+  <label className="flex items-center gap-2">
+    <Radio name="status" value="enabled" checked />
+    <span>Enabled</span>
+  </label>
+  <label className="flex items-center gap-2 opacity-50">
+    <Radio name="status" value="disabled" disabled />
+    <span>Disabled</span>
+  </label>
+</div>
+```
+
+### Horizontal Layout
+
+
+```tsx
+function SizeSelector() {
+  const [size, setSize] = useState('M');
+  const sizes = ['XS', 'S', 'M', 'L', 'XL'];
+
+  return (
+    <div className="flex gap-4">
+      {sizes.map(s => (
+        <label key={s} className="flex items-center gap-2">
+          <Radio
+            name="size"
+            value={s}
+            checked={size === s}
+            onChange={(e) => setSize(e.target.value)}
+          />
+          <span>{s}</span>
+        </label>
+      ))}
+    </div>
+  );
+}
+```
+
+## Grouping Radio Buttons
+
+Radio buttons with the same `name` prop are automatically grouped. Only one radio button in a group can be selected at a time.
+
+```tsx
+// All these radios are grouped by name="color"
+<Radio name="color" value="red" />
+<Radio name="color" value="blue" />
+<Radio name="color" value="green" />
+```
+
+## Accessibility
+
+- Fully keyboard navigable
+- Arrow keys navigate between radio buttons in the same group
+- Space key selects the focused radio
+- Works with screen readers
+- Disabled state properly communicated
+
+## Styling
+
+The component uses the class name `GeckoUIRadio`. Override styles using the `className` prop:
+
+```css
+.GeckoUIRadio {
+  /* Your custom styles */
+}
+```
+
+## Related Components
+
+- [Checkbox](/v1/docs/checkbox) - For multi-select
+- [Switch](/v1/docs/switch) - For toggle states
+- [Select](/v1/docs/select) - For dropdown selections
+- [RHFRadio](/v1/docs/rhf-radio) - React Hook Form integration

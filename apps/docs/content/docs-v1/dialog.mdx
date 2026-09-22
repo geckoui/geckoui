@@ -1,0 +1,242 @@
+---
+title: Dialog
+description: Lightweight imperative modal component for centered overlay content
+---
+
+import { Dialog, Button } from '@geckoui/geckoui';
+
+# Dialog
+
+A lightweight, imperative modal component that renders content in a centered overlay. It serves as the foundational layer for more complex dialog patterns and automatically handles focus management, escape key dismissal, and click-outside behavior.
+
+## Installation
+
+```tsx
+import { Dialog } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { Dialog, Button } from '@geckoui/geckoui';
+
+function Example() {
+  const openDialog = () => {
+    Dialog.show({
+      content: ({ dismiss }) => (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Welcome!</h2>
+          <p className="text-gray-600 mb-6">
+            This is a simple dialog with custom content.
+          </p>
+          <Button onClick={dismiss}>Close</Button>
+        </div>
+      )
+    });
+  };
+
+  return <Button onClick={openDialog}>Open Dialog</Button>;
+}
+```
+
+## API
+
+### Dialog.show(options)
+
+Opens a dialog with the specified options.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `content` | `ReactNode \| FC<{ dismiss: () => void }>` | - | Content to display in the dialog (required) |
+| `className` | `string` | - | CSS class for the dialog container |
+| `dismissOnEsc` | `boolean` | `true` | Dismiss dialog on Escape key press |
+| `dismissOnOutsideClick` | `boolean` | `true` | Dismiss dialog on backdrop click |
+| `data-*` | `string` | - | Data attributes for the dialog element |
+
+### Dialog.dismiss()
+
+Programmatically closes the currently open dialog.
+
+```tsx
+// Close dialog from anywhere
+Dialog.dismiss();
+```
+
+## Examples
+
+### Image Lightbox
+
+
+```tsx
+const openImageViewer = () => {
+  Dialog.show({
+    content: ({ dismiss }) => (
+      <div className="relative">
+        <img
+          src="/large-image.jpg"
+          alt="Preview"
+          className="max-w-4xl rounded-lg"
+        />
+        <button
+          onClick={dismiss}
+          className="absolute top-4 right-4 size-8 flex items-center justify-center bg-black/50 text-white rounded-full"
+        >
+          ✕
+        </button>
+      </div>
+    ),
+    className: "bg-transparent shadow-none",
+    dismissOnEsc: true,
+    dismissOnOutsideClick: true
+  });
+};
+```
+
+### Form Modal
+
+
+```tsx
+import { Input, Label } from '@geckoui/geckoui';
+
+const showUserForm = () => {
+  Dialog.show({
+    content: ({ dismiss }) => (
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" type="text" defaultValue="John Doe" />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" defaultValue="john@example.com" />
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button variant="ghost" onClick={dismiss}>Cancel</Button>
+            <Button onClick={dismiss}>Save Changes</Button>
+          </div>
+        </div>
+      </div>
+    ),
+    className: "max-w-2xl",
+    dismissOnEsc: false,
+    dismissOnOutsideClick: false
+  });
+};
+```
+
+### Non-Dismissible Dialog
+
+
+```tsx
+Dialog.show({
+  content: ({ dismiss }) => (
+    <div>
+      <h2 className="text-xl font-semibold mb-4">Important Notice</h2>
+      <p className="text-gray-600 mb-6">
+        This dialog can only be closed by clicking the button.
+      </p>
+      <Button onClick={dismiss}>I Understand</Button>
+    </div>
+  ),
+  dismissOnEsc: false,
+  dismissOnOutsideClick: false
+});
+```
+
+### Loading State
+
+```tsx
+// Show loading dialog
+Dialog.show({
+  content: () => (
+    <div className="flex flex-col items-center gap-4">
+      <Spinner />
+      <p>Processing payment...</p>
+    </div>
+  ),
+  dismissOnEsc: false,
+  dismissOnOutsideClick: false
+});
+
+// Dismiss from anywhere after async operation
+await processPayment();
+Dialog.dismiss();
+```
+
+## Content Function Pattern
+
+The `content` prop can receive a function that gets access to the `dismiss` callback:
+
+```tsx
+Dialog.show({
+  content: ({ dismiss }) => {
+    const handleSave = async () => {
+      await saveData();
+      dismiss(); // Close after save
+    };
+
+    return (
+      <div>
+        <h2>Edit Item</h2>
+        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={dismiss}>Cancel</Button>
+      </div>
+    );
+  }
+});
+```
+
+## Behavior
+
+### Focus Management
+
+- Automatically blurs the active element when dialog opens
+- Prevents focus from leaving the dialog while open
+- Restores focus appropriately when closed
+
+### Dismissal
+
+- **Escape Key**: Closes dialog by default (disable with `dismissOnEsc={false}`)
+- **Click Outside**: Closes dialog by default (disable with `dismissOnOutsideClick={false}`)
+- **Programmatic**: Call `Dialog.dismiss()` from anywhere
+
+### Portal Rendering
+
+Dialog requires `<GeckoUIPortal />` to be mounted in your app:
+
+```tsx
+// app/layout.tsx
+import { GeckoUIPortal } from '@geckoui/geckoui';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <GeckoUIPortal />
+      </body>
+    </html>
+  );
+}
+```
+
+## Styling
+
+- `GeckoUIDialog` - Main container
+- `GeckoUIDialog__backdrop` - Background overlay
+- `GeckoUIDialog__dialog` - Dialog content wrapper
+
+## Accessibility
+
+- Click-outside detection
+- Escape key support
+- Focus management
+- Backdrop prevents interaction with underlying content
+
+## Related Components
+
+- [ConfirmDialog](/v1/docs/confirm-dialog) - Pre-styled confirmation dialogs
+- [Drawer](/v1/docs/drawer) - Side panel alternative to centered dialogs

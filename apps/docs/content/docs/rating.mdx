@@ -1,0 +1,159 @@
+---
+title: Rating
+description: A rating, picked or shown
+---
+
+import { RatingBasicExample, RatingPrecisionExample, RatingReadOnlyExample, RatingIconsExample, RatingSizesExample, RatingColorsExample } from '@/components/examples/rating-examples';
+
+# Rating
+
+A rating, picked or shown.
+
+## Installation
+
+```tsx
+import { Rating } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <RatingBasicExample />
+</Preview>
+
+```tsx
+const [score, setScore] = useState(3);
+
+<Rating value={score} onChange={setScore} aria-label="Score" />
+```
+
+Picking the rating it already has sets it back to `0`, which is the only way to undo a mis-click with a mouse. `clearable={false}` turns that off.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | required | How many are filled. Any fraction is drawn exactly |
+| `onChange` | `(value: number) => void` | - | Called with the new rating, or `0` when the current one is picked again |
+| `max` | `number` | `5` | How many icons there are |
+| `precision` | `number` | `1` | What a click lands on, as a fraction of one icon |
+| `clearable` | `boolean` | `true` | Whether picking the current rating again sets it to zero |
+| `readOnly` | `boolean` | `false` | Shown rather than picked |
+| `disabled` | `boolean` | `false` | |
+| `icon` | `ReactNode` | a star | The icon |
+| `emptyIcon` | `ReactNode` | `icon` | A different icon for the empty part |
+| `getLabel` | `(value: number) => string` | `` `${value} of ${max}` `` | What each one is called, for a screen reader |
+| `name` | `string` | generated | Ties the radios together |
+| `aria-label` | `string` | - | What the whole thing is called |
+| `color` | `keyof RatingColorMap` | `'gold'` | `gold`, or any of the six semantic colours |
+| `size` | `keyof RatingSizeMap` | `'md'` | |
+| `className` | `string` | - | |
+
+## Examples
+
+### Precision
+
+<Preview>
+  <RatingPrecisionExample />
+</Preview>
+
+```tsx
+<Rating value={score} onChange={setScore} />                  {/* whole icons */}
+<Rating value={score} onChange={setScore} precision={0.5} />  {/* halves */}
+<Rating value={score} onChange={setScore} precision={0.1} />  {/* tenths */}
+```
+
+`precision` decides **what a click lands on**, never what is drawn. All four above share one value, and each draws it identically — they differ only in what you can pick.
+
+The arrow keys step by `precision` too, which is how a tenth stays reachable where a two-pixel pointer target is not.
+
+### Shown rather than picked
+
+<Preview>
+  <RatingReadOnlyExample />
+</Preview>
+
+```tsx
+<Rating value={4.3} readOnly aria-label="4.3 out of 5" />
+```
+
+A fraction is drawn exactly whether the rating can be picked or not, so an average reads as it is rather than being rounded to something the reader was never told. `readOnly` only takes the interaction away.
+
+### Other icons
+
+<Preview>
+  <RatingIconsExample />
+</Preview>
+
+```tsx
+{/* one icon, recoloured */}
+<Rating value={hearts} onChange={setHearts} color="error" icon={<HeartIcon />} />
+
+{/* a different shape for the empty part */}
+<Rating value={4} onChange={setValue} icon={<StarSolid />} emptyIcon={<StarOutline />} />
+```
+
+`icon` alone is used for both halves of each one, filled and empty, with only the colour between them. Give `emptyIcon` as well when the empty state is a different shape, like an outline against a solid.
+
+### Sizes
+
+<Preview>
+  <RatingSizesExample />
+</Preview>
+
+### Colours
+
+<Preview>
+  <RatingColorsExample />
+</Preview>
+
+Stars are `gold` by default, and the six semantic colours are there for the times a rating means something else — a red heart, a green score.
+
+The gold is a fixed colour rather than a theme token, because gold is gold in either theme. It is a shade below a true `#FFD700` on purpose: at that lightness a filled star and an empty one differ only in saturation unless the empty is washed out to nearly white, which reads worse on a light background than the problem it solves.
+
+## The keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>→</kbd> <kbd>↑</kbd> | On one step |
+| <kbd>←</kbd> <kbd>↓</kbd> | Back one step, and to nothing from the first |
+| <kbd>Home</kbd> | To nothing |
+| <kbd>End</kbd> | To the top |
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-rating-accent` | per `color` | The filled part |
+| `--gecko-rating-gold` | `oklch(0.7845 0.1633 68.5)` | The default gold |
+| `--gecko-rating-empty` | `--color-surface-active` | The empty part |
+| `--gecko-rating-size` | per `size` | Each icon |
+| `--gecko-rating-gap` | `0.125rem` | Between them |
+
+### Class names and data attributes
+
+- `GeckoUIRating` - The group, with `data-color`, `data-size`, `data-readonly` and `data-disabled`
+- `GeckoUIRating__icon` - One icon, with `data-filled` when it is full
+- `GeckoUIRating__icon__empty` - The empty copy underneath
+- `GeckoUIRating__icon__fill` - The filled copy, clipped to however much was earned
+- `GeckoUIRating__inputs` - The radios, kept out of sight
+
+Each icon is two copies of the same glyph stacked, the filled one clipped to a width. That is what lets a fraction be a fraction rather than being rounded to a whole.
+
+## Accessibility
+
+A rating is a one-of-many choice, so it is built as a radio group: visually hidden radios carry the semantics and the arrow keys, and post in a plain form. The icons are only what is seen.
+
+Each value is named `"1 of 5"`, `"2 of 5"` and so on. Name the group with `aria-label`, and override the per-value name with `getLabel`:
+
+```tsx
+<Rating value={score} onChange={setScore} aria-label="Rate this article" getLabel={(v) => `${v} stars`} />
+```
+
+The focus ring goes round the whole group, since the radios themselves are out of sight.
+
+## Related Components
+
+- [RHFRating](/docs/rhf-rating) - The same rating, wired to React Hook Form
+- [Progress](/docs/progress) - For showing a number rather than picking one
+- [Radio](/docs/radio) - For a one of many choice that is not a rating

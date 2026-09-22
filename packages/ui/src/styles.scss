@@ -42,6 +42,16 @@
   --color-border-focus: oklch(0.7155 0 none);
   --color-border-hover: oklch(0.8699 0 none);
   --color-border-disabled: oklch(0.9401 0 none);
+
+  /* A field in error. Matches --color-error, with a darker step for hover. */
+  --color-border-invalid: oklch(0.6368 0.2078 25.33);
+  --color-border-invalid-hover: oklch(0.5168 0.2178 25.33);
+
+  /* Semantic colours, shared by Toast and anything else that reports status */
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
 }
 
 * {
@@ -87,6 +97,15 @@
   --color-border-hover: oklch(0.8699 0 none);
   --color-border-disabled: oklch(0.9401 0 none);
 
+  /* A field in error. Matches --color-error, with a darker step for hover. */
+  --color-border-invalid: oklch(0.6368 0.2078 25.33);
+  --color-border-invalid-hover: oklch(0.5168 0.2178 25.33);
+
+  --color-success: oklch(0.6271 0.1699 149.21);
+  --color-error: oklch(0.6368 0.2078 25.33);
+  --color-warning: oklch(0.6685 0.1626 58.32);
+  --color-info: oklch(0.6231 0.188 259.81);
+
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.8717 0.0093 258.34);
   --gecko-ui-scrollbar-thumb-hover: oklch(0.7137 0.0192 261.32);
@@ -116,9 +135,19 @@
   --color-border-secondary: oklch(0.4676 0 none);
   --color-border-focus: oklch(0.5555 0 none);
   --color-border-hover: oklch(0.7155 0 none);
+
+  /* Lighter on hover here, the way the other borders lift against a dark ground */
+  --color-border-invalid: oklch(0.71 0.19 25.33);
+  --color-border-invalid-hover: oklch(0.83 0.17 25.33);
   --color-border-disabled: oklch(0.2972 0 none);
 
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);
   --gecko-ui-scrollbar-thumb-hover: oklch(0.551 0.0234 264.36);
+
+  /* lifted for contrast: the light values sit too dark on a dark surface */
+  --color-success: oklch(0.72 0.17 149.21);
+  --color-error: oklch(0.71 0.19 25.33);
+  --color-warning: oklch(0.76 0.15 58.32);
+  --color-info: oklch(0.72 0.17 259.81);
 }

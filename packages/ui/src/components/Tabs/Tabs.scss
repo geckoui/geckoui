@@ -1,0 +1,188 @@
+@import "../../mixins.scss";
+
+/*
+ * One accent drives every variant, so a new variant added through module augmentation
+ * only needs to decide how to use `--gecko-tabs-accent` — it does not need its own
+ * colour rules.
+ */
+.GeckoUITabs {
+  @include base-reset;
+
+  --gecko-tabs-accent: var(--color-primary-600);
+  --gecko-tabs-muted: var(--color-text-secondary);
+  --gecko-tabs-indicator: 2px;
+  --gecko-tabs-radius: 0.375rem;
+  --gecko-tabs-gap: 0.25rem;
+  --gecko-tabs-padding-x: 0.75rem;
+  --gecko-tabs-padding-y: 0.5rem;
+  --gecko-tabs-font-size: 0.875rem;
+
+  @apply flex flex-col;
+
+  &[data-size="sm"] {
+    --gecko-tabs-padding-x: 0.625rem;
+    --gecko-tabs-padding-y: 0.375rem;
+    --gecko-tabs-font-size: 0.8125rem;
+  }
+
+  &[data-size="lg"] {
+    --gecko-tabs-padding-x: 1rem;
+    --gecko-tabs-padding-y: 0.625rem;
+    --gecko-tabs-font-size: 1rem;
+  }
+
+  &[data-orientation="vertical"] {
+    /*
+     * Centred rather than top aligned, so a short panel sits beside the middle of the
+     * strip instead of stranded against the first tab. Whichever side is taller sets
+     * the height and the other centres against it.
+     */
+    @apply flex-row items-center gap-4;
+  }
+
+  &__list {
+    @apply flex items-stretch overflow-x-auto overflow-y-hidden;
+
+    gap: var(--gecko-tabs-gap);
+
+    /* the strip scrolls sideways when the tabs outgrow it, without a visible bar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+
+  &[data-orientation="vertical"] &__list {
+    @apply flex-col items-stretch overflow-x-hidden overflow-y-auto;
+  }
+
+  &[data-full-width] &__list {
+    @apply w-full;
+  }
+
+  &[data-full-width] &__tab {
+    @apply flex-1;
+  }
+
+  &__tab {
+    @include button-reset;
+
+    @apply relative inline-flex cursor-pointer items-center justify-center gap-2 font-medium whitespace-nowrap transition-colors duration-150;
+
+    @apply shrink-0;
+
+    padding: var(--gecko-tabs-padding-y) var(--gecko-tabs-padding-x);
+    font-size: var(--gecko-tabs-font-size);
+    color: var(--gecko-tabs-muted);
+
+    /* the selected tab keeps its accent on hover, or it reads as unselected */
+    &:hover:not([data-disabled]):not([data-state="selected"]) {
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: -2px;
+      border-radius: var(--gecko-tabs-radius);
+    }
+
+    &[data-state="selected"] {
+      color: var(--gecko-tabs-accent);
+    }
+
+    &[data-disabled] {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  &__panel {
+    @apply flex-1 pt-4;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary-300);
+      outline-offset: 2px;
+    }
+  }
+
+  &[data-orientation="vertical"] &__panel {
+    @apply pt-0;
+  }
+
+  /* underline — the strip carries a hairline, the selected tab an accent bar */
+  &[data-variant="underline"] {
+    --gecko-tabs-gap: 0;
+  }
+
+  &[data-variant="underline"] &__list {
+    @apply border-border-primary border-b;
+  }
+
+  /*
+   * The indicator is an inset shadow rather than a border with a negative margin.
+   * A negative margin pushes the tab past the strip, and any overflow on one axis
+   * turns the other axis scrollable, so the strip could be scrolled vertically.
+   */
+  &[data-variant="underline"] &__tab[data-state="selected"] {
+    box-shadow: inset 0 calc(var(--gecko-tabs-indicator) * -1) 0 0 var(--gecko-tabs-accent);
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__list {
+    @apply border-r border-b-0;
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__tab {
+    @apply justify-start;
+
+    box-shadow: none;
+  }
+
+  &[data-variant="underline"][data-orientation="vertical"] &__tab[data-state="selected"] {
+    box-shadow: inset calc(var(--gecko-tabs-indicator) * -1) 0 0 0 var(--gecko-tabs-accent);
+  }
+
+  /* segmented — the whole strip sits in a track, the selected tab is a raised surface */
+  &[data-variant="segmented"] &__list {
+    /*
+     * `w-fit` lets the track hug the tabs when there are few of them, and `max-w-full`
+     * stops it growing past its container when there are many — without that it never
+     * overflows itself, so it never scrolls.
+     */
+    @apply bg-surface-tertiary w-fit max-w-full p-1;
+
+    border-radius: calc(var(--gecko-tabs-radius) + 0.25rem);
+  }
+
+  &[data-variant="segmented"][data-full-width] &__list {
+    @apply w-full;
+  }
+
+  &[data-variant="segmented"] &__tab {
+    border-radius: var(--gecko-tabs-radius);
+  }
+
+  &[data-variant="segmented"] &__tab[data-state="selected"] {
+    @apply bg-surface-primary shadow-sm;
+
+    color: var(--color-text-primary);
+  }
+
+  /* soft — a tinted accent behind the selected tab, no track */
+  &[data-variant="soft"] &__tab {
+    border-radius: var(--gecko-tabs-radius);
+  }
+
+  &[data-variant="soft"] &__tab[data-state="selected"] {
+    background: color-mix(in oklch, var(--gecko-tabs-accent) 12%, transparent);
+    color: var(--gecko-tabs-accent);
+  }
+
+  &[data-variant="soft"] &__tab:hover:not([data-disabled]):not([data-state="selected"]) {
+    @apply bg-surface-hover;
+  }
+
+  &[data-variant="segmented"] &__tab:hover:not([data-disabled]):not([data-state="selected"]) {
+    @apply bg-surface-hover;
+  }
+}

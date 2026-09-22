@@ -1,0 +1,310 @@
+---
+title: RHFInputGroup
+description: Layout component that combines label, input field, and error message for React Hook Form
+---
+
+import { RHFInputGroup } from '@geckoui/geckoui';
+
+# RHFInputGroup
+
+A layout convenience component that combines a form field label, input component, and error message into a cohesive unit. Automatically detects RHF input components in children (even nested) and extracts their name and control to display validation errors. Reduces boilerplate for standard form field layouts.
+
+> **Recommended Pattern**: Use `RHFInputGroup` when you need label and input detection. It automatically handles the label-input association and error display, reducing boilerplate.
+
+## Installation
+
+```tsx
+import { RHFInputGroup } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFInput, RHFInputGroup } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      basicUsername: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Username">
+        <RHFInput name="basicUsername" placeholder="Enter username" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Label](/v1/docs/label) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Label text for the input group |
+| `labelClassName` | `string` | - | Class name for the label element |
+| `className` | `string` | - | Class name for the wrapper div |
+| `errorClassName` | `string` | - | Class name for the error message |
+| `children` | `ReactNode` | - | Input component(s) to wrap (required) |
+| `required` | `boolean` | - | Shows required asterisk (*) on label |
+| `tooltip` | `string` | - | Tooltip text shown on label hover |
+| ...rest | `LabelProps` | - | All Label component props |
+
+## Examples
+
+### With Required Field
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  groupEmail: z.string().email('Invalid email address').min(1, 'Email is required')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { groupEmail: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup label="Email Address" required>
+        <RHFInput name="groupEmail" type="email" placeholder="Enter email and blur to see validation" />
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### With Help Text (Tooltip)
+
+
+```tsx
+<RHFInputGroup
+  label="Password"
+  required
+  tooltip="Must be at least 8 characters with numbers and special characters"
+>
+  <RHFInput name="tooltipPassword" type="password" placeholder="Enter password" />
+</RHFInputGroup>
+```
+
+### With Textarea
+
+
+```tsx
+import { RHFTextarea } from '@geckoui/geckoui';
+
+const schema = z.object({
+  groupBio: z.string().min(10, 'Bio must be at least 10 characters').max(200, 'Bio must be less than 200 characters')
+});
+
+<RHFInputGroup label="Bio" required tooltip="Tell us about yourself">
+  <RHFTextarea
+    name="groupBio"
+    placeholder="Write your bio here..."
+    rows={4}
+  />
+</RHFInputGroup>
+```
+
+### With Nested Structure
+
+The component automatically finds the first RHF input component even when nested:
+
+
+```tsx
+const schema = z.object({
+  nestedPassword: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(/[!@#$%^&*]/, 'Password must contain at least one special character')
+});
+
+<RHFInputGroup
+  label="Password"
+  required
+  tooltip="Must meet all requirements below"
+>
+  <div className="space-y-2">
+    <RHFInput name="nestedPassword" type="password" placeholder="Enter password" />
+    <ul className="text-sm text-gray-600 space-y-1">
+      <li>✓ At least 8 characters</li>
+      <li>✓ Include a number</li>
+      <li>✓ Include a special character</li>
+    </ul>
+  </div>
+</RHFInputGroup>
+```
+
+### With Custom Styling
+
+
+```tsx
+<RHFInputGroup
+  label="Custom Styled Input"
+  labelClassName="text-blue-600 font-semibold"
+  className="bg-blue-50 p-4 rounded-lg"
+  errorClassName="text-blue-800 font-bold"
+>
+  <RHFInput name="styledInput" placeholder="This has custom styling" />
+</RHFInputGroup>
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFTextarea, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  formUsername: z.string().min(3, 'Username must be at least 3 characters'),
+  formEmail: z.string().email('Invalid email address'),
+  formBio: z.string().min(10, 'Bio must be at least 10 characters'),
+  formPassword: z.string().min(8, 'Password must be at least 8 characters')
+});
+
+function RegistrationForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      formUsername: '',
+      formEmail: '',
+      formBio: '',
+      formPassword: ''
+    }
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Form data:', data);
+    alert('Form submitted! Check console for data.');
+  };
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+        <RHFInputGroup label="Username" required>
+          <RHFInput name="formUsername" placeholder="Enter username" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Email Address" required>
+          <RHFInput name="formEmail" type="email" placeholder="Enter email" />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Bio" required tooltip="Tell us about yourself">
+          <RHFTextarea name="formBio" placeholder="Write your bio..." rows={3} />
+        </RHFInputGroup>
+
+        <RHFInputGroup label="Password" required tooltip="Minimum 8 characters">
+          <RHFInput name="formPassword" type="password" placeholder="Enter password" />
+        </RHFInputGroup>
+
+        <Button type="submit">
+          Submit
+        </Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## How It Works
+
+RHFInputGroup automatically:
+
+1. **Finds the RHF input component** - Recursively searches children to find the first component with `displayName` containing "rhf" (case-insensitive)
+2. **Extracts field name and control** - Gets the `name` and `control` props from the detected input
+3. **Renders error messages** - Automatically passes these to [RHFError](/v1/docs/rhf-error) component to display validation errors
+
+This means you don't need to manually specify the field name twice:
+
+```tsx
+<RHFInputGroup label="Email">
+  <RHFInput name="email" />
+</RHFInputGroup>
+```
+
+Instead of:
+
+```tsx
+<Label>Email</Label>
+<RHFInput name="email" />
+<RHFError name="email" />
+```
+
+## Multiple Inputs
+
+When multiple inputs are present, only the **first input's errors** are shown:
+
+```tsx
+<RHFInputGroup label="Phone Number">
+  <div className="flex gap-2">
+    <RHFInput name="countryCode" placeholder="+1" className="w-20" />
+    <RHFInput name="phoneNumber" placeholder="555-0100" />
+  </div>
+</RHFInputGroup>
+```
+
+For multiple inputs with individual error messages, use [RHFError](/v1/docs/rhf-error) manually:
+
+```tsx
+<div>
+  <Label>Phone Number</Label>
+  <div className="flex gap-2">
+    <div>
+      <RHFInput name="countryCode" placeholder="+1" className="w-20" />
+      <RHFError name="countryCode" />
+    </div>
+    <div>
+      <RHFInput name="phoneNumber" placeholder="555-0100" />
+      <RHFError name="phoneNumber" />
+    </div>
+  </div>
+</div>
+```
+
+## Best Practices
+
+1. **Use for standard layouts** - Perfect for typical label + input + error patterns
+2. **Custom layouts** - Use [Label](/v1/docs/label) and [RHFError](/v1/docs/rhf-error) separately for complex layouts
+3. **Validation mode** - Use `mode: 'onBlur'` in useForm for better UX:
+   ```tsx
+   const methods = useForm({
+     resolver: zodResolver(schema),
+     mode: 'onBlur' // Validates when user leaves the field
+   });
+   ```
+4. **Required fields** - Always use the `required` prop to show asterisk on labels
+5. **Help text** - Use `tooltip` prop for additional context without cluttering the UI
+
+## Accessibility
+
+- Inherits all accessibility features from [Label](/v1/docs/label) component
+- Proper `htmlFor` attribute linking label to input
+- ARIA attributes for required fields
+- Error messages properly associated with inputs
+- Keyboard navigable
+- Screen reader compatible
+
+## Related Components
+
+- [RHFError](/v1/docs/rhf-error) - Error message display component
+- [RHFInput](/v1/docs/rhf-input) - Text input with React Hook Form
+- [RHFTextarea](/v1/docs/rhf-textarea) - Multi-line text input
+- [Label](/v1/docs/label) - Base label component

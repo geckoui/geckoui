@@ -1,5 +1,6 @@
 import SearchDialog from "@/components/search";
-import { GeckoUIPortal } from "@geckoui/geckoui";
+import { siteUrl } from "@/lib/site";
+import { GeckoUIProvider } from "@geckoui/geckoui";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -7,6 +8,7 @@ import { Inter } from "next/font/google";
 import "./global.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Gecko UI",
     template: "%s | Gecko UI"
@@ -42,8 +44,9 @@ export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider search={{ SearchDialog }}>{children}</RootProvider>
-        <GeckoUIPortal />
+        <RootProvider search={{ SearchDialog }}>
+          <GeckoUIProvider>{children}</GeckoUIProvider>
+        </RootProvider>
       </body>
     </html>
   );

@@ -1,0 +1,298 @@
+---
+title: Advanced Usage
+description: Programmatic control with useSelect hook and SelectConsumer
+---
+
+import { Button, Select, SelectConsumer, SelectOption } from "@geckoui/geckoui";
+
+# Advanced Usage
+
+Access Select's internal state and methods using `SelectConsumer` for programmatic control, conditional rendering, and advanced customization patterns.
+
+## SelectConsumer
+
+SelectConsumer provides access to Select's context via a render prop. Use it to read state or call methods from anywhere inside the Select component.
+
+
+```tsx
+"use client";
+
+import { Select, SelectConsumer, SelectOption } from "@geckoui/geckoui";
+import { useState } from "react";
+
+function Example() {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <Select value={value} onChange={setValue} filterable placeholder="Select a framework...">
+      <SelectConsumer
+        render={({ open, keyword, options }) => (
+          <div className="p-3 border rounded-md bg-gray-50 dark:bg-neutral-800 text-sm mb-2">
+            <p>
+              <strong>Status:</strong> {open ? "Open" : "Closed"}
+            </p>
+            <p>
+              <strong>Filter:</strong> {keyword || "(none)"}
+            </p>
+            <p>
+              <strong>Total Options:</strong> {options.length}
+            </p>
+          </div>
+        )}
+      />
+      <SelectOption value="react" label="React" />
+      <SelectOption value="vue" label="Vue" />
+      <SelectOption value="angular" label="Angular" />
+    </Select>
+  );
+}
+```
+
+## Programmatic Control
+
+Control the menu and selection programmatically:
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectConsumer
+    render={({ openMenu, closeMenu, open }) => (
+      <div className="flex gap-2 mb-2">
+        <Button onClick={openMenu} disabled={open}>
+          Open Menu
+        </Button>
+        <Button onClick={closeMenu} disabled={!open}>
+          Close Menu
+        </Button>
+        <Button
+          onClick={() => {
+            setValue("python");
+            closeMenu();
+          }}>
+          Select Python
+        </Button>
+      </div>
+    )}
+  />
+  <SelectOption value="typescript" label="TypeScript" />
+  <SelectOption value="javascript" label="JavaScript" />
+  <SelectOption value="python" label="Python" />
+</Select>
+```
+
+## Conditional Rendering
+
+Show/hide UI based on Select state:
+
+
+```tsx
+<Select multiple value={values} onChange={setValues}>
+  <SelectConsumer
+    render={({ keyword, options, isSelected }) => {
+      const selectedCount = options.filter((opt) => isSelected(opt.value)).length;
+      const filteredCount = keyword
+        ? options.filter((opt) => opt.label.toLowerCase().includes(keyword.toLowerCase())).length
+        : options.length;
+
+      return (
+        <div className="p-2 border-b mb-2 text-sm text-gray-600">
+          <div className="flex justify-between">
+            <span>Selected: {selectedCount}</span>
+            {keyword && <span>Matching: {filteredCount}</span>}
+          </div>
+        </div>
+      );
+    }}
+  />
+  <SelectOption value="bug" label="Bug" />
+  <SelectOption value="feature" label="Feature" />
+  <SelectOption value="docs" label="Documentation" />
+</Select>
+```
+
+## Custom Quick Actions
+
+Add quick action buttons inside the dropdown:
+
+
+```tsx
+<Select value={value} onChange={setValue}>
+  <SelectConsumer<string>
+    render={({ handleChange, closeMenu, value: currentValue }) => (
+      <div className="p-2 border-t mt-2 flex gap-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            handleChange("active");
+            closeMenu();
+          }}>
+          Quick: Active
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            handleChange("inactive");
+            closeMenu();
+          }}>
+          Quick: Inactive
+        </Button>
+        {currentValue && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              setValue(null);
+              closeMenu();
+            }}>
+            Clear
+          </Button>
+        )}
+      </div>
+    )}
+  />
+  <SelectOption value="active" label="Active" />
+  <SelectOption value="inactive" label="Inactive" />
+  <SelectOption value="pending" label="Pending" />
+</Select>
+```
+
+## Debug View
+
+Inspect Select's internal state during development:
+
+
+```tsx
+<Select multiple value={values} onChange={setValues}>
+  <SelectConsumer
+    render={({ open, keyword, value, multiple, options, focusedOption }) => (
+      <pre className="text-xs bg-gray-50 dark:bg-neutral-800 p-3 rounded border">
+        {JSON.stringify(
+          {
+            open,
+            keyword,
+            value,
+            multiple,
+            totalOptions: options.length,
+            focusedOption: focusedOption?.label || null
+          },
+          null,
+          2
+        )}
+      </pre>
+    )}
+  />
+  <SelectOption value="opt1" label="Option 1" />
+  <SelectOption value="opt2" label="Option 2" />
+</Select>
+```
+
+## useSelect Hook
+
+For building completely custom Select components, use the `useSelect` hook directly:
+
+```tsx
+import { useSelect } from "@geckoui/geckoui";
+
+function CustomSelectComponent() {
+  const {
+    open,
+    openMenu,
+    closeMenu,
+    toggleMenu,
+    keyword,
+    setKeyword,
+    value,
+    handleChange,
+    isSelected,
+    options,
+    focusedOption,
+    setFocusedOption,
+    isEmpty,
+    floating,
+    inputRef,
+    setInputRef
+  } = useSelect<string>();
+
+  // Build your custom UI here
+  return <div>{/* Custom implementation */}</div>;
+}
+
+// Must be used inside a Select component
+<Select value={value} onChange={setValue}>
+  <CustomSelectComponent />
+</Select>;
+```
+
+**Important**: `useSelect` must be called inside a Select component (it uses React Context).
+
+## Available Context Properties
+
+### State
+
+| Property            | Type       | Description                        |
+| ------------------- | ---------- | ---------------------------------- |
+| `open`              | `boolean`  | Whether dropdown is open           |
+| `keyword`           | `string`   | Current filter keyword             |
+| `value`             | `T \| T[]` | Current selected value(s)          |
+| `multiple`          | `boolean`  | Whether in multiple selection mode |
+| `isEmpty`           | `boolean`  | Whether no options match filter    |
+| `disabled`          | `boolean`  | Whether Select is disabled         |
+| `placeholder`       | `string`   | Placeholder text                   |
+| `closeMenuOnSelect` | `boolean`  | Auto-close behavior                |
+
+### Data
+
+| Property        | Type                       | Description              |
+| --------------- | -------------------------- | ------------------------ |
+| `options`       | `SelectOptionConfig<T>[]`  | All available options    |
+| `focusedOption` | `FocusedOption<T> \| null` | Currently focused option |
+
+### Methods
+
+| Method             | Type                                 | Description                 |
+| ------------------ | ------------------------------------ | --------------------------- |
+| `openMenu`         | `() => void`                         | Open the dropdown           |
+| `closeMenu`        | `() => void`                         | Close the dropdown          |
+| `toggleMenu`       | `() => void`                         | Toggle dropdown state       |
+| `handleChange`     | `(value: T) => void`                 | Select/deselect an option   |
+| `isSelected`       | `(value: T) => boolean`              | Check if option is selected |
+| `setKeyword`       | `(keyword: string) => void`          | Update filter keyword       |
+| `setOpen`          | `(open: boolean) => void`            | Set open state directly     |
+| `setFocusedOption` | `(option: FocusedOption<T>) => void` | Set focused option          |
+
+### Advanced
+
+| Property      | Type                          | Description                  |
+| ------------- | ----------------------------- | ---------------------------- |
+| `floating`    | `UseFloatingReturn`           | Floating UI positioning data |
+| `inputRef`    | `RefObject<HTMLInputElement>` | Ref for filter input         |
+| `setInputRef` | `(ref: any) => RefCallback`   | Set input ref callback       |
+| `prefix`      | `ReactNode`                   | Prefix content               |
+| `suffix`      | `ReactNode`                   | Suffix content               |
+
+## When to Use
+
+Use SelectConsumer/useSelect when you need to:
+
+- Build completely custom Select UI
+- Access internal state for debugging
+- Sync Select state with external systems
+- Create conditional rendering based on Select state
+
+## When NOT to Use
+
+Don't use SelectConsumer when:
+
+- SelectTrigger can solve your custom trigger needs
+- SelectOption custom content is sufficient
+- You just need custom empty states (use SelectEmpty)
+- You want basic filtering (use filterable prop)
+
+## Related Pages
+
+- [SelectTrigger](/v1/docs/select/select-trigger) - Custom trigger patterns (simpler than useSelect)
+- [SelectOption](/v1/docs/select/select-option) - Custom option content and behavior
+- [SelectEmpty](/v1/docs/select/select-empty) - Custom empty states
+- [Basic Usage](/v1/docs/select) - Introduction to Select

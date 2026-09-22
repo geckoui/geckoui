@@ -48,6 +48,15 @@ export interface UseFilePickerOptions {
    * */
   accept?: string;
 
+  /** Nothing can be picked or dropped.(Default: false) */
+  disabled?: boolean;
+
+  /**
+   * Whether more than one file may be held. `false` keeps one, whether it was browsed to
+   * or dropped in.(Default: true)
+   * */
+  multiple?: boolean;
+
   /**
    * Function to transform files before returning them
    * */
@@ -63,8 +72,10 @@ export interface UseFilePickerOptions {
   keepOldFiles?: boolean;
 
   /**
-   * Whether to remove duplicated files if `keepOldFiles` is true
-   * If true, the file picker will remove duplicated files
+   * Drop a file that is already held, or that arrived twice in the same batch — a folder
+   * and a subfolder that both contain it, say.
+   *
+   * Compared by size first, then by sampling the start, middle and end of the file.
    *
    * Default: false
    * */

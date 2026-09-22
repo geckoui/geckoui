@@ -28,7 +28,7 @@ const RHFDateRangeInput: FC<RHFDateRangeInputProps> = ({
               onChange?.(value);
             }}
             {...rest}
-            hasError={hasError}
+            aria-invalid={hasError || undefined}
           />
         );
       }}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Dialog, Input, Label } from "@geckoui/geckoui";
+import { useState } from "react";
 
 export function BasicDialogExample() {
   const openDialog = () => {
@@ -36,7 +37,7 @@ export function ImageLightboxExample() {
         </div>
       ),
       className: "bg-transparent shadow-none",
-      dismissOnEsc: true,
+      dismissOnEscape: true,
       dismissOnOutsideClick: true
     });
   };
@@ -69,7 +70,7 @@ export function FormDialogExample() {
         </div>
       ),
       className: "max-w-2xl",
-      dismissOnEsc: false,
+      dismissOnEscape: false,
       dismissOnOutsideClick: false
     });
   };
@@ -89,10 +90,27 @@ export function NoEscapeDialogExample() {
           <Button onClick={dismiss}>I Understand</Button>
         </div>
       ),
-      dismissOnEsc: false,
+      dismissOnEscape: false,
       dismissOnOutsideClick: false
     });
   };
 
   return <Button onClick={openDialog}>Open Non-Dismissible Dialog</Button>;
+}
+
+export function ControlledDialogExample() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <h2 className="text-xl font-semibold mb-4">Controlled Dialog</h2>
+        <p className="text-gray-600 mb-6">
+          The parent component owns the open state, the same way it does for Drawer.
+        </p>
+        <Button onClick={() => setOpen(false)}>Close</Button>
+      </Dialog>
+    </>
+  );
 }

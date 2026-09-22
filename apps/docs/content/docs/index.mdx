@@ -48,19 +48,20 @@ Add the CSS imports to your root layout or main entry file:
 import '@geckoui/geckoui/styles.css';
 ```
 
-### 3. Add GeckoUIPortal
+### 3. Add GeckoUIProvider
 
-Add `GeckoUIPortal` to your layout (required for Dialog, Drawer, ConfirmDialog, and Toast components):
+Wrap your app with `GeckoUIProvider`. It is required for Toast, ConfirmDialog and the imperative `Dialog.show()` / `Drawer.show()`; the declarative `<Dialog open>` and `<Drawer open>` work without it:
 
 ```tsx
-import { GeckoUIPortal } from '@geckoui/geckoui';
+import { GeckoUIProvider } from '@geckoui/geckoui';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
-        <GeckoUIPortal />
+        <GeckoUIProvider>
+          {children}
+        </GeckoUIProvider>
       </body>
     </html>
   );

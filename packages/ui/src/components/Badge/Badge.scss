@@ -1,0 +1,116 @@
+@import "../../mixins.scss";
+
+/*
+ * Colour comes from one accent per `data-color`, and each `data-variant` decides how that
+ * accent is used. Adding a colour through module augmentation only needs a new
+ * `--gecko-badge-accent` rule, not a new variant block.
+ */
+.GeckoUIBadge {
+  @include base-reset;
+
+  --gecko-badge-accent: var(--color-text-secondary);
+  /*
+   * The filled foreground inverts with the theme, because the accents do. In dark mode the
+   * semantic tokens are lifted and `default` uses a text colour that flips outright, so a
+   * hard-wired white is unreadable on them. The page surface is light in light mode and dark
+   * in dark mode, which is the contrast partner in both.
+   */
+  --gecko-badge-on-accent: var(--color-surface-primary);
+  --gecko-badge-radius: 0.25rem;
+  --gecko-badge-soft-mix: 12%;
+  --gecko-badge-outline-mix: 40%;
+
+  @apply inline-flex w-fit shrink-0 items-center gap-1.5 border border-transparent font-medium whitespace-nowrap;
+
+  border-radius: var(--gecko-badge-radius);
+
+  &[data-color="default"] {
+    --gecko-badge-accent: var(--color-text-secondary);
+  }
+
+  &[data-color="primary"] {
+    --gecko-badge-accent: var(--color-primary-600);
+
+    /* the primary scale is not lifted in dark, so it keeps its own contrast colour */
+    --gecko-badge-on-accent: var(--color-text-on-primary);
+  }
+
+  &[data-color="success"] {
+    --gecko-badge-accent: var(--color-success);
+  }
+
+  &[data-color="error"] {
+    --gecko-badge-accent: var(--color-error);
+  }
+
+  &[data-color="warning"] {
+    --gecko-badge-accent: var(--color-warning);
+  }
+
+  &[data-color="info"] {
+    --gecko-badge-accent: var(--color-info);
+  }
+
+  &[data-variant="filled"] {
+    background: var(--gecko-badge-accent);
+    color: var(--gecko-badge-on-accent);
+  }
+
+  &[data-variant="soft"] {
+    background: color-mix(
+      in oklab,
+      var(--gecko-badge-accent) var(--gecko-badge-soft-mix),
+      transparent
+    );
+    color: var(--gecko-badge-accent);
+  }
+
+  &[data-variant="outlined"] {
+    background: transparent;
+    border-color: color-mix(
+      in oklab,
+      var(--gecko-badge-accent) var(--gecko-badge-outline-mix),
+      transparent
+    );
+    color: var(--gecko-badge-accent);
+  }
+
+  &[data-size="sm"] {
+    @apply h-5 gap-1 px-1.5 text-[11px];
+  }
+
+  &[data-size="md"] {
+    @apply h-6 px-2 text-xs;
+  }
+
+  &[data-size="lg"] {
+    @apply h-7 gap-2 px-2.5 text-sm;
+  }
+
+  &[data-shape="rounded"] {
+    --gecko-badge-radius: 0.25rem;
+  }
+
+  &[data-shape="pill"] {
+    --gecko-badge-radius: 9999px;
+  }
+
+  &[data-shape="square"] {
+    --gecko-badge-radius: 0;
+  }
+
+  &__dot {
+    @apply size-1.5 shrink-0 rounded-full;
+
+    background: currentColor;
+  }
+
+  &[data-size="lg"] &__dot {
+    @apply size-2;
+  }
+
+  /* keep whatever icon is handed in from being squashed by the flex row */
+  & > svg {
+    @apply shrink-0;
+  }
+}

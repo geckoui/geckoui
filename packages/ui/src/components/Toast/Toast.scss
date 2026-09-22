@@ -1,0 +1,218 @@
+@import "../../mixins.scss";
+
+/*
+ * Every value below is a custom property, so the whole toast system can be
+ * restyled from your own stylesheet without touching a class:
+ *
+ *   :root {
+ *     --gecko-toast-width: 28rem;
+ *     --gecko-toast-radius: 1.5rem;
+ *     --gecko-toast-accent: var(--color-primary-600);
+ *   }
+ */
+.GeckoUIToaster {
+  @include base-reset;
+
+  --gecko-toast-width: min(400px, calc(100vw - 2rem));
+  --gecko-toast-offset: 24px;
+  --gecko-toast-z: 3000;
+
+  @apply pointer-events-none fixed m-0 flex list-none flex-col p-0;
+
+  width: var(--gecko-toast-width);
+  z-index: var(--gecko-toast-z);
+
+  &[data-position^="top"] {
+    top: var(--gecko-toast-offset);
+  }
+
+  &[data-position^="bottom"] {
+    bottom: var(--gecko-toast-offset);
+
+    @apply flex-col-reverse;
+  }
+
+  &[data-position$="left"] {
+    left: var(--gecko-toast-offset);
+  }
+
+  &[data-position$="right"] {
+    /* the scrollbar variable is set while an overlay holds the scroll lock */
+    right: calc(var(--gecko-toast-offset) + var(--gecko-scrollbar-width, 0px));
+  }
+
+  &[data-position$="center"] {
+    @apply left-1/2 -translate-x-1/2;
+  }
+
+  &__item {
+    @apply pointer-events-auto;
+  }
+}
+
+.GeckoUIToast {
+  @include base-reset;
+
+  --gecko-toast-bg: var(--color-surface-primary);
+  --gecko-toast-fg: var(--color-text-primary);
+  --gecko-toast-muted: var(--color-text-muted);
+  --gecko-toast-border: var(--color-border-primary);
+  --gecko-toast-accent: var(--color-text-muted);
+  --gecko-toast-radius: 0.5rem;
+  --gecko-toast-padding: 1rem;
+  --gecko-toast-gap: 0.75rem;
+  --gecko-toast-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --gecko-toast-duration: 200ms;
+
+  @apply flex w-full items-start border;
+
+  background: var(--gecko-toast-bg);
+  border-color: var(--gecko-toast-border);
+  border-radius: var(--gecko-toast-radius);
+  box-shadow: var(--gecko-toast-shadow);
+  color: var(--gecko-toast-fg);
+  gap: var(--gecko-toast-gap);
+  padding: var(--gecko-toast-padding);
+  transition: all var(--gecko-toast-duration) ease-out;
+
+  &[data-variant="success"] {
+    --gecko-toast-accent: var(--color-success);
+  }
+
+  &[data-variant="error"] {
+    --gecko-toast-accent: var(--color-error);
+  }
+
+  &[data-variant="warning"] {
+    --gecko-toast-accent: var(--color-warning);
+  }
+
+  &[data-variant="info"] {
+    --gecko-toast-accent: var(--color-info);
+  }
+
+  &[data-state="entering"],
+  &[data-state="closing"] {
+    @apply scale-95 opacity-0;
+  }
+
+  &[data-state="open"] {
+    @apply scale-100 opacity-100;
+  }
+
+  &__icon {
+    @apply mt-px flex size-[18px] shrink-0 items-center justify-center;
+
+    color: var(--gecko-toast-accent);
+  }
+
+  &__body {
+    @apply flex min-w-0 flex-1 flex-col gap-1;
+  }
+
+  &__message {
+    @apply m-0 text-sm leading-5 font-medium break-words;
+  }
+
+  &__description {
+    @apply m-0 text-sm leading-5 break-words;
+
+    color: var(--gecko-toast-muted);
+  }
+
+  &__actions {
+    @apply mt-2 flex items-center gap-2;
+  }
+
+  &__action,
+  &__cancel {
+    @apply cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium transition-colors;
+  }
+
+  &__action {
+    @apply text-text-on-primary;
+
+    background: var(--gecko-toast-accent);
+  }
+
+  &__cancel {
+    @apply border;
+
+    border-color: var(--gecko-toast-border);
+    color: var(--gecko-toast-fg);
+
+    &:hover {
+      @apply bg-surface-hover;
+    }
+  }
+
+  &__close {
+    @apply -mt-1 -mr-1 cursor-pointer rounded p-1 transition-colors;
+
+    color: var(--gecko-toast-muted);
+
+    &:hover {
+      @apply bg-surface-hover;
+
+      color: var(--gecko-toast-fg);
+    }
+  }
+
+  &__spinner {
+    @apply size-[18px];
+
+    color: var(--gecko-toast-accent);
+  }
+}
+
+.GeckoUIToast__custom {
+  @apply w-full;
+
+  transition: all var(--gecko-toast-duration, 200ms) ease-out;
+
+  &[data-state="entering"],
+  &[data-state="closing"] {
+    @apply scale-95 opacity-0;
+  }
+
+  &[data-state="open"] {
+    @apply scale-100 opacity-100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .GeckoUIToast,
+  .GeckoUIToast__custom {
+    transition-property: opacity;
+  }
+}
+
+/*
+ * Swiping away. The toast follows the pointer with no transition, so it does not lag
+ * behind it, and springs back with one when it is let go short of the threshold.
+ */
+.GeckoUIToast[data-dismissible],
+.GeckoUIToast__custom[data-dismissible] {
+  cursor: grab;
+}
+
+/*
+ * A toast that only leaves downwards leaves the sideways gesture to the page. One that
+ * leaves either way has to take both, or the vertical swipe would be a scroll instead.
+ */
+.GeckoUIToast[data-swipe="y"],
+.GeckoUIToast__custom[data-swipe="y"] {
+  touch-action: pan-x;
+}
+
+.GeckoUIToast[data-swipe="both"],
+.GeckoUIToast__custom[data-swipe="both"] {
+  touch-action: none;
+}
+
+.GeckoUIToast[data-dragging],
+.GeckoUIToast__custom[data-dragging] {
+  cursor: grabbing;
+  transition: none;
+  user-select: none;
+}

@@ -8,7 +8,7 @@ import { z } from "zod";
 export function BasicRHFCounterInputExample() {
   const methods = useForm({
     defaultValues: {
-      quantity: 1
+      quantity: "1"
     }
   });
 
@@ -21,14 +21,14 @@ export function BasicRHFCounterInputExample() {
 
 export function WithValidationExample() {
   const schema = z.object({
-    quantity: z.number().min(1, "Quantity must be at least 1").max(10, "Maximum 10 items")
+    quantity: z.coerce.number().min(1, "Quantity must be at least 1").max(10, "Maximum 10 items")
   });
 
   const methods = useForm({
     resolver: zodResolver(schema) as never,
     mode: "onChange",
     defaultValues: {
-      quantity: 0
+      quantity: "0"
     }
   });
 
@@ -44,9 +44,9 @@ export function WithValidationExample() {
 export function DifferentSizesExample() {
   const methods = useForm({
     defaultValues: {
-      small: 0,
-      medium: 0,
-      large: 0
+      small: "0",
+      medium: "0",
+      large: "0"
     }
   });
 
@@ -63,18 +63,18 @@ export function DifferentSizesExample() {
 
 export function CompleteFormExample() {
   const schema = z.object({
-    adults: z.number().min(1, "At least 1 adult required"),
-    children: z.number().min(0),
-    rooms: z.number().min(1, "At least 1 room required")
+    adults: z.coerce.number().min(1, "At least 1 adult required"),
+    children: z.coerce.number().min(0),
+    rooms: z.coerce.number().min(1, "At least 1 room required")
   });
 
   const methods = useForm({
     resolver: zodResolver(schema) as never,
     mode: "onChange",
     defaultValues: {
-      adults: 1,
-      children: 0,
-      rooms: 1
+      adults: "1",
+      children: "0",
+      rooms: "1"
     }
   });
 

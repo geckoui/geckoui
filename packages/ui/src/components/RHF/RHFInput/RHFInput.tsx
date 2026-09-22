@@ -72,7 +72,7 @@ const RHFInput: FC<RHFInputProps> = ({
         return (
           <Input
             className={classNames("GeckoUIRHFInput", className)}
-            data-error={hasError || undefined}
+            aria-invalid={hasError || undefined}
             prefix={
               prefix ? <DynamicComponentRenderer component={prefix} {...renderProps} /> : null
             }

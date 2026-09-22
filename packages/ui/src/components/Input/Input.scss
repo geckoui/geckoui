@@ -25,6 +25,20 @@
     @apply border-primary-400;
   }
 
+  /*
+   * The invalid state rides `aria-invalid` on the input, which is what a screen reader
+   * reads. Stated for hover and focus too, or the border goes back to blue the moment the
+   * field is used, which is when the error matters most.
+   */
+  &:has(&__input[aria-invalid="true"]),
+  &:has(&__input[aria-invalid="true"]):focus-within {
+    border-color: var(--color-border-invalid);
+  }
+
+  &:has(&__input[aria-invalid="true"]:enabled):hover {
+    border-color: var(--color-border-invalid-hover);
+  }
+
   &__input {
     @include form-reset;
 

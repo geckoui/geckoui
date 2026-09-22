@@ -1,0 +1,121 @@
+---
+title: RHFNumberInput
+description: Number-only text input for React Hook Form with digit and decimal limits
+---
+
+import { BasicRHFNumberInputExample, IntegerOnlyExample, WithDecimalsExample, PositiveOnlyExample, NonStrictExample, WithValidationExample } from '@/components/examples/rhf-number-input-examples';
+
+# RHFNumberInput
+
+A text input wired to React Hook Form that accepts only digits and a single decimal point. It sanitises as you type rather than converting to a number, so a half-typed value like `2.` survives until you finish.
+
+## Installation
+
+```tsx
+import { RHFNumberInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BasicRHFNumberInputExample />
+</Preview>
+
+```tsx
+<FormProvider {...methods}>
+  <RHFNumberInput name="balance" />
+</FormProvider>
+```
+
+The field value is a **string**. Convert it where you need a number, or coerce it in your schema:
+
+```tsx
+const schema = z.object({
+  balance: z.coerce.number().min(0)
+});
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `positiveOnly` | `boolean` | `false` | Reject a leading minus sign |
+| `strict` | `boolean` | `true` | Drop leading zeros, so `000123.45` becomes `123.45` |
+| `maxFractionDigits` | `number` | - | Digits kept after the decimal point. `0` removes the decimal point entirely |
+| `maxWholeDigitPlaces` | `number` | - | Digits kept before the decimal point |
+| `transform` | `{ input?, output? }` | - | Override the display or stored value. Supplying `output` replaces the sanitiser |
+| `control` | `Control` | - | Form control, taken from context when omitted |
+| `rules` | `RegisterOptions` | - | React Hook Form validation rules |
+| ...rest | `RHFInputProps` | - | Everything `RHFInput` accepts, including `prefix` and `suffix` |
+
+## Examples
+
+### Integer only
+
+<Preview>
+  <IntegerOnlyExample />
+</Preview>
+
+```tsx
+<RHFNumberInput name="quantity" maxFractionDigits={0} />
+```
+
+### Fixed precision
+
+<Preview>
+  <WithDecimalsExample />
+</Preview>
+
+```tsx
+<RHFNumberInput name="price" maxFractionDigits={2} maxWholeDigitPlaces={10} />
+```
+
+### Positive numbers only
+
+<Preview>
+  <PositiveOnlyExample />
+</Preview>
+
+```tsx
+<RHFNumberInput name="age" positiveOnly maxFractionDigits={0} />
+```
+
+### Leading zeros preserved
+
+Useful for values that are not really quantities, such as room or account numbers:
+
+<Preview>
+  <NonStrictExample />
+</Preview>
+
+```tsx
+<RHFNumberInput
+  name="roomNumber"
+  strict={false}
+  maxWholeDigitPlaces={5}
+  maxFractionDigits={0}
+/>
+```
+
+### With validation
+
+<Preview>
+  <WithValidationExample />
+</Preview>
+
+## Behavior
+
+- Anything that is not a digit or `.` is stripped as you type.
+- Only the first decimal point is kept, so `1.2.3` becomes `1.2`.
+- With `strict`, the whole part runs through `Number()`, so `007` becomes `7`.
+- A leading `-` is preserved unless `positiveOnly` is set.
+- The value stays a string, so `2.` and `2.0` are not collapsed while typing.
+
+The same sanitising is available on its own as the exported `formatNumericInput` utility, and `CounterInput` uses it too.
+
+## Related Components
+
+- [RHFInput](/docs/rhf-input) - The underlying text input
+- [RHFCurrencyInput](/docs/rhf-currency-input) - Adds a currency symbol and thousands separators
+- [RHFCounterInput](/docs/rhf-counter-input) - Number input with increment and decrement buttons

@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { isInsideShadowDOM } from "../utils/isInsideShadowDom";
 
@@ -28,19 +28,27 @@ const useClickOutside = <T extends HTMLElement>(
   handler?: (event: Event | MouseEvent | TouchEvent) => void,
   refs?: RefObject<T | null>[]
 ) => {
-  useEffect(() => {
-    if (!refs || refs.length === 0) return;
+  const handlerRef = useRef(handler);
+  const refsRef = useRef(refs);
 
-    const isShadow = isInsideShadowDOM(refs[0].current as Node);
+  handlerRef.current = handler;
+  refsRef.current = refs;
+
+  const enabled = !!handler && !!refs && refs.length > 0;
+
+  useEffect(() => {
+    if (!enabled) return;
 
     const listener = (event: Event | MouseEvent | TouchEvent) => {
+      const currentRefs = refsRef.current ?? [];
+      const isShadow = isInsideShadowDOM(currentRefs[0]?.current as Node);
       const target = isShadow ? event.composedPath()[0] : event.target;
 
-      if (refs.some((ref) => ref.current?.contains(target as Node))) {
+      if (currentRefs.some((ref) => ref.current?.contains(target as Node))) {
         return;
       }
 
-      handler?.(event);
+      handlerRef.current?.(event);
     };
 
     document.addEventListener("mousedown", listener, true);
@@ -50,7 +58,7 @@ const useClickOutside = <T extends HTMLElement>(
       document.removeEventListener("mousedown", listener, true);
       document.removeEventListener("touchstart", listener, true);
     };
-  }, [refs, handler]);
+  }, [enabled]);
 };
 
 export default useClickOutside;

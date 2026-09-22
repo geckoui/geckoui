@@ -1,0 +1,252 @@
+---
+title: Stepper
+description: How far along a set of steps you are
+---
+
+import { StepperBasicExample, StepperVerticalExample, StepperErrorExample, StepperFreeExample, StepperReadOnlyExample, StepperRenderExample, StepperSizesExample } from '@/components/examples/stepper-examples';
+
+# Stepper
+
+How far along a set of steps you are.
+
+## Installation
+
+```tsx
+import { Stepper, Step } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <StepperBasicExample />
+</Preview>
+
+```tsx
+const [step, setStep] = useState('payment');
+
+<Stepper value={step} onChange={setStep}>
+  <Step value="cart" description="3 items">Cart</Step>
+  <Step value="delivery" description="Where it goes">Delivery</Step>
+  <Step value="payment" description="Card or bank">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
+```
+
+It shows progress and takes you back through it. **What each step holds is yours to render** — a wizard is usually one form with fields shown and hidden, rather than separate panels. When you do want panels, [Tabs](/docs/tabs) is that component.
+
+## Props API
+
+### Stepper
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | Which step you are on |
+| `onChange` | `(value: string) => void` | - | Called when a step is picked. Without it the stepper is read-only |
+| `linear` | `boolean` | `true` | Whether the steps have to be taken in order |
+| `separator` | `ReactNode` | a line | What goes between the steps |
+| `orientation` | `keyof StepperOrientationMap` | `'horizontal'` | `horizontal` or `vertical` |
+| `size` | `keyof StepperSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `aria-label` | `string` | `'Progress'` | What the whole thing is called |
+| `className` | `string` | - | CSS class for the nav |
+
+### Step
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | What `value` and `onChange` deal in |
+| `description` | `ReactNode` | - | A second line under the name |
+| `status` | `'complete' \| 'current' \| 'upcoming' \| 'error'` | from position | Where this step stands |
+| `icon` | `ReactNode` | number, or a tick | What goes in the marker |
+| `disabled` | `boolean` | `false` | Cannot be picked, whatever else is true |
+| `render` | `({ value, index, status, reachable, disabled, select, children, description }) => ReactNode` | - | Draw the step yourself. `index` counts from one |
+| ...rest | `HTMLAttributes<HTMLButtonElement>` | - | Standard HTML attributes. Not `ButtonHTMLAttributes`, so `type` is not among them |
+
+## Examples
+
+### Going back, but not ahead
+
+Steps behind you can be clicked; the ones ahead cannot, until you get there. Skipping ahead in a wizard usually means arriving somewhere that depends on an answer you have not given yet.
+
+The step you are on is not clickable either — you are already there.
+
+### Vertical
+
+<Preview>
+  <StepperVerticalExample />
+</Preview>
+
+```tsx
+const [step, setStep] = useState('payment');
+
+<Stepper value={step} onChange={setStep} orientation="vertical">
+  <Step value="cart" description="3 items">Cart</Step>
+  <Step value="delivery" description="Where it goes">Delivery</Step>
+  <Step value="payment" description="Card or bank">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
+```
+
+### A step that went wrong
+
+<Preview>
+  <StepperErrorExample />
+</Preview>
+
+```tsx
+<Stepper value="done" onChange={setStep}>
+  <Step value="cart">Cart</Step>
+  <Step value="delivery" status="error" description="Postcode not found">Delivery</Step>
+  <Step value="payment">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
+```
+
+Where a step stands is worked out from where it sits against the current one, so a straight run needs nothing said. `status` overrides that, which is how a step already passed can show an error rather than a tick.
+
+### When any step is reachable
+
+<Preview>
+  <StepperFreeExample />
+</Preview>
+
+```tsx
+const [step, setStep] = useState('cart');
+
+<Stepper value={step} onChange={setStep} linear={false}>
+  <Step value="cart">Cart</Step>
+  <Step value="delivery">Delivery</Step>
+  <Step value="payment">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
+```
+
+### To read, not to use
+
+<Preview>
+  <StepperReadOnlyExample />
+</Preview>
+
+```tsx
+<Stepper value="payment">
+  <Step value="cart">Cart</Step>
+  <Step value="delivery">Delivery</Step>
+  <Step value="payment">Payment</Step>
+  <Step value="done">Confirm</Step>
+</Stepper>
+```
+
+Without an `onChange` nothing is clickable and the keyboard walks straight past, rather than tabbing through a row of buttons that do nothing.
+
+### Sizes
+
+<Preview>
+  <StepperSizesExample />
+</Preview>
+
+### Drawing the steps yourself
+
+<Preview>
+  <StepperRenderExample />
+</Preview>
+
+When the design is not a marker beside a label, `render` hands the whole step over. Nothing of the step's own is drawn — no marker, no classes, no styles to work around:
+
+```tsx
+const PILLS = [
+  { value: 'dev', label: 'Dev', tint: 'bg-blue-500/25 text-blue-600' },
+  { value: 'review', label: 'Review', tint: 'bg-green-500/25 text-green-600' },
+  { value: 'ship', label: 'Ship', tint: 'bg-amber-500/25 text-amber-600' }
+];
+
+function Pipeline() {
+  const [step, setStep] = useState('dev');
+
+  return (
+    <Stepper
+      value={step}
+      onChange={setStep}
+      linear={false}
+      separator={<span className="px-3 text-lg text-gray-400">&rarr;</span>}>
+      {PILLS.map((pill) => (
+        <Step
+          key={pill.value}
+          value={pill.value}
+          render={({ index, status, select }) => (
+            <button
+              type="button"
+              onClick={select}
+              className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 ${
+                status === 'current' ? 'border-2 border-gray-900' : 'border border-gray-300'
+              }`}>
+              <span
+                className={`flex size-7 items-center justify-center rounded-full text-sm font-semibold ${pill.tint}`}>
+                {index}
+              </span>
+              <span className={status === 'current' ? 'font-semibold' : 'text-gray-500'}>
+                {pill.label}
+              </span>
+            </button>
+          )}
+        />
+      ))}
+    </Stepper>
+  );
+}
+```
+
+The list item and the joint to the next step stay, so it is still a list and still joined up, and the reachability rules still hold — `select` does nothing on a step you cannot get to.
+
+Use it when overriding would mean fighting the component. The props above are quicker when the shape already suits.
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-stepper-marker-size` | per `size` | The numbered circle |
+| `--gecko-stepper-gap` | per `size` | Between the marker and its name |
+| `--gecko-stepper-line` | `--color-border-secondary` | The run between markers |
+| `--gecko-stepper-line-done` | `--color-primary-600` | The run behind you |
+| `--gecko-stepper-line-width` | `2px` | How thick that run is |
+| `--gecko-stepper-current` | `--color-primary-600` | Where you are, and what is done |
+| `--gecko-stepper-upcoming` | `--color-text-tertiary` | What is still ahead |
+| `--gecko-stepper-error` | `--color-error` | A step that went wrong |
+
+### Class names and data attributes
+
+- `GeckoUIStepper` - The nav, with `data-orientation` and `data-size`
+- `GeckoUIStepper__list` - The ordered list
+- `GeckoUIStepper__step` - One step, with `data-status`
+- `GeckoUIStepper__button` - The step itself, also with `data-status`
+- `GeckoUIStepper__marker` - The numbered circle
+- `GeckoUIStepper__label` and `__description` - The two lines
+- `GeckoUIStepper__line` - The run to the next step
+
+## Adding your own sizes
+
+Both axes are extensible maps, so you can add keys through module augmentation:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface StepperSizeMap {
+    xs: unknown;
+  }
+}
+```
+
+```css
+.GeckoUIStepper[data-size="xs"] {
+  --gecko-stepper-marker-size: 1.25rem;
+}
+```
+
+## Accessibility
+
+It renders a named `<nav>` around an `<ol>`, so the order and the depth come from the list.
+
+The step you are on carries `aria-current="step"`. Steps you cannot reach are real disabled buttons rather than styled-down ones, so the keyboard skips them, and a stepper with no `onChange` has nothing tabbable in it at all.
+
+## Related Components
+
+- [Tabs](/docs/tabs) - For panels you switch between rather than progress through
+- [Breadcrumb](/docs/breadcrumb) - For where a page sits, rather than how far along you are
+- [Progress](/docs/progress) - For a number rather than a set of steps

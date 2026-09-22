@@ -1,17 +1,41 @@
+import type { FileRejection } from "../../../components/FileInput";
 import type { FilePickerFile, OpenFilePickerOptions } from "../../../types";
 import { isTwoFileEqualByFileContent } from "../../../utils";
 
 class BaseFilePickerHandler {
   accept: string;
   removeDuplicates: boolean;
+  multiple: boolean;
+  preview: boolean;
+  /** How many more files may be taken on this run, not the field's own `max`. */
+  room?: number;
   oldFiles: FilePickerFile[];
 
-  constructor(accept = "*", removeDuplicates = false, opts?: { oldFiles?: FilePickerFile[] }) {
+  /** Everything turned away on this run, and why, for the caller to report. */
+  rejected: FileRejection[] = [];
+
+  constructor(
+    accept = "*",
+    removeDuplicates = false,
+    opts?: {
+      oldFiles?: FilePickerFile[];
+      multiple?: boolean;
+      preview?: boolean;
+      room?: number;
+    }
+  ) {
     this.accept = accept;
     this.removeDuplicates = removeDuplicates;
+    this.multiple = opts?.multiple ?? true;
+    this.preview = opts?.preview ?? false;
+    this.room = opts?.room;
     this.oldFiles = opts?.oldFiles || [];
 
     this.open = this.open.bind(this);
+  }
+
+  private turnAway(file: File, reason: FileRejection["reason"]) {
+    this.rejected.push({ file, reason });
   }
 
   onDrop(_: DataTransferItemList | undefined): Promise<FilePickerFile[]> {
@@ -19,7 +43,7 @@ class BaseFilePickerHandler {
   }
 
   async open(options?: OpenFilePickerOptions): Promise<FilePickerFile[]> {
-    const { multiple = true, directory = false, onChangeStart } = options || {};
+    const { multiple = this.multiple, directory = false, onChangeStart } = options || {};
 
     return new Promise((resolve) => {
       const input = document.createElement("input");
@@ -57,6 +81,22 @@ class BaseFilePickerHandler {
     file: FilePickerFile,
     data: FilePickerFile[] = []
   ): Promise<FilePickerFile[]> {
+    /*
+     * Every path in, browsed or dropped, comes through here, so one file means one file
+     * whichever way it arrived. The browse dialog also enforces it, but a drop cannot.
+     */
+    if (!this.multiple && data.length >= 1) {
+      this.turnAway(file, "max");
+
+      return data;
+    }
+
+    if (this.room !== undefined && data.length >= this.room) {
+      this.turnAway(file, "max");
+
+      return data;
+    }
+
     let newFile = file;
     const key = newFile.size;
 
@@ -68,6 +108,8 @@ class BaseFilePickerHandler {
           const isEqual = await isTwoFileEqualByFileContent(newFile, possibleDuplicatedFile);
 
           if (isEqual) {
+            this.turnAway(file, "duplicate");
+
             return data;
           }
         }
@@ -108,10 +150,15 @@ class BaseFilePickerHandler {
         return newFile.type === acceptType;
       });
 
-      if (!valid) return data;
+      if (!valid) {
+        this.turnAway(newFile, "type");
+
+        return data;
+      }
     }
 
-    newFile.preview = URL.createObjectURL(newFile);
+    // Only on request: an object URL pins the file's bytes until it is revoked
+    if (this.preview) newFile.preview = URL.createObjectURL(newFile);
 
     data.push(newFile);
 

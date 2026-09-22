@@ -1,0 +1,165 @@
+---
+title: InputError
+description: Display validation error messages below form fields
+---
+
+import { InputError, Input } from '@geckoui/geckoui';
+
+# InputError
+
+A component for displaying error messages below input fields. This is a simple styled div, typically used to show validation errors or other feedback related to form inputs.
+
+## Installation
+
+```tsx
+import { InputError } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+<InputError>This field is required</InputError>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Error message content |
+| `className` | `string` | - | CSS class for custom styling |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | All standard div attributes |
+
+## Examples
+
+### With Input Field
+
+
+```tsx
+import { Input, InputError } from '@geckoui/geckoui';
+
+function EmailField() {
+  const [error, setError] = useState('');
+
+  return (
+    <div className="space-y-1">
+      <Input type="email" placeholder="email@example.com" />
+      {error && <InputError>{error}</InputError>}
+    </div>
+  );
+}
+```
+
+### Form Validation
+
+
+```tsx
+function FormWithValidation() {
+  const [errors, setErrors] = useState({});
+
+  return (
+    <form>
+      <div className="space-y-1">
+        <Input type="text" placeholder="Username" />
+        {errors.username && (
+          <InputError>{errors.username}</InputError>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <Input type="password" placeholder="Password" />
+        {errors.password && (
+          <InputError>{errors.password}</InputError>
+        )}
+      </div>
+    </form>
+  );
+}
+```
+
+### Conditional Display
+
+
+```tsx
+function ConditionalError({ error }) {
+  return (
+    <div className="space-y-1">
+      <Input type="email" />
+      {error && <InputError>{error}</InputError>}
+    </div>
+  );
+}
+```
+
+### Multiple Error Types
+
+
+```tsx
+function PasswordField({ errors }) {
+  const getErrorMessage = () => {
+    if (errors.required) return 'Password is required';
+    if (errors.minLength) return 'Password must be at least 8 characters';
+    if (errors.pattern) return 'Password must contain letters and numbers';
+    return '';
+  };
+
+  const errorMessage = getErrorMessage();
+
+  return (
+    <div className="space-y-1">
+      <Input type="password" />
+      {errorMessage && <InputError>{errorMessage}</InputError>}
+    </div>
+  );
+}
+```
+
+### Custom Styling
+
+
+```tsx
+<InputError className="text-red-600 font-semibold">
+  Custom styled error
+</InputError>
+
+<InputError className="text-orange-500 italic">
+  Warning style error
+</InputError>
+```
+
+### With Label
+
+
+```tsx
+import { Label, Input, InputError } from '@geckoui/geckoui';
+
+<div className="space-y-1">
+  <Label htmlFor="email" required>Email Address</Label>
+  <Input id="email" type="email" />
+  {error && <InputError>{error}</InputError>}
+</div>
+```
+
+## Accessibility
+
+- Uses semantic HTML (`<div>` element)
+- Should be associated with form field via ARIA
+- Error styling provides visual feedback
+- Works with screen readers
+
+## Styling
+
+The component uses the class name `GeckoUIInputError`. Override styles using the `className` prop:
+
+```css
+.GeckoUIInputError {
+  /* Default error styling */
+}
+```
+
+## Related Components
+
+- [Label](/v1/docs/label) - Form field labels
+- [Input](/v1/docs/input) - Text input fields
+- [Alert](/v1/docs/alert) - Page-level messages
+- [RHFInput](/v1/docs/rhf-input) - React Hook Form input integration

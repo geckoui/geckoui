@@ -1,0 +1,92 @@
+---
+title: RHFTagInput
+description: TagInput wired to React Hook Form
+---
+
+import { BasicRHFTagInputExample, RHFTagInputRulesExample, RHFTagInputRequiredExample } from '@/components/examples/rhf-tag-input-examples';
+
+# RHFTagInput
+
+[TagInput](/docs/tag-input) wired to React Hook Form.
+
+## Installation
+
+```tsx
+import { RHFTagInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <BasicRHFTagInputExample />
+</Preview>
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { RHFTagInput, TagInputOption } from '@geckoui/geckoui';
+
+function ArticleForm() {
+  const methods = useForm({ defaultValues: { tags: [] } });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(save)}>
+        <RHFTagInput name="tags" rules={{ validate: (tags) => tags.length > 0 || 'Add one' }}>
+          <TagInputOption value="React">React</TagInputOption>
+          <TagInputOption value="Vue">Vue</TagInputOption>
+        </RHFTagInput>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+The field holds a `string[]`. A field the form has nothing for reads as an empty list, so the input never has to guard against it.
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | required | The field path |
+| `control` | `Control` | - | Taken from `FormProvider` when left out |
+| `rules` | `RegisterOptions` | - | Validation rules |
+| `onChange` | `(value: string[]) => void` | - | Called alongside the form update |
+| ...rest | `TagInputProps` | - | Everything [TagInput](/docs/tag-input) takes, except `value`, `onChange` and `aria-invalid` |
+
+`aria-invalid` is driven by the field's own error state, so it is not yours to set.
+
+## Two kinds of rule
+
+They do different jobs and are worth keeping apart:
+
+- **`validate`** decides whether a single tag may be added at all. A tag it turns down never reaches the form.
+- **`rules`** is React Hook Form's, and judges the whole list on submit.
+
+<Preview>
+  <RHFTagInputRulesExample />
+</Preview>
+
+```tsx
+<RHFTagInput
+  name="emails"
+  validate={(tag) => tag.includes('@')}
+  rules={{ validate: (emails) => emails.length <= 10 || 'Ten at most' }}
+/>
+```
+
+Pair it with [RHFError](/docs/rhf-error) to show the message:
+
+<Preview>
+  <RHFTagInputRequiredExample />
+</Preview>
+
+```tsx
+<RHFTagInput name="tags" rules={{ required: 'Add at least one tag' }} />
+<RHFError name="tags" />
+```
+
+## Related Components
+
+- [TagInput](/docs/tag-input) - The field on its own
+- [RHFSelect](/docs/rhf-select) - For picking from a fixed list
+- [RHFError](/docs/rhf-error) - Shows the message

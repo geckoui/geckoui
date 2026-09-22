@@ -8,7 +8,7 @@ import { CheckboxBasicExample, CheckboxIndeterminateExample, CheckboxDisabledExa
 
 # Checkbox
 
-A checkbox component with custom styling and support for indeterminate (partial) state, useful for "select all" scenarios where only some items are selected.
+A checkbox component with custom styling and support for the indeterminate state, useful for "select all" scenarios where only some items are selected.
 
 ## Installation
 
@@ -42,8 +42,9 @@ function Example() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `checked` | `boolean` | - | Controlled checked state |
-| `partial` | `boolean` | `false` | Display indeterminate icon (for partial selection) |
+| `indeterminate` | `boolean` | `false` | Show the mixed state. Independent of `checked`, like the native DOM property |
 | `disabled` | `boolean` | `false` | Disable the checkbox |
+| `aria-invalid` | `boolean` | - | Marks the box invalid, to a screen reader and in its colours |
 | `className` | `string` | - | CSS class for the checkbox box |
 | `onChange` | `ChangeEventHandler` | - | Callback when checked state changes |
 | ...rest | `InputHTMLAttributes` | - | All standard HTML input attributes |
@@ -101,8 +102,8 @@ function SelectAll() {
     <div>
       <label className="flex items-center gap-2">
         <Checkbox
-          checked={someChecked || allChecked}
-          partial={someChecked && !allChecked}
+          checked={allChecked}
+          indeterminate={someChecked && !allChecked}
           onChange={handleSelectAll}
         />
         <span>Select All</span>
@@ -112,6 +113,22 @@ function SelectAll() {
   );
 }
 ```
+
+### How indeterminate behaves
+
+`indeterminate` mirrors the native DOM property. It is purely visual and independent of
+`checked`, so a "select all" box shows the dash while staying unchecked:
+
+| `checked` | `indeterminate` | Shows |
+|---|---|---|
+| `false` | `false` | empty box |
+| `false` | `true` | dash |
+| `true` | `false` | tick |
+| `true` | `true` | dash |
+
+Because it is a DOM property with no matching HTML attribute, the component writes it to
+the input directly. That is what makes the `:indeterminate` CSS pseudo-class match and lets
+assistive tech report the mixed state.
 
 ### Disabled States
 
@@ -165,7 +182,8 @@ The checkbox supports full keyboard navigation:
 
 ## Accessibility
 
-- Uses proper ARIA attributes (`aria-checked`, `role="checkbox"`)
+- Renders a native `<input type="checkbox">`, so role and checked state are implicit
+- The `indeterminate` DOM property is set on the input, so the mixed state is announced
 - Keyboard accessible with Space and Enter keys
 - Focus management for keyboard users
 - Works with screen readers
@@ -179,8 +197,8 @@ The checkbox supports full keyboard navigation:
 
 ## Icons
 
-- **CheckIcon**: Displayed when `checked={true}` and `partial={false}`
-- **IndeterminateIcon**: Displayed when `partial={true}`
+- **CheckIcon**: Displayed when `checked={true}` and `indeterminate={false}`
+- **IndeterminateIcon**: Displayed when `indeterminate={true}`
 
 ## Related Components
 

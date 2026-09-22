@@ -1,0 +1,176 @@
+---
+title: RHFController
+description: Core wrapper component for React Hook Form integration
+---
+
+# RHFController
+
+RHFController is a wrapper around React Hook Form's Controller component that automatically injects the `control` prop from `FormProvider`. This is the foundation for all RHF* components in Gecko UI.
+
+## Installation
+
+```tsx
+import { RHFController } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFController } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      email: ''
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFController
+          name="email"
+          render={({ field }) => (
+            <input
+              {...field}
+              type="email"
+              placeholder="Enter email"
+            />
+          )}
+        />
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Accepts all props from React Hook Form's [Controller](https://react-hook-form.com/api/usecontroller/controller):
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `render` | `function` | - | Render prop function (required) |
+| `defaultValue` | `any` | - | Default field value |
+| `shouldUnregister` | `boolean` | `false` | Unregister field on unmount |
+
+**About `control` prop**: By default, RHFController uses `useFormContext()` to get the control object automatically. Pass it explicitly when you have nested `FormProvider`s and want to connect to a specific form instance.
+
+## Why Use RHFController?
+
+### Without RHFController (Standard RHF)
+
+```tsx
+import { Controller, useFormContext } from 'react-hook-form';
+
+function CustomInput() {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      control={control}  // Must manually get and pass control
+      name="email"
+      render={({ field }) => <input {...field} />}
+    />
+  );
+}
+```
+
+### With RHFController (Gecko UI)
+
+```tsx
+import { RHFController } from '@geckoui/geckoui';
+
+function CustomInput() {
+  return (
+    <RHFController
+      name="email"  // control is auto-injected!
+      render={({ field }) => <input {...field} />}
+    />
+  );
+}
+```
+
+## Examples
+
+### Access Form State
+
+```tsx
+<RHFController
+  name="password"
+  render={({ field, fieldState, formState }) => (
+    <div>
+      <input {...field} type="password" />
+      {fieldState.error && (
+        <span>{fieldState.error.message}</span>
+      )}
+      {formState.isDirty && <span>Unsaved changes</span>}
+    </div>
+  )}
+/>
+```
+
+### Custom Component Integration
+
+```tsx
+<RHFController
+  name="birthDate"
+  render={({ field }) => (
+    <CustomDatePicker
+      value={field.value}
+      onChange={field.onChange}
+      onBlur={field.onBlur}
+    />
+  )}
+/>
+```
+
+### Nested FormProviders
+
+When you have nested forms, pass `control` explicitly to specify which form:
+
+```tsx
+function NestedFormsExample() {
+  const outerForm = useForm({ defaultValues: { outerField: '' } });
+  const innerForm = useForm({ defaultValues: { innerField: '' } });
+
+  return (
+    <FormProvider {...outerForm}>
+      <FormProvider {...innerForm}>
+        {/* Uses innerForm's control automatically */}
+        <RHFController
+          name="innerField"
+          render={({ field }) => <input {...field} />}
+        />
+
+        {/* Explicitly use outerForm's control */}
+        <RHFController
+          name="outerField"
+          control={outerForm.control}
+          render={({ field }) => <input {...field} />}
+        />
+      </FormProvider>
+    </FormProvider>
+  );
+}
+```
+
+## When to Use
+
+### Use RHFController When:
+- Building custom form components
+- Integrating third-party libraries
+- Need fine-grained control over field behavior
+
+### Use Pre-built RHF Components When:
+- Working with Gecko UI components
+- Want automatic error styling
+- Need less boilerplate
+
+## Related Components
+
+- [RHFInput](/v1/docs/rhf-input) - Text input wrapper
+- [React Hook Form Controller](https://react-hook-form.com) - Official docs

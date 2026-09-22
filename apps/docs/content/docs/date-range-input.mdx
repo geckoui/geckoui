@@ -51,8 +51,9 @@ function Example() {
 | `floatingStrategy` | `'absolute' \| 'fixed'` | `'absolute'` | Floating UI positioning strategy |
 | `disabled` | `boolean` | `false` | Disable the input |
 | `readOnly` | `boolean` | `false` | Make the input read-only |
-| `hasError` | `boolean` | `false` | Show error styling |
+| `aria-invalid` | `boolean` | `false` | Show error styling |
 | `hideCalendar` | `boolean` | `false` | Hide the calendar popup |
+| `fixedWeeks` | `boolean` | `false` | Always render six weeks in the calendar, so the popup keeps the same height across months |
 | `hideCalendarIcon` | `boolean` | `false` | Hide the calendar icon |
 | `hideClearIcon` | `boolean` | `false` | Hide the clear button |
 | `placeholder` | `string` | - | Custom placeholder text |
@@ -125,7 +126,7 @@ Choose between different date display formats:
 </Preview>
 
 ```tsx
-<DateRangeInput value={value} onChange={setValue} hasError />
+<DateRangeInput value={value} onChange={setValue} aria-invalid />
 ```
 
 ## Styling
@@ -133,7 +134,7 @@ Choose between different date display formats:
 **State attributes (on `GeckoUIDateInput`):**
 - `data-state="disabled"` - Disabled state
 - `data-state="readonly"` - Read-only state
-- `data-error` - Error state
+- `aria-invalid` - The field is invalid, set by you or by a date that cannot exist
 - `data-focus` - Focused state
 - `data-calendar-open` - Calendar is open
 
@@ -152,7 +153,7 @@ Choose between different date display formats:
 ```css
 .GeckoUIDateInput[data-state="disabled"] { opacity: 0.5; }
 .GeckoUIDateInput[data-state="readonly"] { pointer-events: none; }
-.GeckoUIDateInput[data-error] { border-color: red; }
+.GeckoUIDateInput[aria-invalid="true"] { border-color: var(--color-border-invalid); }
 .GeckoUIDateInput[data-focus] { border-color: blue; }
 .GeckoUIDateInput[data-calendar-open] { border-color: blue; }
 ```

@@ -67,6 +67,23 @@ function Example() {
 | `style` | `React.CSSProperties` | - | Inline styles |
 | `disableDate` | `(date: string) => boolean` | - | Callback to determine if a date should be disabled |
 | `renderDayCell` | `(props: DayCellRenderProps) => ReactNode` | - | Custom renderer for day cells |
+| `fixedWeeks` | `boolean` | `false` | Always render six weeks, so the calendar keeps the same height across months |
+
+### Week count
+
+By default a month takes only the weeks it needs, which is four to six depending on
+the day it starts on and how many days it has. That keeps the calendar compact, but
+it also means the height changes as you page between months.
+
+Pass `fixedWeeks` when that matters — a calendar in a popup, or one sitting next to
+other content that you do not want shifting around:
+
+```tsx
+<Calendar fixedWeeks selectedDate={date} onSelectDate={setDate} />
+```
+
+The extra weeks are added after the month, so the 1st stays in the first row either
+way. `DateInput` and `DateRangeInput` take the same prop and pass it down.
 
 ### DateRange Type
 
@@ -179,6 +196,7 @@ function Example() {
 ```tsx
 interface CalendarRef {
   moveTo: (month: number, year: number) => void;
+  clearSelection: () => void;
 }
 ```
 
@@ -326,11 +344,8 @@ The component uses base class names with `data-*` attributes for states:
 
 **Main Container:**
 - `GeckoUICalendar` - Main container
-- `GeckoUICalendar[data-calendars="2"]` - Dual calendar mode
 - `GeckoUICalendar[data-mode]` - Current view mode (`day`, `month`, `year`)
 - `GeckoUICalendar[data-selection]` - Selection mode (`single`, `range`)
-- `GeckoUICalendar__dual` - Dual calendar wrapper
-- `GeckoUICalendar__dual[data-position="first"]` / `GeckoUICalendar__dual[data-position="second"]` - First/second calendar
 
 **Header:**
 - `GeckoUICalendar__header` - Header container

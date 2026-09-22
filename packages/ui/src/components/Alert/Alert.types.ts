@@ -1,7 +1,7 @@
 import type { FC, HTMLAttributes, ReactNode } from "react";
 
-/** Extensible variant map - To allow module augmentation */
-export interface AlertVariantMap {
+/** Extensible color map - To allow module augmentation */
+export interface AlertColorMap {
   error: unknown;
   warning: unknown;
   info: unknown;
@@ -11,9 +11,12 @@ export interface AlertVariantMap {
 
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   /**
-   * Alert variant to display.(Default: 'error')
+   * What the alert means. Drives the accent colour.(Default: 'default')
+   *
+   * Named `color` to match `Button` and `Badge`, where `variant` is the visual
+   * treatment rather than the meaning.
    * */
-  variant?: keyof AlertVariantMap;
+  color?: keyof AlertColorMap;
 
   /**
    * Determines if the alert should be condensed.(Default: false)

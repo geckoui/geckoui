@@ -1,0 +1,529 @@
+---
+title: Tabs
+description: Switch between panels, or lay out navigation, with one component
+---
+
+import { TabsBasicExample, TabsVariantsExample, TabsSizesExample, TabsFullWidthExample, TabsVerticalExample, TabsRichLabelExample, TabsIconExample, TabsScrollableExample, TabsControlledExample, TabsKeepMountedExample, TabsLayoutExample, TabsNavExample } from '@/components/examples/tabs-examples';
+
+# Tabs
+
+A strip of tabs over the panel each one shows. The same component lays out navigation, with
+the markup switched to match.
+
+## Installation
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <TabsBasicExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="profile">
+  <TabList>
+    <Tab value="profile">Profile</Tab>
+    <Tab value="billing">Billing</Tab>
+  </TabList>
+
+  <TabPanel value="profile">
+    <ProfileForm />
+  </TabPanel>
+  <TabPanel value="billing">
+    <BillingForm />
+  </TabPanel>
+</Tabs>
+```
+
+Four parts. `Tabs` holds the state, `TabList` is the strip, each `Tab` is one tab, and each
+`TabPanel` is what its tab reveals — paired by `value`.
+
+## Props API
+
+### Tabs
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Selected tab. Leave it out to let the component hold the state |
+| `defaultValue` | `string` | first enabled tab | Which tab starts selected when uncontrolled |
+| `onChange` | `(value: string) => void` | - | Called with the value of the tab that was picked |
+| `variant` | `keyof TabsVariantMap` | `'underline'` | `underline`, `segmented` or `soft` |
+| `size` | `keyof TabsSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | A column swaps the arrow keys to up and down |
+| `fullWidth` | `boolean` | `false` | Share the width between the tabs instead of hugging their labels |
+| `as` | `'div' \| 'nav'` | `'div'` | Render as navigation rather than as tabs |
+| `keepMounted` | `boolean` | `false` | Keep hidden panels in the DOM |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the container |
+
+### TabList
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | The `Tab` elements |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the strip |
+
+### Tab
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | Pairs the tab with its `TabPanel` |
+| `disabled` | `boolean` | `false` | Skipped by the keyboard and cannot be selected |
+| `asChild` | `boolean` | `false` | Use the child element as the tab, so a navigation tab can be a real link |
+| `children` | `ReactNode` | - | What the tab shows |
+| ...rest | `HTMLAttributes<HTMLElement>` | - | Spread onto the tab |
+
+### TabPanel
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | required | Pairs the panel with its `Tab` |
+| `keepMounted` | `boolean` | - | Overrides `keepMounted` on `Tabs` for this panel |
+| `children` | `ReactNode` | - | The panel contents |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | Spread onto the panel |
+
+## Examples
+
+### Variants
+
+<Preview>
+  <TabsVariantsExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="one" variant="underline">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+    <Tab value="three">Three</Tab>
+  </TabList>
+
+  <TabPanel value="one">First panel</TabPanel>
+  <TabPanel value="two">Second panel</TabPanel>
+  <TabPanel value="three">Third panel</TabPanel>
+</Tabs>
+```
+
+Swap `variant` for `"segmented"` or `"soft"`; everything else stays the same.
+
+### Sizes
+
+<Preview>
+  <TabsSizesExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="one" variant="segmented" size="sm">
+  <TabList>
+    <Tab value="one">Small</Tab>
+    <Tab value="two">Another</Tab>
+  </TabList>
+
+  <TabPanel value="one">First panel</TabPanel>
+  <TabPanel value="two">Second panel</TabPanel>
+</Tabs>
+```
+
+`size` drives padding and font size. It accepts `"sm"`, `"md"` and `"lg"`.
+
+### Full width
+
+<Preview>
+  <TabsFullWidthExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="overview" fullWidth>
+  <TabList>
+    <Tab value="overview">Overview</Tab>
+    <Tab value="activity">Activity</Tab>
+    <Tab value="settings">Settings</Tab>
+  </TabList>
+
+  <TabPanel value="overview">Overview panel</TabPanel>
+  <TabPanel value="activity">Activity panel</TabPanel>
+  <TabPanel value="settings">Settings panel</TabPanel>
+</Tabs>
+```
+
+### Vertical
+
+<Preview>
+  <TabsVerticalExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="general" orientation="vertical" variant="soft">
+  <TabList>
+    <Tab value="general">General</Tab>
+    <Tab value="security">Security</Tab>
+    <Tab value="advanced">Advanced</Tab>
+  </TabList>
+
+  <TabPanel value="general">General panel</TabPanel>
+  <TabPanel value="security">Security panel</TabPanel>
+  <TabPanel value="advanced">Advanced panel</TabPanel>
+</Tabs>
+```
+
+### Anything in a label
+
+`label` takes a node, so badges and counts need no extra props.
+
+<Preview>
+  <TabsRichLabelExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="inbox">
+  <TabList>
+    <Tab value="inbox">
+      Inbox <Badge color="error">12</Badge>
+    </Tab>
+    <Tab value="sent">Sent</Tab>
+    <Tab value="archive" disabled>
+      Archive
+    </Tab>
+  </TabList>
+
+  <TabPanel value="inbox"><InboxPanel /></TabPanel>
+  <TabPanel value="sent"><SentPanel /></TabPanel>
+  <TabPanel value="archive"><ArchivePanel /></TabPanel>
+</Tabs>
+```
+
+### Icons
+
+An icon is part of the `label`, like anything else.
+
+<Preview>
+  <TabsIconExample />
+</Preview>
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel, Badge } from '@geckoui/geckoui';
+import { UserIcon, CardIcon, BellIcon } from './icons';
+
+<Tabs defaultValue="profile" variant="segmented">
+  <TabList>
+    <Tab value="profile">
+      <UserIcon /> Profile
+    </Tab>
+    <Tab value="billing">
+      <CardIcon /> Billing
+    </Tab>
+    <Tab value="alerts">
+      <BellIcon /> Alerts <Badge color="error">7</Badge>
+    </Tab>
+  </TabList>
+
+  <TabPanel value="profile"><ProfileForm /></TabPanel>
+  <TabPanel value="billing"><BillingForm /></TabPanel>
+  <TabPanel value="alerts"><AlertList /></TabPanel>
+</Tabs>
+```
+
+The tab is `inline-flex` with a gap, so the icon and its text line up with no extra classes.
+
+For an icon on its own, give it an `aria-label` — there is no text for a screen reader to
+announce:
+
+```tsx
+<Tabs defaultValue="profile" variant="soft">
+  <TabList>
+    <Tab value="profile" aria-label="Profile">
+      <UserIcon />
+    </Tab>
+    <Tab value="billing" aria-label="Billing">
+      <CardIcon />
+    </Tab>
+  </TabList>
+
+  <TabPanel value="profile"><ProfileForm /></TabPanel>
+  <TabPanel value="billing"><BillingForm /></TabPanel>
+</Tabs>
+```
+
+### Scrollable
+
+When the tabs outgrow the strip it scrolls sideways, with no visible scrollbar, and the
+selected tab is centred where there is room.
+
+<Preview>
+  <TabsScrollableExample />
+</Preview>
+
+Nothing to switch on. Narrow the window, or add enough tabs, and it happens.
+
+```tsx
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+
+<Tabs defaultValue="July">
+  <TabList>
+    {MONTHS.map((month) => (
+      <Tab key={month} value={month}>{month}</Tab>
+    ))}
+  </TabList>
+
+  {MONTHS.map((month) => (
+    <TabPanel key={month} value={month}>
+      <MonthPanel month={month} />
+    </TabPanel>
+  ))}
+</Tabs>
+```
+
+`fullWidth` is the exception: the tabs share the space and squash rather than scroll, so it
+suits a handful of tabs rather than a long list.
+
+### Controlled
+
+<Preview>
+  <TabsControlledExample />
+</Preview>
+
+```tsx
+import { useState } from 'react';
+import { Tabs, TabList, Tab, TabPanel } from '@geckoui/geckoui';
+
+function AccountTabs() {
+  const [tab, setTab] = useState('profile');
+
+  return (
+    <>
+      <p>Currently showing: {tab}</p>
+
+      <Tabs value={tab} onChange={setTab}>
+        <TabList>
+          <Tab value="profile">Profile</Tab>
+          <Tab value="billing">Billing</Tab>
+        </TabList>
+
+        <TabPanel value="profile">
+          <ProfileForm />
+        </TabPanel>
+        <TabPanel value="billing">
+          <BillingForm />
+        </TabPanel>
+      </Tabs>
+    </>
+  );
+}
+```
+
+### keepMounted
+
+A hidden panel unmounts by default, so a half filled form inside it loses its state. Pass
+`keepMounted` to hide it instead. Type below, switch tab, and come back.
+
+<Preview>
+  <TabsKeepMountedExample />
+</Preview>
+
+```tsx
+// keep every panel mounted
+<Tabs defaultValue="form" keepMounted>
+  <TabList>
+    <Tab value="form">Form</Tab>
+    <Tab value="other">Other</Tab>
+  </TabList>
+
+  <TabPanel value="form">
+    <Input placeholder="Type here, switch tab, come back" />
+  </TabPanel>
+  <TabPanel value="other">Other panel</TabPanel>
+</Tabs>
+
+// or just the one that needs it
+<Tabs defaultValue="form">
+  <TabList>
+    <Tab value="form">Form</Tab>
+    <Tab value="other">Other</Tab>
+  </TabList>
+
+  <TabPanel value="form" keepMounted>
+    <Input placeholder="Type here, switch tab, come back" />
+  </TabPanel>
+  <TabPanel value="other">Other panel</TabPanel>
+</Tabs>
+```
+
+### Strip and panels in different places
+
+`TabList` can sit anywhere in the layout, so the strip and the panels do not have to be
+neighbours. Here the strip is pinned in a header while the panel scrolls under it.
+
+<Preview>
+  <TabsLayoutExample />
+</Preview>
+
+```tsx
+<Tabs defaultValue="profile" className="rounded-lg border">
+  <header className="sticky top-0 border-b bg-white px-4 pt-3">
+    <h2>Settings</h2>
+    <TabList>
+      <Tab value="profile">Profile</Tab>
+      <Tab value="billing">Billing</Tab>
+    </TabList>
+  </header>
+
+  <div className="h-80 overflow-y-auto p-4">
+    <TabPanel value="profile"><ProfileForm /></TabPanel>
+    <TabPanel value="billing"><BillingForm /></TabPanel>
+  </div>
+</Tabs>
+```
+
+## Navigation
+
+Tabs swap content on the same page. Navigation goes somewhere else. They look the same but
+are not the same thing to a screen reader, so `as="nav"` switches the markup:
+
+- a `nav` landmark instead of a tablist, and links instead of `role="tab"`
+- `aria-current="page"` instead of `aria-selected`
+- the arrow keys left alone, so Tab walks through the links as it would anywhere
+
+<Preview>
+  <TabsNavExample />
+</Preview>
+
+Your router owns the state, so pass the current path as `value` and render your own link
+through the `label` function:
+
+```tsx title="app/settings/layout.tsx"
+'use client';
+
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Tabs, TabList, Tab } from '@geckoui/geckoui';
+
+export default function SettingsLayout({ children }) {
+  const pathname = usePathname();
+
+  return (
+    <>
+      <Tabs as="nav" value={pathname}>
+        <TabList>
+          <Tab value="/settings/profile" asChild>
+            <Link href="/settings/profile">Profile</Link>
+          </Tab>
+          <Tab value="/settings/billing" asChild>
+            <Link href="/settings/billing">Billing</Link>
+          </Tab>
+        </TabList>
+      </Tabs>
+
+      {children}
+    </>
+  );
+}
+```
+
+There are no panels here — the page below is the content.
+
+### asChild
+
+`Tab` renders a `<button>` by default. Pass `asChild` and it renders your element instead,
+handing it the id, tab index, aria wiring and the `data-state` the styles key off:
+
+```tsx
+<Tab value="/settings/profile" asChild>
+  <Link href="/settings/profile">Profile</Link>
+</Tab>
+```
+
+The child keeps its own `className`; the tab class is added alongside. Use it for anything
+that has to be a real element — a router link, an anchor, your own button.
+
+If you need the selected state in JavaScript rather than in CSS, read it from the context:
+
+```tsx
+import { useTabs } from '@geckoui/geckoui';
+
+function TabCount() {
+  const { selectedValue } = useTabs();
+
+  return <span>Showing {selectedValue}</span>;
+}
+```
+
+## Keyboard
+
+| Key | Does |
+|---|---|
+| <kbd>←</kbd> <kbd>→</kbd> | Move focus along the strip, wrapping at the ends. <kbd>↑</kbd> <kbd>↓</kbd> when vertical |
+| <kbd>Home</kbd> <kbd>End</kbd> | Move focus to the first or last tab |
+| <kbd>Enter</kbd> <kbd>Space</kbd> | Select the focused tab |
+| <kbd>Tab</kbd> | Leave the strip, rather than walking through every tab |
+
+Arrow keys move focus without changing the panel, so you can look along the tabs without
+mounting each one on the way past. Disabled tabs are skipped.
+
+With `as="nav"` the arrow keys are left to the browser, because links are not a tablist.
+
+## Accessibility
+
+- The strip is a `tablist`, each tab a `tab`, each panel a `tabpanel`, wired together with
+  `aria-controls` and `aria-labelledby`
+- Only the selected tab is in the tab order, so <kbd>Tab</kbd> moves into the panel rather
+  than through every tab
+- `as="nav"` drops the tab roles entirely and uses `aria-current="page"`, because links
+  that navigate are not tabs
+- Give an icon-only tab an `aria-label`
+
+## Styling with CSS
+
+Every part carries a class and the state lives in data attributes:
+
+```
+.GeckoUITabs                 [data-variant] [data-size] [data-orientation] [data-full-width]
+.GeckoUITabs__list
+.GeckoUITabs__tab            [data-state="selected|unselected"] [data-disabled]
+.GeckoUITabs__panel
+```
+
+One accent drives every variant, so retheming is a few variables:
+
+```css
+.GeckoUITabs {
+  --gecko-tabs-accent: rebeccapurple;   /* the selected tab */
+  --gecko-tabs-muted: #888;             /* the rest */
+  --gecko-tabs-indicator: 3px;          /* underline thickness */
+  --gecko-tabs-radius: 0.5rem;
+  --gecko-tabs-gap: 0.5rem;
+  --gecko-tabs-padding-x: 1rem;
+  --gecko-tabs-padding-y: 0.5rem;
+  --gecko-tabs-font-size: 0.875rem;
+}
+```
+
+## Adding your own variants
+
+`TabsVariantMap` and `TabsSizeMap` are open, so a new variant is a type declaration and a
+CSS block. No library change:
+
+```ts title="geckoui.d.ts"
+declare module '@geckoui/geckoui' {
+  interface TabsVariantMap {
+    enclosed: unknown;
+  }
+}
+```
+
+```css
+.GeckoUITabs[data-variant="enclosed"] .GeckoUITabs__tab[data-state="selected"] {
+  border: 1px solid var(--color-border-primary);
+  border-bottom-color: transparent;
+  border-radius: var(--gecko-tabs-radius) var(--gecko-tabs-radius) 0 0;
+}
+```
+
+`<Tabs variant="enclosed">` now type-checks.
+
+## Related Components
+
+- [Menu](/docs/menu) - A dropdown of actions
+- [Badge](/docs/badge) - For counts inside a tab label

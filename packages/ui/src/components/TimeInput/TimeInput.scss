@@ -1,0 +1,204 @@
+@import "../../mixins.scss";
+
+.GeckoUITimeInputWrapper {
+  --gecko-time-input-column-height: 15rem;
+  --gecko-time-input-column-width: 4rem;
+  --gecko-time-input-z: 10;
+
+  @apply relative w-full;
+}
+
+.GeckoUITimeInput {
+  @include base-reset;
+
+  @apply border-border-secondary relative flex min-h-10 items-center gap-3 rounded-md border px-3;
+
+  &[data-state="disabled"] {
+    @apply bg-surface-disabled text-text-disabled cursor-not-allowed;
+
+    .GeckoUITimeInput__segment {
+      @apply cursor-not-allowed;
+    }
+  }
+
+  &[data-state="readonly"] .GeckoUITimeInput__segment {
+    @apply cursor-default;
+
+    &:hover,
+    &:focus-within {
+      @apply bg-transparent;
+    }
+  }
+
+  &[data-state="enabled"] {
+    @apply cursor-pointer;
+
+    &:focus-within,
+    &[data-focus] {
+      @apply border-primary-500;
+    }
+
+    &:hover {
+      @apply border-primary-300;
+    }
+  }
+
+  /*
+   * Stated for the focused state too. `[data-state="enabled"]:focus-within` outweighs a
+   * bare `[data-error]`, so without this the border goes back to blue the moment the field
+   * is used, which is exactly when the error matters most.
+   */
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:focus-within {
+    border-color: var(--color-border-invalid);
+  }
+
+  &[aria-invalid="true"]:hover {
+    border-color: var(--color-border-invalid-hover);
+  }
+
+  /* the segments give the row to the placeholder until there is something to show */
+  &[data-empty] .GeckoUITimeInput__segments {
+    @apply w-0 flex-[0] overflow-hidden;
+  }
+
+  &__placeholder {
+    @apply text-text-placeholder line-clamp-1 flex-1 text-sm;
+  }
+
+  &__segments {
+    @apply ml-[1px] flex flex-1 items-center text-sm;
+  }
+
+  &__hidden-input {
+    @apply pointer-events-none absolute top-0 left-0 -z-10 h-full w-full border-none bg-transparent opacity-0 outline-none;
+  }
+
+  &__segment {
+    @apply cursor-text rounded py-0.5 text-center text-sm transition-colors duration-150 ease-in-out;
+
+    &:focus-within {
+      @apply bg-surface-hover-strong hover:bg-surface-hover-strong;
+    }
+
+    &[data-empty] {
+      @apply text-text-placeholder;
+    }
+
+    &:hover {
+      @apply bg-surface-hover;
+    }
+
+    &[data-segment="meridiem"] {
+      @apply ml-1;
+    }
+  }
+
+  &__separator {
+    @apply text-text-muted select-none;
+  }
+
+  &[data-state="disabled"] &__separator {
+    @apply text-text-disabled;
+  }
+
+  &__prefix,
+  &__suffix {
+    @apply flex items-center;
+  }
+
+  &__icons {
+    @apply flex items-center;
+  }
+
+  &__clear-button {
+    @include button-reset;
+
+    @apply flex cursor-pointer items-center justify-center p-1;
+  }
+
+  &__clear-button:hover .GeckoUI-icon__clear {
+    @apply bg-text-secondary;
+  }
+
+  &__clock-icon {
+    @apply text-text-tertiary h-4 w-4 shrink-0;
+  }
+
+  &[data-state="disabled"] &__clock-icon {
+    @apply text-text-disabled;
+  }
+
+  &__picker {
+    @include base-reset;
+
+    @apply border-border-secondary bg-surface-primary overflow-hidden rounded-md border shadow-lg;
+
+    z-index: var(--gecko-time-input-z);
+  }
+
+  &__columns {
+    @apply flex;
+  }
+
+  /*
+   * One scroller per segment, the way the platform's own picker is laid out. A shared
+   * scroller would mean one long list of every time, which is unusable past a few hours.
+   */
+  &__column {
+    @include base-reset;
+
+    @apply overflow-y-auto p-1;
+
+    max-height: var(--gecko-time-input-column-height);
+    min-width: var(--gecko-time-input-column-width);
+
+    /* still scrolls, just without a bar down the middle of the picker */
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+
+    + .GeckoUITimeInput__column {
+      @apply border-border-primary border-l;
+    }
+  }
+
+  &__cell {
+    @include button-reset;
+
+    @apply text-text-primary w-full cursor-pointer rounded px-2 py-2.5 text-center text-base tabular-nums;
+
+    /*
+     * The grey hover is kept away from the chosen cell. Both selectors weigh the same, so
+     * source order alone decides, and a plain `:hover` would wash the blue out on the one
+     * cell that has to stay legible.
+     */
+    &:hover:not(:disabled):not([data-state="selected"]) {
+      @apply bg-surface-hover;
+    }
+
+    &[data-state="selected"] {
+      @apply bg-primary-600 text-text-on-primary font-medium;
+
+      &:hover:not(:disabled) {
+        @apply bg-primary-700;
+      }
+    }
+
+    &:disabled {
+      @apply text-text-disabled cursor-not-allowed bg-transparent;
+    }
+
+    /*
+     * Chosen, but the rule turns it down. It keeps the selected colours and fades as a
+     * whole, so the text stays legible against its own background: a lighter fill with
+     * `text-text-secondary` on top reads in light mode and disappears in dark, where the
+     * primary scale does not lift with the theme.
+     */
+    &[data-state="selected"]:disabled {
+      @apply bg-primary-600 text-text-on-primary opacity-45;
+    }
+  }
+}

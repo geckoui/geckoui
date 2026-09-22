@@ -249,12 +249,12 @@ This callback is triggered automatically when the user completes entering all di
 ## Error States
 
 RHFOTPInput automatically displays error states with:
-- Red border via `data-error` attribute on the root element when `fieldState.error` exists
+- `aria-invalid` on the control when `fieldState.error` exists, which both a screen reader and the red border read
 - Individual input fields inherit error styling
 
 ```css
-.GeckoUIRHFOTPInput[data-error] {
-  border-color: red;
+.GeckoUIOTPInput[aria-invalid="true"] {
+  border-color: var(--color-border-invalid);
 }
 ```
 

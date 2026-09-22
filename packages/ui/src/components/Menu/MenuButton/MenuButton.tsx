@@ -14,8 +14,14 @@ const MenuButton = ({ children, className }: MenuButtonProps) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (!open) openMenu();
-      const firstItem = menuRef.current?.querySelector<HTMLElement>("[role=menuitem]");
-      setTimeout(() => firstItem?.focus());
+
+      // The panel is not mounted yet on the opening keypress, so look the item up
+      // inside the timeout rather than before it.
+      setTimeout(() => {
+        menuRef.current
+          ?.querySelector<HTMLElement>("[role=menuitem]:not([data-disabled])")
+          ?.focus();
+      });
     }
   };
 

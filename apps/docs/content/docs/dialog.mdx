@@ -1,22 +1,67 @@
 ---
 title: Dialog
-description: Lightweight imperative modal component for centered overlay content
+description: Modal component for centered overlay content, usable declaratively or imperatively
 ---
 
 import { Dialog, Button } from '@geckoui/geckoui';
-import { BasicDialogExample, ImageLightboxExample, FormDialogExample, NoEscapeDialogExample } from '@/components/examples/dialog-examples';
+import { BasicDialogExample, ControlledDialogExample, ImageLightboxExample, FormDialogExample, NoEscapeDialogExample } from '@/components/examples/dialog-examples';
 
 # Dialog
 
-A lightweight, imperative modal component that renders content in a centered overlay. It serves as the foundational layer for more complex dialog patterns and automatically handles focus management, escape key dismissal, and click-outside behavior.
+A modal component that renders content in a centered overlay. It serves as the foundational layer for more complex dialog patterns and handles escape key dismissal and backdrop click behavior.
 
-## Installation
+There are two ways to use it:
+
+- **Declarative** — `<Dialog open onClose={...}>`, when the dialog belongs to a component's state. Same shape as `Drawer`.
+- **Imperative** — `Dialog.show()`, for one-off dialogs triggered from anywhere. Multiple dialogs stack, and each `show()` returns an id for targeted dismissal.
+
+Dialogs always render above drawers.
+
+## Setup
+
+`Dialog.show()` requires [`<GeckoUIProvider>`](/docs/gecko-ui-provider) to wrap your app. The declarative `<Dialog>` renders in place and works without it.
 
 ```tsx
 import { Dialog } from '@geckoui/geckoui';
 ```
 
-## Basic Usage
+## Declarative Usage
+
+<Preview>
+  <ControlledDialogExample />
+</Preview>
+
+```tsx
+import { Dialog, Button } from '@geckoui/geckoui';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <h2 className="text-xl font-semibold mb-4">Controlled Dialog</h2>
+        <Button onClick={() => setOpen(false)}>Close</Button>
+      </Dialog>
+    </>
+  );
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|--------|------|---------|-------------|
+| `open` | `boolean` | `false` | Whether the dialog is visible |
+| `onClose` | `() => void` | — | Called when the dialog asks to close (Esc or backdrop click) |
+| `children` | `ReactNode` | — | Dialog content |
+| `className` | `string` | — | CSS class for the dialog container |
+| `dismissOnEscape` | `boolean` | `true` | Dismiss dialog on Escape key press |
+| `dismissOnOutsideClick` | `boolean` | `true` | Dismiss dialog on backdrop click |
+| `data-*` | `string` | — | Data attributes for the dialog element |
+
+## Imperative Usage
 
 <Preview>
   <BasicDialogExample />
@@ -48,26 +93,67 @@ function Example() {
 
 ### Dialog.show(options)
 
-Opens a dialog with the specified options.
+Opens a dialog and returns an `id` string you can pass to `dismiss(id)`.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `content` | `ReactNode \| FC<{ dismiss: () => void }>` | - | Content to display in the dialog (required) |
-| `className` | `string` | - | CSS class for the dialog container |
-| `dismissOnEsc` | `boolean` | `true` | Dismiss dialog on Escape key press |
+| `content` | `ReactNode \| FC<{ dismiss: () => void }>` | — | Content to display in the dialog |
+| `className` | `string` | — | CSS class for the dialog container |
+| `dismissOnEscape` | `boolean` | `true` | Dismiss dialog on Escape key press |
 | `dismissOnOutsideClick` | `boolean` | `true` | Dismiss dialog on backdrop click |
-| `data-*` | `string` | - | Data attributes for the dialog element |
+| `data-*` | `string` | — | Data attributes for the dialog element |
 
-### Dialog.dismiss()
+**Returns:** `string` — the overlay id.
 
-Programmatically closes the currently open dialog.
+### Dialog.dismiss(id?)
+
+Closes a dialog. Pass the `id` returned by `show()` to close a specific dialog, or call with no argument to close the topmost dialog. It never closes a drawer — use `Drawer.dismiss()` for those.
 
 ```tsx
-// Close dialog from anywhere
+const id = Dialog.show({ content: () => <p>Hello</p> });
+
+// Close this specific dialog:
+Dialog.dismiss(id);
+
+// Close whatever dialog is on top:
 Dialog.dismiss();
 ```
 
+**Note:** clicks inside the dialog never dismiss it. That includes content rendered in a portal, such as a `Select` or `Menu` popup — only a click on the backdrop itself closes the dialog.
+
 ## Examples
+
+### Stacking Dialogs
+
+```tsx
+Dialog.show({
+  content: ({ dismiss }) => (
+    <div>
+      <p>First dialog</p>
+      <Button onClick={() =>
+        Dialog.show({ content: () => <p>Second dialog (stacked on top)</p> })
+      }>
+        Open another
+      </Button>
+      <Button onClick={dismiss}>Close this</Button>
+    </div>
+  )
+});
+```
+
+### Context Consumption
+
+Overlay content can read any React context provided above `GeckoUIProvider`:
+
+```tsx
+// Inside a component where AuthContext is available:
+Dialog.show({
+  content: () => {
+    const { user } = useContext(AuthContext);
+    return <p>Logged in as {user.name}</p>;
+  }
+});
+```
 
 ### Image Lightbox
 
@@ -80,21 +166,14 @@ const openImageViewer = () => {
   Dialog.show({
     content: ({ dismiss }) => (
       <div className="relative">
-        <img
-          src="/large-image.jpg"
-          alt="Preview"
-          className="max-w-4xl rounded-lg"
-        />
-        <button
-          onClick={dismiss}
-          className="absolute top-4 right-4 size-8 flex items-center justify-center bg-black/50 text-white rounded-full"
-        >
+        <img src="/large-image.jpg" alt="Preview" className="max-w-4xl rounded-lg" />
+        <button onClick={dismiss} className="absolute top-4 right-4 size-8 flex items-center justify-center bg-black/50 text-white rounded-full">
           ✕
         </button>
       </div>
     ),
     className: "bg-transparent shadow-none",
-    dismissOnEsc: true,
+    dismissOnEscape: true,
     dismissOnOutsideClick: true
   });
 };
@@ -119,10 +198,6 @@ const showUserForm = () => {
             <Label htmlFor="name">Name</Label>
             <Input id="name" type="text" defaultValue="John Doe" />
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" defaultValue="john@example.com" />
-          </div>
           <div className="flex gap-2 justify-end">
             <Button variant="ghost" onClick={dismiss}>Cancel</Button>
             <Button onClick={dismiss}>Save Changes</Button>
@@ -131,7 +206,7 @@ const showUserForm = () => {
       </div>
     ),
     className: "max-w-2xl",
-    dismissOnEsc: false,
+    dismissOnEscape: false,
     dismissOnOutsideClick: false
   });
 };
@@ -148,13 +223,11 @@ Dialog.show({
   content: ({ dismiss }) => (
     <div>
       <h2 className="text-xl font-semibold mb-4">Important Notice</h2>
-      <p className="text-gray-600 mb-6">
-        This dialog can only be closed by clicking the button.
-      </p>
+      <p className="text-gray-600 mb-6">This dialog can only be closed by clicking the button.</p>
       <Button onClick={dismiss}>I Understand</Button>
     </div>
   ),
-  dismissOnEsc: false,
+  dismissOnEscape: false,
   dismissOnOutsideClick: false
 });
 ```
@@ -162,7 +235,6 @@ Dialog.show({
 ### Loading State
 
 ```tsx
-// Show loading dialog
 Dialog.show({
   content: () => (
     <div className="flex flex-col items-center gap-4">
@@ -170,86 +242,54 @@ Dialog.show({
       <p>Processing payment...</p>
     </div>
   ),
-  dismissOnEsc: false,
+  dismissOnEscape: false,
   dismissOnOutsideClick: false
 });
 
-// Dismiss from anywhere after async operation
 await processPayment();
 Dialog.dismiss();
 ```
 
-## Content Function Pattern
-
-The `content` prop can receive a function that gets access to the `dismiss` callback:
-
-```tsx
-Dialog.show({
-  content: ({ dismiss }) => {
-    const handleSave = async () => {
-      await saveData();
-      dismiss(); // Close after save
-    };
-
-    return (
-      <div>
-        <h2>Edit Item</h2>
-        <Button onClick={handleSave}>Save</Button>
-        <Button onClick={dismiss}>Cancel</Button>
-      </div>
-    );
-  }
-});
-```
-
 ## Behavior
+
+### Stacking
+
+Each `Dialog.show()` pushes onto a shared overlay stack. The topmost dialog captures Esc and backdrop clicks; lower dialogs ignore them until they become topmost.
+
+Dialogs sit above drawers, so an open dialog is topmost even when a drawer opened after it. A dialog gives up topmost as soon as it starts closing, so the overlay underneath responds to Esc right away instead of waiting for the 300ms exit animation.
 
 ### Focus Management
 
-- Automatically blurs the active element when dialog opens
-- Prevents focus from leaving the dialog while open
-- Restores focus appropriately when closed
+Blurs the active element when a dialog opens.
 
 ### Dismissal
 
-- **Escape Key**: Closes dialog by default (disable with `dismissOnEsc={false}`)
-- **Click Outside**: Closes dialog by default (disable with `dismissOnOutsideClick={false}`)
-- **Programmatic**: Call `Dialog.dismiss()` from anywhere
+- **Escape Key**: Closes the topmost dialog by default (disable with `dismissOnEscape: false`)
+- **Backdrop Click**: Closes the topmost dialog by default (disable with `dismissOnOutsideClick: false`). Both the press and the release must land on the backdrop, so dragging to select text past the dialog edge does not close it.
+- **Programmatic**: `Dialog.dismiss(id?)` from anywhere
 
-### Portal Rendering
-
-Dialog requires `<GeckoUIPortal />` to be mounted in your app:
-
-```tsx
-// app/layout.tsx
-import { GeckoUIPortal } from '@geckoui/geckoui';
-
-export default function RootLayout({ children }) {
-  return (
-    <html>
-      <body>
-        {children}
-        <GeckoUIPortal />
-      </body>
-    </html>
-  );
-}
-```
+Clicks inside the dialog never dismiss it. That includes content rendered in a portal, such as a `Select` or `Menu` popup, which lives outside the dialog element in the DOM.
 
 ## Styling
 
-- `GeckoUIDialog` - Main container
-- `GeckoUIDialog__backdrop` - Background overlay
-- `GeckoUIDialog__dialog` - Dialog content wrapper
+- `GeckoUIDialog` — Main container (`data-state="entering" | "open" | "closing"`), `z-index: 2000`
+- `GeckoUIDialog__backdrop` — Background overlay
+- `GeckoUIDialog__dialog` — Dialog content wrapper
+
+Stacked dialogs get an explicit `z-index` of `2000 + position`, so they never depend on DOM order. Drawers start at `1000`, which is why dialogs always win.
 
 ## Accessibility
 
-- Click-outside detection
+- `role="dialog"` and `aria-modal="true"` on the dialog panel
 - Escape key support
-- Focus management
-- Backdrop prevents interaction with underlying content
+- Backdrop click detection
+
+Page scroll is locked while a dialog is open, with the scrollbar width paid back as padding so nothing shifts sideways. Stacked overlays share one reference counted lock.
+
+Not handled yet: there is no focus trap, and focus is not restored to the trigger on close. iOS Safari ignores `overflow: hidden` on the body, so the page behind can still be dragged there.
 
 ## Related Components
 
-- [ConfirmDialog](/docs/confirm-dialog) - Pre-styled confirmation dialogs
-- [Drawer](/docs/drawer) - Side panel alternative to centered dialogs
+- [GeckoUIProvider](/docs/gecko-ui-provider) — Required provider
+- [ConfirmDialog](/docs/confirm-dialog) — Pre-styled confirmation dialogs
+- [Drawer](/docs/drawer) — Side panel alternative

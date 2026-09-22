@@ -5,4 +5,21 @@
   @include focus-outline;
 
   @apply border-border-secondary placeholder:text-text-placeholder enabled:hover:border-primary-300 enabled:focus:border-primary-300 disabled:bg-surface-disabled disabled:text-text-disabled w-full rounded-md border px-3 py-1.5 text-sm placeholder:text-sm placeholder:leading-5 placeholder:font-normal focus:ring-0 focus:ring-offset-0 focus:outline-none disabled:cursor-not-allowed;
+
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:enabled:focus {
+    border-color: var(--color-border-invalid);
+  }
+
+  &[aria-invalid="true"]:enabled:hover {
+    border-color: var(--color-border-invalid-hover);
+  }
+
+  /*
+   * A field that sizes itself owns its height, so the drag handle is not offered: it would
+   * be undone by the next keystroke. Set in CSS rather than inline so it can be overridden.
+   */
+  &[data-auto-resize] {
+    resize: none;
+  }
 }

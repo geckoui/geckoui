@@ -56,7 +56,7 @@ const RHFOTPInput: FC<RHFOTPInputProps> = ({
         return (
           <OTPInput
             className={classNames("GeckoUIRHFOTPInput", className)}
-            data-error={!disabled && fieldState.error ? "" : undefined}
+            aria-invalid={(!disabled && Boolean(fieldState.error)) || undefined}
             disabled={disabled}
             {...rest}
             {...field}

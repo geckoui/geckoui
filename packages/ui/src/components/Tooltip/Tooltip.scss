@@ -5,8 +5,22 @@
 }
 
 .GeckoUITooltip {
-  @apply bg-surface-emphasis text-surface-primary z-50 max-w-[320px] min-w-[0px] rounded-lg p-2 text-xs font-normal;
+  /*
+   * Inverted against the page rather than matching the surface like Popover. A tooltip is
+   * transient and nothing inside it is interactive, so contrast alone separates it and it
+   * needs no border. Both tokens flip in dark mode, so the bubble stays inverted there.
+   */
+  --gecko-tooltip-bg: var(--color-surface-emphasis);
+  --gecko-tooltip-text: var(--color-surface-primary);
+  --gecko-tooltip-radius: 0.5rem;
 
+  @apply max-w-[320px] min-w-[0px] p-2 text-xs font-normal;
+
+  z-index: var(--gecko-tooltip-z, 50);
+
+  border-radius: var(--gecko-tooltip-radius);
+  background: var(--gecko-tooltip-bg);
+  color: var(--gecko-tooltip-text);
   box-shadow:
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
@@ -14,5 +28,5 @@
 }
 
 .GeckoUITooltip__arrow {
-  @apply fill-surface-emphasis;
+  fill: var(--gecko-tooltip-bg);
 }

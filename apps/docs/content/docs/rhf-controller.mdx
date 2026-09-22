@@ -3,6 +3,8 @@ title: RHFController
 description: Core wrapper component for React Hook Form integration
 ---
 
+import { BasicRHFControllerExample, RHFControllerFormStateExample, RHFControllerNestedExample } from '@/components/examples/rhf-controller-examples';
+
 # RHFController
 
 RHFController is a wrapper around React Hook Form's Controller component that automatically injects the `control` prop from `FormProvider`. This is the foundation for all RHF* components in Gecko UI.
@@ -14,6 +16,10 @@ import { RHFController } from '@geckoui/geckoui';
 ```
 
 ## Basic Usage
+
+<Preview>
+  <BasicRHFControllerExample />
+</Preview>
 
 ```tsx
 import { useForm, FormProvider } from 'react-hook-form';
@@ -98,6 +104,10 @@ function CustomInput() {
 
 ### Access Form State
 
+<Preview>
+  <RHFControllerFormStateExample />
+</Preview>
+
 ```tsx
 <RHFController
   name="password"
@@ -131,6 +141,10 @@ function CustomInput() {
 ### Nested FormProviders
 
 When you have nested forms, pass `control` explicitly to specify which form:
+
+<Preview>
+  <RHFControllerNestedExample />
+</Preview>
 
 ```tsx
 function NestedFormsExample() {

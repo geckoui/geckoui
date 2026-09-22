@@ -1,6 +1,6 @@
 ---
 title: Switch
-description: Toggle switch component with multiple sizes built on HeadlessUI
+description: Toggle switch component with multiple sizes, built on a native checkbox
 ---
 
 import { Switch } from '@geckoui/geckoui';
@@ -9,7 +9,7 @@ import { SwitchCustomSizeExample } from '@/components/examples/module-augmentati
 
 # Switch
 
-A toggle component built on HeadlessUI that provides an accessible on/off control. Supports multiple sizes, controlled and uncontrolled modes, and integrates seamlessly with forms.
+A toggle component built on a native checkbox that provides an accessible on/off control. Supports multiple sizes, controlled and uncontrolled modes, and integrates seamlessly with forms.
 
 ## Installation
 
@@ -45,6 +45,7 @@ function Example() {
 | `className` | `string` | - | CSS class for the switch container |
 | `thumbClassName` | `string` | - | CSS class for the switch thumb |
 | `disabled` | `boolean` | `false` | Disable the switch |
+| `aria-invalid` | `boolean` | - | Marks the switch invalid, to a screen reader and in its colours |
 | `defaultChecked` | `boolean` | - | Initial checked state (uncontrolled) |
 
 ## Examples
@@ -165,10 +166,13 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
     @apply h-8 w-14;
   }
 
-  &__thumb {
-    &[data-size="lg"] {
-      @apply w-6 translate-x-0.5 group-data-[checked]:translate-x-3.5;
-    }
+  &__thumb[data-size="lg"] {
+    @apply w-6 translate-x-0.5;
+  }
+
+  // The checked position is a separate rule, because the state lives on the input
+  &:has(input:checked) &__thumb[data-size="lg"] {
+    @apply translate-x-7;
   }
 }
 ```
@@ -181,7 +185,7 @@ Add the corresponding styles to your global CSS/SCSS file. You need to define bo
 
 ## Accessibility
 
-- Built on HeadlessUI for WCAG compliance
+- Renders a native `<input type="checkbox">` with `role="switch"`, so the state is announced correctly
 - Proper ARIA attributes automatically applied
 - Fully keyboard navigable
 - Focus visible for keyboard users
@@ -197,13 +201,14 @@ The component uses class names with data attributes:
 - `GeckoUISwitch__thumb` - Toggle thumb element
 - `GeckoUISwitch__thumb[data-size="sm|md"]` - Thumb size modifiers
 
-The switch also supports HeadlessUI data attributes:
-- `data-[checked]` - Applied when checked
-- `data-[disabled]` - Applied when disabled
+Checked and disabled live on the hidden input rather than on a data attribute, so
+target them through the container:
 
-## Dependencies
-
-This component uses `@headlessui/react` for accessibility and behavior.
+```scss
+.GeckoUISwitch:has(input:checked) { /* on */ }
+.GeckoUISwitch:has(input:disabled) { /* off limits */ }
+.GeckoUISwitch:has(input:focus-visible) { /* keyboard focus */ }
+```
 
 ## Related Components
 

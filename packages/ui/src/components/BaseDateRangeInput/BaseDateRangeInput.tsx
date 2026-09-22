@@ -22,7 +22,6 @@ const BaseDateRangeInput: FC<BaseDateRangeInputProps> = ({
   readOnly = false,
   prefix,
   suffix,
-  hasError = false,
   className,
   format = "DD/MM/YYYY",
   separator = "/",
@@ -35,6 +34,7 @@ const BaseDateRangeInput: FC<BaseDateRangeInputProps> = ({
   onStateUpdate,
   onSubmit,
   hasFocus,
+  "aria-invalid": invalid,
   ...rest
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -439,7 +439,9 @@ const BaseDateRangeInput: FC<BaseDateRangeInputProps> = ({
   const endValid = isValidDate(endYear, endMonth, endDay);
 
   const isError =
-    (!isEmpty && ((!startEmpty && !startValid) || (!endEmpty && !endValid))) || hasError;
+    (!isEmpty && ((!startEmpty && !startValid) || (!endEmpty && !endValid))) ||
+    invalid === true ||
+    invalid === "true";
 
   const state = disabled ? "disabled" : readOnly ? "readonly" : "enabled";
 
@@ -496,7 +498,7 @@ const BaseDateRangeInput: FC<BaseDateRangeInputProps> = ({
       ref={containerRef}
       className={classNames("GeckoUIDateInput", "GeckoUIDateRangeInput", className)}
       data-state={state}
-      data-error={isError || undefined}
+      aria-invalid={isError || undefined}
       data-empty={isEmpty || undefined}
       data-focus={hasFocus || undefined}
       {...rest}

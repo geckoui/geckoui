@@ -1,0 +1,164 @@
+---
+title: Progress
+description: How far along something is
+---
+
+import { ProgressBasicExample, ProgressMaxExample, ProgressIndeterminateExample, ProgressColorsExample, ProgressSizesExample, ProgressThemedExample } from '@/components/examples/progress-examples';
+
+# Progress
+
+How far along something is.
+
+## Installation
+
+```tsx
+import { Progress } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+<Preview>
+  <ProgressBasicExample />
+</Preview>
+
+```tsx
+<Progress value={40} />
+<Progress value={40} label={({ percent }) => `${percent}%`} />
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | How far along. Leave it out when you do not know |
+| `max` | `number` | `100` | What `value` is measured against |
+| `color` | `keyof ProgressColorMap` | `'primary'` | `default`, `primary`, `success`, `error`, `warning` or `info` |
+| `size` | `keyof ProgressSizeMap` | `'md'` | `sm`, `md` or `lg` |
+| `label` | `ReactNode \| ({ percent, value, max }) => ReactNode` | - | Text above the bar |
+| `className` | `string` | - | CSS class for the progress |
+| ...rest | `HTMLAttributes<HTMLDivElement>` | - | All standard div attributes |
+
+## Examples
+
+### Out of something other than 100
+
+<Preview>
+  <ProgressMaxExample />
+</Preview>
+
+```tsx
+<Progress value={3} max={7} label={({ value, max }) => `${value} of ${max} files`} />
+```
+
+`value` is clamped into range, and the label is handed the clamped number, so it never reports more than the bar shows. `percent` is rounded to whole numbers and drives the bar width too, so the two never disagree.
+
+### When the length is not known
+
+<Preview>
+  <ProgressIndeterminateExample />
+</Preview>
+
+```tsx
+<Progress />
+<Progress label="Uploading…" />
+```
+
+Leaving `value` out runs the bar end to end until you have a number. `value={0}` is a known value, not an unknown one, so it draws an empty bar.
+
+A `label` node shows either way. A `label` function is only called when there is a value to report.
+
+### Colours
+
+<Preview>
+  <ProgressColorsExample />
+</Preview>
+
+```tsx
+<Progress value={60} color="success" />
+<Progress value={60} color="error" />
+```
+
+The colours are the shared semantic tokens, so they match Badge, Alert and Toast.
+
+### Sizes
+
+<Preview>
+  <ProgressSizesExample />
+</Preview>
+
+```tsx
+<Progress value={60} size="sm" />
+<Progress value={60} size="lg" />
+```
+
+## Styling with CSS
+
+| Variable | Default | Applies to |
+|----------|---------|------------|
+| `--gecko-progress-accent` | per `color` | The bar |
+| `--gecko-progress-track` | `--color-surface-hover-strong` | The groove behind it |
+| `--gecko-progress-height` | per `size` | Bar thickness |
+| `--gecko-progress-radius` | `9999px` | Corner radius |
+| `--gecko-progress-duration` | `1.4s` | One cycle when the value is unknown |
+| `--gecko-progress-label-gap` | `0.375rem` | Space between the label and the bar |
+
+<Preview>
+  <ProgressThemedExample />
+</Preview>
+
+```css
+.GeckoUIProgress {
+  --gecko-progress-accent: var(--color-primary-400);
+  --gecko-progress-radius: 0.25rem;
+}
+```
+
+### Class names and data attributes
+
+- `GeckoUIProgress` - The progress, with `data-size`, `data-color` and `data-indeterminate`
+- `GeckoUIProgress__label` - The text above the bar
+- `GeckoUIProgress__track` - The groove
+- `GeckoUIProgress__bar` - The filled part
+
+## Adding your own colours
+
+Both axes are extensible maps, so you can add keys through module augmentation and style them with CSS. No component change is needed:
+
+```tsx
+declare module '@geckoui/geckoui' {
+  interface ProgressColorMap {
+    brand: unknown;
+  }
+}
+
+<Progress value={60} color="brand" />
+```
+
+```css
+.GeckoUIProgress[data-color="brand"] {
+  --gecko-progress-accent: oklch(0.62 0.21 320);
+}
+```
+
+The same works for `ProgressSizeMap`.
+
+## Accessibility
+
+The progress carries `role="progressbar"` with `aria-valuemin`, `aria-valuemax` and `aria-valuenow`.
+
+While the value is unknown, `aria-valuenow` is left off entirely. That is what tells a screen reader the value is not known, rather than that nothing has happened yet.
+
+Give it a name with `aria-label`, or point at your own heading with `aria-labelledby`:
+
+```tsx
+<Progress value={40} aria-label="Upload" />
+```
+
+## Motion
+
+Both the fill and the unknown-length animation are dropped under `prefers-reduced-motion`. The unknown-length bar becomes a full-width pulse rather than stopping, which would read as stalled work.
+
+## Related Components
+
+- [Spinner](/docs/spinner) - For work with no length to report
+- [Skeleton](/docs/skeleton) - For content whose shape you know but not its contents

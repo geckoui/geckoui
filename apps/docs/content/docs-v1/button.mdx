@@ -1,0 +1,258 @@
+---
+title: Button
+description: Flexible button component with multiple variants, sizes, and colors
+---
+
+import { Button } from '@geckoui/geckoui';
+
+# Button
+
+A flexible button component that extends the native HTML button with customizable styles. Supports different variants (filled, outlined, ghost, icon), sizes, and colors. All styling is applied via TailwindCSS classes, which can be overridden using the `className` prop.
+
+## Installation
+
+```tsx
+import { Button } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+<Button>Click me</Button>
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outlined' \| 'ghost' \| 'icon'` | `'filled'` | Button visual style |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Button size |
+| `color` | `'primary'` | `'primary'` | Button color scheme |
+| `disabled` | `boolean` | `false` | Disable the button |
+| `className` | `string` | - | CSS class for custom styling |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | HTML button type |
+| ...rest | `ButtonHTMLAttributes` | - | All standard HTML button attributes |
+
+## Examples
+
+### Variants
+
+
+```tsx
+<Button variant="filled">Filled</Button>
+<Button variant="outlined">Outlined</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="icon">🔥</Button>
+```
+
+### Sizes
+
+
+```tsx
+<Button size="xs">Extra Small</Button>
+<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>
+<Button size="xl">Extra Large</Button>
+```
+
+### Outlined Buttons
+
+
+```tsx
+<Button variant="outlined" size="sm">Small</Button>
+<Button variant="outlined" size="md">Medium</Button>
+<Button variant="outlined" size="lg">Large</Button>
+```
+
+### Ghost Buttons
+
+
+```tsx
+<Button variant="ghost">Cancel</Button>
+<Button variant="ghost">Learn More</Button>
+<Button variant="ghost">Skip</Button>
+```
+
+### Icon Buttons
+
+
+```tsx
+<Button variant="icon" size="sm">✏️</Button>
+<Button variant="icon" size="md">🗑️</Button>
+<Button variant="icon" size="lg">⚙️</Button>
+```
+
+### With Icons and Text
+
+
+```tsx
+<Button>
+  <span>+</span>
+  <span>Add Item</span>
+</Button>
+
+<Button variant="outlined">
+  <span>📥</span>
+  <span>Download</span>
+</Button>
+```
+
+### Disabled State
+
+
+```tsx
+<Button disabled>Disabled</Button>
+<Button variant="outlined" disabled>Disabled</Button>
+<Button variant="ghost" disabled>Disabled</Button>
+```
+
+### Form Actions
+
+
+```tsx
+function MyForm() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Button type="submit" variant="filled">Submit</Button>
+      <Button type="reset" variant="outlined">Reset</Button>
+      <Button type="button" variant="ghost">Cancel</Button>
+    </form>
+  );
+}
+```
+
+## Custom Styling
+
+The component uses TailwindCSS classes that can be overridden. By default, the button adds spacing between child elements:
+
+
+```tsx
+<Button
+  variant="filled"
+  className="bg-cyan-500 hover:bg-cyan-600 gap-4 px-6 py-3"
+>
+  <span>⭐</span>
+  <span>Custom Style</span>
+</Button>
+
+<Button
+  variant="outlined"
+  className="border-2 border-purple-500 text-purple-500"
+>
+  Custom Border
+</Button>
+```
+
+## Module Augmentation
+
+The Button component supports TypeScript module augmentation, allowing you to add custom variants, colors, and sizes with full type safety.
+
+### Live Example
+
+Custom `secondary` and `danger` colors created using module augmentation:
+
+
+### Step 1: TypeScript Declaration
+
+Create a declaration file (e.g., `gecko.d.ts`) in your project:
+
+```typescript
+import "@geckoui/geckoui";
+
+declare module "@geckoui/geckoui" {
+  interface ButtonColorMap {
+    secondary: unknown;
+    danger: unknown;
+  }
+}
+```
+
+### Step 2: Add CSS Styles
+
+Add the corresponding styles to your global CSS file. Target using `data-variant` and `data-color` attribute selectors:
+
+```css
+.GeckoUIButton[data-variant="filled"][data-color="secondary"] {
+  @apply bg-gray-600 text-white border-gray-600 enabled:hover:bg-gray-700 enabled:hover:border-gray-700 disabled:bg-gray-600/50 disabled:border-border-disabled;
+}
+
+.GeckoUIButton[data-variant="filled"][data-color="danger"] {
+  @apply bg-red-600 text-white border-red-600 enabled:hover:bg-red-700 enabled:hover:border-red-700 disabled:bg-red-600/50 disabled:border-border-disabled;
+}
+
+.GeckoUIButton[data-variant="outlined"][data-color="secondary"] {
+  @apply border-gray-400 text-gray-600 enabled:hover:bg-gray-50 disabled:bg-surface-hover disabled:text-text-disabled;
+}
+
+.GeckoUIButton[data-variant="outlined"][data-color="danger"] {
+  @apply border-red-400 text-red-600 enabled:hover:bg-red-50 disabled:bg-surface-hover disabled:text-text-disabled;
+}
+
+.GeckoUIButton[data-variant="ghost"][data-color="secondary"] {
+  @apply text-gray-600 enabled:hover:bg-gray-50 disabled:text-text-disabled;
+}
+
+.GeckoUIButton[data-variant="ghost"][data-color="danger"] {
+  @apply text-red-600 enabled:hover:bg-red-50 disabled:text-text-disabled;
+}
+
+.GeckoUIButton[data-variant="icon"][data-color="secondary"] {
+  @apply text-gray-500 disabled:text-text-disabled;
+}
+
+.GeckoUIButton[data-variant="icon"][data-color="danger"] {
+  @apply text-red-500 disabled:text-text-disabled;
+}
+```
+
+### Step 3: Use Your Custom Colors
+
+```tsx
+<Button color="secondary">Secondary</Button>
+<Button color="danger" variant="outlined">Delete</Button>
+```
+
+You can also extend `ButtonVariantMap` for custom variants or `ButtonSizeMap` for custom sizes following the same pattern.
+
+## Accessibility
+
+- Uses semantic `<button>` element
+- Fully keyboard navigable
+- Default `type="button"` prevents accidental form submission
+- Works with screen readers
+- Disabled state properly communicated
+- Focus visible for keyboard users
+
+## Styling
+
+The component uses `data-*` attributes for state and variant styling:
+
+- `data-variant` - Variant (filled, outlined, ghost, icon)
+- `data-color` - Color (primary, or custom via module augmentation)
+- `data-size` - Size (xs, sm, md, lg, xl)
+
+Target them in CSS with attribute selectors:
+
+```css
+.GeckoUIButton[data-variant="filled"][data-color="primary"] { }
+.GeckoUIButton[data-size="lg"] { }
+```
+
+## Default Behavior
+
+- **Type**: Defaults to `type="button"` to prevent accidental form submission
+- **Gap**: Automatically adds spacing between child elements
+- **Variant**: Defaults to `filled`
+- **Size**: Defaults to `md`
+- **Color**: Defaults to `primary`
+
+## Related Components
+
+- [LoadingButton](/v1/docs/loading-button) - Button with loading state

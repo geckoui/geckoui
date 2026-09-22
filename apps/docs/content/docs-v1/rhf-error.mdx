@@ -1,0 +1,353 @@
+---
+title: RHFError
+description: Error message display component for React Hook Form validation
+---
+
+import { RHFError } from '@geckoui/geckoui';
+
+# RHFError
+
+A component for displaying form field error messages with React Hook Form. Automatically shows validation error messages for the specified field. Supports custom rendering and styling of error messages.
+
+## Installation
+
+```tsx
+import { RHFError } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFError } from '@geckoui/geckoui';
+
+const schema = z.object({
+  errorUsername: z.string().min(3, 'Username must be at least 3 characters')
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { errorUsername: '' }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <div className="space-y-2">
+        <RHFInput name="errorUsername" placeholder="Enter username and blur to see error" />
+        <RHFError name="errorUsername" />
+      </div>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name to display errors for (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `className` | `string` | - | Class name for error message (only when `render` is not provided) |
+| `render` | `Function` | - | Custom error rendering function |
+
+## Examples
+
+### With Custom Styling
+
+
+```tsx
+<RHFInput name="styledEmail" placeholder="Enter email" />
+<RHFError name="styledEmail" className="font-bold text-red-700 text-lg" />
+```
+
+### With Custom Render Function
+
+
+```tsx
+const schema = z.object({
+  renderPassword: z.string().min(8, 'Password must be at least 8 characters')
+});
+
+<RHFInput name="renderPassword" type="password" placeholder="Enter password" />
+<RHFError
+  name="renderPassword"
+  render={({ error }) => {
+    if (!error) return null;
+    return (
+      <div className="flex items-center space-x-2 bg-red-50 p-2 rounded">
+        <span className="text-red-500 text-xl">⚠️</span>
+        <span className="text-sm font-medium text-red-600">
+          {error?.message}
+        </span>
+      </div>
+    );
+  }}
+/>
+```
+
+### Multiple Fields with Errors
+
+
+```tsx
+const schema = z.object({
+  multiUsername: z.string().min(3, 'Username must be at least 3 characters'),
+  multiEmail: z.string().email('Invalid email address'),
+  multiPassword: z.string().min(8, 'Password must be at least 8 characters')
+});
+
+<div className="space-y-4">
+  <div className="space-y-1">
+    <label className="text-sm font-medium">Username</label>
+    <RHFInput name="multiUsername" placeholder="Enter username" />
+    <RHFError name="multiUsername" />
+  </div>
+
+  <div className="space-y-1">
+    <label className="text-sm font-medium">Email</label>
+    <RHFInput name="multiEmail" type="email" placeholder="Enter email" />
+    <RHFError name="multiEmail" />
+  </div>
+
+  <div className="space-y-1">
+    <label className="text-sm font-medium">Password</label>
+    <RHFInput name="multiPassword" type="password" placeholder="Enter password" />
+    <RHFError name="multiPassword" />
+  </div>
+</div>
+```
+
+### With Icon
+
+
+```tsx
+<RHFInput name="iconEmail" placeholder="Enter email" />
+<RHFError
+  name="iconEmail"
+  render={({ error }) => {
+    if (!error) return null;
+    return (
+      <div className="flex items-center space-x-2">
+        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+        </svg>
+        <span className="text-sm text-red-600">{error?.message}</span>
+      </div>
+    );
+  }}
+/>
+```
+
+### With Explicit Control Prop
+
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+
+<RHFInput name="controlField" placeholder="Enter text" />
+<RHFError name="controlField" control={methods.control} />
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFInput, RHFError, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  formErrorUsername: z.string().min(3, 'Username must be at least 3 characters'),
+  formErrorEmail: z.string().email('Invalid email address'),
+  formErrorPassword: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  formErrorConfirm: z.string()
+}).refine((data) => data.formErrorPassword === data.formErrorConfirm, {
+  message: "Passwords don't match",
+  path: ['formErrorConfirm']
+});
+
+function RegistrationForm() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      formErrorUsername: '',
+      formErrorEmail: '',
+      formErrorPassword: '',
+      formErrorConfirm: ''
+    }
+  });
+
+  const onSubmit = (data: any) => {
+    console.log('Form data:', data);
+    alert('Form submitted! Check console for data.');
+  };
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Username *</label>
+          <RHFInput name="formErrorUsername" placeholder="Enter username" />
+          <RHFError name="formErrorUsername" />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Email *</label>
+          <RHFInput name="formErrorEmail" type="email" placeholder="Enter email" />
+          <RHFError name="formErrorEmail" />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Password *</label>
+          <RHFInput name="formErrorPassword" type="password" placeholder="Enter password" />
+          <RHFError name="formErrorPassword" />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium">Confirm Password *</label>
+          <RHFInput name="formErrorConfirm" type="password" placeholder="Confirm password" />
+          <RHFError name="formErrorConfirm" />
+        </div>
+
+        <Button type="submit">
+          Submit
+        </Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## How It Works
+
+RHFError uses React Hook Form's `Controller` component internally to:
+
+1. **Access field state** - Gets the `fieldState` for the specified field name
+2. **Check for errors** - Returns `null` (no render) if no error exists
+3. **Display error message** - Shows `error.message` in an `InputError` component
+4. **Support custom rendering** - Allows complete control via the `render` prop
+
+The component only renders when there's an error, making it efficient and clean.
+
+## Render Prop API
+
+The `render` prop receives a `ControllerFieldState` object with:
+
+```tsx
+{
+  error?: {
+    message?: string;
+    type?: string;
+  };
+  invalid: boolean;
+  isDirty: boolean;
+  isTouched: boolean;
+}
+```
+
+Example usage:
+
+```tsx
+<RHFError
+  name="email"
+  render={({ error, invalid, isTouched }) => {
+    if (!error) return null;
+
+    return (
+      <div className={`error ${isTouched ? 'touched' : ''}`}>
+        {error.message}
+      </div>
+    );
+  }}
+/>
+```
+
+## Usage Patterns
+
+### With RHFInputGroup
+
+The easiest way to use RHFError is through [RHFInputGroup](/v1/docs/rhf-input-group), which automatically includes it:
+
+```tsx
+<RHFInputGroup label="Email" required>
+  <RHFInput name="email" />
+</RHFInputGroup>
+```
+
+### Manual Layout
+
+For custom layouts, use RHFError manually:
+
+```tsx
+<div className="field-container">
+  <Label htmlFor="email">Email Address</Label>
+  <RHFInput id="email" name="email" />
+  <RHFError name="email" />
+</div>
+```
+
+### Multiple Errors
+
+For fields with multiple validation rules, Zod returns the first error encountered:
+
+```tsx
+const schema = z.object({
+  password: z.string()
+    .min(8, 'Minimum 8 characters')
+    .regex(/[A-Z]/, 'Must contain uppercase')
+    .regex(/[0-9]/, 'Must contain number')
+});
+
+<RHFError name="password" />
+```
+
+## Best Practices
+
+1. **Validation mode** - Use `mode: 'onBlur'` for better UX:
+   ```tsx
+   const methods = useForm({
+     resolver: zodResolver(schema),
+     mode: 'onBlur' // Shows errors after user leaves field
+   });
+   ```
+
+2. **Error messages** - Write clear, actionable error messages:
+   ```tsx
+   z.string().min(8, 'Password must be at least 8 characters')
+   // ✅ Clear and actionable
+
+   z.string().min(8, 'Invalid')
+   // ❌ Too vague
+   ```
+
+3. **Consistent styling** - Use `className` for simple styling, `render` for complex designs:
+   ```tsx
+   <RHFError name="email" className="text-sm text-red-600" />
+   ```
+
+4. **Accessibility** - Error messages are automatically associated with inputs when using RHFInputGroup
+
+## Accessibility
+
+- Error messages are rendered in a `<p>` tag with proper ARIA attributes via the `InputError` component
+- Errors are announced to screen readers when they appear
+- The `GeckoUIRHFError` CSS class is applied for custom styling
+- Works seamlessly with keyboard navigation
+
+## Related Components
+
+- [RHFInputGroup](/v1/docs/rhf-input-group) - Layout component that includes RHFError
+- [RHFInput](/v1/docs/rhf-input) - Text input with React Hook Form
+- [RHFTextarea](/v1/docs/rhf-textarea) - Multi-line text input
+- [InputError](/v1/docs/input-error) - Base error message component

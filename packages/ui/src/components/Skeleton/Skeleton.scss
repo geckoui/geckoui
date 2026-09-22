@@ -1,0 +1,90 @@
+@import "../../mixins.scss";
+
+.GeckoUISkeleton {
+  @include base-reset;
+
+  --gecko-skeleton-bg: var(--color-surface-hover-strong);
+  /*
+   * A translucent white sheen rather than a second surface token. It reads as a highlight
+   * over the light grey in light mode and over the mid grey in dark mode, where every
+   * surface token below the base is darker than it, not lighter.
+   */
+  --gecko-skeleton-highlight: rgb(255 255 255 / 55%);
+  --gecko-skeleton-radius: 0.25rem;
+  --gecko-skeleton-duration: 1.6s;
+  --gecko-skeleton-line-height: 1em;
+  --gecko-skeleton-line-gap: 0.5rem;
+  --gecko-skeleton-last-line-width: 60%;
+
+  @apply flex flex-col;
+
+  gap: var(--gecko-skeleton-line-gap);
+
+  &__bar {
+    @apply relative block flex-1 overflow-hidden;
+
+    background: var(--gecko-skeleton-bg);
+    border-radius: var(--gecko-skeleton-radius);
+  }
+
+  /*
+   * Text lines take their height from the font size, so a placeholder sits on the same
+   * baseline grid as the copy it stands in for without being measured.
+   */
+  &[data-shape="text"] > .GeckoUISkeleton__bar {
+    @apply flex-none;
+
+    height: var(--gecko-skeleton-line-height);
+
+    /* a short last line is what makes a stack of bars read as a paragraph */
+    &:last-child:not(:only-child) {
+      width: var(--gecko-skeleton-last-line-width);
+    }
+  }
+
+  &[data-shape="circle"] {
+    @apply w-fit;
+
+    > .GeckoUISkeleton__bar {
+      @apply aspect-square h-full;
+
+      border-radius: 9999px;
+    }
+  }
+
+  &[data-animation="pulse"] > .GeckoUISkeleton__bar {
+    animation: gecko-skeleton-pulse var(--gecko-skeleton-duration) ease-in-out infinite;
+  }
+
+  &[data-animation="wave"] > .GeckoUISkeleton__bar::after {
+    @apply absolute inset-0;
+
+    content: "";
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--gecko-skeleton-highlight), transparent);
+    animation: gecko-skeleton-wave var(--gecko-skeleton-duration) linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    > .GeckoUISkeleton__bar,
+    > .GeckoUISkeleton__bar::after {
+      animation: none;
+    }
+
+    > .GeckoUISkeleton__bar::after {
+      @apply hidden;
+    }
+  }
+}
+
+@keyframes gecko-skeleton-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes gecko-skeleton-wave {
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -1,0 +1,308 @@
+---
+title: RHFSwitch
+description: Toggle switch component integrated with React Hook Form with custom value support
+---
+
+import { RHFSwitch } from '@geckoui/geckoui';
+
+# RHFSwitch
+
+A controlled toggle switch component for React Hook Form. By default stores boolean values (true/false), but supports custom values of any type. Values maintain their original data types.
+
+## Installation
+
+```tsx
+import { RHFSwitch } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { RHFSwitch } from '@geckoui/geckoui';
+
+function Example() {
+  const methods = useForm({
+    defaultValues: {
+      enabled: false
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <div className="flex items-center gap-2">
+        <RHFSwitch name="enabled" />
+        <span>Enable notifications</span>
+      </div>
+    </FormProvider>
+  );
+}
+```
+
+## Props API
+
+Extends all props from [Switch](/v1/docs/switch) component plus:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Field name (required) |
+| `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
+| `rules` | `RegisterOptions` | - | Inline validation rules |
+| `value` | `unknown` | - | Value when checked (if not provided, uses boolean) |
+| `uncheckedValue` | `unknown` | - | Value when unchecked (only with `value` prop) |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Switch size |
+| `onChange` | `(value: unknown) => void` | - | Change callback |
+| ...rest | `SwitchProps` | - | All Switch component props |
+
+## Examples
+
+### With Custom String Values
+
+
+```tsx
+<RHFSwitch name="status" value="yes" uncheckedValue="no" />
+```
+
+### With Number Values
+
+
+```tsx
+<RHFSwitch name="mode" value={1} uncheckedValue={0} />
+```
+
+### With Object Values
+
+
+```tsx
+<RHFSwitch
+  name="settings"
+  value={{ theme: 'dark', notifications: true }}
+  uncheckedValue={{ theme: 'light', notifications: false }}
+/>
+```
+
+### Different Sizes
+
+
+```tsx
+<RHFSwitch name="small" size="sm" />
+<RHFSwitch name="medium" size="md" />
+```
+
+### Disabled State
+
+
+```tsx
+<RHFSwitch name="disabledOn" disabled />
+<RHFSwitch name="disabledOff" disabled />
+```
+
+### With Validation (Zod)
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFSwitch, RHFInputGroup } from '@geckoui/geckoui';
+
+const schema = z.object({
+  terms: z.literal(true, { message: 'You must accept the terms' })
+});
+
+function Example() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { terms: false }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <RHFInputGroup required>
+        <div className="flex items-center gap-2">
+          <RHFSwitch name="terms" />
+          <span>I accept the terms and conditions</span>
+        </div>
+      </RHFInputGroup>
+    </FormProvider>
+  );
+}
+```
+
+### Complete Form Example
+
+
+```tsx
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { RHFSwitch, RHFInputGroup, Button } from '@geckoui/geckoui';
+
+const schema = z.object({
+  notifications: z.boolean(),
+  marketing: z.boolean(),
+  darkMode: z.boolean(),
+  twoFactor: z.literal(true, { message: 'Two-factor authentication is required' })
+});
+
+function FormExample() {
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      notifications: true,
+      marketing: false,
+      darkMode: false,
+      twoFactor: false
+    }
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span>Email notifications</span>
+            <RHFSwitch name="notifications" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Marketing emails</span>
+            <RHFSwitch name="marketing" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Dark mode</span>
+            <RHFSwitch name="darkMode" />
+          </div>
+        </div>
+
+        <RHFInputGroup required>
+          <div className="flex items-center gap-2">
+            <RHFSwitch name="twoFactor" />
+            <span>Enable two-factor authentication</span>
+          </div>
+        </RHFInputGroup>
+
+        <Button type="submit">Save Settings</Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Inline Rules Validation
+
+For simple validation, use the `rules` prop:
+
+```tsx
+<RHFSwitch
+  name="terms"
+  rules={{ required: 'You must accept the terms' }}
+/>
+```
+
+For complex forms, we recommend using a schema resolver (Zod, Yup) instead.
+
+## Value Behavior
+
+### Default (Boolean Mode)
+
+When `value` prop is not provided, the switch toggles between `true` and `false`:
+
+```tsx
+// Stores: true or false
+<RHFSwitch name="enabled" />
+```
+
+### Custom Values Mode
+
+When `value` prop is provided:
+- **Checked**: Stores the `value`
+- **Unchecked**: Stores `uncheckedValue` (default: `undefined`)
+
+```tsx
+// Stores: "yes" or "no"
+<RHFSwitch name="status" value="yes" uncheckedValue="no" />
+
+// Stores: 1 or 0
+<RHFSwitch name="mode" value={1} uncheckedValue={0} />
+
+// Stores: object or undefined
+<RHFSwitch name="settings" value={{ enabled: true }} />
+
+// Stores: first object or second object
+<RHFSwitch
+  name="config"
+  value={{ theme: 'dark' }}
+  uncheckedValue={{ theme: 'light' }}
+/>
+```
+
+## Value Type Preservation
+
+RHFSwitch preserves the original value type:
+
+```tsx
+// Boolean (default)
+<RHFSwitch name="enabled" />
+// Result: true or false
+
+// String
+<RHFSwitch name="status" value="active" uncheckedValue="inactive" />
+// Result: "active" or "inactive"
+
+// Number
+<RHFSwitch name="level" value={10} uncheckedValue={0} />
+// Result: 10 or 0
+
+// Object
+<RHFSwitch name="settings" value={{ a: 1 }} uncheckedValue={{ a: 0 }} />
+// Result: { a: 1 } or { a: 0 }
+
+// Array
+<RHFSwitch name="permissions" value={['read', 'write']} uncheckedValue={[]} />
+// Result: ['read', 'write'] or []
+```
+
+## Error States
+
+RHFSwitch doesn't apply error styling directly. Use [RHFInputGroup](/v1/docs/rhf-input-group) to display errors:
+
+```tsx
+<RHFInputGroup required>
+  <div className="flex items-center gap-2">
+    <RHFSwitch name="terms" />
+    <span>Accept terms</span>
+  </div>
+</RHFInputGroup>
+```
+
+**Tip**: Use `mode: 'onBlur'` in useForm to validate on blur:
+
+```tsx
+const methods = useForm({
+  resolver: zodResolver(schema),
+  mode: 'onBlur'
+});
+```
+
+## Keyboard Support
+
+The switch supports full keyboard interaction:
+- **Space** or **Enter**: Toggle the switch
+- **Tab**: Move focus to/from the switch
+
+## Accessibility
+
+- Inherits all accessibility features from [Switch](/v1/docs/switch) component
+- Proper ARIA attributes
+- Keyboard accessible
+- Screen reader compatible
+- Disabled state properly communicated
+
+## Related Components
+
+- [Switch](/v1/docs/switch) - Base switch component
+- [RHFCheckbox](/v1/docs/rhf-checkbox) - Checkbox component
+- [RHFRadio](/v1/docs/rhf-radio) - Radio button component

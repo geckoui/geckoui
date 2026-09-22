@@ -1,0 +1,367 @@
+---
+title: Calendar
+description: Interactive calendar component for date selection with month/year navigation
+---
+
+import { Calendar } from '@geckoui/geckoui';
+
+# Calendar
+
+An interactive calendar component for selecting dates. Features month/year navigation, three view modes (day/month/year), and programmatic control via ref.
+
+## Installation
+
+```tsx
+import { Calendar } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Calendar } from '@geckoui/geckoui';
+
+function Example() {
+  const [selectedDate, setSelectedDate] = useState<string | undefined>();
+
+  return (
+    <div className="space-y-4">
+      <Calendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+      {selectedDate && <p className="text-sm text-gray-600">Selected: {selectedDate}</p>}
+    </div>
+  );
+}
+```
+
+## Props API
+
+### Single Mode Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'single'` | `'single'` | Selection mode for single date |
+| `selectedDate` | `string \| null \| undefined` | - | Currently selected date in YYYY-MM-DD format |
+| `onSelectDate` | `(date: string) => void` | - | Callback when date is selected |
+
+### Range Mode Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'range'` | - | Selection mode for date range |
+| `selectedRange` | `DateRange` | - | Selected date range with `from` and `to` |
+| `onSelectRange` | `(range: DateRange \| null) => void` | - | Callback when range is selected |
+
+### Common Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `calendarRef` | `React.Ref<CalendarRef>` | - | Ref for programmatic control |
+| `className` | `string` | - | Additional CSS classes |
+| `style` | `React.CSSProperties` | - | Inline styles |
+| `disableDate` | `(date: string) => boolean` | - | Callback to determine if a date should be disabled |
+| `renderDayCell` | `(props: DayCellRenderProps) => ReactNode` | - | Custom renderer for day cells |
+
+### DateRange Type
+
+```tsx
+interface DateRange {
+  from: string | null;  // ISO format: 'YYYY-MM-DD'
+  to?: string | null;   // ISO format: 'YYYY-MM-DD'
+}
+```
+
+### DayCellRenderProps Type
+
+```tsx
+interface DayCellRenderProps {
+  day: number;
+  month: number;
+  year: number;
+  date: string;        // 'YYYY-MM-DD' format
+  isDisabled: boolean;
+  isSelected: boolean;
+  isFocusedMonth: boolean; // true if the day is in the current month being viewed
+}
+```
+
+## Date Format
+
+All dates must be in **ISO format: YYYY-MM-DD**
+
+```tsx
+// ✅ Correct
+selectedDate="2024-12-25"
+selectedDate="2024-01-01"
+
+// ❌ Incorrect
+selectedDate="12/25/2024"
+selectedDate="25-12-2024"
+```
+
+The component validates the date format and logs an error if invalid.
+
+## Examples
+
+### With Default Date
+
+Pre-select a date when the calendar loads:
+
+
+```tsx
+const [selectedDate, setSelectedDate] = useState<string | undefined>('2024-06-15');
+
+<Calendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+```
+
+**Use Cases**:
+- Highlight today's date
+- Mark important dates (holidays, events)
+- Show reference dates while selecting
+
+### Programmatic Control
+
+Navigate to specific months/years using `calendarRef`:
+
+
+```tsx
+'use client';
+
+import { useState, useRef } from 'react';
+import { Calendar, Button } from '@geckoui/geckoui';
+import type { CalendarRef } from '@geckoui/geckoui';
+
+function Example() {
+  const [selectedDate, setSelectedDate] = useState<string | undefined>();
+  const calendarRef = useRef<CalendarRef>(null);
+
+  const jumpToDate = (month: number, year: number) => {
+    calendarRef.current?.moveTo(month, year);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <Button size="sm" variant="outlined" onClick={() => jumpToDate(1, 2025)}>
+          January 2025
+        </Button>
+        <Button size="sm" variant="outlined" onClick={() => jumpToDate(7, 2024)}>
+          July 2024
+        </Button>
+        <Button size="sm" variant="outlined" onClick={() => jumpToDate(12, 2023)}>
+          December 2023
+        </Button>
+      </div>
+      <Calendar
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        calendarRef={calendarRef}
+      />
+    </div>
+  );
+}
+```
+
+#### CalendarRef API
+
+```tsx
+interface CalendarRef {
+  moveTo: (month: number, year: number) => void;
+}
+```
+
+**Parameters**:
+- `month`: 1-12 (January = 1, December = 12)
+- `year`: Full year (e.g., 2024, 2025)
+
+**Behavior**:
+- Switches view to Day mode
+- Displays the specified month/year
+- Does NOT select a date (only navigates)
+
+## Range Mode
+
+Use `mode="range"` to enable date range selection with a dual-month calendar display.
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Calendar } from '@geckoui/geckoui';
+import type { DateRange } from '@geckoui/geckoui';
+
+function Example() {
+  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+
+  return (
+    <Calendar
+      mode="range"
+      selectedRange={selectedRange}
+      onSelectRange={(range) => setSelectedRange(range ?? undefined)}
+    />
+  );
+}
+```
+
+### Single Month Display
+
+
+```tsx
+<Calendar
+  mode="range"
+  selectedRange={selectedRange}
+  onSelectRange={(range) => setSelectedRange(range ?? undefined)}
+/>
+```
+
+### Disable Dates
+
+Use `disableDate` to prevent selection of specific dates. The callback receives a date string in `YYYY-MM-DD` format and returns `true` to disable the date.
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Calendar } from '@geckoui/geckoui';
+
+function Example() {
+  const [selectedDate, setSelectedDate] = useState<string | undefined>();
+
+  const disableDate = (date: string) => {
+    const dayOfWeek = new Date(date).getDay();
+    return dayOfWeek === 0 || dayOfWeek === 6; // Disable weekends
+  };
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onSelectDate={setSelectedDate}
+      disableDate={disableDate}
+    />
+  );
+}
+```
+
+**Common Use Cases**:
+- Disable weekends
+- Disable past dates
+- Disable holidays or specific dates
+- Disable dates outside a valid range
+
+### Custom Day Rendering
+
+Use `renderDayCell` to customize how each day cell is displayed. This allows adding custom styling, indicators, or content to specific dates.
+
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Calendar } from '@geckoui/geckoui';
+import type { DayCellRenderProps } from '@geckoui/geckoui';
+
+function Example() {
+  const [selectedDate, setSelectedDate] = useState<string | undefined>();
+
+  const hasEvent = (date: string) => {
+    const today = new Date();
+    return today.getDate() === new Date(date).getDate();
+  };
+
+  return (
+    <div className="space-y-4">
+      <Calendar
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        renderDayCell={({ day, date }) => (
+          <>
+            <span>{day}</span>
+            {hasEvent(date) && (
+              <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-red-500 rounded-full" />
+            )}
+          </>
+        )}
+      />
+      {selectedDate && <p className="text-sm text-gray-600">Selected: {selectedDate}</p>}
+    </div>
+  );
+}
+```
+
+**Common Use Cases**:
+- Add event indicators or dots
+- Show custom styling for holidays
+- Display additional information on hover
+- Highlight specific date ranges
+
+## Styling
+
+The component uses base class names with `data-*` attributes for states:
+
+**Main Container:**
+- `GeckoUICalendar` - Main container
+- `GeckoUICalendar[data-calendars="2"]` - Dual calendar mode
+- `GeckoUICalendar[data-mode]` - Current view mode (`day`, `month`, `year`)
+- `GeckoUICalendar[data-selection]` - Selection mode (`single`, `range`)
+- `GeckoUICalendar__dual` - Dual calendar wrapper
+- `GeckoUICalendar__dual[data-position="first"]` / `GeckoUICalendar__dual[data-position="second"]` - First/second calendar
+
+**Header:**
+- `GeckoUICalendar__header` - Header container
+- `GeckoUICalendar__header__title` - Month/year title
+- `GeckoUICalendar__header__title[data-clickable]` - Clickable title state
+- `GeckoUICalendar__header__arrow-button` - Navigation arrow buttons
+- `GeckoUICalendar__header__arrow-left-icon` / `GeckoUICalendar__header__arrow-right-icon` - Arrow icons
+
+**Year Picker:**
+- `GeckoUICalendar__year-picker` - Year picker grid
+- `GeckoUICalendar__year-picker__button` - Year button
+- `GeckoUICalendar__year-picker__button[data-selected]` - Selected year
+- `GeckoUICalendar__year-picker__button[data-prev-next]` - Previous/next year buttons
+
+**Month Picker:**
+- `GeckoUICalendar__month-picker` - Month picker grid
+- `GeckoUICalendar__month-picker__button` - Month button
+- `GeckoUICalendar__month-picker__button[data-selected]` - Selected month
+
+**Day Picker:**
+- `GeckoUICalendar__day-picker-weekdays` - Weekday header row
+- `GeckoUICalendar__day-picker` - Day picker grid
+- `GeckoUICalendar__day-picker__button` - Day button
+- `GeckoUICalendar__day-picker__button[data-today]` - Today's date
+- `GeckoUICalendar__day-picker__button[data-selected]` - Selected date
+- `GeckoUICalendar__day-picker__button[data-disabled]` - Disabled date
+- `GeckoUICalendar__day-picker__button[data-active-month]` - Dates in current month (absent for outside dates)
+- `GeckoUICalendar__day-picker__button[data-in-range]` - Date within selected range
+- `GeckoUICalendar__day-picker__button[data-range-start]` - Range start date
+- `GeckoUICalendar__day-picker__button[data-range-end]` - Range end date
+- `GeckoUICalendar__day-picker__button[data-hover-preview]` - Hover preview for range selection
+- `GeckoUICalendar__day-picker__button[data-hover-preview-start]` / `GeckoUICalendar__day-picker__button[data-hover-preview-end]` - Hover preview boundaries
+
+## Accessibility
+
+- Semantic HTML with proper table structure for day grid
+- Keyboard navigation with arrow keys
+- Tab to focus navigation buttons
+- Enter/Space to select dates
+- Screen reader announcements for date selection
+- ARIA labels for navigation controls
+
+## Best Practices
+
+1. **Always use ISO format**: Use YYYY-MM-DD for all date values
+2. **Validate dates**: Check date ranges and constraints in onSelectDate
+3. **Clear selection**: Provide a way to clear the selected date
+4. **Form integration**: Disable submit until date is selected
+5. **Error handling**: Show validation errors near the calendar
+6. **Responsive design**: Calendar adapts to container width
+
+## Related Components
+
+- [DateInput](/v1/docs/date-input) - Input field with calendar popup
+- [DateRangeInput](/v1/docs/date-range-input) - Input for selecting date ranges
+- [RHFDateInput](/v1/docs/rhf-date-input) - React Hook Form integrated date input

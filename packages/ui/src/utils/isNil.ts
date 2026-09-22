@@ -1,4 +1,4 @@
-const isNil = (value: unknown): boolean => {
+const isNil = (value: unknown): value is null | undefined => {
   return value == null;
 };
 

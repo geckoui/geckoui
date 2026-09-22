@@ -10,7 +10,9 @@ import { BasicConfirmDialogExample, DeleteConfirmDialogExample, RichContentConfi
 
 ConfirmDialog is a flexible confirmation modal component that prompts users for action validation. Built on top of the Dialog component, it provides a standardized interface for displaying confirmation prompts with customizable content, buttons, and behavior.
 
-## Installation
+## Setup
+
+Requires [`<GeckoUIProvider>`](/docs/gecko-ui-provider) to wrap your app.
 
 ```tsx
 import { ConfirmDialog } from '@geckoui/geckoui';
@@ -38,17 +40,19 @@ ConfirmDialog.show({
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `title` | `string` | - | Dialog title |
-| `content` | `ReactNode \| FC<{dismiss}>` | - | Dialog content |
+| `title` | `string` | — | Dialog title |
+| `content` | `ReactNode \| FC<{dismiss}>` | — | Dialog content |
 | `confirmButtonLabel` | `string` | `'Ok'` | Confirm button text |
 | `cancelButtonLabel` | `string` | `'Cancel'` | Cancel button text |
-| `onConfirm` | `(args) => void \| Promise<void>` | - | Confirm callback |
-| `onCancel` | `(args) => void \| Promise<void>` | - | Cancel callback |
-| `className` | `string` | - | CSS class for dialog |
-| `titleClassName` | `string` | - | CSS class for title |
-| `contentClassName` | `string` | - | CSS class for content |
-| `dismissOnEsc` | `boolean` | `false` | Close on Escape key |
-| `dismissOnOutsideClick` | `boolean` | `false` | Close on outside click |
+| `onConfirm` | `(args) => void \| Promise<void>` | — | Confirm callback |
+| `onCancel` | `(args) => void \| Promise<void>` | — | Cancel callback |
+| `className` | `string` | — | CSS class for dialog |
+| `titleClassName` | `string` | — | CSS class for title |
+| `contentClassName` | `string` | — | CSS class for content |
+| `dismissOnEscape` | `boolean` | `true` | Close on Escape key |
+| `dismissOnOutsideClick` | `boolean` | `true` | Close on outside click |
+
+**Returns:** `string` — the overlay id (forwarded from `Dialog.show`).
 
 ### Callback Arguments
 
@@ -56,16 +60,16 @@ Both `onConfirm` and `onCancel` receive an object with:
 
 | Argument | Type | Description |
 |----------|------|-------------|
-| `preventDefault` | `() => void` | Prevent auto-close |
+| `preventDefault` | `() => void` | Prevent auto-close after callback |
 | `dismiss` | `() => void` | Manually close dialog |
 
-### ConfirmDialog.dismiss()
+### ConfirmDialog.dismiss(id?)
 
-Programmatically closes the confirm dialog from anywhere in your app.
+Programmatically closes the confirm dialog. Pass the `id` returned by `show()` to close a specific dialog, or call with no argument to close the topmost overlay.
 
 ## Examples
 
-### Delete Confirmation(Async)
+### Delete Confirmation (Async)
 
 <Preview>
   <DeleteConfirmDialogExample />
@@ -78,24 +82,19 @@ function DeleteButton({ itemId }) {
       title: "Delete Item",
       content: "Are you sure you want to delete this item? This action cannot be undone.",
       confirmButtonLabel: "Delete",
-      cancelButtonLabel: "Cancel",
+      cancelButtonLabel: "Keep",
       onConfirm: async () => {
         await deleteItem(itemId);
-        showSuccessMessage("Item deleted successfully");
-      },
-      onCancel: () => {
-        console.log('Deletion cancelled');
+        toast.success("Item deleted");
       }
     });
   };
 
-  return <button onClick={handleDelete}>Delete</button>;
+  return <Button onClick={handleDelete}>Delete</Button>;
 }
 ```
 
-> If you pass an async function to `onConfirm` or `onCancel`, the dialog will show a loading state on the button until the Promise resolves.
-
-### Rich Content
+### Rich Content with Custom Component
 
 <Preview>
   <RichContentConfirmDialogExample />
@@ -108,119 +107,46 @@ ConfirmDialog.show({
     <div className="space-y-4">
       <p>Transfer project ownership to:</p>
       <UserSelector onSelect={setSelectedUser} />
-      <button onClick={dismiss} className="text-sm text-blue-500">
-        Cancel transfer
-      </button>
+      <Button variant="link" onClick={dismiss}>Cancel transfer</Button>
     </div>
   ),
   confirmButtonLabel: "Transfer Now",
-  cancelButtonLabel: "Go Back",
-  titleClassName: "text-warning",
-  contentClassName: "min-h-[200px]",
-  onConfirm: ({ dismiss }) => {
+  onConfirm: () => {
     performTransfer();
-    dismiss();
   }
 });
 ```
 
-### Custom Styling
-
-<Preview>
-  <CustomStylingConfirmDialogExample />
-</Preview>
+### Programmatic Dismissal
 
 ```tsx
-ConfirmDialog.show({
-  title: "Premium Feature",
-  content: "This feature requires a premium subscription. Would you like to upgrade?",
-  confirmButtonLabel: "Upgrade Now",
-  cancelButtonLabel: "Maybe Later",
-  className: "max-w-lg",
-  titleClassName: "text-2xl font-bold text-purple-600",
-  contentClassName: "text-gray-600 text-center py-6",
-  onConfirm: () => {
-    router.push("/upgrade");
-  }
+const id = ConfirmDialog.show({
+  title: "Processing",
+  content: "Please wait while we process your request..."
 });
+
+// Close from anywhere
+ConfirmDialog.dismiss(id);
 ```
 
 ## Behavior
 
-### Auto-Close
+- If `onConfirm` or `onCancel` is declared `async`, the respective button shows a loading state until the promise resolves.
+- The check is on the function itself, not on what it returns. A function that returns a promise without being declared `async` gets no loading state:
 
-By default, the dialog automatically closes after:
-- Clicking confirm button (after `onConfirm` completes)
-- Clicking cancel button (after `onCancel` completes)
+  ```tsx
+  // loading state
+  onConfirm: async () => { await deleteUser(id); }
 
-### Manual Control
+  // no loading state, the dialog closes straight away
+  onConfirm: () => deleteUser(id)
+  ```
 
-Use `preventDefault()` to prevent auto-close and handle dismissal manually:
-
-```tsx
-onConfirm: async ({ preventDefault, dismiss }) => {
-  preventDefault(); // Don't auto-close
-
-  const result = await performOperation();
-
-  if (result.success) {
-    dismiss(); // Manually close
-  }
-  // Keep open if failed
-}
-```
-
-### Loading States
-
-When `onConfirm` or `onCancel` returns a Promise (async function), the dialog automatically:
-- Awaits the Promise
-- Shows loading spinner on the button
-- Closes after completion
-
-```tsx
-onConfirm: async () => {
-  await longRunningOperation();
-}
-```
-
-To skip the loading indicator while still calling an async function:
-
-```tsx
-onConfirm: () => {
-  myAsyncFunction();
-}
-```
-
-### Keyboard Support
-
-- **Enter**: Triggers confirm action (when no focusable elements have focus)
-- **Escape**: Disabled by default (set `dismissOnEsc: true` to enable)
-
-## Accessibility
-
-- Built on Dialog component with full accessibility
-- Proper ARIA attributes
-- Keyboard navigation
-- Focus management
-- Loading states communicated to screen readers
-
-## Styling
-
-- `GeckoUIConfirmDialog__dialog` - Dialog container
-- `GeckoUIConfirmDialog__title` - Title element
-- `GeckoUIConfirmDialog__content` - Content wrapper
-- `GeckoUIConfirmDialog__actions` - Button container
-- `GeckoUIConfirmDialog__confirm-button` - Confirm button
-- `GeckoUIConfirmDialog__cancel-button` - Cancel button
-
-## Dependencies
-
-This component uses:
-- `Dialog` component for modal functionality
-- `LoadingButton` for action buttons with loading states
+  Use this when you deliberately want the dialog to close without waiting.
+- After the callback resolves, the dialog closes automatically unless `preventDefault()` was called.
+- Pressing Enter confirms (when no focusable element is focused), and only when the confirm dialog is the topmost overlay. Stacked dialogs below it ignore Enter.
 
 ## Related Components
 
-- [Dialog](/docs/dialog) - Base modal component
-- [Alert](/docs/alert) - Non-blocking notifications
-- [LoadingButton](/docs/loading-button) - Buttons with loading states
+- [GeckoUIProvider](/docs/gecko-ui-provider) — Required provider
+- [Dialog](/docs/dialog) — Lower-level dialog primitive

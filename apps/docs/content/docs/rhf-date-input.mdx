@@ -63,7 +63,6 @@ Extends all props from [DateInput](/docs/date-input) component plus:
 | `prefix` | `ReactNode \| Function` | - | Element before input |
 | `suffix` | `ReactNode \| Function` | - | Element after input |
 | `onChange` | `(value: string) => void` | - | Change callback |
-| `onBlur` | `(value: string) => void` | - | Blur callback |
 
 ## Examples
 
@@ -296,7 +295,7 @@ const dateToDateString = (date: Date): string => {
 ## Error States
 
 RHFDateInput automatically displays error states with:
-- Red border via `hasError` prop when `fieldState.error` exists
+- Red border via `aria-invalid` prop when `fieldState.error` exists
 - No automatic error icon (you must add via suffix prop if desired)
 
 Use [RHFInputGroup](/docs/rhf-input-group) component for label + input + error layout:

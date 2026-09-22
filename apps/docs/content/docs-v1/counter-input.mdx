@@ -1,0 +1,172 @@
+---
+title: Counter Input
+description: A numeric input component with increment/decrement buttons
+---
+
+
+# Counter Input
+
+A numeric input component with increment and decrement buttons. Supports controlled mode, min/max boundaries, custom step values, and multiple sizes.
+
+## Installation
+
+```tsx
+import { CounterInput } from "@geckoui/geckoui";
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from "react";
+
+function Example() {
+  const [value, setValue] = useState(0);
+
+  return <CounterInput value={value} onChange={setValue} />;
+}
+```
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | Current numeric value (required) |
+| `onChange` | `(value: number) => void` | - | Callback when value changes (required) |
+| `min` | `number` | `-Infinity` | Minimum allowed value |
+| `max` | `number` | `Infinity` | Maximum allowed value |
+| `step` | `number` | `1` | Increment/decrement step |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size variant |
+| `disabled` | `boolean` | `false` | Disable the entire component |
+| `readOnly` | `boolean` | `false` | Read-only mode - buttons and input are non-interactive |
+| `editable` | `boolean` | `false` | Allow typing in input field |
+| `inputClassName` | `string` | - | CSS class for the input element |
+| `buttonClassName` | `string` | - | CSS class for the buttons |
+| `className` | `string` | - | CSS class for the container |
+
+## Examples
+
+### Sizes
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} size="sm" />
+<CounterInput value={value} onChange={setValue} size="md" />
+<CounterInput value={value} onChange={setValue} size="lg" />
+```
+
+### Min/Max Boundaries
+
+Buttons are automatically disabled when reaching the min or max value.
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} min={0} max={10} />
+```
+
+### Custom Step
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} step={5} />
+```
+
+### Editable Input
+
+When `editable` is true, users can type directly into the input field. Only numbers and minus sign are allowed.
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} editable />
+```
+
+### Disabled State
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} disabled />
+```
+
+### Read Only State
+
+In read-only mode, buttons and input are non-interactive but maintain normal appearance (no dimmed opacity).
+
+
+```tsx
+<CounterInput value={value} onChange={setValue} readOnly />
+```
+
+## Module Augmentation
+
+The CounterInput component supports TypeScript module augmentation, allowing you to add custom sizes with full type safety.
+
+### Live Example
+
+A custom `xl` size created using module augmentation:
+
+
+### Step 1: TypeScript Declaration
+
+Create a declaration file (e.g., `gecko.d.ts`) in your project:
+
+```typescript
+import "@geckoui/geckoui";
+
+declare module "@geckoui/geckoui" {
+  interface CounterInputSizeMap {
+    xl: unknown;
+  }
+}
+```
+
+### Step 2: Add CSS Styles
+
+Add the corresponding styles to your global CSS/SCSS file:
+
+```scss
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__button {
+  @apply h-14 w-14;
+}
+
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__input {
+  @apply h-14 w-24 text-lg;
+}
+
+.GeckoUICounterInput[data-size="xl"] .GeckoUICounterInput__icon {
+  @apply h-6 w-6;
+}
+```
+
+### Step 3: Use Your Custom Size
+
+```tsx
+<CounterInput value={value} onChange={setValue} size="xl" />
+```
+
+## Accessibility
+
+- Buttons have `aria-label` for screen readers ("Increment" and "Decrement")
+- Input uses `inputMode="numeric"` for appropriate mobile keyboards
+- Focus states are clearly visible
+- Disabled states are properly communicated
+
+## Styling
+
+The component uses BEM base class names with `data-*` attributes for modifiers:
+
+- `GeckoUICounterInput` - Main container
+- `GeckoUICounterInput[data-size="sm|md|lg"]` - Size modifiers
+- `GeckoUICounterInput[data-state="disabled"]` - Disabled state
+- `GeckoUICounterInput[data-state="readonly"]` - Read-only state
+- `GeckoUICounterInput__button` - Increment/decrement buttons
+- `GeckoUICounterInput__button[data-action="increment"]` - Plus button
+- `GeckoUICounterInput__button[data-action="decrement"]` - Minus button
+- `GeckoUICounterInput__input` - The numeric input field
+- `GeckoUICounterInput__icon` - Button icons
+- `GeckoUICounterInput__icon[data-icon="minus"]` - Minus icon
+- `GeckoUICounterInput__icon[data-icon="plus"]` - Plus icon
+
+## Related Components
+
+- [Input](/v1/docs/input) - Text input component
+- [RHFCounterInput](/v1/docs/rhf-counter-input) - React Hook Form integration for this component

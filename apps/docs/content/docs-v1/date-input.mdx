@@ -1,0 +1,196 @@
+---
+title: DateInput
+description: Keyboard-driven date input with intelligent auto-completion and format support
+---
+
+import { DateInput } from '@geckoui/geckoui';
+import { CalendarIcon } from 'lucide-react';
+
+# DateInput
+
+An accessible date picker component that provides an intuitive keyboard-driven interface for date entry. Features intelligent auto-completion, cross-field validation, and support for multiple date formats.
+
+## Installation
+
+```tsx
+import { DateInput } from '@geckoui/geckoui';
+```
+
+## Basic Usage
+
+
+```tsx
+import { useState } from 'react';
+
+function Example() {
+  const [date, setDate] = useState<string | null>(null);
+
+  return (
+    <DateInput
+      value={date}
+      onChange={(isoDate) => setDate(isoDate)}
+      placeholder="Enter date"
+    />
+  );
+}
+```
+
+## Key Features
+
+- **ISO 8601 Output**: Always emits dates in `YYYY-MM-DD` format
+- **Multiple Display Formats**: DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD
+- **Intelligent Auto-completion**: Auto-advances between fields
+- **Cross-field Validation**: Handles leap years and month-specific day limits
+- **Keyboard-driven**: Full keyboard navigation support
+
+## Props API
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string \| null` | `""` | ISO 8601 date string (YYYY-MM-DD) |
+| `onChange` | `(date: string \| null) => void` | - | Callback when date changes (receives ISO format) |
+| `format` | `'DD/MM/YYYY' \| 'MM/DD/YYYY' \| 'YYYY/MM/DD'` | `'DD/MM/YYYY'` | Display format |
+| `separator` | `string` | `'/'` | Separator between date segments |
+| `prefix` | `ReactNode` | - | Element before input (e.g., calendar icon) |
+| `suffix` | `ReactNode` | - | Element after input |
+| `placeholder` | `string` | - | Placeholder text |
+| `placeholderClassName` | `string` | - | CSS class for placeholder |
+| `hasError` | `boolean` | `false` | Show error state |
+| `hideCalendarIcon` | `boolean` | `false` | Hide the default calendar icon |
+| `hideClearIcon` | `boolean` | `false` | Hide the clear button |
+| `hideCalendar` | `boolean` | `false` | Hide the calendar popup |
+| `wrapperClassName` | `string` | - | CSS class for wrapper div |
+| `calendarClassName` | `string` | - | CSS class for calendar popup |
+| `calendarPlacement` | `Placement` | `'bottom-start'` | Calendar popup position |
+| `floatingStrategy` | `'absolute' \| 'fixed'` | `'absolute'` | Floating strategy for calendar |
+| `disabled` | `boolean` | `false` | Disable the input |
+| `readOnly` | `boolean` | `false` | Make read-only |
+| `onStateUpdate` | `(state) => void` | - | Callback with current month/day/year values |
+| `onSubmit` | `() => void` | - | Callback when Enter is pressed on complete date |
+| `className` | `string` | - | CSS class for styling |
+
+## Examples
+
+### Different Formats
+
+
+```tsx
+import { useState } from 'react';
+import { DateInput } from '@geckoui/geckoui';
+
+function Example() {
+  const [date1, setDate1] = useState<string | null>(null);
+  const [date2, setDate2] = useState<string | null>(null);
+  const [date3, setDate3] = useState<string | null>(null);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* European format */}
+      <DateInput value={date1} onChange={setDate1} format="DD/MM/YYYY" placeholder="DD/MM/YYYY" />
+
+      {/* US format */}
+      <DateInput value={date2} onChange={setDate2} format="MM/DD/YYYY" placeholder="MM/DD/YYYY" />
+
+      {/* ISO format */}
+      <DateInput value={date3} onChange={setDate3} format="YYYY/MM/DD" placeholder="YYYY/MM/DD" />
+    </div>
+  );
+}
+```
+
+### Custom Separator
+
+
+```tsx
+import { useState } from 'react';
+import { DateInput } from '@geckoui/geckoui';
+
+function Example() {
+  const [date1, setDate1] = useState<string | null>(null);
+  const [date2, setDate2] = useState<string | null>(null);
+  const [date3, setDate3] = useState<string | null>(null);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <DateInput value={date1} onChange={setDate1} separator="/" placeholder="DD/MM/YYYY" />
+      <DateInput value={date2} onChange={setDate2} separator="-" placeholder="DD-MM-YYYY" />
+      <DateInput value={date3} onChange={setDate3} separator="." placeholder="DD.MM.YYYY" />
+    </div>
+  );
+}
+```
+
+### Disabled State
+
+
+```tsx
+import { useState } from 'react';
+import { DateInput } from '@geckoui/geckoui';
+
+function Example() {
+  const [date, setDate] = useState<string | null>("2024-01-15");
+
+  return <DateInput value={date} onChange={setDate} disabled />;
+}
+```
+
+### Read-Only
+
+
+```tsx
+import { useState } from 'react';
+import { DateInput } from '@geckoui/geckoui';
+
+function Example() {
+  const [date, setDate] = useState<string | null>("2024-12-25");
+
+  return <DateInput value={date} onChange={setDate} readOnly />;
+}
+```
+
+## ISO 8601 Format
+
+The component always outputs dates in ISO 8601 format (`YYYY-MM-DD`) regardless of the display format:
+
+```tsx
+function Example() {
+  const [date, setDate] = useState<string | null>(null);
+
+  return (
+    <div>
+      <DateInput
+        value={date}
+        onChange={(isoDate) => {
+          setDate(isoDate);
+          // isoDate is always "YYYY-MM-DD" format
+          // e.g., "2024-12-25"
+        }}
+        format="DD/MM/YYYY" // Display format
+      />
+      <p>Selected: {date}</p> {/* Shows: 2024-12-25 */}
+    </div>
+  );
+}
+```
+
+## Keyboard Navigation
+
+- **Tab**: Move to next segment
+- **Shift + Tab**: Move to previous segment
+- **Arrow Up/Down**: Increment/decrement current segment
+- **Backspace/Delete**: Clear current segment
+- **Enter**: Submit (triggers `onSubmit` callback)
+- **Type numbers**: Auto-advance when segment is complete
+
+## Accessibility
+
+- Fully keyboard navigable
+- Automatic focus management between segments
+- ARIA labels for screen readers
+- Clear visual focus indicators
+- Works with screen readers
+
+## Related Components
+
+- [Calendar](/v1/docs/calendar) - Full calendar picker
+- [RHFDateInput](/v1/docs/rhf-date-input) - React Hook Form integration with calendar

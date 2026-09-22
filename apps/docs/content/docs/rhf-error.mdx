@@ -65,7 +65,7 @@ function Example() {
 | `name` | `string` | - | Field name to display errors for (required) |
 | `control` | `Control` | Auto-injected | Optional: Pass explicitly for nested forms or custom form context |
 | `className` | `string` | - | Class name for error message (only when `render` is not provided) |
-| `render` | `Function` | - | Custom error rendering function |
+| `render` | `(state: ControllerFieldState) => ReactNode` | - | Custom error rendering. The message is `state.error?.message` |
 
 ## Examples
 
