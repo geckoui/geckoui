@@ -184,10 +184,10 @@
    */
   &[aria-invalid="true"],
   &[aria-invalid="true"]:focus-within {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &[data-state="enabled"][aria-invalid="true"]:hover {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 }

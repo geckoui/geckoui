@@ -31,10 +31,10 @@
    * anything earlier loses and the border goes back to blue the moment the field is used.
    */
   &[aria-invalid="true"] &__input {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &[aria-invalid="true"]:hover &__input:enabled {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 }

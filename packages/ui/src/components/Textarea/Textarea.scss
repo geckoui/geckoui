@@ -8,11 +8,11 @@
 
   &[aria-invalid="true"],
   &[aria-invalid="true"]:enabled:focus {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &[aria-invalid="true"]:enabled:hover {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 
   /*

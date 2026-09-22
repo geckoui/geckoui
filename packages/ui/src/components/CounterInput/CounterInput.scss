@@ -41,12 +41,12 @@
   /* The whole control reads as invalid, not just the text field in the middle of it */
   &:has(&__input[aria-invalid="true"]) &__button,
   &:has(&__input[aria-invalid="true"]) &__input {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &:has(&__input[aria-invalid="true"]):hover &__button,
   &:has(&__input[aria-invalid="true"]):hover &__input {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 
   &__input {

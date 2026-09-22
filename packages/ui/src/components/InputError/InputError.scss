@@ -1,3 +1,5 @@
 .GeckoUIInputError {
-  @apply w-full text-sm font-normal text-red-600;
+  @apply w-full text-sm font-normal;
+
+  color: var(--color-error);
 }

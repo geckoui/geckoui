@@ -30,11 +30,11 @@
     }
   }
   &__input[aria-invalid="true"] {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &__input[aria-invalid="true"]:hover:enabled {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 
   &:has(:checked:disabled),

@@ -6,7 +6,7 @@
   @apply text-text-muted flex min-h-[24px] w-auto items-center gap-1 text-sm font-medium;
 
   &__required-indicator {
-    @apply text-red-400;
+    color: var(--color-error);
   }
 
   &__tooltip-icon {

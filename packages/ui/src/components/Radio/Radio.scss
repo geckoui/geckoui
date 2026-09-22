@@ -45,10 +45,10 @@
    * anything earlier loses and the border goes back to blue the moment the field is used.
    */
   &[aria-invalid="true"] {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &[aria-invalid="true"]:hover:enabled {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 }

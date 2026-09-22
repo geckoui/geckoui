@@ -37,11 +37,11 @@
   }
 
   &:has(&__input[aria-invalid="true"]) {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &:has(&__input[aria-invalid="true"]:enabled):hover {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 
   &__input {

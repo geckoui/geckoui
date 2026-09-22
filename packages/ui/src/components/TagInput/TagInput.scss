@@ -37,11 +37,11 @@
    */
   &:has(&__input[aria-invalid="true"]),
   &:has(&__input[aria-invalid="true"]):focus-within {
-    @apply border-red-500;
+    border-color: var(--color-border-invalid);
   }
 
   &:has(&__input[aria-invalid="true"]):hover {
-    @apply border-red-600;
+    border-color: var(--color-border-invalid-hover);
   }
 
   &__tags {

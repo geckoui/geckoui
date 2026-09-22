@@ -78,8 +78,22 @@ Border colors for various states:
   --color-border-focus: oklch(0.7155 0 none);     /* Focus state */
   --color-border-hover: oklch(0.8699 0 none);     /* Hover state */
   --color-border-disabled: oklch(0.9401 0 none);  /* Disabled state */
+  --color-border-invalid: oklch(0.6368 0.2078 25.33);       /* A field in error */
+  --color-border-invalid-hover: oklch(0.5168 0.2178 25.33); /* ...under the pointer */
 }
 ```
+
+Every field that can be invalid takes its red from `--color-border-invalid`, so one line
+retints all of them:
+
+```css
+:root {
+  --color-border-invalid: rebeccapurple;
+}
+```
+
+`--color-border-invalid-hover` is the step the border takes under the pointer: darker in
+light mode, lighter in dark, the way the other borders behave against each ground.
 
 ### Semantic Colors
 
@@ -98,7 +112,7 @@ updates [Badge](/docs/badge), [Alert](/docs/alert) and [Toast](/docs/toast) toge
 | Variable | Used by |
 |----------|---------|
 | `--color-success` | Badge, Alert, Toast |
-| `--color-error` | Badge, Alert, Toast |
+| `--color-error` | Badge, Alert, Toast, `InputError`, the required marker on `Label` |
 | `--color-warning` | Badge, Alert, Toast |
 | `--color-info` | Badge, Alert, Toast |
 
@@ -153,6 +167,8 @@ Gecko UI includes built-in dark mode support. Apply the `.dark` class to enable 
   --color-border-focus: oklch(0.5555 0 none);
   --color-border-hover: oklch(0.7155 0 none);
   --color-border-disabled: oklch(0.2972 0 none);
+  --color-border-invalid: oklch(0.71 0.19 25.33);
+  --color-border-invalid-hover: oklch(0.83 0.17 25.33);
 
   --gecko-ui-scrollbar-track: oklch(0 0 none);
   --gecko-ui-scrollbar-thumb: oklch(0.4461 0.0263 256.8);

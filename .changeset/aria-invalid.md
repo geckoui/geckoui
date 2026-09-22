@@ -27,3 +27,8 @@ five RHF-side stylesheets are gone.
 
 `Checkbox`, `Radio`, `Switch`, `Select`, `OTPInput` and `CounterInput` gained an error state
 they never had.
+
+The red is a theme token now, not a hardcoded `red-500`. `--color-border-invalid` and
+`--color-border-invalid-hover` retint every field that can be invalid at once, and
+`InputError`'s message and the required marker on `Label` take `--color-error` rather than
+their own reds.
