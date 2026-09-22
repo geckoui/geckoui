@@ -19,3 +19,7 @@ size, line height and padding you give it, and refits when a web font lands — 
 
 `TextareaProps` extends `TextareaHTMLAttributes` rather than `TextareaAutosizeProps`. The
 props themselves are unchanged.
+
+A field with `autoResize` no longer offers the drag handle. It owns its own height, so a
+manual resize was undone by the next keystroke. `resize` is set in CSS against
+`[data-auto-resize]`, so it can be overridden.

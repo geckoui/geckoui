@@ -212,6 +212,20 @@ describe("Textarea autoResize", () => {
     expect(onInput).toHaveBeenCalled();
   });
 
+  it("does not offer the drag handle, which the next keystroke would undo", () => {
+    stubLayout(46);
+
+    render(<Textarea autoResize placeholder="Notes" />);
+
+    expect(field()).toHaveAttribute("data-auto-resize");
+  });
+
+  it("leaves the handle alone on a plain textarea", () => {
+    render(<Textarea placeholder="Notes" />);
+
+    expect(field()).not.toHaveAttribute("data-auto-resize");
+  });
+
   it("clears what it wrote when autoResize is turned off", () => {
     stubLayout(146);
 

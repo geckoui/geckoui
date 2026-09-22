@@ -50,6 +50,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         {...rest}
         className={classNames("GeckoUITextarea", className)}
+        // The height is ours while this is on, so the grip that undoes it is not offered
+        data-auto-resize={autoResize || undefined}
         ref={(node) => {
           innerRef.current = node;
 
