@@ -1,29 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
-import { FormProvider, type UseFormProps, useForm } from "react-hook-form";
 import { describe, expect, it, vi } from "vitest";
 
-import { RHFFilePicker } from ".";
-
-function Form({
-  children,
-  onSubmit,
-  ...options
-}: { children: ReactNode; onSubmit?: (values: unknown) => void } & UseFormProps) {
-  const methods = useForm(options);
-  return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit((values) => onSubmit?.(values))}>
-        {children}
-        <button type="submit">Submit</button>
-      </form>
-    </FormProvider>
-  );
-}
+import { RHFFilePicker } from "..";
+import { Form } from "../testUtils";
 
 const root = () => document.querySelector<HTMLElement>(".GeckoUIRHFFilePicker")!;
+
 const dropzone = () => document.querySelector<HTMLElement>(".GeckoUIRHFFilePicker__upload-area")!;
+
 const rows = () =>
   Array.from(document.querySelectorAll<HTMLElement>(".GeckoUIRHFFilePicker__file-row"));
 
