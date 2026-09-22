@@ -10,6 +10,8 @@
 
 📚 **Documentation**: [Gecko](https://geckoui.dev)
 
+Upgrading from v1? See the [migration guide](https://geckoui.dev/docs/migrating-to-v2).
+
 ## Installation
 
 ```bash
@@ -52,7 +54,28 @@ import "@geckoui/geckoui/styles.css";
 }
 ```
 
-### 2. Use Components
+### 2. Wrap Your App
+
+`GeckoUIProvider` owns the overlay stack. `Toast`, `ConfirmDialog` and the imperative
+`Dialog.show()` / `Drawer.show()` need it; the declarative `<Dialog open>` and
+`<Drawer open>` forms do not. Put it below your own context providers, so content opened
+from anywhere can still read them.
+
+```tsx
+import { GeckoUIProvider } from "@geckoui/geckoui";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <GeckoUIProvider>{children}</GeckoUIProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 3. Use Components
 
 ```tsx
 import { Alert, Button, Input } from "@geckoui/geckoui";
@@ -60,13 +83,13 @@ import { Alert, Button, Input } from "@geckoui/geckoui";
 function App() {
   return (
     <div>
-      <Button variant="contained" color="primary">
+      <Button variant="filled" color="primary">
         Click me
       </Button>
 
       <Input placeholder="Enter your name" />
 
-      <Alert variant="success" title="Operation completed successfully!" />
+      <Alert color="success" title="Operation completed successfully!" />
     </div>
   );
 }
@@ -78,13 +101,14 @@ GeckoUI uses [OKLCH](https://developer.mozilla.org/en-US/docs/Web/CSS/color_valu
 
 ### Dark Mode
 
-Add the `.dark` class to your root element:
+Nothing switches on its own. Add the `dark` class above your app — normally `<html>` — or
+every component stays light:
 
 ```tsx
-<div className="dark">
-  <App />
-</div>
+<html lang="en" className="dark">
 ```
+
+On a wrapper instead of the root, it themes only that subtree.
 
 ### Customizing Colors
 
