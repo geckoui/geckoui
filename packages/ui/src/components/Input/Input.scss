@@ -31,9 +31,12 @@
    * field is used, which is when the error matters most.
    */
   &:has(&__input[aria-invalid="true"]),
-  &:has(&__input[aria-invalid="true"]):hover,
   &:has(&__input[aria-invalid="true"]):focus-within {
     @apply border-red-500;
+  }
+
+  &:has(&__input[aria-invalid="true"]:enabled):hover {
+    @apply border-red-600;
   }
 
   &__input {

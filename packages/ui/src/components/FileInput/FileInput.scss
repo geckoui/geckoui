@@ -41,9 +41,12 @@
    */
   &:has(&__trigger[aria-invalid="true"]),
   &:has(&__trigger[aria-invalid="true"])[data-dragging],
-  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):hover,
   &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):focus-visible {
     @apply border-red-500;
+  }
+
+  &[data-state="enabled"]:has(&__trigger[aria-invalid="true"]):hover {
+    @apply border-red-600;
   }
 
   /* A field drawn by the caller keeps the drop target and gives up the box around it */

@@ -55,10 +55,12 @@
    * used, which is when the error matters most.
    */
   &[aria-invalid="true"],
-  &[aria-invalid="true"]:hover,
-  &[aria-invalid="true"][data-open],
-  &[data-state="enabled"][aria-invalid="true"]:hover {
+  &[aria-invalid="true"][data-open] {
     @apply border-red-500;
+  }
+
+  &[data-state="enabled"][aria-invalid="true"]:hover {
+    @apply border-red-600;
   }
 
   &:focus-visible {

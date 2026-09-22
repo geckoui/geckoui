@@ -44,8 +44,11 @@
    * Last, and stated for hover and focus: the state rules above are just as specific, so
    * anything earlier loses and the border goes back to blue the moment the field is used.
    */
-  &[aria-invalid="true"],
-  &[aria-invalid="true"]:hover:enabled {
+  &[aria-invalid="true"] {
     @apply border-red-500;
+  }
+
+  &[aria-invalid="true"]:hover:enabled {
+    @apply border-red-600;
   }
 }

@@ -7,9 +7,12 @@
   @apply border-border-secondary placeholder:text-text-placeholder enabled:hover:border-primary-300 enabled:focus:border-primary-300 disabled:bg-surface-disabled disabled:text-text-disabled w-full rounded-md border px-3 py-1.5 text-sm placeholder:text-sm placeholder:leading-5 placeholder:font-normal focus:ring-0 focus:ring-offset-0 focus:outline-none disabled:cursor-not-allowed;
 
   &[aria-invalid="true"],
-  &[aria-invalid="true"]:enabled:hover,
   &[aria-invalid="true"]:enabled:focus {
     @apply border-red-500;
+  }
+
+  &[aria-invalid="true"]:enabled:hover {
+    @apply border-red-600;
   }
 
   /*
