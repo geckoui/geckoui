@@ -197,7 +197,10 @@ describe("RHFFileInput", () => {
   const makeFile = (name: string) => new File(["content"], name, { type: "text/plain" });
 
   beforeEach(() => {
-    globalThis.URL.createObjectURL = vi.fn(() => "blob:preview");
+    let issued = 0;
+
+    globalThis.URL.createObjectURL = vi.fn(() => `blob:preview-${++issued}`);
+    globalThis.URL.revokeObjectURL = vi.fn();
   });
 
   it("renders a file input", () => {
@@ -225,6 +228,39 @@ describe("RHFFileInput", () => {
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalled());
     expect((onSubmit.mock.calls[0][0] as { doc: File }).doc.name).toBe("a.txt");
+  });
+
+  it("revokes the preview of a file that has been replaced", async () => {
+    const { container } = render(
+      <Form defaultValues={{ doc: null }}>
+        <RHFFileInput name="doc" />
+      </Form>
+    );
+
+    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
+
+    await userEvent.upload(input, makeFile("a.txt"));
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+
+    // Picking again drops the first file, whose blob would otherwise be pinned for good
+    await userEvent.upload(input, makeFile("b.txt"));
+
+    await waitFor(() => expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:preview-1"));
+    expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the preview of the file it is still holding", async () => {
+    const { container } = render(
+      <Form defaultValues={{ doc: null }}>
+        <RHFFileInput name="doc" />
+      </Form>
+    );
+
+    const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
+
+    await userEvent.upload(input, makeFile("a.txt"));
+
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
   });
 
   it("stores an array when multiple is set", async () => {
@@ -255,7 +291,7 @@ describe("RHFFileInput", () => {
     const input = container.querySelector<HTMLInputElement>(".GeckoUIRHFFileInput__input")!;
     await userEvent.upload(input, makeFile("a.txt"));
 
-    expect(onChange.mock.calls[0][0]).toMatchObject({ preview: "blob:preview" });
+    expect(onChange.mock.calls[0][0]).toMatchObject({ preview: "blob:preview-1" });
   });
 
   it("renders custom content and marks the input", () => {

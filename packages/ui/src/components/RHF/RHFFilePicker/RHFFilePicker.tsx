@@ -129,6 +129,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
   render,
   keepOldFiles,
   transform,
+  disabled = false,
   field,
   fieldState,
   formState
@@ -140,6 +141,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
     removeDuplicates,
     keepOldFiles,
     transform,
+    disabled,
     onChange: async (files, newFiles) => {
       field.onChange(files);
 
@@ -151,7 +153,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
   const { dropzoneRef, openFilePicker, loading, dragging } = filePicker;
 
   if (render && typeof render === "function") {
-    return render({ ...filePicker, field, fieldState, formState });
+    return render({ ...filePicker, disabled, field, fieldState, formState });
   }
 
   const { value } = field;
@@ -167,6 +169,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
       className="GeckoUIRHFFilePicker"
       data-loading={loading || undefined}
       data-dragging={dragging || undefined}
+      data-disabled={disabled || undefined}
       data-error={error ? "" : undefined}>
       <div
         className="GeckoUIRHFFilePicker__upload-area"
@@ -178,6 +181,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
         <div className="GeckoUIRHFFilePicker__upload-buttons">
           <button
             className="GeckoUIRHFFilePicker__browse-button"
+            disabled={disabled}
             onClick={() => openFilePicker()}
             type="button">
             Browse Files
@@ -185,6 +189,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
 
           <button
             className="GeckoUIRHFFilePicker__browse-button"
+            disabled={disabled}
             onClick={() => openFilePicker({ directory: true })}
             type="button">
             Browse Folder
@@ -206,6 +211,7 @@ function RHFFilePickerRenderer<T extends HTMLElement = HTMLDivElement>({
               <span className="GeckoUIRHFFilePicker__file-size">{formatFileSize(file.size)}</span>
               <button
                 className="GeckoUIRHFFilePicker__file-remove"
+                disabled={disabled}
                 onClick={() => handleRemoveFile(file)}
                 type="button">
                 <X className="GeckoUIRHFFilePicker__file-remove-icon" />

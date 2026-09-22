@@ -5,7 +5,10 @@ import type { RHFBaseProps, RHFRenderArgs } from "../RHF.types";
 
 export interface RHFFilePickerRenderProps<T extends HTMLElement = HTMLDivElement>
   extends UseFilePickerReturn<T>,
-    RHFRenderArgs<Record<string, FilePickerFile[]>> {}
+    RHFRenderArgs<Record<string, FilePickerFile[]>> {
+  /** Nothing can be picked or dropped; draw your dropzone accordingly. */
+  disabled: boolean;
+}
 
 export type FilePickerOptions = Omit<UseFilePickerOptions, "onStart">;
 

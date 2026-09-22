@@ -7,6 +7,7 @@ import type {
   UseFilePickerOptions,
   UseFilePickerReturn
 } from "../types";
+import useRevokedPreviews from "./useRevokedPreviews";
 
 /**
  * A hook for handling file selection with drag-and-drop, file picker, and directory selection support.
@@ -77,7 +78,8 @@ function useFilePicker<T extends HTMLElement>(
     onError,
     transform,
     files = [],
-    setFiles
+    setFiles,
+    disabled = false
   } = options || {};
 
   const removeDuplicates = _removeDuplicated && keepOldFiles;
@@ -85,6 +87,8 @@ function useFilePicker<T extends HTMLElement>(
   const dropzoneRef = useRef<T>(null);
   const [loading, setLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
+
+  useRevokedPreviews(files.map((file) => file.preview));
 
   const handleOnChange = useCallback(
     async (res: FilePickerFile[]) => {
@@ -100,7 +104,7 @@ function useFilePicker<T extends HTMLElement>(
   );
 
   const openFilePicker: OpenFilePickerFn = async (options) => {
-    if (loading) return;
+    if (loading || disabled) return;
 
     try {
       const handler = new FilePicker(accept, removeDuplicates, {
@@ -127,7 +131,7 @@ function useFilePicker<T extends HTMLElement>(
   useEffect(() => {
     const el = dropzoneRef.current;
 
-    if (!el) return;
+    if (!el || disabled) return;
 
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
@@ -179,7 +183,7 @@ function useFilePicker<T extends HTMLElement>(
       el.removeEventListener("dragleave", handleDragLeave);
       el.removeEventListener("drop", handleDrop);
     };
-  }, [accept, files, handleOnChange, loading, onError, onStart, removeDuplicates]);
+  }, [accept, disabled, files, handleOnChange, loading, onError, onStart, removeDuplicates]);
 
   return {
     dropzoneRef,

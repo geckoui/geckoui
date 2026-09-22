@@ -48,6 +48,9 @@ export interface UseFilePickerOptions {
    * */
   accept?: string;
 
+  /** Nothing can be picked or dropped.(Default: false) */
+  disabled?: boolean;
+
   /**
    * Function to transform files before returning them
    * */

@@ -195,3 +195,82 @@ describe("RHFFilePicker", () => {
     expect(typeof render_.mock.calls[0][0].openFilePicker).toBe("function");
   });
 });
+
+describe("RHFFilePicker disabled", () => {
+  it("marks the root and the buttons", () => {
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker name="files" disabled />
+      </Form>
+    );
+
+    expect(root()).toHaveAttribute("data-disabled");
+    expect(screen.getByRole("button", { name: "Browse Files" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Browse Folder" })).toBeDisabled();
+  });
+
+  it("does not disable anything by default", () => {
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker name="files" />
+      </Form>
+    );
+
+    expect(root()).not.toHaveAttribute("data-disabled");
+    expect(screen.getByRole("button", { name: "Browse Files" })).not.toBeDisabled();
+  });
+
+  it("ignores a drop", async () => {
+    const onChange = vi.fn();
+
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker name="files" disabled onChange={onChange} />
+      </Form>
+    );
+
+    fireEvent.drop(dropzone(), {
+      dataTransfer: { items: [{ kind: "file", type: "image/png" }], types: ["Files"] }
+    });
+
+    await waitFor(() => expect(onChange).not.toHaveBeenCalled());
+    expect(root()).not.toHaveAttribute("data-dragging");
+  });
+
+  it("does not take a drag over", () => {
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker name="files" disabled />
+      </Form>
+    );
+
+    fireEvent.dragEnter(dropzone());
+
+    expect(root()).not.toHaveAttribute("data-dragging");
+  });
+
+  it("cannot remove a file that is already there", () => {
+    render(
+      <Form defaultValues={{ files: [pickedFile("a.png", 10)] }}>
+        <RHFFilePicker name="files" disabled />
+      </Form>
+    );
+
+    expect(rows()).toHaveLength(1);
+    expect(rows()[0].querySelector("button")).toBeDisabled();
+  });
+
+  it("hands `disabled` to a custom render", () => {
+    render(
+      <Form defaultValues={{ files: [] }}>
+        <RHFFilePicker
+          name="files"
+          disabled
+          render={({ disabled }) => <p>{disabled ? "off" : "on"}</p>}
+        />
+      </Form>
+    );
+
+    expect(screen.getByText("off")).toBeInTheDocument();
+  });
+});

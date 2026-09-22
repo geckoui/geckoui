@@ -1,5 +1,7 @@
 import type { FC } from "react";
+import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
+import useRevokedPreviews from "../../../hooks/useRevokedPreviews";
 import { classNames } from "../../../utils/classNames";
 import { DynamicComponentRenderer } from "../../DynamicComponentRenderer";
 import { RHFController } from "../RHFController";
@@ -66,46 +68,88 @@ const RHFFileInput: FC<RHFFileInputProps> = ({
       control={control}
       name={name}
       rules={rules}
-      render={(renderProps) => {
-        const { field } = renderProps;
-
-        return (
-          <label className={classNames("GeckoUIRHFFileInput", className)} id={id}>
-            <input
-              {...field}
-              {...rest}
-              className={classNames("GeckoUIRHFFileInput__input", inputClassName)}
-              data-custom={Boolean(render) || undefined}
-              disabled={disabled}
-              id={id}
-              multiple={multiple}
-              onBlur={(e) => {
-                field.onBlur();
-                onBlur?.(e);
-              }}
-              onChange={(e) => {
-                let data: FileWithPreview[] | FileWithPreview | undefined = Array.from(
-                  (e.target.files ?? []) as FileWithPreview[]
-                ).map((file) => {
-                  file.preview = URL.createObjectURL(file);
-                  return file;
-                });
-
-                if (!multiple) {
-                  data = data[0];
-                }
-
-                field.onChange(data);
-                onChange?.(data);
-              }}
-              type="file"
-              value={undefined}
-            />
-            {render ? <DynamicComponentRenderer component={render} {...renderProps} /> : null}
-          </label>
-        );
-      }}
+      render={(renderProps) => (
+        <Field
+          {...renderProps}
+          className={className}
+          disabled={disabled}
+          id={id}
+          inputClassName={inputClassName}
+          multiple={multiple}
+          onBlur={onBlur}
+          onChange={onChange}
+          render={render}
+          rest={rest}
+        />
+      )}
     />
+  );
+};
+
+/**
+ * The input itself, as a component rather than inline, so the preview cleanup can be a hook
+ * with the field's value in hand.
+ */
+const Field = ({
+  field,
+  className,
+  disabled,
+  id,
+  inputClassName,
+  multiple,
+  onBlur,
+  onChange,
+  render,
+  rest,
+  ...renderProps
+}: {
+  field: ControllerRenderProps<FieldValues, string>;
+  rest: Record<string, unknown>;
+} & Omit<RHFFileInputProps, "name" | "control" | "rules">) => {
+  const held: FileWithPreview[] = Array.isArray(field.value)
+    ? field.value
+    : field.value
+      ? [field.value]
+      : [];
+
+  useRevokedPreviews(held.map((file) => file?.preview));
+
+  return (
+    <label className={classNames("GeckoUIRHFFileInput", className)} id={id}>
+      <input
+        {...field}
+        {...rest}
+        className={classNames("GeckoUIRHFFileInput__input", inputClassName)}
+        data-custom={Boolean(render) || undefined}
+        disabled={disabled}
+        id={id}
+        multiple={multiple}
+        onBlur={(e) => {
+          field.onBlur();
+          onBlur?.(e);
+        }}
+        onChange={(e) => {
+          let data: FileWithPreview[] | FileWithPreview | undefined = Array.from(
+            (e.target.files ?? []) as FileWithPreview[]
+          ).map((file) => {
+            file.preview = URL.createObjectURL(file);
+            return file;
+          });
+
+          if (!multiple) {
+            data = data[0];
+          }
+
+          field.onChange(data);
+          onChange?.(data);
+        }}
+        type="file"
+        value={undefined}
+      />
+      {render ? (
+        <DynamicComponentRenderer component={render} field={field} {...renderProps} />
+      ) : null}
+    </label>
   );
 };
 
