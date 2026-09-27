@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.0.6
+
+### Patch Changes
+
+- 67eeba7: An outside click or Escape now closes only the topmost overlay. A `Select`,
+  `Menu`, `Popover`, `ColorInput`, `DateInput`, `DateRangeInput`, `TimeInput`, `TagInput` or
+  `Breadcrumb` menu open inside a `Drawer` or `Dialog` used to close together with it, since
+  each overlay handled the click on its own and the click on the backdrop reached them all.
+  Open overlays now form a stack, as in Radix, React Aria and the native popover API: the
+  first click closes the menu, the next one the drawer. `useClickOutside` takes the open
+  state as an optional third argument to join the stack; without it, nothing changes.
+- eff80e5: Opening a `Select` no longer pops up the keyboard on a phone. The dropdown search
+  box no longer takes focus on open, and the trigger's own field is read-only unless the
+  search is `"inline"`. The new `autoFocusSearch` prop focuses the dropdown search on open.
+  Typing on a keyboard while the select is focused still moves into the search box.
+
 ## 2.0.5
 
 ### Patch Changes
