@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.4
+
+### Patch Changes
+
+- 9587db1: A closed `Drawer` no longer keeps its children mounted. They stayed in the DOM,
+  only moved off screen, so an `autoFocus` field inside took focus as soon as the page
+  loaded (on a phone, the keyboard popped up with nothing open), a form kept its last
+  values between opens, and the hidden fields were still in the Tab order. Children now
+  unmount once the slide out finishes, as `Dialog` already did. The new `keepMounted` prop
+  keeps them for state that should survive closing. Either way a closed panel is `inert`,
+  so nothing in it can be focused or reached by assistive technology.
+
 ## 2.0.3
 
 ### Patch Changes
