@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.3
+
+### Patch Changes
+
+- 8b2548a: A filterable `Select` no longer sticks out of its field. With nothing typed, the
+  inline search input was absolutely positioned at `left: 0.75rem` but kept `width: 100%`,
+  so it ran about 12px past the right edge. Inside a scroll container, such as a `Drawer`,
+  that gave a horizontal scrollbar. The input is now pinned to both sides.
+
 ## 2.0.2
 
 ### Patch Changes
