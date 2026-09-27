@@ -125,6 +125,9 @@ function SelectButton({ prefix, suffix, className, ...selectProps }: SelectButto
             className="GeckoUISelectButton__search__input"
             {...(((open && !hasValue) || (!multiple && hasValue)) && { "data-initial": "" })}
             {...(!filterable && { "data-readonly": "" })}
+            // Only inline search types here. Anywhere else a focusable text field would
+            // pop up the phone keyboard; readOnly keeps the keyboard interaction
+            readOnly={!filterable}
             onKeyDown={handleKeyboardInteraction}
             onFocusCapture={openMenu}
             onChange={

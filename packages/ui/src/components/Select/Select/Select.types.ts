@@ -47,6 +47,16 @@ export interface BaseSelectProps extends PropsWithChildren, SelectButtonProps {
   filterable?: boolean | "inline" | "dropdown";
 
   /**
+   * Focus the dropdown search box when the menu opens.
+   * Off by default: on a phone, focusing it pops up the keyboard over the options.
+   * Typing on a keyboard while the select is focused still moves into the search box.
+   * Only for `filterable` / `"dropdown"`; `"inline"` always focuses, since that is where
+   * you type.
+   * Default is false
+   * */
+  autoFocusSearch?: boolean;
+
+  /**
    * Whether to close the menu when an option is selected
    * Default is true for single select and false for multi select
    * */
@@ -173,6 +183,16 @@ export interface SelectContextProps<T>
    * If you use custom `SelectButton` you should bind this to the input
    * */
   keyword: string;
+
+  /**
+   * Bumped when the dropdown search box should take focus
+   * */
+  searchFocusRequest: number;
+
+  /**
+   * Move focus into the dropdown search box
+   * */
+  requestSearchFocus: () => void;
 
   /**
    * Setter for filter keyword

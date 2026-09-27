@@ -72,7 +72,21 @@ const [value, setValue] = useState<string | null>(null);
 </Select>
 ```
 
-The `filterable="dropdown"` prop automatically adds a default search input at the top of the dropdown.
+The `filterable="dropdown"` prop automatically adds a default search input at the top of the dropdown. `filterable` on its own means the same thing.
+
+### Focusing the search box
+
+The dropdown search does not take focus when the menu opens. On a phone, a focused text field pops up the keyboard over the options, when most people only want to tap one. Typing on a keyboard while the select is focused still moves into the search box, so desktop users can just type.
+
+Pass `autoFocusSearch` to focus it on open:
+
+```tsx
+<Select filterable="dropdown" autoFocusSearch value={value} onChange={setValue}>
+  {/* options */}
+</Select>
+```
+
+`filterable="inline"` always takes focus, since the field itself is where you type. The select's own field is read-only in every other mode, so opening a plain or dropdown-filtered select never brings up the keyboard.
 
 ## Filterable with Multiple Selection
 

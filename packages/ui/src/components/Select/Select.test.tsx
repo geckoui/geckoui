@@ -748,4 +748,46 @@ describe("Select", () => {
       expect(menu()).toHaveClass("GeckoUISelectMenu", "panel");
     });
   });
+
+  describe("search focus", () => {
+    const dropdownSearch = () =>
+      document.querySelector<HTMLInputElement>(".GeckoUISelectMenu__search-container input");
+
+    it("leaves the dropdown search unfocused on open, so a phone keeps its keyboard down", async () => {
+      render(<Fruits filterable />);
+
+      await userEvent.click(trigger());
+
+      expect(dropdownSearch()).not.toBeNull();
+      expect(dropdownSearch()).not.toHaveFocus();
+    });
+
+    it("focuses the dropdown search on open with autoFocusSearch", async () => {
+      render(<Fruits filterable="dropdown" autoFocusSearch />);
+
+      await userEvent.click(trigger());
+
+      expect(dropdownSearch()).toHaveFocus();
+    });
+
+    it("moves typing on the trigger into the dropdown search", async () => {
+      render(<Fruits filterable />);
+      await userEvent.click(trigger());
+
+      await userEvent.keyboard("ch");
+
+      expect(dropdownSearch()).toHaveFocus();
+      expect(dropdownSearch()).toHaveValue("ch");
+      expect(options().map((o) => o.textContent)).toEqual(["Cherry"]);
+    });
+
+    it("keeps the trigger field read-only unless the search is inline", () => {
+      const { unmount } = render(<Fruits filterable />);
+      expect(searchInput()).toHaveAttribute("readonly");
+      unmount();
+
+      render(<Fruits filterable="inline" />);
+      expect(searchInput()).not.toHaveAttribute("readonly");
+    });
+  });
 });

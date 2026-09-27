@@ -21,17 +21,21 @@ export const useSelectTrigger = <T,>() => {
     open,
     multiple,
     isEmpty,
-    handleChange
+    handleChange,
+    filterable,
+    requestSearchFocus
   } = useSelect<T>();
+
+  const hasDropdownSearch = filterable === true || filterable === "dropdown";
 
   const filteredOptions = options.filter(
     ({ label, visibility }) => !isHideSelectOption({ keyword, label, visibility, isEmpty })
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(() => e.target.value);
+  const filterTo = (text: string) => {
+    setKeyword(() => text);
 
-    let focusedValue = options.find(({ label }) => isTextIncludes(label, e.target.value));
+    let focusedValue = options.find(({ label }) => isTextIncludes(label, text));
 
     if (!focusedValue && filteredOptions.length) {
       focusedValue = filteredOptions[0];
@@ -42,7 +46,19 @@ export const useSelectTrigger = <T,>() => {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => filterTo(e.target.value);
+
   const handleKeyboardInteraction = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // With a dropdown search that is not focused, typing starts the search there
+    const printable = e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+    if (hasDropdownSearch && printable && !(e.key === " " && !keyword)) {
+      e.preventDefault();
+      if (!open) openMenu();
+      filterTo((open ? keyword : "") + e.key);
+      requestSearchFocus();
+      return;
+    }
+
     if (e.key === "Escape") {
       e.currentTarget.blur();
       closeMenu();

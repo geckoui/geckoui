@@ -1,4 +1,4 @@
-import { Children, type PropsWithChildren, useMemo } from "react";
+import { Children, type PropsWithChildren, useEffect, useMemo } from "react";
 
 import { classNames } from "../../../utils/classNames";
 import { isSelectEmpty, isSelectTrigger } from "../Select.utils";
@@ -13,6 +13,8 @@ const SelectMenu = ({ children, className, ...rest }: SelectMenuProps) => {
     disabled,
     open,
     filterable,
+    autoFocusSearch,
+    searchFocusRequest,
     menuScrollContainerRef,
     floating: { refs, floatingStyles }
   } = useSelect();
@@ -21,6 +23,13 @@ const SelectMenu = ({ children, className, ...rest }: SelectMenuProps) => {
     () => Children.toArray(children).filter((el) => !isSelectTrigger(el)),
     [children]
   );
+
+  useEffect(() => {
+    if (!searchFocusRequest) return;
+    refs.floating.current
+      ?.querySelector<HTMLInputElement>(".GeckoUISelectMenu__search-container input")
+      ?.focus();
+  }, [searchFocusRequest, refs.floating]);
 
   if (!open || disabled) {
     return null;
@@ -36,7 +45,10 @@ const SelectMenu = ({ children, className, ...rest }: SelectMenuProps) => {
       data-with-search={hasDropdownSearch || undefined}
       {...rest}>
       {hasDropdownSearch && (
-        <SelectDropdownSearch className="GeckoUISelectMenu__search-container" autoFocus />
+        <SelectDropdownSearch
+          className="GeckoUISelectMenu__search-container"
+          autoFocus={autoFocusSearch}
+        />
       )}
       <div ref={menuScrollContainerRef} className="GeckoUISelectMenu__items">
         {menuItems}

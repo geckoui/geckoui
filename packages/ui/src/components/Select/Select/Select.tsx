@@ -75,6 +75,7 @@ const Select: SelectOverload = <T,>(props: SelectProps<T>) => {
 
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [searchFocusRequest, setSearchFocusRequest] = useState(0);
   const [focusedOption, setFocusedOption] = useState<FocusedOption<T> | null>(null);
 
   const floating = useFloating({
@@ -179,6 +180,8 @@ const Select: SelectOverload = <T,>(props: SelectProps<T>) => {
         setOpen,
         keyword,
         setKeyword,
+        searchFocusRequest,
+        requestSearchFocus: () => setSearchFocusRequest((n) => n + 1),
         floating,
         openMenu,
         closeMenu,
