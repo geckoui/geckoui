@@ -62,6 +62,7 @@ function Example() {
 | `allowClickOutside` | `boolean` | `false` | Make the backdrop click-through, so clicking anywhere outside the drawer closes it |
 | `dismissOnEscape` | `boolean` | `true` | Close drawer on Escape key press |
 | `hideBackdrop` | `boolean` | `false` | Hide backdrop overlay (visual only) |
+| `keepMounted` | `boolean` | `false` | Keep the children in the DOM while the drawer is closed |
 | `backdropClassName` | `string` | — | CSS class for backdrop |
 | `className` | `string` | — | CSS class for drawer panel |
 | `children` | `ReactNode` | — | Drawer content |
@@ -71,6 +72,21 @@ function Example() {
 
 - `allowClickOutside: false` (default) — the backdrop blocks clicks, and clicking it calls `onClose`.
 - `allowClickOutside: true` — the backdrop becomes click-through, so clicking anywhere outside the panel calls `onClose` and the click also reaches the page underneath.
+
+### Closed content
+
+Children render while the drawer is open and through the slide out, then unmount. A form
+inside starts fresh on every open, and an `autoFocus` field only takes focus when the drawer
+is shown, so there is nothing to reset by hand.
+
+Pass `keepMounted` when state should survive closing, such as a half filled form the user
+may come back to:
+
+```tsx
+<Drawer open={open} onClose={() => setOpen(false)} keepMounted>
+  <DraftForm />
+</Drawer>
+```
 
 ## Examples
 
@@ -194,6 +210,7 @@ The drawer root (`GeckoUIDrawer`) sits at `z-index: 1000`. Drawers opened with `
 ## Accessibility
 
 - `role="dialog"` on the drawer panel, with `aria-modal` set when the backdrop is not click-through
+- A closed panel is `inert`, so nothing in it can be focused or reached by a screen reader, even with `keepMounted`
 - Keyboard navigation with Escape key support
 - Click-outside detection
 

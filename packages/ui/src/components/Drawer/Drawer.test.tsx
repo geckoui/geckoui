@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -169,6 +169,135 @@ describe("Drawer", () => {
       await userEvent.keyboard("{Escape}");
 
       expect(onClose).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("closed content", () => {
+    it("does not render children while closed", async () => {
+      render(<Drawer open={false}>panel content</Drawer>);
+      await settle();
+
+      expect(screen.queryByText("panel content")).not.toBeInTheDocument();
+    });
+
+    it("does not focus an autoFocus field while closed", async () => {
+      render(
+        <Drawer open={false}>
+          <input aria-label="amount" autoFocus />
+        </Drawer>
+      );
+      await settle();
+
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it("focuses an autoFocus field once opened", async () => {
+      const { rerender } = render(
+        <Drawer open={false}>
+          <input aria-label="amount" autoFocus />
+        </Drawer>
+      );
+      await settle();
+
+      rerender(
+        <Drawer open>
+          <input aria-label="amount" autoFocus />
+        </Drawer>
+      );
+      await settle();
+
+      expect(screen.getByLabelText("amount")).toHaveFocus();
+    });
+
+    it("keeps children through the slide out", () => {
+      vi.useFakeTimers();
+      const { rerender } = render(<Drawer open>panel content</Drawer>);
+
+      rerender(<Drawer open={false}>panel content</Drawer>);
+      act(() => {
+        vi.advanceTimersByTime(50);
+      });
+
+      expect(screen.getByText("panel content")).toBeInTheDocument();
+    });
+
+    it("unmounts children once the slide out has finished", () => {
+      vi.useFakeTimers();
+      const { rerender } = render(<Drawer open>panel content</Drawer>);
+
+      rerender(<Drawer open={false}>panel content</Drawer>);
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(screen.queryByText("panel content")).not.toBeInTheDocument();
+    });
+
+    it("mounts children fresh on every open", () => {
+      vi.useFakeTimers();
+      const { rerender } = render(
+        <Drawer open>
+          <input aria-label="name" />
+        </Drawer>
+      );
+      fireEvent.change(screen.getByLabelText("name"), { target: { value: "typed" } });
+
+      rerender(
+        <Drawer open={false}>
+          <input aria-label="name" />
+        </Drawer>
+      );
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      rerender(
+        <Drawer open>
+          <input aria-label="name" />
+        </Drawer>
+      );
+
+      expect(screen.getByLabelText("name")).toHaveValue("");
+    });
+
+    it("keeps children and their state while closed with keepMounted", () => {
+      vi.useFakeTimers();
+      const { rerender } = render(
+        <Drawer open keepMounted>
+          <input aria-label="name" />
+        </Drawer>
+      );
+      fireEvent.change(screen.getByLabelText("name"), { target: { value: "typed" } });
+
+      rerender(
+        <Drawer open={false} keepMounted>
+          <input aria-label="name" />
+        </Drawer>
+      );
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(screen.getByLabelText("name")).toHaveValue("typed");
+    });
+
+    it("makes the closed panel inert", async () => {
+      const { rerender } = render(
+        <Drawer open={false} keepMounted>
+          x
+        </Drawer>
+      );
+      await settle();
+
+      expect(panel().inert).toBe(true);
+
+      rerender(
+        <Drawer open keepMounted>
+          x
+        </Drawer>
+      );
+      await settle();
+
+      expect(panel().inert).toBe(false);
     });
   });
 

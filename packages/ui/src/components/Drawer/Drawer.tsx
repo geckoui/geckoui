@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useClickOutside, useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
@@ -25,6 +25,10 @@ import type { DrawerProps } from "./Drawer.types";
  *   <div className="p-6">Content here</div>
  * </Drawer>
  * ```
+ *
+ * Closed drawers unmount their children once the slide out finishes, so a form inside
+ * starts fresh on every open and an `autoFocus` field only takes focus when it is shown.
+ * Pass `keepMounted` to keep the children alive while closed instead.
  *
  * @example
  * Mobile navigation menu:
@@ -56,6 +60,7 @@ function Drawer({
   className,
   children,
   dismissOnEscape = true,
+  keepMounted = false,
   style
 }: DrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -81,19 +86,26 @@ function Drawer({
 
   // Hold the scroll lock through the slide out. Releasing it the moment `open` flips
   // makes the page jump sideways while the drawer is still moving.
+  // Set during render, not in an effect: the children must still be there on the very
+  // render that closes the drawer, or they vanish before the slide out starts.
   const [closing, setClosing] = useState(false);
-  const wasOpen = useRef(open);
+  const [prevOpen, setPrevOpen] = useState(open);
+
+  if (prevOpen !== open) {
+    setPrevOpen(open);
+    setClosing(!open);
+  }
 
   useEffect(() => {
-    if (wasOpen.current === open) return;
-    wasOpen.current = open;
+    if (!closing) return;
 
-    if (open) return;
-
-    setClosing(true);
     const timer = setTimeout(() => setClosing(false), OVERLAY_ANIMATION_DURATION);
-
     return () => clearTimeout(timer);
+  }, [closing]);
+
+  // The DOM property rather than the attribute: React 18 and 19 disagree on how to spell it
+  useLayoutEffect(() => {
+    if (drawerRef.current) drawerRef.current.inert = !open;
   }, [open]);
 
   const onCloseRef = useRef(onClose);
@@ -132,7 +144,7 @@ function Drawer({
         className={classNames("GeckoUIDrawer__drawer", className)}
         role="dialog"
         aria-modal={!allowClickOutside}>
-        {children}
+        {(open || closing || keepMounted) && children}
       </div>
     </div>
   );

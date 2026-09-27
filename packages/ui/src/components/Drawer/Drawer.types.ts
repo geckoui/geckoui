@@ -69,6 +69,17 @@ export interface DrawerProps {
   dismissOnEscape?: boolean;
 
   /**
+   * Keep the children in the DOM while the drawer is closed.
+   * By default they unmount once the slide out finishes, so a form inside starts fresh on
+   * every open and an `autoFocus` field only takes focus when it is shown.
+   * A closed drawer is inert either way: nothing in it can be focused or reached by
+   * assistive technology.
+   *
+   * Default: false
+   * */
+  keepMounted?: boolean;
+
+  /**
    * Inline styles for the drawer root.
    * `GeckoUIProvider` uses it to stack drawers opened with `Drawer.show()`.
    * */
