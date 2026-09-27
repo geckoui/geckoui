@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.5
+
+### Patch Changes
+
+- 26a7e41: An `autoFocus` field inside a `Drawer` takes focus again when the drawer opens.
+  2.0.4 cleared the closed panel's `inert` in a layout effect, which runs after React has
+  already tried to focus the newly mounted child, so the focus was refused. `inert` is now
+  rendered as an attribute and is gone before the child mounts.
+
 ## 2.0.4
 
 ### Patch Changes
