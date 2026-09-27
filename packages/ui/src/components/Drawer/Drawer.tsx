@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, version } from "react";
 
 import { useClickOutside, useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
@@ -103,11 +103,6 @@ function Drawer({
     return () => clearTimeout(timer);
   }, [closing]);
 
-  // The DOM property rather than the attribute: React 18 and 19 disagree on how to spell it
-  useLayoutEffect(() => {
-    if (drawerRef.current) drawerRef.current.inert = !open;
-  }, [open]);
-
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -143,11 +138,22 @@ function Drawer({
         data-instant={!ready || undefined}
         className={classNames("GeckoUIDrawer__drawer", className)}
         role="dialog"
-        aria-modal={!allowClickOutside}>
+        aria-modal={!allowClickOutside}
+        {...inertProps(!open)}>
         {(open || closing || keepMounted) && children}
       </div>
     </div>
   );
+}
+
+// Rendered as an attribute so it is gone before an autoFocus child that mounts on open
+// takes focus; an effect would clear it too late. React 19 takes a boolean, React 18
+// only passes the attribute through as an empty string.
+const INERT_IS_BOOLEAN = Number(version.split(".")[0]) >= 19;
+
+function inertProps(inert: boolean) {
+  if (INERT_IS_BOOLEAN) return { inert };
+  return inert ? ({ inert: "" } as unknown as { inert: boolean }) : {};
 }
 
 /**

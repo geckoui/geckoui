@@ -288,7 +288,7 @@ describe("Drawer", () => {
       );
       await settle();
 
-      expect(panel().inert).toBe(true);
+      expect(panel()).toHaveAttribute("inert");
 
       rerender(
         <Drawer open keepMounted>
@@ -297,7 +297,31 @@ describe("Drawer", () => {
       );
       await settle();
 
-      expect(panel().inert).toBe(false);
+      expect(panel()).not.toHaveAttribute("inert");
+    });
+
+    it("is no longer inert when a child mounting on open takes focus", async () => {
+      // autoFocus runs as the child mounts; an inert panel would refuse the focus
+      let inertAtMount: boolean | undefined;
+      function Probe() {
+        return (
+          <span
+            ref={(el) => {
+              if (el) inertAtMount = el.closest(".GeckoUIDrawer__drawer")!.hasAttribute("inert");
+            }}
+          />
+        );
+      }
+      const { rerender } = render(<Drawer open={false}>x</Drawer>);
+      await settle();
+
+      rerender(
+        <Drawer open>
+          <Probe />
+        </Drawer>
+      );
+
+      expect(inertAtMount).toBe(false);
     });
   });
 
