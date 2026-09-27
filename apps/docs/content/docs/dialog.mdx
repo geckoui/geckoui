@@ -283,6 +283,7 @@ Stacked dialogs get an explicit `z-index` of `2000 + position`, so they never de
 - `role="dialog"` and `aria-modal="true"` on the dialog panel
 - Escape key support
 - Backdrop click detection
+- A menu, popover or picker open inside it closes first: an outside click or Escape reaches only the topmost overlay, so the next one closes the dialog
 
 Page scroll is locked while a dialog is open, with the scrollbar width paid back as padding so nothing shifts sideways. Stacked overlays share one reference counted lock.
 

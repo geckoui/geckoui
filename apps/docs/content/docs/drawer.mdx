@@ -213,6 +213,7 @@ The drawer root (`GeckoUIDrawer`) sits at `z-index: 1000`. Drawers opened with `
 - A closed panel is `inert`, so nothing in it can be focused or reached by a screen reader, even with `keepMounted`
 - Keyboard navigation with Escape key support
 - Click-outside detection
+- A menu, popover or picker open inside it closes first: an outside click or Escape reaches only the topmost overlay, so the next one closes the drawer
 
 Page scroll is locked while a drawer is open, unless `allowClickOutside` is set, since that drawer deliberately leaves the page usable. The scrollbar width is paid back as padding so nothing shifts sideways.
 
