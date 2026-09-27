@@ -161,7 +161,7 @@
       padding: 0px;
 
       &[data-initial] {
-        @apply absolute left-3;
+        @apply absolute right-3 left-3 w-auto;
       }
 
       &[data-readonly] {

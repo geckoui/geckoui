@@ -59,7 +59,7 @@ function SelectButton({ prefix, suffix, className, ...selectProps }: SelectButto
     return trigger;
   }
 
-  const filterable = _filterable === true || _filterable === "inline";
+  const filterable = _filterable === "inline";
 
   return (
     <div
@@ -177,7 +177,7 @@ function SelectButtonContent() {
     disabled
   } = useSelect();
 
-  const filterable = _filterable === true || _filterable === "inline";
+  const filterable = _filterable === "inline";
 
   const { preventDefault, attachPreventDefault } = usePreventDefault();
 

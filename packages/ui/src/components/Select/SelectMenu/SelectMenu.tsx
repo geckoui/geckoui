@@ -26,7 +26,7 @@ const SelectMenu = ({ children, className, ...rest }: SelectMenuProps) => {
     return null;
   }
 
-  const hasDropdownSearch = filterable === "dropdown";
+  const hasDropdownSearch = filterable === true || filterable === "dropdown";
 
   return (
     <div

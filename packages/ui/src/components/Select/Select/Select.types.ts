@@ -40,6 +40,8 @@ export interface BaseSelectProps extends PropsWithChildren, SelectButtonProps {
 
   /**
    * Whether to show the input for filtering the options
+   * `true` or `"dropdown"`: a search box at the top of the menu
+   * `"inline"`: typed straight into the button
    * Default is false
    * */
   filterable?: boolean | "inline" | "dropdown";

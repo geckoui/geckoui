@@ -530,7 +530,7 @@ describe("Select", () => {
     });
 
     it("clears the keyword when the menu closes", async () => {
-      render(<Fruits filterable />);
+      render(<Fruits filterable="inline" />);
 
       await userEvent.click(trigger());
       await userEvent.keyboard("an");
@@ -549,6 +549,15 @@ describe("Select", () => {
       await userEvent.type(search, "ap");
 
       expect(options().map((o) => o.textContent)).toEqual(["Apple"]);
+    });
+
+    it("puts the search box in the menu when filterable is true", async () => {
+      render(<Fruits filterable />);
+
+      await userEvent.click(trigger());
+
+      expect(menu()!.querySelector(".GeckoUISelectDropdownSearch input")).not.toBeNull();
+      expect(searchInput()).toHaveAttribute("data-readonly");
     });
 
     it("keeps an always visible option while filtering", async () => {
