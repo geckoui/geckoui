@@ -138,7 +138,7 @@ const TimeInput: FC<TimeInputProps> = ({
     setDraft(null);
   };
 
-  useClickOutside(close, [listRef, fieldRef]);
+  useClickOutside(close, [listRef, fieldRef], open);
 
   /*
    * Each column opens on what is already chosen, sitting at the top of its own scroller.

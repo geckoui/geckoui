@@ -164,9 +164,13 @@ const Select: SelectOverload = <T,>(props: SelectProps<T>) => {
     }
   };
 
-  useClickOutside(() => {
-    closeMenu();
-  }, [refs.reference as unknown as RefObject<HTMLElement>]);
+  useClickOutside(
+    () => {
+      closeMenu();
+    },
+    [refs.reference as unknown as RefObject<HTMLElement>],
+    open
+  );
 
   return (
     <SelectContext.Provider

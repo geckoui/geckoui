@@ -139,9 +139,13 @@ const DateInput: FC<DateInputProps> = ({
     onOpenChange: setOpenCalendar
   });
 
-  useClickOutside(() => {
-    setOpenCalendar(false);
-  }, [refs.reference as never]);
+  useClickOutside(
+    () => {
+      setOpenCalendar(false);
+    },
+    [refs.reference as never],
+    openCalendar
+  );
 
   const handleStateUpdateInternal = useCallback(
     (state: { day: string; month: string; year: string }) => {

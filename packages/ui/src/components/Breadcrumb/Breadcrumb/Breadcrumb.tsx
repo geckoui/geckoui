@@ -57,7 +57,7 @@ const Breadcrumb = ({
     onOpenChange: setOpen
   });
 
-  useClickOutside(() => setOpen(false), [menuRef, triggerRef]);
+  useClickOutside(() => setOpen(false), [menuRef, triggerRef], open);
 
   const crumbs = Children.toArray(children);
 

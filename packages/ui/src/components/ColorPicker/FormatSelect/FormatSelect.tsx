@@ -26,7 +26,7 @@ const FormatSelect = ({ value, options, labels, disabled, onChange }: FormatSele
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(() => Math.max(options.indexOf(value), 0));
 
-  useClickOutside(() => setOpen(false), [rootRef]);
+  useClickOutside(() => setOpen(false), [rootRef], open);
 
   useEffect(() => {
     if (!open) return;

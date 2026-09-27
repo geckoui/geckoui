@@ -80,7 +80,7 @@ const TagInput = ({
     onOpenChange: setOpen
   });
 
-  useClickOutside(() => setOpen(false), [menuRef, fieldRef]);
+  useClickOutside(() => setOpen(false), [menuRef, fieldRef], open);
 
   const declared = optionsFrom(children);
 

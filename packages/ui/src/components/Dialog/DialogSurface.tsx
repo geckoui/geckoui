@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
+import { useLayer } from "../../utils/layerStack";
 import { OVERLAY_ANIMATION_DURATION } from "../GeckoUIProvider/overlay-store";
 
 type AnimationState = "closed" | "entering" | "open" | "closing";
@@ -87,7 +88,13 @@ export function DialogSurface({
 
   const canDismiss = open && isTop && animationState !== "closing";
 
-  useEscListener(canDismiss && dismissOnEscape ? requestDismiss : undefined);
+  // A menu or popover open inside the dialog takes the outside click or Escape first
+  const isTopLayer = useLayer(open);
+  const dismissIfTopLayer = useCallback(() => {
+    if (isTopLayer()) requestDismiss();
+  }, [isTopLayer, requestDismiss]);
+
+  useEscListener(canDismiss && dismissOnEscape ? dismissIfTopLayer : undefined);
 
   const isOutside = (target: EventTarget | null) =>
     target === backdropRef.current || target === rootRef.current;
@@ -100,7 +107,7 @@ export function DialogSurface({
     const shouldDismiss = pressedOutside.current && isOutside(event.target);
     pressedOutside.current = false;
 
-    if (shouldDismiss && canDismiss && dismissOnOutsideClick) requestDismiss();
+    if (shouldDismiss && canDismiss && dismissOnOutsideClick) dismissIfTopLayer();
   };
 
   if (animationState === "closed") return null;

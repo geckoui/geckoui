@@ -9,6 +9,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import { classNames } from "../../../utils/classNames";
+import { useLayer } from "../../../utils/layerStack";
 import type { PopoverProps } from "../Popover.types";
 import { PopoverContext } from "../usePopover";
 
@@ -88,6 +89,8 @@ const Popover = ({
     onOpenChange: setOpen
   });
 
+  const isTop = useLayer(open);
+
   useEffect(() => {
     if (!dismissOnOutsideClick || !open) return;
 
@@ -96,6 +99,7 @@ const Popover = ({
     // `setOpen(o => !o)` would read the closed state and open it straight back up.
     const dismiss = (event: MouseEvent) => {
       if (rootRef.current?.contains(event.target as Node)) return;
+      if (!isTop()) return;
 
       setOpen(false);
     };
@@ -129,6 +133,7 @@ const Popover = ({
           // text field on purpose. A popover often holds a form, and Escape should shut
           // it from inside one.
           if (!dismissOnEscape || !open || e.key !== "Escape") return;
+          if (!isTop()) return;
 
           e.stopPropagation();
           close();

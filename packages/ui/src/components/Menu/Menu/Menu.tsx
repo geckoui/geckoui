@@ -52,9 +52,13 @@ const Menu = ({
     }
   }, [open, openMenu, closeMenu]);
 
-  useClickOutside(() => {
-    closeMenu();
-  }, [refs.reference as unknown as RefObject<HTMLElement>]);
+  useClickOutside(
+    () => {
+      closeMenu();
+    },
+    [refs.reference as unknown as RefObject<HTMLElement>],
+    open
+  );
 
   const childArray = Children.toArray(children);
   const trigger = childArray.find(isMenuTrigger);

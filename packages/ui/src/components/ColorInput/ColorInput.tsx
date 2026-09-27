@@ -75,7 +75,7 @@ const ColorInput = ({
     onOpenChange?.(next);
   };
 
-  useClickOutside(() => toggle(false), [panelRef, fieldRef]);
+  useClickOutside(() => toggle(false), [panelRef, fieldRef], open);
 
   const color = value ?? internal;
   const parsed = parseColor(color);

@@ -2,11 +2,14 @@ import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
 
 import { isInsideShadowDOM } from "../utils/isInsideShadowDom";
+import { useLayer } from "../utils/layerStack";
 
 /**
  * Reuseable hook to detect clicks outside of a ref element that is passed as an argument
  * @param handler - Function to be called when a click is detected outside of the component
  * @param refs - Ref objects to be checked for clicks outside
+ * @param open - Pass the overlay's open state to make it a layer: while open it only reacts
+ *   when it is the topmost open overlay, so a menu inside a drawer closes without the drawer
  * @returns void
  * @example
  *
@@ -26,8 +29,14 @@ import { isInsideShadowDOM } from "../utils/isInsideShadowDom";
  */
 const useClickOutside = <T extends HTMLElement>(
   handler?: (event: Event | MouseEvent | TouchEvent) => void,
-  refs?: RefObject<T | null>[]
+  refs?: RefObject<T | null>[],
+  open?: boolean
 ) => {
+  const isTop = useLayer(!!open);
+  const layered = open !== undefined;
+  const layeredRef = useRef(layered);
+  layeredRef.current = layered;
+
   const handlerRef = useRef(handler);
   const refsRef = useRef(refs);
 
@@ -48,6 +57,8 @@ const useClickOutside = <T extends HTMLElement>(
         return;
       }
 
+      if (layeredRef.current && !isTop()) return;
+
       handlerRef.current?.(event);
     };
 
@@ -58,7 +69,7 @@ const useClickOutside = <T extends HTMLElement>(
       document.removeEventListener("mousedown", listener, true);
       document.removeEventListener("touchstart", listener, true);
     };
-  }, [enabled]);
+  }, [enabled, isTop]);
 };
 
 export default useClickOutside;

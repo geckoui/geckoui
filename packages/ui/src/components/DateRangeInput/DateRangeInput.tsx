@@ -58,9 +58,13 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
     onOpenChange: setOpenCalendar
   });
 
-  useClickOutside(() => {
-    handleCloseCalendar();
-  }, [refs.reference as never]);
+  useClickOutside(
+    () => {
+      handleCloseCalendar();
+    },
+    [refs.reference as never],
+    openCalendar
+  );
 
   const handleStateUpdateInternal = (state: {
     startDay: string;

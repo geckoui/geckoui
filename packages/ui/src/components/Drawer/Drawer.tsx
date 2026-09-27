@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, version } from "react";
 
 import { useClickOutside, useEscListener, useScrollLock } from "../../hooks";
 import { classNames } from "../../utils/classNames";
+import { useLayer } from "../../utils/layerStack";
 import { OVERLAY_ANIMATION_DURATION, overlayStore } from "../GeckoUIProvider/overlay-store";
 import type { DrawerProps } from "./Drawer.types";
 
@@ -106,21 +107,28 @@ function Drawer({
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
+  const isTop = useLayer(open);
+
   const handleDismiss = useCallback(() => {
     onCloseRef.current?.();
   }, []);
 
+  // A menu or popover open inside the drawer takes the outside click or Escape first
+  const dismissIfTop = useCallback(() => {
+    if (isTop()) handleDismiss();
+  }, [isTop, handleDismiss]);
+
   const dismissOnClickOutside = useCallback(() => {
     if (!allowClickOutside || !open) return;
-    handleDismiss();
-  }, [allowClickOutside, open, handleDismiss]);
+    dismissIfTop();
+  }, [allowClickOutside, open, dismissIfTop]);
 
   useClickOutside(dismissOnClickOutside, [drawerRef]);
 
   // a click-through drawer deliberately leaves the page usable, so it must not lock scroll
   useScrollLock((open || closing) && !allowClickOutside);
 
-  useEscListener(open && dismissOnEscape ? handleDismiss : undefined);
+  useEscListener(open && dismissOnEscape ? dismissIfTop : undefined);
 
   return (
     <div className="GeckoUIDrawer" style={style}>
@@ -128,7 +136,7 @@ function Drawer({
         data-state={visible && !hideBackdrop ? "visible" : "hidden"}
         data-clickthrough={allowClickOutside || undefined}
         className={classNames("GeckoUIDrawer__backdrop", backdropClassName)}
-        onMouseDown={open ? handleDismiss : undefined}
+        onMouseDown={open ? dismissIfTop : undefined}
         role="presentation"
       />
       <div
