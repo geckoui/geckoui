@@ -48,14 +48,9 @@
       @apply transition-none delay-0;
     }
 
-    &[data-state="open"][data-placement="top"],
-    &[data-state="open"][data-placement="bottom"] {
-      @apply translate-y-0;
-    }
-
-    &[data-state="open"][data-placement="right"],
-    &[data-state="open"][data-placement="left"] {
-      @apply translate-x-0;
+    /* any translate but none makes the panel the containing block for fixed floating menus */
+    &[data-state="open"] {
+      @apply translate-none;
     }
 
     &[data-state="closed"][data-placement="right"] {
