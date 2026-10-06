@@ -4,6 +4,8 @@ import { resolve } from "path";
 import postcss from "postcss";
 import { defineConfig } from "tsup";
 
+import { createConsumerTheme, getThemeColorTokens } from "./src/tailwind/consumerTheme";
+
 // tsup already treats dependencies and peerDependencies as external, so this list is
 // belt and braces. Keep it in step with package.json rather than letting it collect
 // packages the library no longer uses.
@@ -45,7 +47,7 @@ export default defineConfig((options) => {
 
           return {
             loader: "css",
-            contents: css
+            contents: `${css}\n${createConsumerTheme(getThemeColorTokens(source))}`
           };
         }
       })

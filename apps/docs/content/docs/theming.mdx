@@ -9,7 +9,34 @@ Gecko UI uses CSS custom properties (variables) for theming with [OKLCH](https:/
 
 ## CSS Variables
 
-Theme colors are defined as `--color-*` CSS custom properties. These are standard [Tailwind CSS v4 theme variables](https://tailwindcss.com/docs/theme) and work seamlessly with Tailwind's opacity modifier syntax (e.g., `bg-primary-600/50`).
+Theme colors are defined as `--color-*` CSS custom properties.
+
+### Tailwind Utilities
+
+When the stylesheet is imported from your Tailwind CSS v4 file, every color below is also a
+Tailwind utility, with no extra setup:
+
+```css title="src/global.css"
+@import "tailwindcss";
+
+@layer components {
+  @import "@geckoui/geckoui/styles.css";
+}
+```
+
+```tsx
+<div className="bg-surface-secondary text-text-muted border border-border-secondary">
+  <span className="text-error">Required</span>
+  <div className="bg-primary-600/50 hover:bg-surface-hover dark:bg-surface-tertiary" />
+</div>
+```
+
+The utilities point at the variables (`bg-surface-primary` is
+`background-color: var(--color-surface-primary)`), so they follow dark mode and any
+override below. Opacity modifiers and variants work as with Tailwind's own colors.
+
+Importing `styles.css` only from JavaScript styles the components but does not add these
+utilities, since your Tailwind never reads the file.
 
 ### Primary Colors
 

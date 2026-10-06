@@ -88,6 +88,11 @@ If you use `tailwindcss`, make sure to import the css inside `layer` directive t
 }
 ```
 
+Importing it from your Tailwind CSS file also gives you a Tailwind utility for every Gecko UI
+color, such as `bg-surface-primary`, `text-text-muted`, `border-border-secondary` or
+`bg-primary-600/50`. They read the same CSS variables as the components, so they follow dark
+mode and your theme overrides. See [Theming](/docs/theming#tailwind-utilities).
+
 ## Provider Setup
 
 Wrap your app with `GeckoUIProvider`. This is **required** for the following components:
