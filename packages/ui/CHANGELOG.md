@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.1.0
+
+### Minor Changes
+
+- fe75961: Every theme color is now a Tailwind utility in the app: `bg-surface-primary`,
+  `text-text-muted`, `border-border-secondary`, `bg-primary-600/50`, `text-error` and the
+  rest. Tailwind compiled the library's `@theme` away, so the variables reached the app only
+  as plain `:root` properties and the app's Tailwind never generated classes for them. The
+  stylesheet now ends with a `@theme inline reference` block that the app's Tailwind reads
+  when it imports `styles.css` from CSS, as the installation guide shows. Each utility is
+  `var(--color-*)`, so dark mode and theme overrides still apply, and no variable is declared
+  twice. A JS-only import is unchanged.
+
 ## 2.0.6
 
 ### Patch Changes
