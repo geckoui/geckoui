@@ -86,21 +86,35 @@ export interface BaseSelectProps extends PropsWithChildren, SelectButtonProps {
   clearable?: boolean;
 }
 
-export interface SingleSelectProps<T> extends BaseSelectProps {
+export interface SingleSelectBaseProps<T> extends BaseSelectProps {
   /**
    * The value of the select
    * */
   value: T;
 
   /**
-   * Callback to be called when the value changes
-   * */
-  onChange: (value: T) => void;
-
-  /**
    * Disabling multiple select
    * */
   multiple?: false;
+}
+
+export interface SingleSelectProps<T> extends SingleSelectBaseProps<T> {
+  clearable?: false;
+
+  /**
+   * Callback to be called when the value changes
+   * */
+  onChange: (value: T) => void;
+}
+
+export interface ClearableSingleSelectProps<T> extends SingleSelectBaseProps<T> {
+  clearable: true;
+
+  /**
+   * Callback to be called when the value changes.
+   * The clear button calls it with `null`.
+   * */
+  onChange: (value: T | null) => void;
 }
 
 export interface MultiSelectProps<T> extends BaseSelectProps {
@@ -120,10 +134,14 @@ export interface MultiSelectProps<T> extends BaseSelectProps {
   multiple: true;
 }
 
-export type SelectProps<T> = SingleSelectProps<T> | MultiSelectProps<T>;
+export type SelectProps<T> =
+  | SingleSelectProps<T>
+  | ClearableSingleSelectProps<T>
+  | MultiSelectProps<T>;
 
 export interface SelectOverload {
   <T>(props: SingleSelectProps<T>): JSX.Element;
+  <T>(props: ClearableSingleSelectProps<T>): JSX.Element;
   <T>(props: MultiSelectProps<T>): JSX.Element;
   <T>(props: SelectProps<T>): JSX.Element;
   displayName: string;

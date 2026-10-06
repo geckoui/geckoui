@@ -463,7 +463,7 @@ describe("Select", () => {
       await userEvent.click(optionByLabel("Apple"));
       await userEvent.click(trigger().querySelector(".GeckoUISelectButton__clear-button")!);
 
-      expect(onChange).toHaveBeenLastCalledWith(undefined);
+      expect(onChange).toHaveBeenLastCalledWith(null);
     });
 
     it("clears every value when multiple", async () => {

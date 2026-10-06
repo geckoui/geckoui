@@ -52,7 +52,7 @@ function SelectButton({ prefix, suffix, className, ...selectProps }: SelectButto
       return;
     }
 
-    handleChange(undefined);
+    handleChange(null);
   };
 
   if (trigger) {
