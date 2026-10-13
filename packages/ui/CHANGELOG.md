@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.2
+
+### Patch Changes
+
+- A `Popover` no longer caps its width at 20rem. The panel takes the width of its content and
+  is limited only by the viewport (`calc(100vw - 12px)`, the same 6px edge as its `shift`), so
+  a form with a fixed width wider than 20rem no longer spills past the panel's border. Size a
+  popover through its content (`<div className="w-[360px]">`). `--gecko-popover-max-width`
+  still sets a cap when one is wanted, for example on a popover that holds a long paragraph.
+
 ## 2.1.0
 
 ### Minor Changes

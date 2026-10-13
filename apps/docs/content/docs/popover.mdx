@@ -198,13 +198,15 @@ The trigger is your own element, so style it however you already do.
   --gecko-popover-radius: 0.375rem;
   --gecko-popover-padding: 0.75rem;
   --gecko-popover-width: max-content;
-  --gecko-popover-max-width: 20rem;
+  --gecko-popover-max-width: calc(100vw - 12px);
   --gecko-popover-z: 50;
 }
 ```
 
-The panel sizes itself to its content up to `--gecko-popover-max-width`. Set
-`--gecko-popover-width` to pin it to a fixed width instead.
+The panel has no width of its own: it takes the width of its content, and stops only at the
+edge of the viewport. Size a popover through what is inside it (`<div className="w-[360px]">`).
+Set `--gecko-popover-width` to pin the panel to a width instead, or `--gecko-popover-max-width`
+to cap it, for example on a popover that holds a long paragraph.
 
 ## Popover, Tooltip or Menu?
 
