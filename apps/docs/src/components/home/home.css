@@ -1,0 +1,51 @@
+@keyframes gk-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(var(--lift, -12px)) rotate(calc(var(--r, 0deg) + 1deg));
+  }
+}
+
+.gk-float {
+  transform: rotate(var(--r, 0deg));
+  animation: gk-float var(--dur, 7s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.gk-float:hover,
+.gk-float:focus-within {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gk-float {
+    animation: none;
+  }
+}
+
+.dark .gk-logo {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.gk-home {
+  --bg: #e4dcff;
+  --ink: #22124f;
+  --muted: #4c3d80;
+  --sun: #ffd23f;
+  --card: #ffffff;
+  --card-ink: #0a0a0a;
+  --edge: #0a0a0a;
+}
+.dark .gk-home {
+  --bg: #1c1440;
+  --ink: #ece6ff;
+  --muted: #b0a3e0;
+  --card: #1b1b1f;
+  --card-ink: #f2f2f2;
+  --edge: #000000;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}

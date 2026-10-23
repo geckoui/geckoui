@@ -10,10 +10,11 @@ import "./global.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Gecko UI",
-    template: "%s | Gecko UI"
+    default: "GeckoUI — React component library",
+    template: "%s | GeckoUI"
   },
-  description: "Gecko UI — because your app deserves to be cute AND powerful.",
+  description:
+    "GeckoUI (Gecko UI) is a React component library with 40+ accessible, typed components, react-hook-form wrappers and CSS variable themes.",
   icons: {
     icon: [
       { url: "/favicon.ico" },

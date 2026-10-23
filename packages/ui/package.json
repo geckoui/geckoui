@@ -7,8 +7,12 @@
     "react",
     "components",
     "ui",
-    "library"
+    "library",
+    "geckoui",
+    "react-hook-form",
+    "tailwind"
   ],
+  "homepage": "https://geckoui.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/geckoui/geckoui.git",

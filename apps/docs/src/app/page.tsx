@@ -1,14 +1,16 @@
+import { lilita } from "@/components/home/fonts";
+import { GeckoHome } from "@/components/home/home";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  robots: { index: false, follow: false }
+  title: { absolute: "GeckoUI — React component library" },
+  alternates: { canonical: "/" }
 };
 
 export default function HomePage() {
   return (
-    <>
-      <meta httpEquiv="refresh" content="0;url=/docs" />
-      <link rel="canonical" href="/docs" />
-    </>
+    <div className={lilita.variable}>
+      <GeckoHome />
+    </div>
   );
 }
