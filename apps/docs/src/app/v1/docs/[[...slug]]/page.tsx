@@ -1,8 +1,8 @@
-import { VersionNotice } from "@/components/version-notice";
+import { getMDXComponents } from "@/components/docs/mdx";
+import { DocsPage } from "@/components/docs/page";
+import { VersionNotice } from "@/components/docs/version-notice";
 import { sourceV1 } from "@/lib/source";
-import { getMDXComponents } from "@/mdx-components";
-import { createRelativeLink } from "fumadocs-ui/mdx";
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page";
+import { findNeighbour } from "fumadocs-core/page-tree";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -12,19 +12,17 @@ export default async function Page(props: PageProps<"/v1/docs/[[...slug]]">) {
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const { previous, next } = findNeighbour(sourceV1.pageTree, page.url);
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
-        <VersionNotice slugs={page.slugs} />
-        <MDX
-          components={getMDXComponents({
-            a: createRelativeLink(sourceV1, page)
-          })}
-        />
-      </DocsBody>
+    <DocsPage
+      title={page.data.title}
+      description={page.data.description}
+      toc={page.data.toc}
+      previous={previous}
+      next={next}>
+      <VersionNotice slugs={page.slugs} />
+      <MDX components={getMDXComponents()} />
     </DocsPage>
   );
 }

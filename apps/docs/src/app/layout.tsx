@@ -1,11 +1,15 @@
-import SearchDialog from "@/components/search";
+import "@/components/docs/docs.css";
+import { classNames } from "@/lib/classNames";
 import { siteUrl } from "@/lib/site";
 import { GeckoUIProvider } from "@geckoui/geckoui";
-import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import "./global.css";
+
+const description =
+  "GeckoUI (Gecko UI) is a React component library with 40+ accessible, typed components, react-hook-form wrappers and CSS variable themes.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -13,8 +17,7 @@ export const metadata: Metadata = {
     default: "GeckoUI — React component library",
     template: "%s | GeckoUI"
   },
-  description:
-    "GeckoUI (Gecko UI) is a React component library with 40+ accessible, typed components, react-hook-form wrappers and CSS variable themes.",
+  description,
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -24,30 +27,36 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png"
   },
   openGraph: {
-    title: "Gecko UI",
-    description: "Gecko UI — because your app deserves to be cute AND powerful.",
+    title: "GeckoUI",
+    description,
     images: ["/logo.png"],
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gecko UI",
-    description: "Gecko UI — because your app deserves to be cute AND powerful.",
+    title: "GeckoUI",
+    description,
     images: ["/logo.png"]
   }
 };
 
-const inter = Inter({
-  subsets: ["latin"]
-});
+const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
-        <RootProvider search={{ SearchDialog }}>
+    <html
+      lang="en"
+      className={classNames(geistSans.variable, geistMono.variable)}
+      suppressHydrationWarning>
+      <body className="min-h-screen antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
           <GeckoUIProvider>{children}</GeckoUIProvider>
-        </RootProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

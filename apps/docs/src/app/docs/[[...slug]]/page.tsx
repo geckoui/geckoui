@@ -1,7 +1,7 @@
+import { getMDXComponents } from "@/components/docs/mdx";
+import { DocsPage } from "@/components/docs/page";
 import { getPageImage, source } from "@/lib/source";
-import { getMDXComponents } from "@/mdx-components";
-import { createRelativeLink } from "fumadocs-ui/mdx";
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page";
+import { findNeighbour } from "fumadocs-core/page-tree";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -11,19 +11,17 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const { previous, next } = findNeighbour(source.pageTree, page.url);
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
-        <MDX
-          components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(source, page)
-          })}
-        />
-      </DocsBody>
+    <DocsPage
+      title={page.data.title}
+      description={page.data.description}
+      toc={page.data.toc}
+      githubPath={`content/docs/${page.path}`}
+      previous={previous}
+      next={next}>
+      <MDX components={getMDXComponents()} />
     </DocsPage>
   );
 }

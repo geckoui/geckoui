@@ -1,89 +1,120 @@
-"use client";
-
+import { GITHUB_URL, SiteHeader } from "@/components/site/site-header";
+import { Accessibility, Bot, Braces, ClipboardCheck, Paintbrush, Palette } from "lucide-react";
 import Link from "next/link";
-import { type CSSProperties, useState } from "react";
 
-import { ACCENTS, type Accent, Features, accentVars } from "./features";
-import { Floater, HomeFooter, HomeNav, InstallCommand } from "./shared";
-import {
-  CheckoutStepper,
-  NotifySwitch,
-  OTPWidget,
-  QuantityCounter,
-  RatingWidget,
-  StatusBadges,
-  TeamAvatars,
-  ToastButton,
-  VolumeSlider
-} from "./widgets";
+import { InstallCommand } from "./install-command";
+import { Showcase } from "./showcase";
 
-const sticker =
-  "rounded-2xl border-[3px] border-[var(--edge)] bg-[var(--card)] p-4 text-[var(--card-ink)] shadow-[6px_6px_0_var(--edge)]";
+const FEATURES = [
+  {
+    icon: ClipboardCheck,
+    title: "Forms built in",
+    body: "Every input has a react-hook-form version that registers, validates and shows its own error."
+  },
+  {
+    icon: Palette,
+    title: "Themes are CSS variables",
+    body: "Set --color-primary-500 in any color format and every component follows. Dark mode is one class."
+  },
+  {
+    icon: Accessibility,
+    title: "Accessible by default",
+    body: "Keyboard navigation, focus management and ARIA attributes come with every component."
+  },
+  {
+    icon: Braces,
+    title: "Typed end to end",
+    body: "Props, events and refs are fully typed, so your editor shows what each component accepts."
+  },
+  {
+    icon: Paintbrush,
+    title: "Style with plain CSS",
+    body: "Each part has a stable class and data attributes. Override what you need and keep the rest."
+  },
+  {
+    icon: Bot,
+    title: "Ready for AI agents",
+    body: "Install the GeckoUI skill and your coding agent gets the real API, variables and class names."
+  }
+];
 
 export function GeckoHome() {
-  const [accent, setAccent] = useState<Accent>(ACCENTS[0]);
-
   return (
-    <div
-      style={accentVars(accent.hue) as CSSProperties}
-      className="gk-home min-h-screen overflow-x-hidden bg-[var(--bg)] text-[var(--ink)]">
-      <HomeNav className="text-[var(--muted)]" />
+    <div className="min-h-screen">
+      <SiteHeader />
 
-      <section className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 lg:pt-14">
-        <h1 className="font-display max-w-4xl text-[clamp(3.25rem,9vw,7.5rem)] leading-[0.92]">
-          Cute components. Serious React.
-        </h1>
-        <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-md text-lg text-[var(--muted)]">
-            GeckoUI gives you 40+ accessible, typed components, react-hook-form wrappers, and themes
-            that are just CSS variables. Peel off any sticker below and play with it.
+      <main>
+        <section className="mx-auto flex max-w-4xl flex-col items-center px-4 pt-16 pb-14 text-center md:pt-24">
+          <Link
+            href="/docs/migrating-to-v2"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs transition-colors hover:bg-accent">
+            <span className="font-medium">GeckoUI v2 is here</span>
+            <span className="text-muted-foreground">See what changed</span>
+          </Link>
+          <h1 className="mt-6 text-4xl leading-[1.05] font-semibold tracking-tighter text-balance sm:text-5xl md:text-6xl">
+            React components with forms built in
+          </h1>
+          <p className="mt-5 max-w-2xl text-base text-balance text-muted-foreground sm:text-lg">
+            GeckoUI is a library of 40+ accessible, typed React components. Every input works with
+            react-hook-form, and every color is a CSS variable you can change.
           </p>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/docs"
-              className="rounded-xl border-[3px] border-[var(--edge)] bg-[var(--sun)] px-6 py-3 font-bold text-black shadow-[4px_4px_0_var(--edge)] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--edge)]">
-              Read the docs
+              className="inline-flex h-10 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90">
+              Get started
             </Link>
-            <InstallCommand className="rounded-xl border-[3px] border-[var(--edge)] bg-[var(--card)] px-4 py-3 text-[var(--card-ink)] shadow-[4px_4px_0_var(--edge)]" />
+            <Link
+              href="/docs/accordion"
+              className="inline-flex h-10 items-center rounded-lg border border-border px-5 text-sm font-medium transition-colors hover:bg-accent">
+              Browse components
+            </Link>
+          </div>
+          <InstallCommand command="pnpm add @geckoui/geckoui" className="mt-5" />
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 md:px-8">
+          <div className="rounded-2xl border border-border bg-muted/40 p-4 md:p-6">
+            <Showcase />
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-24 md:px-8">
+          <h2 className="max-w-xl text-3xl font-semibold tracking-tight">
+            Everything a product UI needs, nothing to wire up
+          </h2>
+          <div className="mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f) => (
+              <div key={f.title}>
+                <f.icon className="size-5 text-muted-foreground" />
+                <h3 className="mt-3 font-medium">{f.title}</h3>
+                <p className="mt-1.5 text-sm leading-6 text-muted-foreground">{f.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-muted-foreground md:px-8">
+          <span>MIT licensed. Built with GeckoUI.</span>
+          <div className="flex gap-5">
+            <Link href="/docs" className="hover:text-foreground">
+              Docs
+            </Link>
+            <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="hover:text-foreground">
+              GitHub
+            </a>
+            <a
+              href="https://www.npmjs.com/package/@geckoui/geckoui"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-foreground">
+              npm
+            </a>
           </div>
         </div>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="relative flex flex-wrap justify-center gap-6 lg:block lg:h-[560px]">
-          <Floater top="2%" left="0%" rotate={-6} duration={6} className={sticker}>
-            <NotifySwitch />
-          </Floater>
-          <Floater top="0%" left="30%" rotate={4} duration={7} delay={-2} className={sticker}>
-            <RatingWidget />
-          </Floater>
-          <Floater top="8%" left="58%" rotate={-3} duration={6.5} delay={-4} className={sticker}>
-            <CheckoutStepper />
-          </Floater>
-          <Floater top="34%" left="8%" rotate={5} duration={7.5} delay={-1} className={sticker}>
-            <OTPWidget />
-          </Floater>
-          <Floater top="38%" left="42%" rotate={-5} duration={6} delay={-3} className={sticker}>
-            <ToastButton />
-          </Floater>
-          <Floater top="34%" left="70%" rotate={7} duration={8} delay={-5} className={sticker}>
-            <VolumeSlider />
-          </Floater>
-          <Floater top="68%" left="2%" rotate={-2} duration={7} delay={-2.5} className={sticker}>
-            <StatusBadges />
-          </Floater>
-          <Floater top="70%" left="34%" rotate={3} duration={6.5} delay={-6} className={sticker}>
-            <TeamAvatars />
-          </Floater>
-          <Floater top="66%" left="66%" rotate={-6} duration={7.5} delay={-3.5} className={sticker}>
-            <QuantityCounter />
-          </Floater>
-        </div>
-      </section>
-
-      <Features accent={accent} onAccent={setAccent} />
-
-      <HomeFooter className="border-t-[3px] border-[var(--edge)] text-[var(--muted)]" />
+      </footer>
     </div>
   );
 }

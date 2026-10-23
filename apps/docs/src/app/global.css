@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/neutral.css";
-@import "fumadocs-ui/css/preset.css";
 
 /*
  * The playground page is gitignored, and Tailwind skips gitignored files when it detects
@@ -12,12 +10,57 @@
  */
 @source "./playground/page.tsx";
 
-body {
-  background-color: white;
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #faf8f3;
+  --foreground: #1c1917;
+  --muted: #f1ede4;
+  --muted-foreground: #78716c;
+  --accent: #ede8dd;
+  --border: #e4ddd0;
+  --primary: #1c1917;
+  --primary-foreground: #faf8f3;
+  --code: #f4f0e7;
+  --ring: #a8a29e;
 }
 
-.dark body {
-  background-color: #121212;
+.dark {
+  --background: #161412;
+  --foreground: #f2efe8;
+  --muted: #211e1a;
+  --muted-foreground: #a8a29e;
+  --accent: #2a2622;
+  --border: #322d27;
+  --primary: #f2efe8;
+  --primary-foreground: #161412;
+  --code: #1c1916;
+  --ring: #57534e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-code: var(--code);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--foreground) 15%, transparent);
 }
 
 @layer components {

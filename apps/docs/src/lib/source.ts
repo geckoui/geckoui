@@ -15,12 +15,13 @@ export const sourceV1 = loader({
   plugins: [lucideIconsPlugin()]
 });
 
-export const LATEST_VERSION = "v2";
-
-export const versions = [
-  { name: "v2 (latest)", url: "/docs" },
-  { name: "v1", url: "/v1/docs" }
-];
+/** slug -> versions containing it, so the version switch keeps you on the same page */
+export function slugsByVersion(): Record<string, string[]> {
+  return {
+    v2: source.getPages().map((p) => p.slugs.join("/")),
+    v1: sourceV1.getPages().map((p) => p.slugs.join("/"))
+  };
+}
 
 export function getPageImage(page: InferPageType<typeof source>) {
   const segments = [...page.slugs, "image.png"];
